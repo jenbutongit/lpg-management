@@ -64,7 +64,7 @@ export function configure(
 		'/authenticate',
 		passport.authenticate('oauth2', {
 			failureFlash: true,
-			failureRedirect: '/',
+			failureRedirect: '/login',
 		}),
 		(req: express.Request, res: express.Response) => {
 			const session = req.session
