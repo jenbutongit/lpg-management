@@ -1,10 +1,11 @@
 import {describe, it} from 'mocha'
-import {mockReq, mockRes} from 'sinon-express-mock'
+import {mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
-import * as sinon from 'sinon'
 import {NextFunction, Request, Response} from 'express'
 import {Auth} from "../../../src/identity/auth"
+import * as sinon from 'sinon'
+import {expect} from 'chai'
 
 chai.use(sinonChai)
 
@@ -17,32 +18,20 @@ describe('Auth tests', function () {
 			'secret',
 			'localhost:8080',
 			'http://localhost:3030')
-		//
-		// sinon.stub(auth, 'authenticate').callsFake(function (req, res, next) {
-		// 	console.log('stubbing isAuth')
-		// 	return next()
-		// })
 	})
 
 	it('should return next function if user is authenticated', function () {
-		// const index: (request: Request, response: Response) => void = homeController.index()
-		// const request: Request = mockReq()
-		// const reponse: Response = mockRes()
-		//
-		// index(request, reponse)
-		//
-		// expect(reponse.render).to.have.been.calledOnceWith('index')
+		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
 
-		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate
-		const request: Request = mockReq()
 		const reponse: Response = mockRes()
-		const next: NextFunction = function () {
-			console.log('next was called');
-		};
+		const request: Request = <Request>{}
+		request.isAuthenticated = sinon.stub().returns(true)
 
-		sinon.stub(request, 'isAuthenticated').returns(true)
+		const next: NextFunction = sinon.stub()
 
 		authenticate(request, reponse, next)
+
+		expect(next).to.have.been.calledOnce
 	});
 
 });

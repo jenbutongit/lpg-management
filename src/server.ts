@@ -3,7 +3,7 @@ import * as ctx from './ApplicationContext'
 import * as passport from './identity/passport'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
-import {Auth} from "./identity/auth"
+// import {Auth} from "./identity/auth"
 
 const expressNunjucks = require('express-nunjucks');
 

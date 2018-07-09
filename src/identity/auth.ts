@@ -1,4 +1,4 @@
-import * as express from "express"
+import {NextFunction, Request, Response} from "express";
 
 export class Auth {
 
@@ -9,7 +9,7 @@ export class Auth {
 	}
 
 	authenticate() {
-		return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+		return (req: Request, res: Response, next: NextFunction) => {
 			if (req.isAuthenticated()) {
 				return next()
 			}

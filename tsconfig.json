@@ -20,5 +20,5 @@
     "strictNullChecks": true,
     "target": "ESNext"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }
