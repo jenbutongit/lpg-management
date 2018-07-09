@@ -1,8 +1,6 @@
-var {Given, When, Then, defineSupportCode} = require('cucumber');
-var axios = require('axios')
-var appRoot = require('app-root-path');
-var {expect, fail} = require('chai')
-var nock = require('nock');
+const {Given, When, Then, defineSupportCode} = require('cucumber');
+const axios = require('axios')
+const {expect, fail} = require('chai')
 
 const http = axios.create({
     baseURL: 'http://localhost',
@@ -17,22 +15,14 @@ let promise;
 Given(/^I am not authenticated$/, function () {
 });
 
-When(/^I request the home page$/, function (callback) {
-    promise = http.get('/home').catch(function (error) {
-        if (error.response) {
-            console.log(error.response.status);
-        } else {
-            callback.fail
-            console.log('Error', error.message);
-        };
-});
+When(/^I request the home page$/, function () {
+    promise = http.get('/home');
 });
 
 Then(/^I am redirected to the login page$/, function (callback) {
     promise.then(function (response) {
         expect(response.status).to.eql(302);
-    }, error => {
-        console.log("new error")
-        callback.fail
-    })
+    }).catch((error) => {
+        callback(error)
+    });
 });
