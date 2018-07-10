@@ -34,7 +34,7 @@ describe('Auth tests', function () {
 		expect(next).to.have.been.calledOnce
 	});
 
-	it('should return next function if user is authenticated', function () {
+	it('should redirect to identity management if not logged in', function () {
 		const originalUrl = 'original-url'
 
 		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
