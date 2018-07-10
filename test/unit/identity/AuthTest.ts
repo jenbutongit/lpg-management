@@ -21,23 +21,23 @@ describe('Auth tests', function () {
 	})
 
 	it('should return next function if user is authenticated', function () {
+		const originalUrl = 'original-url'
+
 		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
 
-		const reponse: Response = mockRes()
+		const response: Response = mockRes()
 		const request: Request = <Request>{}
-		request.isAuthenticated = sinon.stub().returns(true)
-
 		const next: NextFunction = sinon.stub()
 
-		authenticate(request, reponse, next)
+		request.isAuthenticated = sinon.stub().returns(false)
+		request.originalUrl = originalUrl
 
-		expect(next).to.have.been.calledOnce
+		response.cookie = sinon.stub()
+		response.redirect = sinon.stub()
+
+		authenticate(request, response, next)
+
+		expect(response.cookie).to.have.been.calledOnceWith('redirectTo', originalUrl)
+		expect(response.redirect).to.have.been.calledOnceWith('/authenticate')
 	});
-
 });
-
-// 'f90a4080-e5e9-4a80-ace4-f738b4c9c30e',
-// 	'test',
-// 	'http://localhost:8080',
-// 	app,
-// 	'http://localhost:3030'
