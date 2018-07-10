@@ -1,25 +1,26 @@
-import {NextFunction, Request, Response, Handler} from "express";
+import {NextFunction, Request, Response, Handler} from 'express'
 // import * as identityservice from './identity-service'
 // import * as identity from './identity'
 // import * as oauth2 from 'passport-oauth2'
 // import * as log4js from "log4js"
-import {PassportStatic} from "passport"
+import {PassportStatic} from 'passport'
 
 // const logger = log4js.getLogger('config/passport')
 
 export class Auth {
-
 	clientId: string
 	clientSecret: string
 	authenticationServiceUrl: string
 	callbackUrl: string
 	passportStatic: PassportStatic
 
-	constructor(clientId: string,
-				clientSecret: string,
-				authenticationServiceUrl: string,
-				callbackUrl: string,
-				passportStatic: PassportStatic) {
+	constructor(
+		clientId: string,
+		clientSecret: string,
+		authenticationServiceUrl: string,
+		callbackUrl: string,
+		passportStatic: PassportStatic
+	) {
 		this.clientId = clientId
 		this.clientSecret = clientSecret
 		this.authenticationServiceUrl = authenticationServiceUrl
@@ -27,11 +28,11 @@ export class Auth {
 		this.passportStatic = passportStatic
 	}
 
-	initialize() :Handler {
+	initialize(): Handler {
 		return this.passportStatic.initialize()
 	}
 
-	session() :Handler {
+	session(): Handler {
 		return this.passportStatic.session()
 	}
 
@@ -80,6 +81,4 @@ export class Auth {
 	// 		}
 	// 	)
 	// }
-
-
 }

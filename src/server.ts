@@ -2,10 +2,10 @@ import * as express from 'express'
 import * as ctx from './ApplicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
-import {Auth} from "./identity/auth"
-import * as passport from "passport"
+import {Auth} from './identity/auth'
+import * as passport from 'passport'
 
-const expressNunjucks = require('express-nunjucks');
+const expressNunjucks = require('express-nunjucks')
 
 const app = express()
 
@@ -28,18 +28,19 @@ app.use(
 	})
 )
 
-var appRoot = require('app-root-path');
+var appRoot = require('app-root-path')
 
-app.set('views', appRoot + '/views');
+app.set('views', appRoot + '/views')
 
-expressNunjucks(app, {});
+expressNunjucks(app, {})
 
-const auth = new Auth('f90a4080-e5e9-4a80-ace4-f738b4c9c30e',
+const auth = new Auth(
+	'f90a4080-e5e9-4a80-ace4-f738b4c9c30e',
 	'test',
 	'http://localhost:8080',
 	'http://localhost:3030',
 	passport
-	)
+)
 
 app.use(auth.initialize())
 app.use(auth.session())
@@ -48,6 +49,8 @@ app.use(auth.session())
 
 // app.use(passport.isAuthenticated)
 
-app.get('/', ctx.default.homeController.index());
+app.get('/', ctx.default.homeController.index())
 
-app.listen(3030, () => console.log('Example app listening on port 3030! on ', appRoot))
+app.listen(3030, () =>
+	console.log('Example app listening on port 3030! on ', appRoot)
+)

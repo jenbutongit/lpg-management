@@ -3,27 +3,33 @@ import {mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {NextFunction, Request, Response} from 'express'
-import {Auth} from "../../../src/identity/auth"
+import {Auth} from '../../../src/identity/auth'
 import * as sinon from 'sinon'
 import {expect} from 'chai'
-import {PassportStatic} from "passport"
+import {PassportStatic} from 'passport'
 
 chai.use(sinonChai)
 
-describe('Auth tests', function () {
+describe('Auth tests', function() {
 	let auth: Auth
 	let passportStatic: PassportStatic = <PassportStatic>{}
 
 	beforeEach(() => {
-		auth = new Auth('clientId',
+		auth = new Auth(
+			'clientId',
 			'secret',
 			'localhost:8080',
 			'http://localhost:3030',
-			passportStatic)
+			passportStatic
+		)
 	})
 
-	it('should return next function if user is authenticated', function () {
-		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
+	it('should return next function if user is authenticated', function() {
+		const authenticate: (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => void = auth.authenticate()
 
 		const reponse: Response = mockRes()
 		const request: Request = <Request>{}
@@ -34,12 +40,16 @@ describe('Auth tests', function () {
 		authenticate(request, reponse, next)
 
 		expect(next).to.have.been.calledOnce
-	});
+	})
 
-	it('should return redirect if user is not authenticated', function () {
+	it('should return redirect if user is not authenticated', function() {
 		const originalUrl = 'original-url'
 
-		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
+		const authenticate: (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => void = auth.authenticate()
 
 		const response: Response = mockRes()
 		const request: Request = <Request>{}
@@ -53,11 +63,14 @@ describe('Auth tests', function () {
 
 		authenticate(request, response, next)
 
-		expect(response.cookie).to.have.been.calledOnceWith('redirectTo', originalUrl)
+		expect(response.cookie).to.have.been.calledOnceWith(
+			'redirectTo',
+			originalUrl
+		)
 		expect(response.redirect).to.have.been.calledOnceWith('/authenticate')
-	});
+	})
 
-	it('should call passportStatic initialize', function () {
+	it('should call passportStatic initialize', function() {
 		passportStatic.initialize = sinon.stub()
 
 		auth.initialize()
@@ -65,11 +78,11 @@ describe('Auth tests', function () {
 		expect(passportStatic.initialize).to.have.been.calledOnce
 	})
 
-	it('should call passportStatic session', function () {
+	it('should call passportStatic session', function() {
 		passportStatic.session = sinon.stub()
 
 		auth.session()
 
 		expect(passportStatic.session).to.have.been.calledOnce
 	})
-});
+})

@@ -19,7 +19,6 @@ export function configure(
 	app.use(passport.initialize())
 	app.use(passport.session())
 
-
 	strategy = new oauth2.Strategy(
 		{
 			authorizationURL: `${authenticationServiceUrl}/oauth/authorize`,
