@@ -1,4 +1,5 @@
 import {AxiosInstance} from 'axios'
+import {Identity} from './identity'
 
 export class IdentityService {
 	http: AxiosInstance
@@ -13,6 +14,8 @@ export class IdentityService {
 				Authorization: `Bearer ${token}`,
 			},
 		})
-		return response.data
+		const identity = new Identity(response.data.uid, response.data.roles, token)
+
+		return identity
 	}
 }

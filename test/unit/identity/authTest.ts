@@ -8,6 +8,9 @@ import {expect} from 'chai'
 import {PassportStatic} from 'passport'
 import {IdentityService} from '../../../src/identity/identityService'
 import {Auth} from '../../../src/identity/auth'
+// import * as oauth2 from 'passport-oauth2'
+import {Identity} from '../../../src/identity/identity'
+// import {VerifyCallback} from 'passport-oauth2'
 
 chai.use(sinonChai)
 
@@ -87,5 +90,25 @@ describe('Auth tests', function() {
 		auth.session()
 
 		expect(passportStatic.session).to.have.been.calledOnce
+	})
+
+	it('should call Verify()', function() {
+		const verifyCallback = auth.verify()
+
+		const accessToken = 'access-token'
+		const identity: Identity = <Identity>sinon.createStubInstance(Identity)
+		const getDetails = sinon
+			.stub()
+			.withArgs(accessToken)
+			.returns(identity)
+
+		identityService.getDetails = getDetails
+		const passportCallback = sinon.stub()
+
+		verifyCallback(accessToken, 'refresh-token', null, passportCallback).then(
+			function() {
+				expect(passportCallback).to.have.been.calledOnce
+			}
+		)
 	})
 })

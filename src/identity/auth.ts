@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response, Handler} from 'express'
-import * as identity from './identity'
 import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
@@ -60,49 +59,24 @@ export class Auth {
 				clientSecret: this.clientSecret,
 				tokenURL: `${this.authenticationServiceUrl}/oauth/token`,
 			},
-			async (accessToken: string, profile: any, cb: oauth2.VerifyCallback) => {
-				profile.accessToken = accessToken
-
-				try {
-					const identityDetails = await this.identityService.getDetails(
-						accessToken
-					)
-
-					const combined = {
-						...profile,
-						...identityDetails,
-					}
-					const user = identity.Identity.create(combined)
-					return cb(null, user)
-				} catch (e) {
-					logger.warn(`Error retrieving user profile information`, e)
-					cb(e)
-				}
-			}
+			this.verify()
 		)
-
 		this.passportStatic.use(strategy)
 	}
 
 	verify() {
 		return async (
 			accessToken: string,
+			refreshToken: string,
 			profile: any,
 			cb: oauth2.VerifyCallback
 		) => {
-			profile.accessToken = accessToken
-
 			try {
 				const identityDetails = await this.identityService.getDetails(
 					accessToken
 				)
 
-				const combined = {
-					...profile,
-					...identityDetails,
-				}
-				const user = identity.Identity.create(combined)
-				return cb(null, user)
+				cb(null, identityDetails)
 			} catch (e) {
 				logger.warn(`Error retrieving user profile information`, e)
 				cb(e)
