@@ -6,18 +6,20 @@ import {NextFunction, Request, Response} from 'express'
 import {Auth} from "../../../src/identity/auth"
 import * as sinon from 'sinon'
 import {expect} from 'chai'
+import {PassportStatic} from "passport"
 
 chai.use(sinonChai)
 
 describe('Auth tests', function () {
-
 	let auth: Auth
+	let passportStatic: PassportStatic = <PassportStatic>{}
 
 	beforeEach(() => {
 		auth = new Auth('clientId',
 			'secret',
 			'localhost:8080',
-			'http://localhost:3030')
+			'http://localhost:3030',
+			passportStatic)
 	})
 
 	it('should return next function if user is authenticated', function () {
@@ -34,7 +36,7 @@ describe('Auth tests', function () {
 		expect(next).to.have.been.calledOnce
 	});
 
-	it('should return next function if user is authenticated', function () {
+	it('should return redirect if user is not authenticated', function () {
 		const originalUrl = 'original-url'
 
 		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
@@ -54,4 +56,20 @@ describe('Auth tests', function () {
 		expect(response.cookie).to.have.been.calledOnceWith('redirectTo', originalUrl)
 		expect(response.redirect).to.have.been.calledOnceWith('/authenticate')
 	});
+
+	it('should call passportStatic initialize', function () {
+		passportStatic.initialize = sinon.stub()
+
+		auth.initialize()
+
+		expect(passportStatic.initialize).to.have.been.calledOnce
+	})
+
+	it('should call passportStatic session', function () {
+		passportStatic.session = sinon.stub()
+
+		auth.session()
+
+		expect(passportStatic.session).to.have.been.calledOnce
+	})
 });
