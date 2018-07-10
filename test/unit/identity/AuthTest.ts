@@ -21,6 +21,20 @@ describe('Auth tests', function () {
 	})
 
 	it('should return next function if user is authenticated', function () {
+		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
+
+		const reponse: Response = mockRes()
+		const request: Request = <Request>{}
+		request.isAuthenticated = sinon.stub().returns(true)
+
+		const next: NextFunction = sinon.stub()
+
+		authenticate(request, reponse, next)
+
+		expect(next).to.have.been.calledOnce
+	});
+
+	it('should return next function if user is authenticated', function () {
 		const originalUrl = 'original-url'
 
 		const authenticate: (request: Request, response: Response, next: NextFunction) => void = auth.authenticate()
