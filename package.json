@@ -2,13 +2,13 @@
   "name": "@cshr/lpg-admin",
   "version": "1.0.0",
   "description": "lpg admin application",
-  "main": "index.js",
+  "main": "server",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run sass:all && npm run compile",
     "clean": "./bin/setup-dist",
     "compile": "./bin/tsc",
-    "start": "tsc && node dist/build/server.js"
+    "start": "tsc && node dist/build/src/server.js"
   },
   "repository": {
     "type": "git",

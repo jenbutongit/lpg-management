@@ -38,17 +38,6 @@ export class Auth {
 		return this.passportStatic.session()
 	}
 
-	authenticate() {
-		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.isAuthenticated()) {
-				return next()
-			}
-
-			res.cookie('redirectTo', req.originalUrl)
-			res.redirect('/authenticate')
-		}
-	}
-
 	configureStrategy() {
 		let strategy: oauth2.Strategy
 		strategy = new oauth2.Strategy(
@@ -61,7 +50,7 @@ export class Auth {
 			},
 			this.verify()
 		)
-		this.passportStatic.use(strategy)
+		this.useStrategy(strategy)
 	}
 
 	verify() {
@@ -81,6 +70,29 @@ export class Auth {
 				logger.warn(`Error retrieving user profile information`, e)
 				cb(e)
 			}
+		}
+	}
+
+	useStrategy(strategy: oauth2.Strategy) {
+		this.passportStatic.use(strategy)
+	}
+
+	serializeUser(identityDetails: any) {
+		return this.passportStatic.serializeUser(identityDetails)
+	}
+
+	deserializeUser(identityDetails: any) {
+		return this.passportStatic.deserializeUser(identityDetails)
+	}
+
+	authenticate() {
+		return (req: Request, res: Response, next: NextFunction) => {
+			if (req.isAuthenticated()) {
+				return next()
+			}
+
+			res.cookie('redirectTo', req.originalUrl)
+			res.redirect('/authenticate')
 		}
 	}
 }

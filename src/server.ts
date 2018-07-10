@@ -4,10 +4,13 @@ import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 
 const expressNunjucks = require('express-nunjucks')
-
 const app = express()
-
 const FileStore = sessionFileStore(session)
+
+var appRoot = require('app-root-path')
+app.set('views', appRoot + '/views')
+
+expressNunjucks(app, {})
 
 app.use(
 	session({
@@ -25,12 +28,6 @@ app.use(
 		}),
 	})
 )
-
-var appRoot = require('app-root-path')
-
-app.set('views', appRoot + '/views')
-
-expressNunjucks(app, {})
 
 app.use(ctx.default.auth.initialize())
 app.use(ctx.default.auth.session())
