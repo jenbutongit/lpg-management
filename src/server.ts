@@ -45,7 +45,7 @@ const auth = new Auth(
 app.use(auth.initialize())
 app.use(auth.session())
 
-// passport.configure()
+auth.configureStrategy()
 
 // app.use(passport.isAuthenticated)
 
