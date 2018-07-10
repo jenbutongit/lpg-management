@@ -3,16 +3,18 @@ import {mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {NextFunction, Request, Response} from 'express'
-import {Auth} from '../../../src/identity/auth'
 import * as sinon from 'sinon'
 import {expect} from 'chai'
 import {PassportStatic} from 'passport'
+import {IdentityService} from '../../../src/identity/identityService'
+import {Auth} from '../../../src/identity/auth'
 
 chai.use(sinonChai)
 
 describe('Auth tests', function() {
 	let auth: Auth
 	let passportStatic: PassportStatic = <PassportStatic>{}
+	let identityService: IdentityService = <IdentityService>{}
 
 	beforeEach(() => {
 		auth = new Auth(
@@ -20,7 +22,8 @@ describe('Auth tests', function() {
 			'secret',
 			'localhost:8080',
 			'http://localhost:3030',
-			passportStatic
+			passportStatic,
+			identityService
 		)
 	})
 

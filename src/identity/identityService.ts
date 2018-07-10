@@ -3,16 +3,6 @@ import {AxiosInstance} from 'axios'
 export class IdentityService {
 	http: AxiosInstance
 
-	// constructor(baseUrl: string) {
-	// 	const http = axios.create({
-	// 		baseURL: this.baseUrl,
-	// 		headers: {
-	// 			'Content-Type': 'application/json',
-	// 		},
-	// 		timeout: 5000,
-	// 	})
-	// }
-
 	constructor(http: AxiosInstance) {
 		this.http = http
 	}

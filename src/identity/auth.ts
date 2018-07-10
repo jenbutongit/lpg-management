@@ -1,9 +1,9 @@
 import {NextFunction, Request, Response, Handler} from 'express'
-import * as identityservice from './identity-service'
 import * as identity from './identity'
-import * as oauth2 from 'passport-oauth2'
 import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
+import {IdentityService} from './identityService'
+import * as oauth2 from 'passport-oauth2'
 
 const logger = log4js.getLogger('config/passport')
 
@@ -13,19 +13,22 @@ export class Auth {
 	authenticationServiceUrl: string
 	callbackUrl: string
 	passportStatic: PassportStatic
+	identityService: IdentityService
 
 	constructor(
 		clientId: string,
 		clientSecret: string,
 		authenticationServiceUrl: string,
 		callbackUrl: string,
-		passportStatic: PassportStatic
+		passportStatic: PassportStatic,
+		identityService: IdentityService
 	) {
 		this.clientId = clientId
 		this.clientSecret = clientSecret
 		this.authenticationServiceUrl = authenticationServiceUrl
 		this.callbackUrl = callbackUrl
 		this.passportStatic = passportStatic
+		this.identityService = identityService
 	}
 
 	initialize(): Handler {
@@ -61,7 +64,9 @@ export class Auth {
 				profile.accessToken = accessToken
 
 				try {
-					const identityDetails = await identityservice.getDetails(accessToken)
+					const identityDetails = await this.identityService.getDetails(
+						accessToken
+					)
 
 					const combined = {
 						...profile,
@@ -88,7 +93,9 @@ export class Auth {
 			profile.accessToken = accessToken
 
 			try {
-				const identityDetails = await identityservice.getDetails(accessToken)
+				const identityDetails = await this.identityService.getDetails(
+					accessToken
+				)
 
 				const combined = {
 					...profile,
