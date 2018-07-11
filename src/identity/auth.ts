@@ -77,15 +77,15 @@ export class Auth {
 		this.passportStatic.use(strategy)
 	}
 
-	serializeUser(identityDetails: any) {
-		return this.passportStatic.serializeUser(identityDetails)
-	}
+	// serializeUser(identityDetails: any) {
+	// 	this.passportStatic.serializeUser(identityDetails)
+	// }
+	//
+	// deserializeUser(identityDetails: any) {
+	// 	return this.passportStatic.deserializeUser(identityDetails)
+	// }
 
-	deserializeUser(identityDetails: any) {
-		return this.passportStatic.deserializeUser(identityDetails)
-	}
-
-	authenticate() {
+	checkAuthenticated() {
 		return (req: Request, res: Response, next: NextFunction) => {
 			if (req.isAuthenticated()) {
 				return next()
@@ -93,6 +93,29 @@ export class Auth {
 
 			res.cookie('redirectTo', req.originalUrl)
 			res.redirect('/authenticate')
+		}
+	}
+
+	authenticate() {
+		const self = this
+		return () => {
+			self.passportStatic.authenticate('oauth2', {
+				failureFlash: true,
+				failureRedirect: '/',
+			})
+		}
+	}
+
+	redirect() {
+		return (req: Request, res: Response) => {
+			const redirect = req.cookies.redirectTo
+			if (!redirect) {
+				console.log('passport: session not present on express request')
+				res.sendStatus(500)
+				return
+			}
+			delete req.cookies.redirectTo
+			res.redirect(redirect)
 		}
 	}
 }

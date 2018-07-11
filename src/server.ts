@@ -34,7 +34,13 @@ app.use(ctx.default.auth.session())
 
 ctx.default.auth.configureStrategy()
 
-// app.use(passport.isAuthenticated)
+app.all(
+	'/authenticate',
+	ctx.default.auth.authenticate,
+	ctx.default.auth.redirect
+)
+
+app.use(ctx.default.auth.checkAuthenticated())
 
 app.get('/', ctx.default.homeController.index())
 

@@ -35,7 +35,7 @@ describe('Auth tests', function() {
 			request: Request,
 			response: Response,
 			next: NextFunction
-		) => void = auth.authenticate()
+		) => void = auth.checkAuthenticated()
 
 		const reponse: Response = mockRes()
 		const request: Request = <Request>{}
@@ -55,7 +55,7 @@ describe('Auth tests', function() {
 			request: Request,
 			response: Response,
 			next: NextFunction
-		) => void = auth.authenticate()
+		) => void = auth.checkAuthenticated()
 
 		const response: Response = mockRes()
 		const request: Request = <Request>{}
@@ -134,13 +134,72 @@ describe('Auth tests', function() {
 		)
 	})
 
-	it('serializeUser should call passport serializeUser()', function() {
-		passportStatic.serializeUser = sinon.stub()
+	// it('serializeUser should call passport serializeUser()', function() {
+	// 	passportStatic.serializeUser = sinon.stub()
+	//
+	// 	const identity: Identity = <Identity>sinon.createStubInstance(Identity)
+	//
+	// 	auth.serializeUser(identity)
+	//
+	// 	expect(passportStatic.serializeUser).calledOnceWith(identity)
+	// })
+	//
+	// it('serializeUser should call passport deserializeUser()', function() {
+	// 	passportStatic.deserializeUser = sinon.stub()
+	//
+	// 	const identity: Identity = <Identity>sinon.createStubInstance(Identity)
+	//
+	// 	auth.deserializeUser(identity)
+	//
+	// 	expect(passportStatic.deserializeUser).calledOnceWith(identity)
+	// })
 
-		const identity: Identity = <Identity> sinon.createStubInstance(Identity)
+	it('should call authenticate', function() {
+		const authRet: any = {authenticated: true}
+		passportStatic.authenticate = sinon
+			.stub()
+			.returns(authRet)
+			.withArgs('oauth2', {
+				failureFlash: true,
+				failureRedirect: '/',
+			})
 
-		auth.serializeUser(identity)
+		const authReturn = auth.authenticate()
 
-		expect(passportStatic.serializeUser).calledOnceWith(identity)
+		expect(passportStatic.authenticate).calledOnceWith('oauth2', {
+			failureFlash: true,
+			failureRedirect: '/',
+		})
+
+		expect(authReturn).to.eql(authRet)
+	})
+
+	it('should call sendStatus(500) if redirectTo value is not present', function() {
+		const redirect: (
+			request: Request,
+			response: Response
+		) => void = auth.redirect()
+
+		const reponse: Response = mockRes()
+		const request: Request = <Request>{cookies: {}}
+
+		redirect(request, reponse)
+
+		expect(reponse.sendStatus).calledOnceWith(500)
+	})
+
+	it('should call redirect if redirectTo value is present in cookie', function() {
+		const redirect: (
+			request: Request,
+			response: Response
+		) => void = auth.redirect()
+
+		const reponse: Response = mockRes()
+		const request: Request = <Request>{cookies: {redirectTo: '/'}}
+
+		redirect(request, reponse)
+
+		expect(reponse.redirect).calledOnceWith('/')
+		expect(request.cookies.redirectTo).to.be.undefined
 	})
 })
