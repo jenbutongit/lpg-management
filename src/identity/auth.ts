@@ -58,7 +58,7 @@ export class Auth {
 			},
 			this.verify()
 		)
-		this.useStrategy(strategy)
+		this.passportStatic.use(strategy)
 
 		this.passportStatic.serializeUser((user, done) => {
 			done(null, JSON.stringify(user))
@@ -97,10 +97,6 @@ export class Auth {
 				cb(e)
 			}
 		}
-	}
-
-	useStrategy(strategy: oauth2.Strategy) {
-		this.passportStatic.use(strategy)
 	}
 
 	checkAuthenticated() {
