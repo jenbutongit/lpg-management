@@ -4,12 +4,19 @@ import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
 import {Auth} from './identity/auth'
+import * as log4js from 'log4js'
+import * as config from './config'
 
+const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
+
 const appRoot = require('app-root-path')
 
+const {PORT = 3005} = process.env
 const app = express()
 const FileStore = sessionFileStore(session)
+
+log4js.configure(config.LOGGING)
 
 expressNunjucks(app, {})
 
@@ -48,6 +55,4 @@ app.use(ctx.default.auth.checkAuthenticated())
 
 app.get('/', ctx.default.homeController.index())
 
-app.listen(3030, () =>
-	console.log('Example app listening on port 3030! on ', appRoot)
-)
+app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
