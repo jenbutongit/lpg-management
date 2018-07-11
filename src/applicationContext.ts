@@ -1,8 +1,12 @@
+import * as config from './config'
+import * as log4js from 'log4js'
 import {HomeController} from './controllers/home'
 import axios, {AxiosInstance} from 'axios'
 import {IdentityService} from './identity/identityService'
 import {Auth} from './identity/auth'
 import * as passport from 'passport'
+
+log4js.configure(config.LOGGING)
 
 export class ApplicationContext {
 	public homeController: HomeController
@@ -14,20 +18,20 @@ export class ApplicationContext {
 		this.homeController = new HomeController()
 
 		this.axiosInstance = axios.create({
-			baseURL: 'http://localhost:8080',
+			baseURL: config.AUTHENTICATION.authenticationServiceUrl,
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			timeout: 15000,
+			timeout: config.REQUEST_TIMEOUT,
 		})
 
 		this.identityService = new IdentityService(this.axiosInstance)
 
 		this.auth = new Auth(
-			'f90a4080-e5e9-4a80-ace4-f738b4c9c30e',
-			'test',
-			'http://localhost:8080',
-			'http://localhost:3030',
+			config.AUTHENTICATION.managementClientId,
+			config.AUTHENTICATION.managementClientSecret,
+			config.AUTHENTICATION.authenticationServiceUrl,
+			config.AUTHENTICATION.callbackUrl,
 			passport,
 			this.identityService
 		)

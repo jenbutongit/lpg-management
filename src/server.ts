@@ -3,14 +3,17 @@ import * as ctx from './ApplicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
+import {Auth} from './identity/auth'
+
 const expressNunjucks = require('express-nunjucks')
+const appRoot = require('app-root-path')
+
 const app = express()
 const FileStore = sessionFileStore(session)
 
-var appRoot = require('app-root-path')
-app.set('views', appRoot + '/views')
-
 expressNunjucks(app, {})
+
+app.set('views', appRoot + '/views')
 
 app.use(
 	session({
@@ -19,7 +22,7 @@ app.use(
 			maxAge: 31536000,
 			secure: false,
 		},
-		name: 'lpg-management-ui',
+		name: 'lpg-management',
 		resave: true,
 		saveUninitialized: true,
 		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
@@ -36,7 +39,7 @@ app.use(ctx.default.auth.session())
 ctx.default.auth.configureStrategy()
 
 app.all(
-	'/authenticate',
+	Auth.AUTHENTICATION_PATH,
 	ctx.default.auth.authenticate(),
 	ctx.default.auth.redirect()
 )

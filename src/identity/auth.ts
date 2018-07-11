@@ -8,6 +8,13 @@ import {Identity} from './identity'
 const logger = log4js.getLogger('config/passport')
 
 export class Auth {
+	public static get AUTHENTICATION_PATH(): string {
+		return '/authenticate'
+	}
+	public static get REDIRECT_COOKIE_NAME(): string {
+		return 'redirectTo'
+	}
+
 	clientId: string
 	clientSecret: string
 	authenticationServiceUrl: string
@@ -59,7 +66,15 @@ export class Auth {
 
 		this.passportStatic.deserializeUser<Identity, string>(
 			async (data, done) => {
-				done(null, new Identity('', [], ''))
+				let jsonResponse = JSON.parse(data)
+				done(
+					null,
+					new Identity(
+						jsonResponse.uid,
+						jsonResponse.roles,
+						jsonResponse.accessToken
+					)
+				)
 			}
 		)
 	}
@@ -94,8 +109,8 @@ export class Auth {
 				return next()
 			}
 
-			res.cookie('redirectTo', req.originalUrl)
-			res.redirect('/authenticate')
+			res.cookie(Auth.REDIRECT_COOKIE_NAME, req.originalUrl)
+			res.redirect(Auth.AUTHENTICATION_PATH)
 		}
 	}
 
@@ -108,13 +123,13 @@ export class Auth {
 
 	redirect() {
 		return (req: Request, res: Response) => {
-			const redirect = req.cookies.redirectTo
+			const redirect = req.cookies[Auth.REDIRECT_COOKIE_NAME]
 			if (!redirect) {
-				console.log('passport: session not present on express request')
+				logger.info('passport: session not present on express request')
 				res.sendStatus(500)
 				return
 			}
-			delete req.cookies.redirectTo
+			delete req.cookies[Auth.REDIRECT_COOKIE_NAME]
 			res.redirect(redirect)
 		}
 	}
