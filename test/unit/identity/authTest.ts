@@ -107,8 +107,40 @@ describe('Auth tests', function() {
 
 		verifyCallback(accessToken, 'refresh-token', null, passportCallback).then(
 			function() {
-				expect(passportCallback).to.have.been.calledOnce
+				expect(passportCallback).to.have.been.calledOnceWith(null, identity)
 			}
 		)
+	})
+
+	it('verify should catch and log errors', function() {
+		const verifyCallback = auth.verify()
+
+		const accessToken = 'access-token'
+
+		const error: Error = new Error('Test Error')
+
+		const getDetails = sinon
+			.stub()
+			.withArgs(accessToken)
+			.throws(error)
+
+		identityService.getDetails = getDetails
+		const passportCallback = sinon.stub()
+
+		verifyCallback(accessToken, 'refresh-token', null, passportCallback).then(
+			function() {
+				expect(passportCallback).to.have.been.calledOnceWith(error)
+			}
+		)
+	})
+
+	it('serializeUser should call passport serializeUser()', function() {
+		passportStatic.serializeUser = sinon.stub()
+
+		const identity: Identity = <Identity> sinon.createStubInstance(Identity)
+
+		auth.serializeUser(identity)
+
+		expect(passportStatic.serializeUser).calledOnceWith(identity)
 	})
 })
