@@ -13,3 +13,5 @@ yarn.lock
 files
 data.json
 modules.json
+.nyc_output
+coverage
