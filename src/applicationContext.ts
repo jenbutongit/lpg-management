@@ -18,7 +18,7 @@ export class ApplicationContext {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			timeout: 1500,
+			timeout: 15000,
 		})
 
 		this.identityService = new IdentityService(this.axiosInstance)

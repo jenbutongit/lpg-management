@@ -3,7 +3,7 @@ import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
 import * as oauth2 from 'passport-oauth2'
-import {Identity} from "./identity";
+import {Identity} from './identity'
 
 const logger = log4js.getLogger('config/passport')
 
@@ -57,9 +57,11 @@ export class Auth {
 			done(null, JSON.stringify(user))
 		})
 
-		this.passportStatic.deserializeUser<Identity, string>(async (data, done) => {
-			done(null, new Identity('', [],''))
-		})
+		this.passportStatic.deserializeUser<Identity, string>(
+			async (data, done) => {
+				done(null, new Identity('', [], ''))
+			}
+		)
 	}
 
 	verify() {

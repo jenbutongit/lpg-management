@@ -2,7 +2,7 @@ import * as express from 'express'
 import * as ctx from './ApplicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
-
+import * as cookieParser from 'cookie-parser'
 const expressNunjucks = require('express-nunjucks')
 const app = express()
 const FileStore = sessionFileStore(session)
@@ -28,6 +28,7 @@ app.use(
 		}),
 	})
 )
+app.use(cookieParser())
 
 app.use(ctx.default.auth.initialize())
 app.use(ctx.default.auth.session())
@@ -37,7 +38,7 @@ ctx.default.auth.configureStrategy()
 app.all(
 	'/authenticate',
 	ctx.default.auth.authenticate(),
-	ctx.default.auth.redirect
+	ctx.default.auth.redirect()
 )
 
 app.use(ctx.default.auth.checkAuthenticated())
