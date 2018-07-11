@@ -3,6 +3,7 @@ import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
 import * as oauth2 from 'passport-oauth2'
+import {Identity} from "./identity";
 
 const logger = log4js.getLogger('config/passport')
 
@@ -51,6 +52,14 @@ export class Auth {
 			this.verify()
 		)
 		this.useStrategy(strategy)
+
+		this.passportStatic.serializeUser((user, done) => {
+			done(null, JSON.stringify(user))
+		})
+
+		this.passportStatic.deserializeUser<Identity, string>(async (data, done) => {
+			done(null, new Identity('', [],''))
+		})
 	}
 
 	verify() {
@@ -77,14 +86,6 @@ export class Auth {
 		this.passportStatic.use(strategy)
 	}
 
-	// serializeUser(identityDetails: any) {
-	// 	this.passportStatic.serializeUser(identityDetails)
-	// }
-	//
-	// deserializeUser(identityDetails: any) {
-	// 	return this.passportStatic.deserializeUser(identityDetails)
-	// }
-
 	checkAuthenticated() {
 		return (req: Request, res: Response, next: NextFunction) => {
 			if (req.isAuthenticated()) {
@@ -97,13 +98,10 @@ export class Auth {
 	}
 
 	authenticate() {
-		const self = this
-		return () => {
-			self.passportStatic.authenticate('oauth2', {
-				failureFlash: true,
-				failureRedirect: '/',
-			})
-		}
+		return this.passportStatic.authenticate('oauth2', {
+			failureFlash: true,
+			failureRedirect: '/',
+		})
 	}
 
 	redirect() {

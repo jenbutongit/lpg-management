@@ -36,7 +36,7 @@ ctx.default.auth.configureStrategy()
 
 app.all(
 	'/authenticate',
-	ctx.default.auth.authenticate,
+	ctx.default.auth.authenticate(),
 	ctx.default.auth.redirect
 )
 
