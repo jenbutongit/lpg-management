@@ -10,6 +10,7 @@ import {IdentityService} from '../../../src/identity/identityService'
 import {Auth} from '../../../src/identity/auth'
 // import * as oauth2 from 'passport-oauth2'
 import {Identity} from '../../../src/identity/identity'
+import {Strategy} from "passport-oauth2";
 // import {VerifyCallback} from 'passport-oauth2'
 
 chai.use(sinonChai)
@@ -134,26 +135,6 @@ describe('Auth tests', function() {
 		)
 	})
 
-	// it('serializeUser should call passport serializeUser()', function() {
-	// 	passportStatic.serializeUser = sinon.stub()
-	//
-	// 	const identity: Identity = <Identity>sinon.createStubInstance(Identity)
-	//
-	// 	auth.serializeUser(identity)
-	//
-	// 	expect(passportStatic.serializeUser).calledOnceWith(identity)
-	// })
-	//
-	// it('serializeUser should call passport deserializeUser()', function() {
-	// 	passportStatic.deserializeUser = sinon.stub()
-	//
-	// 	const identity: Identity = <Identity>sinon.createStubInstance(Identity)
-	//
-	// 	auth.deserializeUser(identity)
-	//
-	// 	expect(passportStatic.deserializeUser).calledOnceWith(identity)
-	// })
-
 	it('should call authenticate', function() {
 		const authRet: any = {authenticated: true}
 		passportStatic.authenticate = sinon
@@ -201,5 +182,22 @@ describe('Auth tests', function() {
 
 		expect(reponse.redirect).calledOnceWith('/')
 		expect(request.cookies.redirectTo).to.be.undefined
+	})
+
+
+	it('should configure passport with serialize methods and strategy', () => {
+		const deserializeUser = sinon.stub();
+		const serializeUser = sinon.stub();
+		const useStrategy = sinon.stub().withArgs(sinon.match.instanceOf(Strategy));
+
+		passportStatic.deserializeUser = deserializeUser;
+		passportStatic.serializeUser = serializeUser;
+		passportStatic.use = useStrategy
+
+		auth.configureStrategy()
+
+		expect(passportStatic.deserializeUser).to.have.been.calledOnce;
+		expect(passportStatic.serializeUser).to.have.been.calledOnce;
+		expect(passportStatic.use).to.have.been.calledOnce;
 	})
 })
