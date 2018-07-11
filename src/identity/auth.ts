@@ -64,19 +64,7 @@ export class Auth {
 			done(null, JSON.stringify(user))
 		})
 
-		this.passportStatic.deserializeUser<Identity, string>(
-			async (data, done) => {
-				let jsonResponse = JSON.parse(data)
-				done(
-					null,
-					new Identity(
-						jsonResponse.uid,
-						jsonResponse.roles,
-						jsonResponse.accessToken
-					)
-				)
-			}
-		)
+		this.passportStatic.deserializeUser<Identity, string>(this.deserializeUser())
 	}
 
 	verify() {
@@ -128,5 +116,20 @@ export class Auth {
 			delete req.cookies[Auth.REDIRECT_COOKIE_NAME]
 			res.redirect(redirect)
 		}
+	}
+
+	deserializeUser() {
+		return async (data: string, done: any) => {
+			let jsonResponse = JSON.parse(data)
+			done(
+				null,
+				new Identity(
+					jsonResponse.uid,
+					jsonResponse.roles,
+					jsonResponse.accessToken
+				)
+			)
+		}
+
 	}
 }

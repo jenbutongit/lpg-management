@@ -8,10 +8,8 @@ import {expect} from 'chai'
 import {PassportStatic} from 'passport'
 import {IdentityService} from '../../../src/identity/identityService'
 import {Auth} from '../../../src/identity/auth'
-// import * as oauth2 from 'passport-oauth2'
 import {Identity} from '../../../src/identity/identity'
 import {Strategy} from "passport-oauth2";
-// import {VerifyCallback} from 'passport-oauth2'
 
 chai.use(sinonChai)
 
@@ -199,5 +197,18 @@ describe('Auth tests', function() {
 		expect(passportStatic.deserializeUser).to.have.been.calledOnce;
 		expect(passportStatic.serializeUser).to.have.been.calledOnce;
 		expect(passportStatic.use).to.have.been.calledOnce;
+	})
+
+
+	it('should deserialize json to identity', () => {
+		const deserializeCallback = auth.deserializeUser();
+		const data: string = '{"uid": "abc123", "roles": ["role1"], "accessToken": "access-token"}';
+		const identity: Identity = new Identity('abc123', ['role1'], 'access-token');
+
+		const doneCallback = sinon.stub();
+
+		deserializeCallback(data, doneCallback);
+
+		expect(doneCallback).to.have.been.calledOnceWith(null, identity);
 	})
 })
