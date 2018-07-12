@@ -39,18 +39,7 @@ app.use(
 )
 app.use(cookieParser())
 
-app.use(ctx.default.auth.initialize())
-app.use(ctx.default.auth.session())
-
-ctx.default.auth.configureStrategy()
-
-app.all(
-	config.AUTHENTICATION_PATH,
-	ctx.default.auth.authenticate(),
-	ctx.default.auth.redirect()
-)
-
-app.use(ctx.default.auth.checkAuthenticated())
+ctx.default.auth.configure(app)
 
 app.get('/', ctx.default.homeController.index())
 

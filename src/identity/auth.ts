@@ -34,6 +34,17 @@ export class Auth {
 		this.identityService = identityService
 	}
 
+	configure(app: any) {
+		app.use(this.initialize())
+		app.use(this.session())
+
+		this.configureStrategy()
+
+		app.all(config.AUTHENTICATION_PATH, this.authenticate(), this.redirect())
+
+		app.use(this.checkAuthenticated())
+	}
+
 	initialize(): Handler {
 		return this.passportStatic.initialize()
 	}
