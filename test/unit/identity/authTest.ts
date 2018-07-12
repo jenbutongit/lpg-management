@@ -153,7 +153,7 @@ describe('Auth tests', function() {
 		expect(authReturn).to.eql(authRet)
 	})
 
-	it('should call sendStatus(500) if redirectTo value is not present', function() {
+	it('should call redirect to / if redirectTo value is not present', function() {
 		const redirect: (
 			request: Request,
 			response: Response
@@ -164,7 +164,7 @@ describe('Auth tests', function() {
 
 		redirect(request, reponse)
 
-		expect(reponse.sendStatus).calledOnceWith(500)
+		expect(reponse.redirect).calledOnceWith('/')
 	})
 
 	it('should call redirect if redirectTo value is present in cookie', function() {
