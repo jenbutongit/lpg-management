@@ -1,4 +1,5 @@
 import {NextFunction, Request, Response, Handler} from 'express'
+import * as config from '../config'
 import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
@@ -8,12 +9,7 @@ import {Identity} from './identity'
 const logger = log4js.getLogger('config/passport')
 
 export class Auth {
-	public static get AUTHENTICATION_PATH(): string {
-		return '/authenticate'
-	}
-	public static get REDIRECT_COOKIE_NAME(): string {
-		return 'redirectTo'
-	}
+	readonly REDIRECT_COOKIE_NAME: string = 'redirectTo'
 
 	clientId: string
 	clientSecret: string
@@ -64,7 +60,9 @@ export class Auth {
 			done(null, JSON.stringify(user))
 		})
 
-		this.passportStatic.deserializeUser<Identity, string>(this.deserializeUser())
+		this.passportStatic.deserializeUser<Identity, string>(
+			this.deserializeUser()
+		)
 	}
 
 	verify() {
@@ -93,8 +91,8 @@ export class Auth {
 				return next()
 			}
 
-			res.cookie(Auth.REDIRECT_COOKIE_NAME, req.originalUrl)
-			res.redirect(Auth.AUTHENTICATION_PATH)
+			res.cookie(this.REDIRECT_COOKIE_NAME, req.originalUrl)
+			res.redirect(config.AUTHENTICATION_PATH)
 		}
 	}
 
@@ -107,13 +105,15 @@ export class Auth {
 
 	redirect() {
 		return (req: Request, res: Response) => {
-			const redirect = req.cookies[Auth.REDIRECT_COOKIE_NAME]
+			const redirect = req.cookies[this.REDIRECT_COOKIE_NAME]
 			if (!redirect) {
-				logger.info('passport: session not present on express request')
-				res.sendStatus(500)
+				logger.info(
+					'Passport session not present on express request - redirecting to root'
+				)
+				res.redirect('/')
 				return
 			}
-			delete req.cookies[Auth.REDIRECT_COOKIE_NAME]
+			delete req.cookies[this.REDIRECT_COOKIE_NAME]
 			res.redirect(redirect)
 		}
 	}
@@ -130,6 +130,5 @@ export class Auth {
 				)
 			)
 		}
-
 	}
 }

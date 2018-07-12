@@ -36,12 +36,13 @@ export const LOGGING = set(
 )
 
 export const AUTHENTICATION = set({
-	managementClientId:
-		env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
-	managementClientSecret: env.OAUTH_CLIENT_SECRET || 'test',
+	clientId: env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
+	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl:
 		env.AUTHENTICATION_SERVICE_URL || 'http://identity.local.cshr.digital:8080',
 	callbackUrl: env.CALLBACK_URL || 'http://lpg.local.cshr.digital:3005',
 })
 
 export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000
+
+export const AUTHENTICATION_PATH = '/authenticate'

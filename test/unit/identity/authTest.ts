@@ -9,7 +9,7 @@ import {PassportStatic} from 'passport'
 import {IdentityService} from '../../../src/identity/identityService'
 import {Auth} from '../../../src/identity/auth'
 import {Identity} from '../../../src/identity/identity'
-import {Strategy} from "passport-oauth2";
+import {Strategy} from 'passport-oauth2'
 
 chai.use(sinonChai)
 
@@ -182,33 +182,32 @@ describe('Auth tests', function() {
 		expect(request.cookies.redirectTo).to.be.undefined
 	})
 
-
 	it('should configure passport with serialize methods and strategy', () => {
-		const deserializeUser = sinon.stub();
-		const serializeUser = sinon.stub();
-		const useStrategy = sinon.stub().withArgs(sinon.match.instanceOf(Strategy));
+		const deserializeUser = sinon.stub()
+		const serializeUser = sinon.stub()
+		const useStrategy = sinon.stub().withArgs(sinon.match.instanceOf(Strategy))
 
-		passportStatic.deserializeUser = deserializeUser;
-		passportStatic.serializeUser = serializeUser;
+		passportStatic.deserializeUser = deserializeUser
+		passportStatic.serializeUser = serializeUser
 		passportStatic.use = useStrategy
 
 		auth.configureStrategy()
 
-		expect(passportStatic.deserializeUser).to.have.been.calledOnce;
-		expect(passportStatic.serializeUser).to.have.been.calledOnce;
-		expect(passportStatic.use).to.have.been.calledOnce;
+		expect(passportStatic.deserializeUser).to.have.been.calledOnce
+		expect(passportStatic.serializeUser).to.have.been.calledOnce
+		expect(passportStatic.use).to.have.been.calledOnce
 	})
 
-
 	it('should deserialize json to identity', () => {
-		const deserializeCallback = auth.deserializeUser();
-		const data: string = '{"uid": "abc123", "roles": ["role1"], "accessToken": "access-token"}';
-		const identity: Identity = new Identity('abc123', ['role1'], 'access-token');
+		const deserializeCallback = auth.deserializeUser()
+		const data: string =
+			'{"uid": "abc123", "roles": ["role1"], "accessToken": "access-token"}'
+		const identity: Identity = new Identity('abc123', ['role1'], 'access-token')
 
-		const doneCallback = sinon.stub();
+		const doneCallback = sinon.stub()
 
-		deserializeCallback(data, doneCallback);
+		deserializeCallback(data, doneCallback)
 
-		expect(doneCallback).to.have.been.calledOnceWith(null, identity);
+		expect(doneCallback).to.have.been.calledOnceWith(null, identity)
 	})
 })

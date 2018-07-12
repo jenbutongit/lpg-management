@@ -18,7 +18,6 @@ export class ApplicationContext {
 		this.homeController = new HomeController()
 
 		this.axiosInstance = axios.create({
-			baseURL: config.AUTHENTICATION.authenticationServiceUrl,
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -28,8 +27,8 @@ export class ApplicationContext {
 		this.identityService = new IdentityService(this.axiosInstance)
 
 		this.auth = new Auth(
-			config.AUTHENTICATION.managementClientId,
-			config.AUTHENTICATION.managementClientSecret,
+			config.AUTHENTICATION.clientId,
+			config.AUTHENTICATION.clientSecret,
 			config.AUTHENTICATION.authenticationServiceUrl,
 			config.AUTHENTICATION.callbackUrl,
 			passport,

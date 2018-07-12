@@ -3,7 +3,6 @@ import * as ctx from './ApplicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
-import {Auth} from './identity/auth'
 import * as log4js from 'log4js'
 import * as config from './config'
 
@@ -46,7 +45,7 @@ app.use(ctx.default.auth.session())
 ctx.default.auth.configureStrategy()
 
 app.all(
-	Auth.AUTHENTICATION_PATH,
+	config.AUTHENTICATION_PATH,
 	ctx.default.auth.authenticate(),
 	ctx.default.auth.redirect()
 )
