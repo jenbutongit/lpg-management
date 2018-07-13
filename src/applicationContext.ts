@@ -5,6 +5,7 @@ import axios, {AxiosInstance} from 'axios'
 import {IdentityService} from './identity/identityService'
 import {Auth} from './identity/auth'
 import * as passport from 'passport'
+import {AuthConfig} from './identity/authConfig'
 
 log4js.configure(config.LOGGING)
 
@@ -27,10 +28,13 @@ export class ApplicationContext {
 		this.identityService = new IdentityService(this.axiosInstance)
 
 		this.auth = new Auth(
-			config.AUTHENTICATION.clientId,
-			config.AUTHENTICATION.clientSecret,
-			config.AUTHENTICATION.authenticationServiceUrl,
-			config.AUTHENTICATION.callbackUrl,
+			new AuthConfig(
+				config.AUTHENTICATION.clientId,
+				config.AUTHENTICATION.clientSecret,
+				config.AUTHENTICATION.authenticationServiceUrl,
+				config.AUTHENTICATION.callbackUrl,
+				config.AUTHENTICATION_PATH
+			),
 			passport,
 			this.identityService
 		)

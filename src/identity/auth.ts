@@ -5,31 +5,23 @@ import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
 import * as oauth2 from 'passport-oauth2'
 import {Identity} from './identity'
+import {AuthConfig} from './authConfig'
 
 const logger = log4js.getLogger('config/passport')
 
 export class Auth {
 	readonly REDIRECT_COOKIE_NAME: string = 'redirectTo'
 
-	clientId: string
-	clientSecret: string
-	authenticationServiceUrl: string
-	callbackUrl: string
+	config: AuthConfig
 	passportStatic: PassportStatic
 	identityService: IdentityService
 
 	constructor(
-		clientId: string,
-		clientSecret: string,
-		authenticationServiceUrl: string,
-		callbackUrl: string,
+		config: AuthConfig,
 		passportStatic: PassportStatic,
 		identityService: IdentityService
 	) {
-		this.clientId = clientId
-		this.clientSecret = clientSecret
-		this.authenticationServiceUrl = authenticationServiceUrl
-		this.callbackUrl = callbackUrl
+		this.config = config
 		this.passportStatic = passportStatic
 		this.identityService = identityService
 	}
@@ -57,11 +49,13 @@ export class Auth {
 		let strategy: oauth2.Strategy
 		strategy = new oauth2.Strategy(
 			{
-				authorizationURL: `${this.authenticationServiceUrl}/oauth/authorize`,
-				callbackURL: `${this.callbackUrl}/authenticate`,
-				clientID: this.clientId,
-				clientSecret: this.clientSecret,
-				tokenURL: `${this.authenticationServiceUrl}/oauth/token`,
+				authorizationURL: `${
+					this.config.authenticationServiceUrl
+				}/oauth/authorize`,
+				callbackURL: `${this.config.callbackUrl}/authenticate`,
+				clientID: this.config.clientId,
+				clientSecret: this.config.clientSecret,
+				tokenURL: `${this.config.authenticationServiceUrl}/oauth/token`,
 			},
 			this.verify()
 		)
@@ -103,7 +97,7 @@ export class Auth {
 			}
 
 			res.cookie(this.REDIRECT_COOKIE_NAME, req.originalUrl)
-			res.redirect(config.AUTHENTICATION_PATH)
+			res.redirect(this.config.authenticationPath)
 		}
 	}
 

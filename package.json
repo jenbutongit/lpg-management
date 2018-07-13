@@ -7,7 +7,7 @@
     "test": "npm run compile && find dist -name '*Test.js' | xargs ./node_modules/nyc/bin/nyc.js --reporter=text --reporter=html ./node_modules/mocha/bin/mocha",
     "build": "npm run sass:all && npm run compile",
     "clean": "./bin/setup-dist",
-    "compile": "tsc",
+    "compile": "rm -rf dist && ./node_modules/typescript/bin/tsc",
     "start": "npm run compile && node dist/build/src/server.js"
   },
   "repository": {

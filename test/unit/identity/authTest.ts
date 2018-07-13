@@ -10,6 +10,7 @@ import {IdentityService} from '../../../src/identity/identityService'
 import {Auth} from '../../../src/identity/auth'
 import {Identity} from '../../../src/identity/identity'
 import {Strategy} from 'passport-oauth2'
+import {AuthConfig} from "../../../src/identity/authConfig";
 
 chai.use(sinonChai)
 
@@ -18,15 +19,22 @@ describe('Auth tests', function() {
 	let passportStatic: PassportStatic = <PassportStatic>{}
 	let identityService: IdentityService = <IdentityService>{}
 
+	const clientId = 'clientId'
+	const clientSecret = 'secret'
+	const authenticationServiceUrl = 'localhost:8080'
+	const callbackUrl = 'http://localhost:3030'
+	const authenticationPath = 'authentication-path'
+
 	beforeEach(() => {
-		auth = new Auth(
-			'clientId',
-			'secret',
-			'localhost:8080',
-			'http://localhost:3030',
-			passportStatic,
-			identityService
+		const config = new AuthConfig(
+			clientId,
+			clientSecret,
+			authenticationServiceUrl,
+			callbackUrl,
+			authenticationPath
 		)
+
+		auth = new Auth(config, passportStatic, identityService)
 	})
 
 	it('should return next function if user is authenticated', function() {
