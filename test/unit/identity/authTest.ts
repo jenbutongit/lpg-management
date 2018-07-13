@@ -10,7 +10,7 @@ import {IdentityService} from '../../../src/identity/identityService'
 import {Auth} from '../../../src/identity/auth'
 import {Identity} from '../../../src/identity/identity'
 import {Strategy} from 'passport-oauth2'
-import {AuthConfig} from "../../../src/identity/authConfig";
+import {AuthConfig} from '../../../src/identity/authConfig'
 
 chai.use(sinonChai)
 
@@ -80,7 +80,7 @@ describe('Auth tests', function() {
 			'redirectTo',
 			originalUrl
 		)
-		expect(response.redirect).to.have.been.calledOnceWith('/authenticate')
+		expect(response.redirect).to.have.been.calledOnceWith(authenticationPath)
 	})
 
 	it('should call passportStatic initialize', function() {
