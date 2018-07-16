@@ -28,7 +28,7 @@ stage "Pulling the latest lpg-management docker image"
 docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
 docker pull cshr/lpg-management || true
 
-stage "Building the new lpg-management docker image"
+stage "Building the new lpg-management docker image "
 docker build --cache-from cshr/lpg-management:latest --build-arg VERSION=${TRAVIS_COMMIT} -t cshr/lpg-management:${TRAVIS_COMMIT} .
 
 BRANCH_TAG=`echo ${TRAVIS_PULL_REQUEST_BRANCH:-${TRAVIS_BRANCH}} | sed 's/\//-/g'`
