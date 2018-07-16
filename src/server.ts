@@ -1,5 +1,5 @@
 import * as express from 'express'
-import * as ctx from './ApplicationContext'
+import * as ctx from './applicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
