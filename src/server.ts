@@ -41,8 +41,6 @@ app.use(
 )
 app.use(serveStatic(appRoot + '/views/assets'))
 
-console.log(appRoot + '/views/assets')
-
 app.use(cookieParser())
 
 ctx.default.auth.configure(app)
