@@ -2,7 +2,7 @@ import {AuthConfig} from '../../../src/identity/authConfig'
 import {expect} from 'chai'
 
 describe('AuthConfig tests', () => {
-	const clientId: string = 'client-id'
+	const clientId: string = 'client-_id'
 	const clientSecret: string = 'client-secret'
 	const authenticationServiceUrl: string = 'authentication-service-url'
 	const callbackUrl: string = 'callback-url'

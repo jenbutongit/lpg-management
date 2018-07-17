@@ -4,7 +4,7 @@ import {expect} from 'chai'
 
 describe('Identity tests', () => {
 	it('hasRoles() should return true if identity contains role', () => {
-		const uid: string = 'user-id'
+		const uid: string = 'user-_id'
 		const roles: string[] = ['role1', 'role2']
 		const accessToken: string = 'access-token'
 
@@ -16,7 +16,7 @@ describe('Identity tests', () => {
 	})
 
 	it('hasRoles() should return true if identity has any of the roles specified', () => {
-		const uid: string = 'user-id'
+		const uid: string = 'user-_id'
 		const roles: string[] = ['role1', 'role2']
 		const accessToken: string = 'access-token'
 
