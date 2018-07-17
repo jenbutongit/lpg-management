@@ -16,6 +16,33 @@
                 </div>
             </div>
         </div>
+        {% for x in range(10) %}
+        <div>
+            <span>Course {{ x + 1 }}</span>
+        </div>
+        {% endfor %}
+        {% if paginatedResults.totalResults !== 0 %}
+        <div class="pager">
+            <div class="pager__controls">
+                {% if paginatedResults.currentPage > 0 %}
+                <a class="pager__prev" href="/search?q={{query}}{courseType ? '&courseType=' + courseType.split(',').join('&courseType=') : ''}&s={{searchResults.size}}&p={{searchResults.page - 1}}">Prev</a>
+                {% endif %}
+
+                {% for x in range(paginatedResults.pageCount) %}
+                {% if x === paginatedResults.currentPage %}
+                <span>{{ x + 1 }}</span>
+                {% else %}
+                <a href="/search?q={{query}}{courseType ? '&courseType=' + courseType.split(',').join('&courseType=') : ''}&s={{searchResults.size}}&p={{ x+1 }}">{{ x+1 }}</a>
+                {% endif %}
+                {% endfor %}
+
+                {% if paginatedResults.currentPage != endResult %}
+                <a class="pager__next" href="/search?q={{query}}{courseType ? '&courseType=' + courseType.split(',').join('&courseType=') : ''}&s={{searchResults.size}}&p={{searchResults.page + 1}}">Next</a>
+                {% endif %}
+
+                <div class="pager__summary">Showing {{ paginatedResults.firstResult }} - {{ paginatedResults.lastResult }} of {{ paginatedResults.totalResults }}</div>
+            </div>
+            {% endif %}
     </div>
 </Page>
 {% endblock %}
