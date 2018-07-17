@@ -38,7 +38,11 @@ app.use(
 		}),
 	})
 )
-app.use(serveStatic(appRoot + '/views/assets'))
+app.use(serveStatic(appRoot + '/dist/views/assets'))
+app.use(
+	'/assets',
+	express.static(appRoot + '/node_modules/govuk-frontend/assets')
+)
 app.use('/scripts', express.static(appRoot + '/node_modules/govuk-frontend/'))
 
 app.use(cookieParser())

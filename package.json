@@ -4,11 +4,11 @@
   "description": "lpg admin application",
   "main": "server",
   "scripts": {
-    "clean": "rm -rf dist",
+    "clean": "./bin/setup-dist && rm -rf dist",
     "sass": "node-sass views/assets/styles/main.scss dist/views/assets/styles/main.css --output-style compressed",
     "test": "npm run compile && find dist -name '*Test.js' | xargs ./node_modules/nyc/bin/nyc.js --reporter=text --reporter=html ./node_modules/mocha/bin/mocha",
     "compile": "./node_modules/typescript/bin/tsc",
-    "build": "npm run clean && npm run sass && npm run compile",
+    "build": "npm run sass && npm run compile",
     "start": "npm run build && node dist/build/src/server.js"
   },
   "repository": {
