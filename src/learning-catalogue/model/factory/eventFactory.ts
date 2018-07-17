@@ -2,6 +2,10 @@ import {Event} from '../event'
 import * as moment from 'moment'
 
 export class EventFactory {
+	constructor() {
+		this.create = this.create.bind(this)
+	}
+
 	create(data: any) {
 		const event: Event = new Event()
 

@@ -9,6 +9,8 @@ export class ModuleFactory {
 	constructor(audienceFactory: AudienceFactory, eventFactory: EventFactory) {
 		this.audienceFactory = audienceFactory
 		this.eventFactory = eventFactory
+
+		this.create = this.create.bind(this)
 	}
 
 	create(data: any) {

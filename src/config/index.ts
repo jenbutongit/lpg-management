@@ -46,3 +46,11 @@ export const AUTHENTICATION = set({
 export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000
 
 export const AUTHENTICATION_PATH = '/authenticate'
+
+export const COURSE_CATALOGUE = set({
+	auth: {
+		password: env.COURSE_CATALOGUE_PASS || 'password',
+		username: env.COURSE_CATALOGUE_USER || 'user',
+	},
+	url: env.COURSE_CATALOGUE_URL || 'http://localhost:9001',
+})

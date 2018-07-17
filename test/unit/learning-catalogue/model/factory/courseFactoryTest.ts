@@ -12,7 +12,8 @@ describe('CourseFactory tests', () => {
 
 	beforeEach(() => {
 		moduleFactory = <ModuleFactory>{}
-		courseFactory = new CourseFactory(moduleFactory)
+		courseFactory = new CourseFactory()
+		courseFactory.moduleFactory = moduleFactory
 	})
 
 	it('should create a a Course from data', () => {

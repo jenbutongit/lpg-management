@@ -2,6 +2,10 @@ import {Audience} from '../audience'
 import * as moment from 'moment'
 
 export class AudienceFactory {
+	constructor() {
+		this.create = this.create.bind(this)
+	}
+
 	create(data: any) {
 		const audience: Audience = new Audience()
 		audience.areasOfWork = data.areasOfWork
