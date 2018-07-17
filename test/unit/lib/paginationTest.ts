@@ -20,6 +20,6 @@ describe('Pagination tests', () => {
 		expect(paginatedResults.firstResult).to.be.eql(1)
 		expect(paginatedResults.lastResult).to.be.eql(10)
 		expect(paginatedResults.pageCount).to.be.eql(1)
-		expect(paginatedResults.currentPage).to.be.eql(1)
+		expect(paginatedResults.currentPage).to.be.eql(0)
 	})
 })
