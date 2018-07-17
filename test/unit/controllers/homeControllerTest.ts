@@ -1,5 +1,5 @@
 import {beforeEach, describe, it} from 'mocha'
-import {HomeController} from '../../../src/controllers/home'
+import {HomeController} from '../../../src/controllers/homeController'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'

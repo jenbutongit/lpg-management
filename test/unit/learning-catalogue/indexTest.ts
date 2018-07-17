@@ -85,4 +85,70 @@ describe('Learning Catalogue tests', () => {
 			expect(result.totalResults).to.eql(32)
 		})
 	})
+
+	it('should return empty list of results if results are null', () => {
+		const response = {
+			data: {
+				results: null,
+				page: 0,
+				totalResults: 32,
+				size: 10,
+			},
+		}
+
+		const get = sinon
+			.stub()
+			.returns(
+				new Promise((resolve, reject) => {
+					resolve(response)
+				})
+			)
+			.withArgs('/courses')
+
+		http.get = get
+
+		const create = sinon.stub()
+		courseFactory.create = create
+
+		learningCatalogue.listAll().then(result => {
+			expect(create).to.not.have.been.called
+			expect(result.results).to.eql([])
+			expect(result.page).to.eql(0)
+			expect(result.size).to.eql(10)
+			expect(result.totalResults).to.eql(32)
+		})
+	})
+
+	it('Should throw error if there is a problem with request to learning catalogue', async () => {
+		const error: Error = new Error('Error thrown from stub')
+
+		const get = sinon.stub().throws(error)
+
+		http.get = get
+
+		await expect(learningCatalogue.listAll()).to.be.rejectedWith(
+			`Error listing all courses - ${error}`
+		)
+	})
+
+	it('should be able to set axios instance', () => {
+		const axios: AxiosInstance = <AxiosInstance>{}
+		learningCatalogue.http = axios
+
+		expect(learningCatalogue.http).to.equal(axios)
+	})
+
+	it('should be able to set config', () => {
+		const config: LearningCatalogueConfig = <LearningCatalogueConfig>{}
+		learningCatalogue.config = config
+
+		expect(learningCatalogue.config).to.equal(config)
+	})
+
+	it('should be able to set course factory', () => {
+		const courseFactory: CourseFactory = <CourseFactory>{}
+		learningCatalogue.courseFactory = courseFactory
+
+		expect(learningCatalogue.courseFactory).to.equal(courseFactory)
+	})
 })
