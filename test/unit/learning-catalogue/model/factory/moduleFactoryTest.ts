@@ -96,4 +96,38 @@ describe('ModuleFactory tests', () => {
 		expect(result.audiences[0].frequency).to.equal(audienceFrequency)
 		expect(result.audiences[0].mandatory).to.equal(audienceMandatory)
 	})
+
+	it('should set events and audiense to emplty lists if null', () => {
+		const type: string = 'face-to-face'
+		const productCode: string = 'F13'
+		const id: string = 'MBlZJv-ZRDCYZsCByjzRuQ'
+		const title: string = 'module title'
+		const description: string = 'module description'
+		const duration: number = 3600
+		const price: number = 100
+
+		const data: object = {
+			type: type,
+			productCode: productCode,
+			id: id,
+			title: title,
+			description: description,
+			duration: duration,
+			price: price,
+			events: null,
+			audiences: null,
+		}
+
+		const result: Module = moduleFactory.create(data)
+
+		expect(result.id).to.equal(id)
+		expect(result.type).to.equal(type)
+		expect(result.productCode).to.equal(productCode)
+		expect(result.title).to.equal(title)
+		expect(result.description).to.equal(description)
+		expect(result.duration).to.equal(duration)
+		expect(result.price).to.equal(price)
+		expect(result.events).to.eql([])
+		expect(result.audiences).to.eql([])
+	})
 })

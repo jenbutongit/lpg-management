@@ -14,7 +14,6 @@ export class EventFactory {
 		if (data.date) {
 			event.date = moment.utc(data.date).toDate()
 		}
-		event.date = data.date
 		event.location = data.location
 		event.capacity = data.capacity
 

@@ -26,4 +26,24 @@ describe('EventFactory tests', () => {
 		expect(result.location).to.equal(location)
 		expect(result.capacity).to.equal(capacity)
 	})
+
+	it('should ignore missing date', () => {
+		const id: string = 'LmYAPQseRqm7dk1Q2WjA2w'
+		const location: string = 'London'
+		const capacity: number = 100
+
+		const data: object = {
+			id: id,
+			date: null,
+			location: location,
+			capacity: capacity,
+		}
+
+		const result: Event = eventFactory.create(data)
+
+		expect(result.id).to.equal(id)
+		expect(result.date).to.be.undefined
+		expect(result.location).to.equal(location)
+		expect(result.capacity).to.equal(capacity)
+	})
 })
