@@ -18,9 +18,12 @@ const FileStore = sessionFileStore(session)
 
 log4js.configure(config.LOGGING)
 
+app.set('views', [
+	appRoot + '/views',
+	appRoot + '/node_modules/govuk-frontend/',
+	appRoot + '/node_modules/govuk-frontend/components',
+])
 expressNunjucks(app, {})
-
-app.set('views', appRoot + '/views')
 
 app.use(
 	session({
