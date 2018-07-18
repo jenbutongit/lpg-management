@@ -46,12 +46,6 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-<<<<<<< HEAD
-		expect(response.render).to.have.been.calledOnceWith('index', {
-			results: pageResults,
-		})
-=======
-		expect(reponse.render).to.have.been.calledOnceWith('page/index')
->>>>>>> LPFG-540: fix failing test
+		expect(response.render).to.have.been.calledOnceWith('page/index')
 	})
 })
