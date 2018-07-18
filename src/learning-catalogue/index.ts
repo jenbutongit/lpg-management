@@ -15,14 +15,20 @@ export class LearningCatalogue {
 		this._courseFactory = new CourseFactory()
 	}
 
-	async listAll(): Promise<PageResults<Course>> {
+	async listAll(
+		page: number = 0,
+		size: number = 10
+	): Promise<PageResults<Course>> {
 		try {
-			const response = await this._http.get(`${this._config.url}/courses`, {
-				auth: {
-					username: this._config.username,
-					password: this._config.password,
-				},
-			})
+			const response = await this._http.get(
+				`${this._config.url}/courses?page=${page}&size=${size}`,
+				{
+					auth: {
+						username: this._config.username,
+						password: this._config.password,
+					},
+				}
+			)
 
 			response.data.results = (response.data.results || []).map(
 				this._courseFactory.create

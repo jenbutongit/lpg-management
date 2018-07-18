@@ -46,14 +46,19 @@ describe('Learning Catalogue tests', () => {
 			},
 		}
 
-		const get = sinon
-			.stub()
+		const get = sinon.stub()
+		get
+			.withArgs(`${config.url}/courses?page=0&size=10`, {
+				auth: {
+					username: config.username,
+					password: config.password,
+				},
+			})
 			.returns(
-				new Promise((resolve, reject) => {
+				new Promise(resolve => {
 					resolve(response)
 				})
 			)
-			.withArgs('/courses')
 
 		http.get = get
 
@@ -77,12 +82,55 @@ describe('Learning Catalogue tests', () => {
 
 		courseFactory.create = create
 
-		learningCatalogue.listAll().then(result => {
+		return learningCatalogue.listAll().then(result => {
 			expect(create).to.have.been.calledTwice
 			expect(result.results).to.eql([course1, course2])
 			expect(result.page).to.eql(0)
 			expect(result.size).to.eql(10)
 			expect(result.totalResults).to.eql(32)
+			expect(get).to.have.been.calledOnceWith(
+				`${config.url}/courses?page=0&size=10`,
+				{
+					auth: {
+						username: config.username,
+						password: config.password,
+					},
+				}
+			)
+		})
+	})
+
+	it('should pass page parameters to http call', () => {
+		const page: number = 2
+		const size: number = 99
+
+		const response = {
+			data: {
+				results: [],
+				page: 0,
+				totalResults: 32,
+				size: 10,
+			},
+		}
+
+		http.get = sinon.stub().returns(
+			new Promise(resolve => {
+				resolve(response)
+			})
+		)
+
+		courseFactory.create = sinon.stub()
+
+		return learningCatalogue.listAll(page, size).then(result => {
+			expect(http.get).to.have.been.calledOnceWith(
+				`${config.url}/courses?page=${page}&size=${size}`,
+				{
+					auth: {
+						username: config.username,
+						password: config.password,
+					},
+				}
+			)
 		})
 	})
 
@@ -110,7 +158,7 @@ describe('Learning Catalogue tests', () => {
 		const create = sinon.stub()
 		courseFactory.create = create
 
-		learningCatalogue.listAll().then(result => {
+		return learningCatalogue.listAll().then(result => {
 			expect(create).to.not.have.been.called
 			expect(result.results).to.eql([])
 			expect(result.page).to.eql(0)
@@ -126,7 +174,7 @@ describe('Learning Catalogue tests', () => {
 
 		http.get = get
 
-		await expect(learningCatalogue.listAll()).to.be.rejectedWith(
+		return await expect(learningCatalogue.listAll()).to.be.rejectedWith(
 			`Error listing all courses - ${error}`
 		)
 	})
@@ -135,20 +183,20 @@ describe('Learning Catalogue tests', () => {
 		const axios: AxiosInstance = <AxiosInstance>{}
 		learningCatalogue.http = axios
 
-		expect(learningCatalogue.http).to.equal(axios)
+		return expect(learningCatalogue.http).to.equal(axios)
 	})
 
 	it('should be able to set config', () => {
 		const config: LearningCatalogueConfig = <LearningCatalogueConfig>{}
 		learningCatalogue.config = config
 
-		expect(learningCatalogue.config).to.equal(config)
+		return expect(learningCatalogue.config).to.equal(config)
 	})
 
 	it('should be able to set course factory', () => {
 		const courseFactory: CourseFactory = <CourseFactory>{}
 		learningCatalogue.courseFactory = courseFactory
 
-		expect(learningCatalogue.courseFactory).to.equal(courseFactory)
+		return expect(learningCatalogue.courseFactory).to.equal(courseFactory)
 	})
 })
