@@ -89,4 +89,10 @@ describe('CourseFactory tests', () => {
 		expect(result.modules).to.eql([])
 		expect(moduleFactory.create).to.not.have.been.called
 	})
+
+	it('should be able to set module factory', () => {
+		const newModuleFactory: ModuleFactory = <ModuleFactory>{}
+		courseFactory.moduleFactory = newModuleFactory
+		return expect(courseFactory.moduleFactory).to.equal(newModuleFactory)
+	})
 })
