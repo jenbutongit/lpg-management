@@ -17,7 +17,6 @@ export class HomeController {
 			)
 
 			response.render('page/index', {paginatedResults, searchResults})
-			// response.render('index.html')
 		}
 	}
 }
