@@ -1,0 +1,13 @@
+.govuk-header__navigation-item--active a:link,
+.govuk-header__navigation-item--active a:hover,
+.govuk-header__navigation-item--active a:visited {
+	color: $white;
+}
+
+.govuk-header__container {
+	border-color: $theme;
+}
+
+.govuk-footer {
+	border-top: 0.625em solid #af292e;
+}
