@@ -1,6 +1,6 @@
 FROM library/ubuntu
 
-EXPOSE 3001
+EXPOSE 3005
 
 RUN apt-get update && \
   apt-get install --yes wget g++ make perl libarchive-zip-perl && \
