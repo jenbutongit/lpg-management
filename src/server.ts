@@ -1,10 +1,11 @@
 import * as express from 'express'
-import * as ctx from './ApplicationContext'
+import * as ctx from './applicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
 import * as log4js from 'log4js'
 import * as config from './config'
+import * as serveStatic from 'serve-static'
 
 const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
@@ -17,9 +18,12 @@ const FileStore = sessionFileStore(session)
 
 log4js.configure(config.LOGGING)
 
+app.set('views', [
+	appRoot + '/views',
+	appRoot + '/node_modules/govuk-frontend/',
+	appRoot + '/node_modules/govuk-frontend/components',
+])
 expressNunjucks(app, {})
-
-app.set('views', appRoot + '/views')
 
 app.use(
 	session({
@@ -37,6 +41,18 @@ app.use(
 		}),
 	})
 )
+app.use(serveStatic(appRoot + '/dist/views/assets'))
+
+app.use(
+	'/govuk-frontend',
+	express.static(appRoot + '/node_modules/govuk-frontend/')
+)
+
+app.use(
+	'/assets',
+	express.static(appRoot + '/node_modules/govuk-frontend/assets')
+)
+
 app.use(cookieParser())
 
 ctx.default.auth.configure(app)
