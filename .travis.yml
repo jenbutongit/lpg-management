@@ -9,4 +9,8 @@ cache:
   directories:
     - node_modules
 
+before_install:
+  - chmod +x build.sh
+
+install: true
 script: ./environ/ci
