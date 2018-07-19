@@ -1,7 +1,7 @@
 import {AxiosInstance} from 'axios'
 import {Course} from './model/course'
 import {CourseFactory} from './model/factory/courseFactory'
-import {PageResults} from './model/PageResults'
+import {PageResults} from './model/pageResults'
 import {LearningCatalogueConfig} from './learningCatalogueConfig'
 
 export class LearningCatalogue {

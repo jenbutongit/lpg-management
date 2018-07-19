@@ -39,7 +39,8 @@ export const AUTHENTICATION = set({
 	clientId: env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
 	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl:
-		env.AUTHENTICATION_SERVICE_URL || 'http://identity.local.cshr.digital:8080',
+		env.AUTHENTICATION_SERVICE_URL ||
+		'http://identity.local.cshr.digital:8080',
 	callbackUrl: env.CALLBACK_URL || 'http://lpg.local.cshr.digital:3005',
 })
 

@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
-import {PageResults} from '../learning-catalogue/model/PageResults'
+import {PageResults} from '../learning-catalogue/model/pageResults'
 
 export class HomeController {
 	learningCatalogue: LearningCatalogue

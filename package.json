@@ -8,7 +8,8 @@
     "build": "npm run sass:all && npm run compile",
     "clean": "./bin/setup-dist",
     "compile": "rm -rf dist && ./node_modules/typescript/bin/tsc",
-    "start": "npm run compile && node dist/build/src/server.js"
+    "start": "npm run compile && node dist/build/src/server.js",
+    "acceptance-test": "DEBUG=nock.* ./node_modules/cucumber/bin/cucumber-js test/acceptance/"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "session-file-store": "1.2.0"
   },
   "devDependencies": {
+    "@3846masa/axios-cookiejar-support": "^0.3.5",
     "@types/app-root-path": "^1.2.4",
     "@types/chai": "4.1.4",
     "@types/chai-as-promised": "^7.1.0",
@@ -52,11 +54,13 @@
     "chai-as-promised": "^7.1.1",
     "cucumber": "4.2.1",
     "mocha": "5.2.0",
-    "nock": "9.4.1",
+    "mockserver-client": "^5.3.0",
+    "mockserver-node": "^5.3.0",
     "nyc": "12.0.2",
     "sinon": "6.1.2",
     "sinon-chai": "3.2.0",
     "sinon-express-mock": "2.0.4",
+    "tough-cookie": "^2.4.3",
     "ts-node": "7.0.0",
     "typescript": "2.9.2"
   }

@@ -1,5 +1,4 @@
 import {NextFunction, Request, Response, Handler} from 'express'
-import * as config from '../config'
 import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
@@ -32,7 +31,11 @@ export class Auth {
 
 		this.configureStrategy()
 
-		app.all(config.AUTHENTICATION_PATH, this.authenticate(), this.redirect())
+		app.all(
+			this.config.authenticationPath,
+			this.authenticate(),
+			this.redirect()
+		)
 
 		app.use(this.checkAuthenticated())
 	}
