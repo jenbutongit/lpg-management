@@ -10,7 +10,7 @@ cache:
     - node_modules
 
 before_install:
-  - chmod +x build.sh
+  - chmod +x ./environ/ci
 
 install: true
 script: ./environ/ci
