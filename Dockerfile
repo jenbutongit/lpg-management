@@ -24,7 +24,6 @@ RUN . $NVM_DIR/nvm.sh \
   && nvm use default
 
 COPY package.json package.json
-COPY bin/setup-dist bin/setup-dist
 COPY src src
 
 # Runtime environment variables
