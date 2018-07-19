@@ -9,7 +9,7 @@
     "clean": "./bin/setup-dist",
     "compile": "rm -rf dist && ./node_modules/typescript/bin/tsc",
     "start": "npm run compile && node dist/build/src/server.js",
-    "acceptance-test": "DEBUG=nock.* ./node_modules/cucumber/bin/cucumber-js test/acceptance/"
+    "acceptance-test": "./node_modules/cucumber/bin/cucumber-js test/acceptance/"
   },
   "repository": {
     "type": "git",
