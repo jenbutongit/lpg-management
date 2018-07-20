@@ -18,7 +18,7 @@ export class HomeController {
 				Course
 			> = await self.learningCatalogue.listAll()
 
-			response.render('index', {
+			response.render('page/index', {
 				results: pageResults,
 			})
 		}
