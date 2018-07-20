@@ -1,7 +1,35 @@
 {% extends "../component/Page.html" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} {%block
 content %}
-<h1 class="govuk-heading-l">Content management</h1>
-{% if paginatedResults.totalResults !== 0 %}
+<div class="grid-row">
+    <div class="u--border--bgrey">
+        <h1 class="govuk-heading-l">Content management</h1>
+    </div>
+
+
+    <div class="column-two-thirds">
+        {% if pageResults %}
+        <h2 class="govuk-heading-m">Courses</h2>
+        <ul class="courses">
+            {% for Course in pageResults.results %}
+            <li class="course-details u--border--bgrey">
+                <a href="#">
+                    <h3 class="course-title">{{ Course._title }}</h3>
+                </a>
+                <p class="course-description course-padding">{{ Course._shortDescription }}</p>
+                <a class="course-edit course-padding" href="#">Edit</a>
+
+            </li>{% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+    <div class="column-one-third">
+
+    </div>
+</div>
+
+<!-- {% if paginatedResults.totalResults !== 0 %}
+     {{ pageResults.totalResults }}
 <div class="pager">
     <div class="pager__controls">
         {% if paginatedResults.currentPage > 0 %}
@@ -19,4 +47,7 @@ content %}
         </div>
     </div>
 </div>
-{% endif %} {% endblock %}
+{% endif %}  -->
+
+
+{% endblock %}
