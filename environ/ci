@@ -8,6 +8,8 @@ function stage {
   ((counter++)) || true
   printf "\n\033[34;1m➡  $1  \033[90m[stage $counter] [running ${SECONDS}s]\033[0m\n\n"
 }
+stage "Install dependencies from npm"
+npm install
 
 stage "Running the unit tests"
 npm test
