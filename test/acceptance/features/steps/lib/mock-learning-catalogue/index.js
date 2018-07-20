@@ -8,7 +8,7 @@ function MockLearningCatalogue(host, port) {
 	this.stubCoursesEndpoint = function() {
 		const learningCataloguePage1 =
 			fs.readFileSync(
-				`${appRootPath.path}/test/acceptance/features/steps/lib/mock-learning-catalogue/courses.page.1.json`,
+				`${appRootPath.path}/test/acceptance/features/steps/lib/mock-learning-catalogue/fixtures/courses.page.1.json`,
 				'utf8'
 			)
 
@@ -29,6 +29,18 @@ function MockLearningCatalogue(host, port) {
 				console.log(error);
 			}
 		);
+	}
+
+	this.reset = function() {
+		this.mock.reset()
+			.then(
+				function () {
+					console.log("reset all state for mock learning catalogue");
+				},
+				function (error) {
+					console.log(error);
+				}
+			);
 	}
 }
 
