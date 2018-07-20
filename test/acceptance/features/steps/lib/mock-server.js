@@ -5,7 +5,7 @@ const argv = require('minimist')(process.argv.slice(2));
 const instructions = [
 	'',
 	'Start a mock server...',
-	'	Example: server.js -p [port] -n [name]',
+	'	Example: mock-server.js -p [port] -n [name]',
 	'		-p: The port the mock service should run on',
 	'		-n: (optional) The name of the service (only used for logging)',
 	''].join('\n')
