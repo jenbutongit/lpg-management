@@ -104,6 +104,18 @@ function MockIdentityService(host, port) {
 		this.stubTokenEndpoint()
 		this.stubResolveEndpoint()
 	}
+
+	this.reset = function() {
+		this.mock.reset()
+			.then(
+				function () {
+					console.log("reset all state for mock identity service");
+				},
+				function (error) {
+					console.log(error);
+				}
+			);
+	}
 }
 
 module.exports.MockIdentityService = MockIdentityService
