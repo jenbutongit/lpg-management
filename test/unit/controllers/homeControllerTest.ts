@@ -46,8 +46,6 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('index', {
-			results: pageResults,
-		})
+		expect(response.render).to.have.been.calledOnceWith('page/index')
 	})
 })
