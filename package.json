@@ -9,7 +9,12 @@
     "clean": "./bin/setup-dist",
     "compile": "rm -rf dist && ./node_modules/typescript/bin/tsc",
     "start": "npm run compile && node dist/build/src/server.js",
-    "acceptance-test": "./node_modules/cucumber/bin/cucumber-js test/acceptance/"
+    "acceptance-test": "npm run start-mock-identity-service && npm run start-mock-learning-catalogue && ./node_modules/cucumber/bin/cucumber-js test/acceptance/ && npm run stop-mock-identity-service && npm run stop-mock-learning-catalogue",
+    "start-mock-identity-service": "node ./test/acceptance/features/steps/lib/server.js start -p 8080 -n identity_service",
+    "stop-mock-identity-service": "node ./test/acceptance/features/steps/lib/server.js stop -p 8080 -n identity_service",
+    "start-mock-learning-catalogue": "node ./test/acceptance/features/steps/lib/server.js start -p 9001 -n lerning_catalogue",
+    "stop-mock-learning-catalogue": "node ./test/acceptance/features/steps/lib/server.js stop -p 9001 -n learning_catalogue"
+
   },
   "repository": {
     "type": "git",
@@ -53,6 +58,8 @@
     "chai": "4.1.2",
     "chai-as-promised": "^7.1.1",
     "cucumber": "4.2.1",
+    "daemonize-process": "^1.0.9",
+    "minimist": "^1.2.0",
     "mocha": "5.2.0",
     "mockserver-client": "^5.3.0",
     "mockserver-node": "^5.3.0",
