@@ -1,9 +1,6 @@
 const {Given, When, Then} = require('cucumber');
 const axios = require('axios');
 const {expect} = require('chai');
-const mockServerClient = require('mockserver-client').mockServerClient;
-const fs = require('fs')
-
 const axiosCookieJarSupport = require('@3846masa/axios-cookiejar-support');
 const tough = require('tough-cookie');
 
@@ -23,12 +20,14 @@ const http = axios.create({
 })
 
 let promise;
+let identityService;
+let learningCatalogue;
 
 Given(/^I am not authenticated$/, () => {
 });
 
 When(/^I request the home page$/, () => {
-	const learningCatalogue = new MockLearningCatalogue('localhost', 9001)
+	learningCatalogue = new MockLearningCatalogue('localhost', 9001)
 	learningCatalogue.stubCoursesEndpoint()
 
 	promise = http.get('/', {
@@ -46,8 +45,7 @@ Then(/^I am redirected to the login page$/, (callback) => {
 });
 
 Given(/^I am an authenticated user$/, () => {
-	const identityService = new MockIdentityService('identity.local.cshr.digital', 8080)
-
+	identityService = new MockIdentityService('identity.local.cshr.digital', 8080)
 	identityService.stubLoginJourney()
 })
 
@@ -57,15 +55,7 @@ Then(/^I see a paginated list of all courses$/, (callback) => {
 	}).catch((error) => {
 		callback(error);
 	}).finally((callback) => {
-		mockServerClient("localhost", 8080)
-			.reset()
-			.then(
-				function () {
-					console.log("reset all state");
-				},
-				function (error) {
-					console.log(error);
-				}
-			);
+		identityService.reset()
+		learningCatalogue.reset()
 	})
 });
