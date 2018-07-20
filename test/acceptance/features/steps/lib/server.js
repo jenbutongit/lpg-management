@@ -22,7 +22,7 @@ const actions = {
 	stop: (port, name) => {
 		console.log(`stopping ${name} mock service on port ${port}`)
 		mockServer.stop_mockserver({
-			serverPort: 9001,
+			serverPort: port,
 			verbose: true
 		});
 	}
