@@ -3,14 +3,14 @@
     {% for Course in pageResults.results %}
 
     <li class="list-details u--border--bgrey">
-        <a href="#">
+        <a href="javascript:void(0)s">
             <h3 class="list-title">{{ Course._title }}</h3>
         </a>
         {% if Course._modules.length > 1 %}
             <p class="list-padding">This course comprises of {{Course._modules.length}} modules</p>
         {% endif %}
         <p class="list-paragraph list-padding">{{ Course._shortDescription }}</p>
-        <a class="list-link list-padding" href="#">Edit</a>
+        <a class="list-link list-padding" href="javascript:void(0)">Edit</a>
 
     </li>
     {% endfor %}

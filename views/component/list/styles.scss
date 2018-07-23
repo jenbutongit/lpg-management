@@ -15,5 +15,16 @@
 		.list-padding {
 			padding: 10px 8px 10px 0;
 		}
+
+		.list-link {
+			padding: 0;
+			margin: 10px 8px 10px 0;
+			width: 34px;
+
+			&:focus {
+				background-color: $link-focus;
+				outline: 3px solid $link-focus;
+			}
+		}
 	}
 }
