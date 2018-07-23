@@ -176,25 +176,4 @@ describe('Learning Catalogue tests', () => {
 			`Error listing all courses - ${error}`
 		)
 	})
-
-	it('should be able to set axios instance', () => {
-		const axios: AxiosInstance = <AxiosInstance>{}
-		learningCatalogue.http = axios
-
-		return expect(learningCatalogue.http).to.equal(axios)
-	})
-
-	it('should be able to set config', () => {
-		const config: LearningCatalogueConfig = <LearningCatalogueConfig>{}
-		learningCatalogue.config = config
-
-		return expect(learningCatalogue.config).to.equal(config)
-	})
-
-	it('should be able to set course factory', () => {
-		const courseFactory: CourseFactory = <CourseFactory>{}
-		learningCatalogue.courseFactory = courseFactory
-
-		return expect(learningCatalogue.courseFactory).to.equal(courseFactory)
-	})
 })
