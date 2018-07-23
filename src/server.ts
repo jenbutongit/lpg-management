@@ -58,5 +58,5 @@ app.use(cookieParser())
 ctx.default.auth.configure(app)
 
 app.get('/', ctx.default.homeController.index())
-
+app.get('/course', ctx.default.homeController.course())
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

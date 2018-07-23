@@ -21,8 +21,9 @@
         <div class="column-one-third">
             {% block menuBox %}
                 {% set delete = true %}
-                {{ menuBox("Actions"), delete }}
+                {{ menuBox("Actions", delete) }}
             {% endblock %}
         </div>
     </div>
 </div>
+{% endblock %}

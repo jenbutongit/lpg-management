@@ -23,4 +23,10 @@ export class HomeController {
 			})
 		}
 	}
+
+	public course() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course', {})
+		}
+	}
 }
