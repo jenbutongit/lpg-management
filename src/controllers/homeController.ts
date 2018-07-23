@@ -13,6 +13,7 @@ export class HomeController {
 	public index() {
 		const self = this
 
+		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
 			const pageResults: PageResults<
 				Course
