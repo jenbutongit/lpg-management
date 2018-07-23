@@ -1,0 +1,19 @@
+.list {
+	font-size: $font-normal;
+	color: $font-color;
+
+	.list-details {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 10px;
+
+		.list-title {
+			font-weight: 700;
+			padding: 10px 8px 10px 0;
+		}
+
+		.list-padding {
+			padding: 10px 8px 10px 0;
+		}
+	}
+}

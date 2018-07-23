@@ -1,7 +1,7 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu-box/macro.njk" import menuBox %}
 
-{% extends "../component/Page.html" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
+{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
 {% block content %}
 <div class="grid-row">
     <div class="u--border--bgrey">
@@ -11,6 +11,7 @@
     <div class="column-container">
         <div class="column-two-thirds">  
             {% if pageResults %}
+           
                 {% block list %}
                     {{ list("Courses", pageResults) }}
                 {% endblock %}

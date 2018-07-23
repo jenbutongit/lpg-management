@@ -12,23 +12,3 @@
 		padding-left: 5px;
 	}
 }
-
-.courses {
-	font-size: $font-normal;
-	color: $font-color;
-
-	.course-details {
-		display: flex;
-		flex-direction: column;
-		margin-bottom: 10px;
-
-		.course-title {
-			font-weight: 700;
-			padding: 10px 8px 10px 0;
-		}
-
-		.course-padding {
-			padding: 10px 8px 10px 0;
-		}
-	}
-}
