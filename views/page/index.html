@@ -28,6 +28,12 @@
 
 <!-- {% if paginatedResults.totalResults !== 0 %}
      {{ pageResults.totalResults }}
+=======
+{% extends "../component/Page.html" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} {%block
+content %}
+<h1 class="govuk-heading-l">Content management</h1>
+{% if paginatedResults.totalResults !== 0 %}
+>>>>>>> 374cd0ba19df97719eef0f4d8678214a5794d5f5
 <div class="pager">
     <div class="pager__controls">
         {% if paginatedResults.currentPage > 0 %}
@@ -49,3 +55,4 @@
 
 
 {% endblock %}
+
