@@ -16,7 +16,9 @@ export class User {
 		user.givenName = data.fullName ? data.fullName : data.givenName
 		user.grade = data.grade
 		if (data.profession || data.areasOfWork) {
-			user.areasOfWork = Object.values(data.profession || data.areasOfWork)
+			user.areasOfWork = Object.values(
+				data.profession || data.areasOfWork
+			)
 		}
 		user.otherAreasOfWork = data.otherAreasOfWork
 		user.interests = data.interests

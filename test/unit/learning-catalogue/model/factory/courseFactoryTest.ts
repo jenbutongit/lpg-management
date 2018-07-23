@@ -23,8 +23,10 @@ describe('CourseFactory tests', () => {
 	it('should create a a Course from data', () => {
 		const id: string = 'L1U3cK3GQtuf3iDg71NqJw'
 		const title: string = 'Working with budgets'
-		const shortDescription = 'This topic introduces yo… governance processes.'
-		const description: string = 'You learn about creating…in government’ topic.'
+		const shortDescription =
+			'This topic introduces yo… governance processes.'
+		const description: string =
+			'You learn about creating…in government’ topic.'
 		const learningOutcomes: string =
 			'After completing this to…h the financial cycle'
 		const moduleId1: string = 'jksdhskdjhsdfk'
@@ -63,8 +65,10 @@ describe('CourseFactory tests', () => {
 	it('should add empty list if modules is null', () => {
 		const id: string = 'L1U3cK3GQtuf3iDg71NqJw'
 		const title: string = 'Working with budgets'
-		const shortDescription = 'This topic introduces yo… governance processes.'
-		const description: string = 'You learn about creating…in government’ topic.'
+		const shortDescription =
+			'This topic introduces yo… governance processes.'
+		const description: string =
+			'You learn about creating…in government’ topic.'
 		const learningOutcomes: string =
 			'After completing this to…h the financial cycle'
 
