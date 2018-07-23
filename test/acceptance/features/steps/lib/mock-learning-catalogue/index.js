@@ -23,7 +23,56 @@ function MockLearningCatalogue(host, port) {
 			}
 		}).then(
 			function () {
-				console.log("expectation created");
+				console.log("stubbed GET /courses endpoint in Learning Catalogue");
+			},
+			function (error) {
+				console.log(error);
+			}
+		);
+	}
+
+	this.stubGetCourseEndpoint = function() {
+			const course =
+				fs.readFileSync(
+					`${appRootPath.path}/test/acceptance/features/steps/lib/mock-learning-catalogue/fixtures/course.L1U3cK3GQtuf3iDg71NqJw.json`,
+					'utf8'
+				)
+
+		this.mock.mockAnyResponse({
+			httpRequest: 	{
+				method: 'GET',
+				path: '/courses/L1U3cK3GQtuf3iDg71NqJw',
+			},
+			httpResponse: {
+				statusCode: 200,
+				body: course,
+			}
+		}).then(
+			function () {
+				console.log("stubbed GET /courses/L1U3cK3GQtuf3iDg71NqJw endpoint in Learning Catalogue");
+			},
+			function (error) {
+				console.log(error);
+			}
+		);
+	}
+
+	this.stubPostCourseEndpoint = function() {
+		this.mock.mockAnyResponse({
+			httpRequest: 	{
+				method: 'POST',
+				path: '/courses/',
+			},
+			httpResponse: {
+				statusCode: 201,
+				headers: [{
+					name: 'Location',
+					values : [ `http://${host}:${port}/courses/L1U3cK3GQtuf3iDg71NqJw in Learning Catalogue` ]
+				}]
+			}
+		}).then(
+			function () {
+				console.log("stubbed POST /courses/ endpoint in Learning Catalogue");
 			},
 			function (error) {
 				console.log(error);
