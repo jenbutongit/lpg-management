@@ -40,24 +40,44 @@ export class LearningCatalogue {
 		}
 	}
 
-	get http(): AxiosInstance {
-		return this._http
+	async create(course: Course): Promise<Course> {
+		try {
+			const response = await this._http.post(
+				`${this._config.url}/courses/`,
+				course,
+				{
+					auth: {
+						username: this._config.username,
+						password: this._config.password,
+					},
+				}
+			)
+
+			const location = response.headers.location
+			const courseId = location.substr(location.lastIndexOf('/') + 1)
+
+			return this.get(courseId)
+		} catch (e) {
+			throw new Error(`Error creating course: ${e}`)
+		}
 	}
 
-	set http(value: AxiosInstance) {
-		this._http = value
-	}
+	async get(courseId: string): Promise<Course> {
+		try {
+			const response = await this._http.get(
+				`${this._config.url}/courses/${courseId}`,
+				{
+					auth: {
+						username: this._config.username,
+						password: this._config.password,
+					},
+				}
+			)
 
-	get config(): LearningCatalogueConfig {
-		return this._config
-	}
-
-	set config(value: LearningCatalogueConfig) {
-		this._config = value
-	}
-
-	get courseFactory(): CourseFactory {
-		return this._courseFactory
+			return this._courseFactory.create(response.data)
+		} catch (e) {
+			throw new Error(`Error retrieving course: ${e}`)
+		}
 	}
 
 	set courseFactory(value: CourseFactory) {
