@@ -22,17 +22,13 @@
 	border-bottom: 1px solid $border;
 }
 
-.grid-row {
-	display: grid;
-}
-
-.column-two-thirds {
-	width: 66.6667%;
-}
-
 ul {
 	padding: 0;
 	margin: 0;
+}
+
+a:active {
+	background-color: yellow;
 }
 
 .govuk-heading-m {

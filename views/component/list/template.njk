@@ -1,0 +1,13 @@
+<h2 class="govuk-heading-m">{{listTitle}}</h2>
+<ul class="courses">
+    {% for Course in pageResults.results %}
+    <li class="course-details u--border--bgrey">
+        <a href="#">
+            <h3 class="course-title">{{ Course._title }}</h3>
+        </a>
+        <p class="course-description course-padding">{{ Course._shortDescription }}</p>
+        <a class="course-edit course-padding" href="#">Edit</a>
+
+    </li>
+    {% endfor %}
+</ul>

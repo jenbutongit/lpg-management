@@ -1,30 +1,27 @@
-{% extends "../component/Page.html" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} {%block
-content %}
+{% from "../component/list/macro.njk" import list %}
+{% from "../component/menu-box/macro.njk" import menuBox %}
+
+{% extends "../component/Page.html" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
+{% block content %}
 <div class="grid-row">
     <div class="u--border--bgrey">
         <h1 class="govuk-heading-l">Content management</h1>
     </div>
 
+    <div class="column-container">
+        <div class="column-two-thirds">  
+            {% if pageResults %}
+                {% block list %}
+                    {{ list("Courses", pageResults) }}
+                {% endblock %}
+            {% endif %}
+        </div>
 
-    <div class="column-two-thirds">
-        {% if pageResults %}
-        <h2 class="govuk-heading-m">Courses</h2>
-        <ul class="courses">
-            {% for Course in pageResults.results %}
-            <li class="course-details u--border--bgrey">
-                <a href="#">
-                    <h3 class="course-title">{{ Course._title }}</h3>
-                </a>
-                <p class="course-description course-padding">{{ Course._shortDescription }}</p>
-                <a class="course-edit course-padding" href="#">Edit</a>
-
-            </li>{% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-
-    <div class="column-one-third">
-
+        <div class="column-one-third">
+            {% block menuBox %}
+                {{ menuBox("Actions") }}
+            {% endblock %}
+        </div>
     </div>
 </div>
 
