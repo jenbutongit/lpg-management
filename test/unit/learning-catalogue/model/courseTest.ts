@@ -49,6 +49,43 @@ describe('Course tests', () => {
 		const modules = [new Module()]
 
 		course.modules = modules
+
 		expect(course.modules).to.equal(modules)
+	})
+
+	it('should be able to get costs by sum of module costs', () => {
+		const module1 = new Module()
+		module1.price = 100
+
+		const module2 = new Module()
+		module2.price = 50
+
+		const module3 = new Module()
+		module3.price = 25.25
+
+		course.modules = [module1, module2, module3]
+
+		expect(course.getCost()).to.equal(175.25)
+	})
+
+	it('should get type to be null if no modules', () => {
+		course.modules = []
+
+		expect(course.getType()).to.equal(null)
+	})
+
+	it('should get type to be blended if more than one module', () => {
+		course.modules = [new Module(), new Module(), new Module()]
+
+		expect(course.getType()).to.equal('blended')
+	})
+
+	it('should get type to be type of module if only one module', () => {
+		const module1 = new Module()
+		module1.type = 'video'
+
+		course.modules = [module1]
+
+		expect(course.getType()).to.equal('video')
 	})
 })
