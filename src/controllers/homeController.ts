@@ -20,7 +20,7 @@ export class HomeController {
 			> = await self.learningCatalogue.listAll()
 
 			response.render('page/index', {
-				results: pageResults,
+				pageResults,
 			})
 		}
 	}
