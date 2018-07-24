@@ -1,0 +1,32 @@
+{% extends "../Page.njk" %}
+{% block header %}
+ {{ govukHeader({
+  navigation: [
+     {
+       href: "#1",
+       text: "Party",
+       active: true
+     },
+     {
+       href: "#2",
+       text: "Suggestions for you"
+     },
+     {
+       href: "#3",
+       text: "Learning record"
+     },
+     {
+       href: "#4",
+       text: "Profile"
+     },
+     {
+       href: "#5",
+       text: "Admin"
+     },
+     {
+       href: "#6",
+       text: "Sign out"
+     }
+   ]
+ }) }}
+{% endblock %}
