@@ -2,41 +2,43 @@
 {% from "../component/menu-box/macro.njk" import menuBox %}
 {% from "../component/navigation/macro.njk" import navigation %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
-
+{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %}
 
 {% block header %}
-    {% block navigation %}
-    {% set urls = [
-        {
-            href: "#1",
-            text: "Home",
-            active: true
-        },
-        {
-            href: "#2",
-            text: "Suggestions for you"
-        },
-        {
-            href: "#3",
-            text: "Learning record"
-        },
-        {
-            href: "#4",
-            text: "Profile"
-        },
-        {
-            href: "#5",
-            text: "Admin"
-        },
-        {
-            href: "#6",
-            text: "Sign out"
-        }
-        ] %}
-        {{ navigation(urls) }}
-        {% endblock %}
-    {% endblock %}
+        {{ govukHeader({
+            homepageUrl: "#",
+            containerClasses: "govuk-width-container",
+            serviceName: "Civil Service Learning",
+            serviceUrl: "#",
+            navigation: [
+      {
+        href: "#1",
+        text: "Home",
+        active: true
+      },
+      {
+        href: "#2",
+        text: "Suggestions for you"
+      },
+      {
+        href: "#3",
+        text: "Learning record"
+      },
+      {
+        href: "#4",
+        text: "Profile"
+      },
+      {
+        href: "#5",
+        text: "Admin"
+      },
+      {
+        href: "#6",
+        text: "Sign out"
+      }
+    ]
+        }) }}
+{% endblock %}
 {% block content %}
 
 <div class="grid-row">
