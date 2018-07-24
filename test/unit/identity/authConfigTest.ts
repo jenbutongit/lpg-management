@@ -19,7 +19,9 @@ describe('AuthConfig tests', () => {
 
 		expect(config.clientId).to.equal(clientId)
 		expect(config.clientSecret).to.equal(clientSecret)
-		expect(config.authenticationServiceUrl).to.equal(authenticationServiceUrl)
+		expect(config.authenticationServiceUrl).to.equal(
+			authenticationServiceUrl
+		)
 		expect(config.callbackUrl).to.equal(callbackUrl)
 		expect(config.authenticationPath).to.equal(authenticationPath)
 	})
@@ -34,7 +36,9 @@ describe('AuthConfig tests', () => {
 		expect(config.clientSecret).to.equal(clientSecret)
 
 		config.authenticationServiceUrl = authenticationServiceUrl
-		expect(config.authenticationServiceUrl).to.equal(authenticationServiceUrl)
+		expect(config.authenticationServiceUrl).to.equal(
+			authenticationServiceUrl
+		)
 
 		config.callbackUrl = callbackUrl
 		expect(config.callbackUrl).to.equal(callbackUrl)

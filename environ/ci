@@ -8,23 +8,25 @@ function stage {
   ((counter++)) || true
   printf "\n\033[34;1m➡  $1  \033[90m[stage $counter] [running ${SECONDS}s]\033[0m\n\n"
 }
+stage "Install dependencies from npm"
+npm install
 
 stage "Running the unit tests"
 npm test
 
-stage "Pulling the latest lpg-management docker image"
+stage "Pulling the latest lpg-management-ui docker image"
 docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-docker pull cshr/lpg-management || true
+docker pull cshr/lpg-management-ui || true
 
-stage "Building the new lpg-management docker image"
-docker build --cache-from cshr/lpg-management:latest --build-arg VERSION=${TRAVIS_COMMIT} -t cshr/lpg-management:${TRAVIS_COMMIT} .
+stage "Building the new lpg-management-ui docker image"
+docker build --cache-from cshr/lpg-management-ui:latest --build-arg VERSION=${TRAVIS_COMMIT} -t cshr/lpg-management-ui:${TRAVIS_COMMIT} .
 
 BRANCH_TAG=`echo ${TRAVIS_PULL_REQUEST_BRANCH:-${TRAVIS_BRANCH}} | sed 's/\//-/g'`
 
-stage "Pushing the lpg-management ${TRAVIS_COMMIT} docker image"
-docker tag cshr/lpg-management:${TRAVIS_COMMIT} cshr/lpg-management:${BRANCH_TAG}
-docker tag cshr/lpg-management:${TRAVIS_COMMIT} cshr/lpg-management:${BRANCH_TAG}-${TRAVIS_BUILD_NUMBER}
-docker tag cshr/lpg-management:${TRAVIS_COMMIT} cshr/lpg-management:latest
-docker push cshr/lpg-management
+stage "Pushing the lpg-management-ui ${TRAVIS_COMMIT} docker image"
+docker tag cshr/lpg-management-ui:${TRAVIS_COMMIT} cshr/lpg-management-ui:${BRANCH_TAG}
+docker tag cshr/lpg-management-ui:${TRAVIS_COMMIT} cshr/lpg-management-ui:${BRANCH_TAG}-${TRAVIS_BUILD_NUMBER}
+docker tag cshr/lpg-management-ui:${TRAVIS_COMMIT} cshr/lpg-management-ui:latest
+docker push cshr/lpg-management-ui
 
 echo "Total run time: ${SECONDS}s"
