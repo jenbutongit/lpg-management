@@ -11,7 +11,6 @@
 		"build": "npm run sass && npm run compile",
 		"watch-sass": "node-sass -w -r views/assets/styles/ -o dist/views/assets/styles/ --output-style compressed",
 		"start": "npm run clean && npm run build && node dist/build/src/server.js"
-
 	},
 	"repository": {
 		"type": "git",
@@ -40,7 +39,6 @@
 		"session-file-store": "1.2.0"
 	},
 	"devDependencies": {
-
 		"@types/app-root-path": "^1.2.4",
 		"@types/chai": "4.1.4",
 		"@types/chai-as-promised": "^7.1.0",
