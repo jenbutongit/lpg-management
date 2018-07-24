@@ -1,19 +1,18 @@
 import {describe, it} from 'mocha'
 import {CourseTitleValidator} from '../../../src/validators/courseTitleValidator'
 import {expect} from 'chai'
+import {ValidationErrorMapper} from '../../../src/validators/validationErrorMapper'
 
 describe('CourseTitleValidator tests', () => {
-	const validator = new CourseTitleValidator()
+	const validator = new CourseTitleValidator(new ValidationErrorMapper())
 
 	it('should fail validation if title is missing', async () => {
 		const params = {}
 
 		const errors = await validator.check(params)
 
-		expect(errors.length).to.equal(1)
-		expect(errors[0].constraints.isNotEmpty).to.equal(
-			'title should not be empty'
-		)
+		expect(errors.size).to.equal(1)
+		expect(errors.fields.title).to.eql(['title should not be empty'])
 	})
 
 	it('should pass validation if title is present', async () => {
@@ -23,6 +22,6 @@ describe('CourseTitleValidator tests', () => {
 
 		const errors = await validator.check(params)
 
-		expect(errors.length).to.equal(0)
+		expect(errors.size).to.equal(0)
 	})
 })

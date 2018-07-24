@@ -1,8 +1,19 @@
-import {IsNotEmpty, validate} from 'class-validator'
+import {IsNotEmpty, validate, ValidationError} from 'class-validator'
+import {ValidationErrorMapper} from './validationErrorMapper'
 
 export class CourseTitleValidator {
-	check(params: any) {
-		return validate(new CourseTitle(params.title))
+	private _validationErrorMapper: ValidationErrorMapper = new ValidationErrorMapper()
+
+	constructor(validationErrorMapper: ValidationErrorMapper) {
+		this._validationErrorMapper = validationErrorMapper
+	}
+
+	async check(params: any) {
+		const validationErrors: ValidationError[] = await validate(
+			new CourseTitle(params.title)
+		)
+
+		return this._validationErrorMapper.map(validationErrors)
 	}
 }
 
