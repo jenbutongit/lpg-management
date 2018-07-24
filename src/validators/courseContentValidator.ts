@@ -1,4 +1,4 @@
-import {IsNotEmpty, Length, validate, ValidationError} from 'class-validator'
+import {IsNotEmpty, MaxLength, validate, ValidationError} from 'class-validator'
 import {ValidationErrorMapper} from './validationErrorMapper'
 
 export class CourseContentValidator {
@@ -19,11 +19,11 @@ export class CourseContentValidator {
 
 class CourseContent {
 	@IsNotEmpty()
-	@Length(0, 160)
+	@MaxLength(160)
 	shortDescription: string
 
 	@IsNotEmpty()
-	@Length(0, 1500)
+	@MaxLength(1500)
 	description: string
 
 	constructor(shortDescription: string, description: string) {

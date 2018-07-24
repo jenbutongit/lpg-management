@@ -13,11 +13,11 @@ describe('CourseTitleValidator tests', () => {
 
 		expect(errors.size).to.equal(4)
 		expect(errors.fields.shortDescription).to.eql([
-			'shortDescription must be longer than or equal to 0 characters',
+			'shortDescription must be shorter than or equal to 160 characters',
 			'shortDescription should not be empty',
 		])
 		expect(errors.fields.description).to.eql([
-			'description must be longer than or equal to 0 characters',
+			'description must be shorter than or equal to 1500 characters',
 			'description should not be empty',
 		])
 	})
@@ -29,8 +29,6 @@ describe('CourseTitleValidator tests', () => {
 		}
 
 		const errors = await validator.check(params)
-
-		console.log(errors)
 
 		expect(errors.size).to.equal(1)
 		expect(errors.fields.shortDescription).to.eql([
