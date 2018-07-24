@@ -47,9 +47,9 @@
     </div>
 
     <div class="column-container">
+
         <div class="column-two-thirds">  
             {% if pageResults %}
-           
                 {% block list %}
                     {{ list("Courses", pageResults) }}
                 {% endblock %}
@@ -61,6 +61,7 @@
                 {{ menuBox("Actions") }}
             {% endblock %}
         </div>
+
     </div>
 </div>
 {% endblock %}
