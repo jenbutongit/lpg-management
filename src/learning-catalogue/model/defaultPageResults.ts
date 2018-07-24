@@ -1,8 +1,8 @@
 import {PageResults} from './PageResults'
 
-export class CoursePageResults<Course> implements PageResults<Course> {
+export class DefaultPageResults<T> implements PageResults<T> {
 	private _page: number
-	private _results: Course[]
+	private _results: T[]
 	private _size: number
 	private _totalResults: number
 
@@ -14,11 +14,11 @@ export class CoursePageResults<Course> implements PageResults<Course> {
 		this._page = value
 	}
 
-	get results(): Course[] {
+	get results(): T[] {
 		return this._results
 	}
 
-	set results(value: Course[]) {
+	set results(value: T[]) {
 		this._results = value
 	}
 

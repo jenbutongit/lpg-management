@@ -1,7 +1,7 @@
 import {Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
-import {CoursePageResults} from '../learning-catalogue/model/coursePageResults'
+import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 
 export class HomeController {
 	learningCatalogue: LearningCatalogue
@@ -23,7 +23,7 @@ export class HomeController {
 			if (request.query.s) {
 				size = request.query.s
 			}
-			const pageResults: CoursePageResults<
+			const pageResults: DefaultPageResults<
 				Course
 			> = await self.learningCatalogue.listAll(page, size)
 

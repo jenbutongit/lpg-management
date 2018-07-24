@@ -1,13 +1,13 @@
 import {Course} from '../../../../src/learning-catalogue/model/course'
 import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
-import {CoursePageResults} from '../../../../src/learning-catalogue/model/coursePageResults'
+import {DefaultPageResults} from '../../../../src/learning-catalogue/model/defaultPageResults'
 
 describe('CoursePageResults tests', () => {
-	let course: CoursePageResults<Course>
+	let course: DefaultPageResults<Course>
 
 	beforeEach(() => {
-		course = new CoursePageResults()
+		course = new DefaultPageResults()
 	})
 
 	it('should be able to set page', () => {
@@ -59,5 +59,17 @@ describe('CoursePageResults tests', () => {
 		course.totalResults = 100
 
 		expect(course.getPageCount()).to.equal(10)
+	})
+
+	it('should be able to get next page', () => {
+		course.page = 0
+
+		expect(course.getNextPage()).to.equal(1)
+	})
+
+	it('should be able to get previous page', () => {
+		course.page = 5
+
+		expect(course.getPreviousPage()).to.equal(4)
 	})
 })
