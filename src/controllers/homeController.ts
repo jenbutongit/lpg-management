@@ -21,6 +21,7 @@ export class HomeController {
 
 			response.render('page/index', {
 				pageResults,
+				lpgUiUrl: response.locals.lpgUiUrl,
 			})
 		}
 	}

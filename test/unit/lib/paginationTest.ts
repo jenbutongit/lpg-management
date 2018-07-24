@@ -14,7 +14,9 @@ describe('Pagination tests', () => {
 
 		const pagination: Pagination = new Pagination()
 
-		const paginatedResults = pagination.calculatePaginatedResults(searchResults)
+		const paginatedResults = pagination.calculatePaginatedResults(
+			searchResults
+		)
 
 		expect(paginatedResults.totalResults).to.be.eql(10)
 		expect(paginatedResults.firstResult).to.be.eql(1)
