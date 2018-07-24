@@ -1,7 +1,7 @@
 import {AxiosInstance} from 'axios'
 import {Course} from './model/course'
 import {CourseFactory} from './model/factory/courseFactory'
-import {PageResults} from './model/PageResults'
+import {PageResults} from './model/pageResults'
 import {LearningCatalogueConfig} from './learningCatalogueConfig'
 
 export class LearningCatalogue {
@@ -38,26 +38,6 @@ export class LearningCatalogue {
 		} catch (e) {
 			throw new Error(`Error listing all courses - ${e}`)
 		}
-	}
-
-	get http(): AxiosInstance {
-		return this._http
-	}
-
-	set http(value: AxiosInstance) {
-		this._http = value
-	}
-
-	get config(): LearningCatalogueConfig {
-		return this._config
-	}
-
-	set config(value: LearningCatalogueConfig) {
-		this._config = value
-	}
-
-	get courseFactory(): CourseFactory {
-		return this._courseFactory
 	}
 
 	set courseFactory(value: CourseFactory) {

@@ -8,7 +8,7 @@ import {Request, Response} from 'express'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
-import {PageResults} from '../../../src/learning-catalogue/model/PageResults'
+import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
 
 chai.use(sinonChai)
 
@@ -46,6 +46,8 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/index')
+		expect(response.render).to.have.been.calledOnceWith('page/index', {
+			results: pageResults,
+		})
 	})
 })

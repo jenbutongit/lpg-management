@@ -73,4 +73,21 @@ export class Course {
 	set modules(value: Module[]) {
 		this._modules = value
 	}
+
+	getCost() {
+		const costArray = this.modules.map(module => module.price)
+		return costArray.length
+			? costArray.reduce((p, c) => (p || 0) + (c || 0), 0)
+			: null
+	}
+
+	getType() {
+		if (!this.modules.length) {
+			return null
+		}
+		if (this.modules.length > 1) {
+			return 'blended'
+		}
+		return this.modules[0].type
+	}
 }
