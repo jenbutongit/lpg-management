@@ -39,10 +39,19 @@ export const AUTHENTICATION = set({
 	clientId: env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
 	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl:
-		env.AUTHENTICATION_SERVICE_URL || 'http://identity.local.cshr.digital:8080',
+		env.AUTHENTICATION_SERVICE_URL ||
+		'http://identity.local.cshr.digital:8080',
 	callbackUrl: env.CALLBACK_URL || 'http://lpg.local.cshr.digital:3005',
 })
 
 export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000
 
 export const AUTHENTICATION_PATH = '/authenticate'
+
+export const COURSE_CATALOGUE = set({
+	auth: {
+		password: env.COURSE_CATALOGUE_PASS || 'password',
+		username: env.COURSE_CATALOGUE_USER || 'user',
+	},
+	url: env.COURSE_CATALOGUE_URL || 'http://localhost:9001',
+})
