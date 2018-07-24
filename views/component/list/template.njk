@@ -3,9 +3,7 @@
     {% for Course in pageResults.results %}
 
     <li class="list-details u--border--bgrey">
-        <a href="javascript:void(0)s">
-            <h3 class="list-title">{{ Course._title }}</h3>
-        </a>
+        <a class="govuk-link list-title" href="javascript:void(0)">{{ Course._title }}</a>
         {% if Course._modules.length > 1 %}
             <p class="govuk-body">This course comprises of {{Course._modules.length}} modules</p>
         {% endif %}
