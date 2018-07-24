@@ -1,4 +1,4 @@
-import {PageResults} from './PageResults'
+import {PageResults} from './pageResults'
 
 export class DefaultPageResults<T> implements PageResults<T> {
 	private _page: number
