@@ -9,9 +9,8 @@
     </div>
 
     <div class="column-container">
-        <div class="column-two-thirds">  
+        <div class="column-two-thirds">
             {% if pageResults %}
-           
                 {% block list %}
                     {{ list("Courses", pageResults) }}
                 {% endblock %}
@@ -26,32 +25,33 @@
     </div>
 </div>
 
-<!-- {% if paginatedResults.totalResults !== 0 %}
-     {{ pageResults.totalResults }}
-=======
-{% extends "../component/Page.html" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} {%block
-content %}
-<h1 class="govuk-heading-l">Content management</h1>
-{% if paginatedResults.totalResults !== 0 %}
->>>>>>> 374cd0ba19df97719eef0f4d8678214a5794d5f5
+{% if pageResults.totalResults !== 0 %}
 <div class="pager">
     <div class="pager__controls">
-        {% if paginatedResults.currentPage > 0 %}
-        <a class="pager__prev" href="/search?q={{query}}{courseType ? '&courseType=' + courseType.split(',').join('&courseType=') : ''}&s={{searchResults.size}}&p={{searchResults.page - 1}}">Prev</a>
-        {% endif %} {% for x in range(paginatedResults.pageCount) %} {% if x === paginatedResults.currentPage %}
-        <span>{{ x + 1 }}</span>
-        {% else %}
-        <a href="/search?q={{query}}{courseType ? '&courseType=' + courseType.split(',').join('&courseType=') : ''}&s={{searchResults.size}}&p={{ x+1 }}">{{ x+1 }}</a>
-        {% endif %} {% endfor %} {% if paginatedResults.currentPage != endResult %}
-        <a class="pager__next" href="/search?q={{query}}{courseType ? '&courseType=' + courseType.split(',').join('&courseType=') : ''}&s={{searchResults.size}}&p={{searchResults.page + 1}}">Next</a>
+        {% if pageResults.page > 0 %}
+            <a class="pager__prev" href="/?s={{pageResults.size}}&p={{pageResults.getPreviousPage()}}">Prev</a>
+        {% endif %}
+
+        {% if pageResults.getPageCount() != 1 %}
+            {% for x in range(pageResults.getPageCount()) %}
+                {% if x === pageResults.page +1 %}
+                    <span>{{ x + 1 }}</span>
+                {% else %}
+                    <a href="/?s={{pageResults.size}}&p={{x}}">{{ x+1 }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if pageResults.page != pageResults.getPageCount() - 1 %}
+                <a class="pager__next" href="/?s={{pageResults.size}}&p={{pageResults.getNextPage()}}">Next</a>
+            {% endif %}
         {% endif %}
 
         <div class="pager__summary">
-            Showing {{ paginatedResults.firstResult }} - {{ paginatedResults.lastResult }} of {{ paginatedResults.totalResults }}
+            Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}
         </div>
     </div>
 </div>
-{% endif %}  -->
+{% endif %}
 
 
 {% endblock %}
