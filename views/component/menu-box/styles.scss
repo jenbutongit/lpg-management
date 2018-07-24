@@ -27,6 +27,10 @@
 		background-color: darken($theme, 10%);
 		color: $white;
 	}
+
+	&:focus {
+		background-color: $theme;
+	}
 }
 
 .button-red {
