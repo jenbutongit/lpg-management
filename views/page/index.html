@@ -3,56 +3,55 @@
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
 {% block content %}
-<div class="govuk-grid-row">
-    <div class="u--border--bgrey">
-        <h1 class="govuk-heading-l">Content management</h1>
-    </div>
 
     <div class="govuk-width-container">
-      <main class="govuk-main-wrapper">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">  
+        <main class="govuk-main-wrapper">
+            <div class="govuk-grid-row">
+                <div class="u--border--bgrey">
+                    <h1 class="govuk-heading-l">Content management</h1>
+                </div>
+            </div>
+            <div class="govuk-grid-column-two-thirds">  
 
-            {% if pageResults %}
-                {% block list %}
-                    {{ list("Courses", pageResults) }}
-                {% endblock %}
-            {% endif %}
-        </div>
-
-        <div class="govuk-grid-column-one-third">
-            {% block menuBox %}
-                {{ menuBox("Actions") }}
-            {% endblock %}
-        </div>
-    </div>
-</div>
-
-{% if pageResults.totalResults !== 0 %}
-<div class="pager">
-    <div class="pager__controls">
-        {% if pageResults.page > 0 %}
-            <a class="pager__prev" href="/?s={{pageResults.size}}&p={{pageResults.getPreviousPage()}}">Prev</a>
-        {% endif %}
-
-        {% if pageResults.getPageCount() != 1 %}
-            {% for x in range(pageResults.getPageCount()) %}
-                {% if x === pageResults.page +1 %}
-                    <span>{{ x + 1 }}</span>
-                {% else %}
-                    <a href="/?s={{pageResults.size}}&p={{x}}">{{ x+1 }}</a>
+                {% if pageResults %}
+                    {% block list %}
+                        {{ list("Courses", pageResults) }}
+                    {% endblock %}
                 {% endif %}
-            {% endfor %}
+            </div>
 
-            {% if pageResults.page != pageResults.getPageCount() - 1 %}
-                <a class="pager__next" href="/?s={{pageResults.size}}&p={{pageResults.getNextPage()}}">Next</a>
-            {% endif %}
-        {% endif %}
-
-        <div class="pager__summary">
-            Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}
-
+            <div class="govuk-grid-column-one-third">
+                {% block menuBox %}
+                    {{ menuBox("Actions") }}
+                {% endblock %}
+            </div>
         </div>
+
+    {% if pageResults.totalResults !== 0 %}
+    <div class="pager">
+        <div class="pager__controls">
+            {% if pageResults.page > 0 %}
+                <a class="pager__prev" href="/?s={{pageResults.size}}&p={{pageResults.getPreviousPage()}}">Prev</a>
+            {% endif %}
+
+            {% if pageResults.getPageCount() != 1 %}
+                {% for x in range(pageResults.getPageCount()) %}
+                    {% if x === pageResults.page +1 %}
+                        <span>{{ x + 1 }}</span>
+                    {% else %}
+                        <a href="/?s={{pageResults.size}}&p={{x}}">{{ x+1 }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pageResults.page != pageResults.getPageCount() - 1 %}
+                    <a class="pager__next" href="/?s={{pageResults.size}}&p={{pageResults.getNextPage()}}">Next</a>
+                {% endif %}
+            {% endif %}
+
+            <div class="pager__summary">
+                Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}
+
+            </div>
         </main>
     </div>
 </div>
