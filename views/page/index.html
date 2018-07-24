@@ -34,7 +34,7 @@
 
         {% if pageResults.getPageCount() != 1 %}
             {% for x in range(pageResults.getPageCount()) %}
-                {% if x === pageResults.page +1 %}
+                {% if x == pageResults.page %}
                     <span>{{ x + 1 }}</span>
                 {% else %}
                     <a href="/?s={{pageResults.size}}&p={{x}}">{{ x+1 }}</a>
