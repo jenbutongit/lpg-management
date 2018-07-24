@@ -28,10 +28,6 @@ export class CourseFactory {
 		return course
 	}
 
-	get moduleFactory(): ModuleFactory {
-		return this._moduleFactory
-	}
-
 	set moduleFactory(value: ModuleFactory) {
 		this._moduleFactory = value
 	}

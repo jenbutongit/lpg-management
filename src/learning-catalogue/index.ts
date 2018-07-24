@@ -40,26 +40,6 @@ export class LearningCatalogue {
 		}
 	}
 
-	get http(): AxiosInstance {
-		return this._http
-	}
-
-	set http(value: AxiosInstance) {
-		this._http = value
-	}
-
-	get config(): LearningCatalogueConfig {
-		return this._config
-	}
-
-	set config(value: LearningCatalogueConfig) {
-		this._config = value
-	}
-
-	get courseFactory(): CourseFactory {
-		return this._courseFactory
-	}
-
 	set courseFactory(value: CourseFactory) {
 		this._courseFactory = value
 	}
