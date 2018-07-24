@@ -1,8 +1,12 @@
+{% from "button/macro.njk" import govukButton %}
+
 <div class="right-menu">
     <h4 class="menu-header">{{ boxTitle }}</h4>
     <a class="menu-link" href="#">Add a new course</a>
 
     {% if (delete === true} %}
-        <a class="button-red" href="javascript: void(0)">Delete</a>
+        {{ govukButton({
+            text: "Delete"
+        }) }}
     {% endif %}
 </div>

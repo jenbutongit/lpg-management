@@ -1,6 +1,10 @@
-.overview-item {
+.overview {
 	display: flex;
 	justify-content: space-between;
 	padding: 10px 8px 10px 0;
 	display: flex;
+
+	.overview-item {
+		line-height: 1.4;
+	}
 }
