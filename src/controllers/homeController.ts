@@ -2,6 +2,7 @@ import {Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {PageResults} from '../learning-catalogue/model/pageResults'
+import {CourseRequest} from '../extended'
 
 export class HomeController {
 	learningCatalogue: LearningCatalogue
@@ -22,6 +23,16 @@ export class HomeController {
 			response.render('page/index', {
 				pageResults,
 			})
+		}
+	}
+
+	public courseOverview() {
+		return async (request: Request, response: Response) => {
+			const req = request as CourseRequest
+
+			const course = req.course
+
+			response.render(`page/course/${course.id}`, {})
 		}
 	}
 }
