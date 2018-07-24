@@ -40,6 +40,46 @@ export class LearningCatalogue {
 		}
 	}
 
+	async create(course: Course): Promise<Course> {
+		try {
+			const response = await this._http.post(
+				`${this._config.url}/courses/`,
+				course,
+				{
+					auth: {
+						username: this._config.username,
+						password: this._config.password,
+					},
+				}
+			)
+
+			const location = response.headers.location
+			const courseId = location.substr(location.lastIndexOf('/') + 1)
+
+			return this.get(courseId)
+		} catch (e) {
+			throw new Error(`Error creating course: ${e}`)
+		}
+	}
+
+	async get(courseId: string): Promise<Course> {
+		try {
+			const response = await this._http.get(
+				`${this._config.url}/courses/${courseId}`,
+				{
+					auth: {
+						username: this._config.username,
+						password: this._config.password,
+					},
+				}
+			)
+
+			return this._courseFactory.create(response.data)
+		} catch (e) {
+			throw new Error(`Error retrieving course: ${e}`)
+		}
+	}
+
 	set courseFactory(value: CourseFactory) {
 		this._courseFactory = value
 	}
