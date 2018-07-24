@@ -5,6 +5,7 @@ import {IdentityService} from './identityService'
 import * as oauth2 from 'passport-oauth2'
 import {Identity} from './identity'
 import {AuthConfig} from './authConfig'
+import * as ctx from '../applicationContext'
 
 const logger = log4js.getLogger('config/passport')
 
@@ -145,6 +146,7 @@ export class Auth {
 		return (req: Request, res: Response, next: NextFunction) => {
 			res.locals.isAuthenticated = req.isAuthenticated()
 			res.locals.identity = req.user
+			res.locals.lpgUiUrl = ctx.default.lpgConfig.lpgUiUrl
 			next()
 		}
 	}
