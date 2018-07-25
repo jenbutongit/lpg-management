@@ -1,9 +1,28 @@
 import {Module} from './module'
+import {IsNotEmpty, MaxLength} from 'class-validator'
 
 export class Course {
 	private _id: string
+
+	@IsNotEmpty({
+		groups: ['default', 'titleOnly'],
+	})
 	private _title: string
+
+	@IsNotEmpty({
+		groups: ['default', 'descriptionsOnly'],
+	})
+	@MaxLength(160, {
+		groups: ['default', 'descriptionsOnly'],
+	})
 	private _shortDescription: string
+
+	@IsNotEmpty({
+		groups: ['default', 'descriptionsOnly'],
+	})
+	@MaxLength(1500, {
+		groups: ['default', 'descriptionsOnly'],
+	})
 	private _description: string
 	private _duration: number
 	private _learningOutcomes: string
