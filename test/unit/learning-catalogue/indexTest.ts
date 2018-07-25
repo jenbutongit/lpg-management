@@ -47,18 +47,16 @@ describe('Learning Catalogue tests', () => {
 		}
 
 		const get = sinon.stub()
-		get
-			.withArgs(`${config.url}/courses?page=0&size=10`, {
-				auth: {
-					username: config.username,
-					password: config.password,
-				},
+		get.withArgs(`${config.url}/courses?page=0&size=10`, {
+			auth: {
+				username: config.username,
+				password: config.password,
+			},
+		}).returns(
+			new Promise(resolve => {
+				resolve(response)
 			})
-			.returns(
-				new Promise(resolve => {
-					resolve(response)
-				})
-			)
+		)
 
 		http.get = get
 
