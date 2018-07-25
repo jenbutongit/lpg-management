@@ -79,8 +79,8 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-    expect(learningCatalogue.listAll).to.have.been.calledWith(3, 5)
-    
+		expect(learningCatalogue.listAll).to.have.been.calledWith(3, 5)
+
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
 			lpgUiUrl: lpgUiUrl,

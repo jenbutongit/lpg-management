@@ -49,14 +49,19 @@ app.use(
 )
 app.use(serveStatic(appRoot + '/dist/views/assets'))
 
-app.use('/govuk-frontend', express.static(appRoot + '/node_modules/govuk-frontend/'))
+app.use(
+	'/govuk-frontend',
+	express.static(appRoot + '/node_modules/govuk-frontend/')
+)
 
-app.use('/assets', express.static(appRoot + '/node_modules/govuk-frontend/assets'))
+app.use(
+	'/assets',
+	express.static(appRoot + '/node_modules/govuk-frontend/assets')
+)
 
 app.use(cookieParser())
 
 ctx.auth.configure(app)
-
 
 app.get('/', ctx.homeController.index())
 app.get('/course', ctx.homeController.course())
