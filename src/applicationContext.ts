@@ -9,6 +9,7 @@ import {AuthConfig} from './identity/authConfig'
 
 import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
 import {LearningCatalogue} from './learning-catalogue'
+import {EnvValue} from 'ts-json-properties'
 
 log4js.configure(config.LOGGING)
 
@@ -19,6 +20,7 @@ export class ApplicationContext {
 	auth: Auth
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
+	@EnvValue('lpgUiUrl') private lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -52,8 +54,9 @@ export class ApplicationContext {
 			this.learningCatalogueConfig
 		)
 
-		this.homeController = new HomeController(this.learningCatalogue)
+		this.homeController = new HomeController(
+			this.learningCatalogue,
+			this.lpgUiUrl
+		)
 	}
 }
-
-export default new ApplicationContext()
