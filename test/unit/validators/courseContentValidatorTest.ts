@@ -36,7 +36,7 @@ describe('CourseTitleValidator tests', () => {
 		])
 	})
 
-	it('should pass validation if shortDescription is 160 characters', async () => {
+	it('should pass validation if shortDescription is 160 characters or less', async () => {
 		const params = {
 			description: 'Course description',
 			shortDescription: 'x'.repeat(160),
@@ -61,7 +61,7 @@ describe('CourseTitleValidator tests', () => {
 		])
 	})
 
-	it('should pass validation if description is 1500 characters', async () => {
+	it('should pass validation if description is 1500 characters or less', async () => {
 		const params = {
 			description: 'x'.repeat(1500),
 			shortDescription: 'Course short description',
