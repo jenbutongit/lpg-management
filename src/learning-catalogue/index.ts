@@ -1,8 +1,8 @@
 import {AxiosInstance} from 'axios'
 import {Course} from './model/course'
 import {CourseFactory} from './model/factory/courseFactory'
-import {PageResults} from './model/pageResults'
 import {LearningCatalogueConfig} from './learningCatalogueConfig'
+import {DefaultPageResults} from './model/defaultPageResults'
 
 export class LearningCatalogue {
 	private _http: AxiosInstance
@@ -18,7 +18,7 @@ export class LearningCatalogue {
 	async listAll(
 		page: number = 0,
 		size: number = 10
-	): Promise<PageResults<Course>> {
+	): Promise<DefaultPageResults<Course>> {
 		try {
 			const response = await this._http.get(
 				`${this._config.url}/courses?page=${page}&size=${size}`,
@@ -34,7 +34,15 @@ export class LearningCatalogue {
 				this._courseFactory.create
 			)
 
-			return response.data as PageResults<Course>
+			// prettier-ignore
+			const coursePageResults: DefaultPageResults<Course> = new DefaultPageResults()
+
+			coursePageResults.size = size
+			coursePageResults.results = response.data.results
+			coursePageResults.page = page
+			coursePageResults.totalResults = response.data.totalResults
+
+			return coursePageResults
 		} catch (e) {
 			throw new Error(`Error listing all courses - ${e}`)
 		}

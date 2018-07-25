@@ -1,27 +1,38 @@
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
-import {PageResults} from '../learning-catalogue/model/pageResults'
+import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {CourseRequest} from '../extended'
 
 export class HomeController {
 	learningCatalogue: LearningCatalogue
+	lpgUiUrl: String
 
-	constructor(learningCatalogue: LearningCatalogue) {
+	constructor(learningCatalogue: LearningCatalogue, lpgUiUrl: String) {
 		this.learningCatalogue = learningCatalogue
+		this.lpgUiUrl = lpgUiUrl
 	}
 
 	public index() {
 		const self = this
-
 		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
-			const pageResults: PageResults<
-				Course
-			> = await self.learningCatalogue.listAll()
+			let page = 0
+			let size = 10
+
+			if (request.query.p) {
+				page = request.query.p
+			}
+			if (request.query.s) {
+				size = request.query.s
+			}
+
+			// prettier-ignore
+			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listAll(page, size)
 
 			response.render('page/index', {
 				pageResults,
+				lpgUiUrl: this.lpgUiUrl,
 			})
 		}
 	}
@@ -31,10 +42,28 @@ export class HomeController {
 			const req = request as CourseRequest
 
 			const course = req.course
-			// const course = new Course()
-			// course.title = 'Test Course'
 
 			response.render(`page/course`, {course})
+		}
+	}
+
+	public loadCourse() {
+		const self = this
+
+		return async (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => {
+			const req = request as CourseRequest
+			const courseId: string = req.params.courseId
+			const course = await await self.learningCatalogue.get(courseId)
+			if (course) {
+				req.course = course
+				next()
+			} else {
+				response.sendStatus(404)
+			}
 		}
 	}
 }

@@ -1,11 +1,12 @@
 import * as express from 'express'
-import * as ctx from './applicationContext'
 import * as session from 'express-session'
 import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
 import * as log4js from 'log4js'
 import * as config from './config'
 import * as serveStatic from 'serve-static'
+import {Properties} from 'ts-json-properties'
+import {ApplicationContext} from './applicationContext'
 
 const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
@@ -18,11 +19,15 @@ const FileStore = sessionFileStore(session)
 
 log4js.configure(config.LOGGING)
 
+Properties.initialize()
+const ctx = new ApplicationContext()
+
 app.set('views', [
 	appRoot + '/views',
 	appRoot + '/node_modules/govuk-frontend/',
 	appRoot + '/node_modules/govuk-frontend/components',
 ])
+
 expressNunjucks(app, {})
 
 app.use(
@@ -56,9 +61,11 @@ app.use(
 
 app.use(cookieParser())
 
-ctx.default.auth.configure(app)
+ctx.auth.configure(app)
 
-app.get('/', ctx.default.homeController.index())
-app.get('/courses/:courseId', ctx.default.homeController.courseOverview())
+app.param('courseId', ctx.homeController.loadCourse())
+
+app.get('/', ctx.homeController.index())
+app.get('/course/:courseId', ctx.homeController.courseOverview())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
