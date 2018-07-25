@@ -1,20 +1,25 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu-box/macro.njk" import menuBox %}
+{% from "../component/course/macro.njk" import courseDetails with context %}
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}Course overview- Civil Service Learning{% endblock %}
 {% block content %}
-<div class="grid-row">
-    <div class="u--border--bgrey">
-        <h1 class="govuk-heading-l">Course overview</h1>
+<div class="u--border--bgrey">
+    <h1 class="govuk-heading-l">{{ course.title }}</h1>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% block courseDetails %}
+        {{ courseDetails(course) }}
+        {% endblock %}
     </div>
 
-    <div class="column-container">
-        <div class="column-two-thirds">
-            {% if course %}
-                {{course.title}}
-            {% endif %}
-        </div>
+    <div class="govuk-grid-column-one-third">
+        {% block menuBox %}
+        {% set delete = true %}
+        {{ menuBox("Actions", delete) }}
+        {% endblock %}
     </div>
 </div>
 {% endblock %}
-
