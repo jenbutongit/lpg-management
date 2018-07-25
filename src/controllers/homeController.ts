@@ -24,9 +24,9 @@ export class HomeController {
 			if (request.query.s) {
 				size = request.query.s
 			}
-			const pageResults: DefaultPageResults<
-				Course
-			> = await self.learningCatalogue.listAll(page, size)
+
+			// prettier-ignore
+			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listAll(page, size)
 
 			response.render('page/index', {
 				pageResults,

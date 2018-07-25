@@ -34,9 +34,9 @@ export class LearningCatalogue {
 				this._courseFactory.create
 			)
 
-			const coursePageResults: DefaultPageResults<
-				Course
-			> = new DefaultPageResults()
+			// prettier-ignore
+			const coursePageResults: DefaultPageResults<Course> = new DefaultPageResults()
+
 			coursePageResults.size = size
 			coursePageResults.results = response.data.results
 			coursePageResults.page = page
