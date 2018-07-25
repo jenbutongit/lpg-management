@@ -9,6 +9,9 @@ import {AuthConfig} from './identity/authConfig'
 
 import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
 import {LearningCatalogue} from './learning-catalogue'
+import {ValidationErrorMapper} from './validators/validationErrorMapper'
+import {CourseContentValidator} from './validators/courseContentValidator'
+import {CourseTitleValidator} from './validators/courseTitleValidator'
 
 log4js.configure(config.LOGGING)
 
@@ -19,6 +22,9 @@ export class ApplicationContext {
 	auth: Auth
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
+	validationErrorMapper: ValidationErrorMapper
+	courseContentValidator: CourseContentValidator
+	courseTitleValidator: CourseTitleValidator
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -50,6 +56,14 @@ export class ApplicationContext {
 		this.learningCatalogue = new LearningCatalogue(
 			this.axiosInstance,
 			this.learningCatalogueConfig
+		)
+
+		this.validationErrorMapper = new ValidationErrorMapper()
+		this.courseContentValidator = new CourseContentValidator(
+			this.validationErrorMapper
+		)
+		this.courseTitleValidator = new CourseTitleValidator(
+			this.validationErrorMapper
 		)
 
 		this.homeController = new HomeController(this.learningCatalogue)
