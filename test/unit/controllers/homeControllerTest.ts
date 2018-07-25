@@ -9,6 +9,7 @@ import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
 import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
+import {CourseRequest} from '../../../src/extended'
 
 chai.use(sinonChai)
 
@@ -24,8 +25,8 @@ describe('Home Controller Tests', function() {
 
 	it('should render index template with default page and size', async function() {
 		const course: Course = new Course()
-		course.id = 'course-id'
-		course.title = 'course-title'
+		course.id = 'courseOverview-id'
+		course.title = 'courseOverview-title'
 
 		const pageResults: PageResults<Course> = {
 			page: 0,
@@ -53,8 +54,8 @@ describe('Home Controller Tests', function() {
 
 	it('should call learning catalogue with correct page and size', async function() {
 		const course: Course = new Course()
-		course.id = 'course-id'
-		course.title = 'course-title'
+		course.id = 'courseOverview-id'
+		course.title = 'courseOverview-title'
 
 		const pageResults: PageResults<Course> = {
 			page: 0,
@@ -84,6 +85,29 @@ describe('Home Controller Tests', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
 			lpgUiUrl: lpgUiUrl,
+		})
+	})
+
+	it('should call course overview page', async function() {
+		const course: Course = new Course()
+		course.id = 'courseOverview-id'
+		course.title = 'courseOverview-title'
+
+		const courseOverview: (
+			request: Request,
+			response: Response
+		) => void = homeController.courseOverview()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		const req = request as CourseRequest
+		req.course = course
+
+		await courseOverview(req, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course', {
+			course,
 		})
 	})
 })

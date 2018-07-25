@@ -185,7 +185,7 @@ describe('Learning Catalogue tests', () => {
 			data: {
 				id: courseId,
 				title: 'Test Course Title',
-				shortDescription: 'Test course short description',
+				shortDescription: 'Test courseOverview short description',
 			},
 		}
 
@@ -246,7 +246,7 @@ describe('Learning Catalogue tests', () => {
 			data: {
 				id: courseId,
 				title: 'Test Course Title',
-				shortDescription: 'Test course short description',
+				shortDescription: 'Test courseOverview short description',
 			},
 		}
 
@@ -304,9 +304,9 @@ describe('Learning Catalogue tests', () => {
 		)
 	})
 
-	it('should post course and return result of get', async () => {
+	it('should post courseOverview and return result of get', async () => {
 		const postUrl = `${config.url}/courses/`
-		const courseId = 'test-course-id'
+		const courseId = 'test-courseOverview-id'
 
 		const requestConfig = {
 			auth: {
@@ -340,7 +340,7 @@ describe('Learning Catalogue tests', () => {
 			data: {
 				id: courseId,
 				title: 'Test Course Title',
-				shortDescription: 'Test course short description',
+				shortDescription: 'Test courseOverview short description',
 			},
 		}
 
