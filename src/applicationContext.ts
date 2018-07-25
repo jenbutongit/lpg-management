@@ -12,6 +12,7 @@ import {LearningCatalogue} from './learning-catalogue'
 import {ValidationErrorMapper} from './validators/validationErrorMapper'
 import {CourseContentValidator} from './validators/courseContentValidator'
 import {CourseTitleValidator} from './validators/courseTitleValidator'
+import {EnvValue} from 'ts-json-properties'
 
 log4js.configure(config.LOGGING)
 
@@ -25,6 +26,7 @@ export class ApplicationContext {
 	validationErrorMapper: ValidationErrorMapper
 	courseContentValidator: CourseContentValidator
 	courseTitleValidator: CourseTitleValidator
+	@EnvValue('lpgUiUrl') private lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -66,8 +68,9 @@ export class ApplicationContext {
 			this.validationErrorMapper
 		)
 
-		this.homeController = new HomeController(this.learningCatalogue)
+		this.homeController = new HomeController(
+			this.learningCatalogue,
+			this.lpgUiUrl
+		)
 	}
 }
-
-export default new ApplicationContext()

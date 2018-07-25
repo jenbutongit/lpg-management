@@ -10,6 +10,16 @@
 	color: $white;
 }
 
+.govuk-heading-l {
+	padding-left: 0;
+}
+
+.govuk-grid-column-two-thirds {
+	.govuk-heading-m {
+		margin-top: 30px;
+	}
+}
+
 .govuk-header__container {
 	border-color: $theme;
 }
@@ -25,10 +35,30 @@
 ul {
 	padding: 0;
 	margin: 0;
+	list-style-type: none;
 }
 
-.govuk-heading-m {
-	padding-top: 10px;
-	margin-top: 30px;
-	margin-bottom: 13px;
+a {
+	color: $link;
+
+	&:visited {
+		color: $link-visited;
+	}
+
+	&:hover {
+		color: $link-hover;
+	}
+}
+
+.pager__controls {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	flex-direction: row-reverse;
+}
+
+@media screen and (min-width: $tablet-small) {
+	.pager__controls {
+		font-size: $font-normal;
+	}
 }

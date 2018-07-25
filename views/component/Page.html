@@ -86,9 +86,6 @@
 
 {% set mainClasses = "app-main-class" %}
 
-{% block main %}
-  {{ super() }}
-{% endblock %}
 
 {% block beforeContent %}
   {{ govukPhaseBanner({
@@ -100,7 +97,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-xl">Customised page template</h1>
+  
 {% endblock %}
 
 {% block footer %}
