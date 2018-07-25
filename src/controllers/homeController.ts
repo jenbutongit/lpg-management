@@ -2,11 +2,10 @@ import {Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {PageResults} from '../learning-catalogue/model/pageResults'
-import {Value} from 'ts-json-properties'
 
 export class HomeController {
 	learningCatalogue: LearningCatalogue
-	@Value('lpgUiUrl') private lpgUiUrl: String
+	lpgUiUrl: String
 
 	constructor(learningCatalogue: LearningCatalogue, lpgUiUrl: String) {
 		this.learningCatalogue = learningCatalogue
