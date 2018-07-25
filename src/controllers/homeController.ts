@@ -31,8 +31,10 @@ export class HomeController {
 			const req = request as CourseRequest
 
 			const course = req.course
+			// const course = new Course()
+			// course.title = 'Test Course'
 
-			response.render(`page/course/${course.id}`, {})
+			response.render(`page/course`, {course})
 		}
 	}
 }

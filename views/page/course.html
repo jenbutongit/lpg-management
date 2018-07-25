@@ -1,0 +1,20 @@
+{% from "../component/list/macro.njk" import list %}
+{% from "../component/menu-box/macro.njk" import menuBox %}
+
+{% extends "../component/Page.njk" %} {% block pageTitle %}Course overview- Civil Service Learning{% endblock %}
+{% block content %}
+<div class="grid-row">
+    <div class="u--border--bgrey">
+        <h1 class="govuk-heading-l">Course overview</h1>
+    </div>
+
+    <div class="column-container">
+        <div class="column-two-thirds">
+            {% if course %}
+                {{course.title}}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
