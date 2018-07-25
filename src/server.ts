@@ -35,7 +35,8 @@ app.use(
 		name: 'lpg-management',
 		resave: true,
 		saveUninitialized: true,
-		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
+		secret:
+			'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
 		store: new FileStore({
 			path: process.env.NOW ? `/tmp/sessions` : `.sessions`,
 		}),
@@ -58,5 +59,8 @@ app.use(cookieParser())
 ctx.default.auth.configure(app)
 
 app.get('/', ctx.default.homeController.index())
+
+app.get('/add-course', ctx.default.homeController.addCourse())
+app.get('/add-course-details', ctx.default.homeController.addCourseDetails())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

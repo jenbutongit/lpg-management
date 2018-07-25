@@ -24,4 +24,18 @@ export class HomeController {
 			})
 		}
 	}
+
+	public addCourse() {
+		//TODO: Return empty list of results here if learning catalogue is down?
+		return async (request: Request, response: Response) => {
+			response.render('page/add-course-title', {})
+		}
+	}
+
+	public addCourseDetails() {
+		//TODO: Return empty list of results here if learning catalogue is down?
+		return async (request: Request, response: Response) => {
+			response.render('page/add-course-details', {})
+		}
+	}
 }
