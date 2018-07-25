@@ -57,7 +57,7 @@ export class HomeController {
 		) => {
 			const req = request as CourseRequest
 			const courseId: string = req.params.courseId
-			const course = await await self.learningCatalogue.get(courseId)
+			const course = await self.learningCatalogue.get(courseId)
 			if (course) {
 				req.course = course
 				next()
