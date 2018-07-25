@@ -43,20 +43,14 @@ app.use(
 )
 app.use(serveStatic(appRoot + '/dist/views/assets'))
 
-app.use(
-	'/govuk-frontend',
-	express.static(appRoot + '/node_modules/govuk-frontend/')
-)
+app.use('/govuk-frontend', express.static(appRoot + '/node_modules/govuk-frontend/'))
 
-app.use(
-	'/assets',
-	express.static(appRoot + '/node_modules/govuk-frontend/assets')
-)
+app.use('/assets', express.static(appRoot + '/node_modules/govuk-frontend/assets'))
 
 app.use(cookieParser())
 
 ctx.default.auth.configure(app)
 
 app.get('/', ctx.default.homeController.index())
-
+app.get('/course', ctx.default.homeController.course())
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

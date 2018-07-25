@@ -1,0 +1,25 @@
+{% from "../component/menu-box/macro.njk" import menuBox %}
+{% from "../component/course/macro.njk" import course %}
+
+{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
+{% block content %}
+    
+<div class="u--border--bgrey">
+    <h1 class="govuk-heading-l">Management and negotiation skills</h1>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">  
+        {% block course %}
+            {{ course() }}
+        {% endblock %}
+    </div>
+
+    <div class="govuk-grid-column-one-third">
+        {% block menuBox %}
+            {% set delete = true %}
+            {{ menuBox("Actions", delete) }}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}
