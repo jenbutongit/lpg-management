@@ -10,6 +10,7 @@ import {AuthConfig} from './identity/authConfig'
 import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
 import {LearningCatalogue} from './learning-catalogue'
 import {CourseValidator} from './learning-catalogue/validator/courseValidator'
+import {EnvValue} from 'ts-json-properties'
 
 log4js.configure(config.LOGGING)
 
@@ -21,6 +22,7 @@ export class ApplicationContext {
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
 	courseValidator: CourseValidator
+	@EnvValue('lpgUiUrl') private lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -56,8 +58,9 @@ export class ApplicationContext {
 
 		this.courseValidator = new CourseValidator()
 
-		this.homeController = new HomeController(this.learningCatalogue)
+		this.homeController = new HomeController(
+			this.learningCatalogue,
+			this.lpgUiUrl
+		)
 	}
 }
-
-export default new ApplicationContext()

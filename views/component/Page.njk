@@ -86,10 +86,6 @@
 
 {% set mainClasses = "app-main-class" %}
 
-{% block main %}
-  {{ super() }}
-{% endblock %}
-
 {% block beforeContent %}
   {{ govukPhaseBanner({
     tag: {
