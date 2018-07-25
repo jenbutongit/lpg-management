@@ -21,7 +21,36 @@ describe('Home Controller Tests', function() {
 		homeController = new HomeController(learningCatalogue)
 	})
 
-	it('should render index template', async function() {
+	it('should render index template with default page and size', async function() {
+		const course: Course = new Course()
+		course.id = 'course-id'
+		course.title = 'course-title'
+
+		const pageResults: PageResults<Course> = {
+			page: 0,
+			size: 10,
+			totalResults: 21,
+			results: [course],
+		} as PageResults<Course>
+
+		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
+		learningCatalogue.listAll = listAll
+
+		const index: (
+			request: Request,
+			response: Response
+		) => void = homeController.index()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+		await index(request, response)
+
+		expect(learningCatalogue.listAll).to.have.been.calledWith(0, 10)
+
+		expect(response.render).to.have.been.calledOnceWith('page/index')
+	})
+
+	it('should call learning catalogue with correct page and size', async function() {
 		const course: Course = new Course()
 		course.id = 'course-id'
 		course.title = 'course-title'
@@ -44,10 +73,13 @@ describe('Home Controller Tests', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
+		request.query.p = 3
+		request.query.s = 5
+
 		await index(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/index', {
-			pageResults,
-		})
+		expect(learningCatalogue.listAll).to.have.been.calledWith(3, 5)
+
+		expect(response.render).to.have.been.calledOnceWith('page/index')
 	})
 })

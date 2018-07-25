@@ -45,6 +45,7 @@
 		"moment": "2.22.2"
 	},
 	"devDependencies": {
+		"@types/app-root-path": "^1.2.4",
 		"@3846masa/axios-cookiejar-support": "0.3.5",
 		"@types/app-root-path": "1.2.4",
 		"@types/chai": "4.1.4",

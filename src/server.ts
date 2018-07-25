@@ -62,5 +62,6 @@ app.get('/', ctx.default.homeController.index())
 
 app.get('/add-course', ctx.default.homeController.addCourse())
 app.get('/add-course-details', ctx.default.homeController.addCourseDetails())
+app.get('/course', ctx.default.homeController.course())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
