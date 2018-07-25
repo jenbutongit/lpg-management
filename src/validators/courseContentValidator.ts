@@ -1,8 +1,23 @@
 import {IsNotEmpty, MaxLength, validate, ValidationError} from 'class-validator'
 import {ValidationErrorMapper} from './validationErrorMapper'
 
+/**
+	Usage example:
+
+    const courseContentValidator = new CourseContentValidator(new ValidationErrorMapper)
+
+	const errors = courseContentValidator.check(request.params)
+
+	if (errors.size > 0) {
+		for (const message in errors.fields.shortDescription) {
+			console.log(message)
+		}
+	}
+
+ **/
+
 export class CourseContentValidator {
-	private _validationErrorMapper: ValidationErrorMapper = new ValidationErrorMapper()
+	private _validationErrorMapper: ValidationErrorMapper
 
 	constructor(validationErrorMapper: ValidationErrorMapper) {
 		this._validationErrorMapper = validationErrorMapper
