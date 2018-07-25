@@ -136,9 +136,7 @@ describe('Home Controller Tests', function() {
 		await loadCourse(req, response, next)
 
 		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
-
 		expect(req.course).to.have.be.eql(course)
-
 		expect(next).to.have.been.calledOnce
 	})
 
