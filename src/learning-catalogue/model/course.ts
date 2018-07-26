@@ -6,22 +6,27 @@ export class Course {
 
 	@IsNotEmpty({
 		groups: ['all', 'title'],
+		message: 'validation.course.title.empty',
 	})
 	private _title: string
 
 	@IsNotEmpty({
 		groups: ['all', 'shortDescription'],
+		message: 'validation.course.shortDescription.empty',
 	})
 	@MaxLength(160, {
 		groups: ['all', 'shortDescription'],
+		message: 'validation.course.shortDescription.maxLength',
 	})
 	private _shortDescription: string
 
 	@IsNotEmpty({
 		groups: ['all', 'description'],
+		message: 'validation.course.description.empty',
 	})
 	@MaxLength(1500, {
 		groups: ['all', 'description'],
+		message: 'validation.course.description.maxLength',
 	})
 	private _description: string
 	private _duration: number

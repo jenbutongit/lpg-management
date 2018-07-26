@@ -23,7 +23,13 @@ import {CourseFactory} from '../model/factory/courseFactory'
  *   size: 2,
  *   fields: {
  *     title: [
- *       '_title should not be empty'
+ *       'validation.course.title.empty'
+ *     ],
+ *     shortDescription: [
+ *       'validation.course.shortDescription.empty'
+ *     ]
+ *     description: [
+ *       'validation.course.description.empty'
  *     ]
  *   }
  * }
@@ -33,7 +39,7 @@ import {CourseFactory} from '../model/factory/courseFactory'
  * const errors = courseValidator.check(course)
  *
  * if (errors.size()) {
- *   for (message in errors.fields._title) {
+ *   for (message in errors.fields.title) {
  *     console.log(message)
  *   }
  * }

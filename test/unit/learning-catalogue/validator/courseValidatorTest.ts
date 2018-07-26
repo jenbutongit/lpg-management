@@ -32,7 +32,9 @@ describe('CourseValidator tests', () => {
 			)
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._title).to.eql(['_title should not be empty'])
+			expect(errors.fields.title).to.eql([
+				'validation.course.title.empty',
+			])
 		})
 
 		it('should fail validation if title is present but is an empty string', async () => {
@@ -44,7 +46,9 @@ describe('CourseValidator tests', () => {
 			)
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._title).to.eql(['_title should not be empty'])
+			expect(errors.fields.title).to.eql([
+				'validation.course.title.empty',
+			])
 		})
 	})
 
@@ -55,9 +59,9 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, 'shortDescription')
 
 			expect(errors.size).to.equal(2)
-			expect(errors.fields._shortDescription).to.eql([
-				'_shortDescription must be shorter than or equal to 160 characters',
-				'_shortDescription should not be empty',
+			expect(errors.fields.shortDescription).to.eql([
+				'validation.course.shortDescription.maxLength',
+				'validation.course.shortDescription.empty',
 			])
 		})
 
@@ -69,8 +73,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, 'shortDescription')
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._shortDescription).to.eql([
-				'_shortDescription must be shorter than or equal to 160 characters',
+			expect(errors.fields.shortDescription).to.eql([
+				'validation.course.shortDescription.maxLength',
 			])
 		})
 
@@ -102,9 +106,9 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, 'description')
 
 			expect(errors.size).to.equal(2)
-			expect(errors.fields._description).to.eql([
-				'_description must be shorter than or equal to 1500 characters',
-				'_description should not be empty',
+			expect(errors.fields.description).to.eql([
+				'validation.course.description.maxLength',
+				'validation.course.description.empty',
 			])
 		})
 
@@ -116,8 +120,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, 'description')
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._description).to.eql([
-				'_description should not be empty',
+			expect(errors.fields.description).to.eql([
+				'validation.course.description.empty',
 			])
 		})
 
@@ -129,8 +133,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, 'description')
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._description).to.eql([
-				'_description must be shorter than or equal to 1500 characters',
+			expect(errors.fields.description).to.eql([
+				'validation.course.description.maxLength',
 			])
 		})
 
@@ -164,7 +168,9 @@ describe('CourseValidator tests', () => {
 			})
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._title).to.eql(['_title should not be empty'])
+			expect(errors.fields.title).to.eql([
+				'validation.course.title.empty',
+			])
 		})
 
 		it('should fail validation if title is present but is an empty string', async () => {
@@ -175,7 +181,9 @@ describe('CourseValidator tests', () => {
 			})
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._title).to.eql(['_title should not be empty'])
+			expect(errors.fields.title).to.eql([
+				'validation.course.title.empty',
+			])
 		})
 
 		it('should fail validation if title, shortDescription and description are missing', async () => {
@@ -184,15 +192,17 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params)
 
 			expect(errors.size).to.equal(5)
-			expect(errors.fields._shortDescription).to.eql([
-				'_shortDescription must be shorter than or equal to 160 characters',
-				'_shortDescription should not be empty',
+			expect(errors.fields.shortDescription).to.eql([
+				'validation.course.shortDescription.maxLength',
+				'validation.course.shortDescription.empty',
 			])
-			expect(errors.fields._description).to.eql([
-				'_description must be shorter than or equal to 1500 characters',
-				'_description should not be empty',
+			expect(errors.fields.description).to.eql([
+				'validation.course.description.maxLength',
+				'validation.course.description.empty',
 			])
-			expect(errors.fields._title).to.eql(['_title should not be empty'])
+			expect(errors.fields.title).to.eql([
+				'validation.course.title.empty',
+			])
 		})
 
 		it('should fail validation if shortDescription is greater than 160 characters', async () => {
@@ -205,8 +215,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params)
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._shortDescription).to.eql([
-				'_shortDescription must be shorter than or equal to 160 characters',
+			expect(errors.fields.shortDescription).to.eql([
+				'validation.course.shortDescription.maxLength',
 			])
 		})
 
@@ -232,8 +242,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params)
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._description).to.eql([
-				'_description must be shorter than or equal to 1500 characters',
+			expect(errors.fields.description).to.eql([
+				'validation.course.description.maxLength',
 			])
 		})
 
@@ -259,8 +269,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params)
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields._description).to.eql([
-				'_description should not be empty',
+			expect(errors.fields.description).to.eql([
+				'validation.course.description.empty',
 			])
 		})
 
