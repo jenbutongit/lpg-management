@@ -65,6 +65,9 @@ ctx.auth.configure(app)
 
 app.param('courseId', ctx.homeController.loadCourse())
 
+app.get('/', function(req, res) {
+	res.redirect('/content-management')
+})
 app.get('/content-management', ctx.homeController.index())
 app.get(
 	'/content-management/course/:courseId',
