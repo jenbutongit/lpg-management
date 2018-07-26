@@ -1,7 +1,8 @@
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
+import {CourseRequest} from '../extended'
 
 export class HomeController {
 	learningCatalogue: LearningCatalogue
@@ -36,9 +37,33 @@ export class HomeController {
 		}
 	}
 
-	public course() {
+	public courseOverview() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course', {})
+			const req = request as CourseRequest
+
+			const course = req.course
+
+			response.render(`page/course`, {course})
+		}
+	}
+
+	public loadCourse() {
+		const self = this
+
+		return async (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => {
+			const req = request as CourseRequest
+			const courseId: string = req.params.courseId
+			const course = await self.learningCatalogue.get(courseId)
+			if (course) {
+				req.course = course
+				next()
+			} else {
+				response.sendStatus(404)
+			}
 		}
 	}
 }

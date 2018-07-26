@@ -1,24 +1,24 @@
+{% from "../component/list/macro.njk" import list %}
 {% from "../component/menu-box/macro.njk" import menuBox %}
-{% from "../component/course/macro.njk" import course %}
+{% from "../component/course/macro.njk" import courseDetails with context %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
+{% extends "../component/Page.njk" %} {% block pageTitle %}Course overview - Civil Service Learning{% endblock %}
 {% block content %}
-    
 <div class="u--border--bgrey">
-    <h1 class="govuk-heading-l">Management and negotiation skills</h1>
+    <h1 class="govuk-heading-l">{{ course.title }}</h1>
 </div>
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">  
-        {% block course %}
-            {{ course() }}
+    <div class="govuk-grid-column-two-thirds">
+        {% block courseDetails %}
+        {{ courseDetails(course) }}
         {% endblock %}
     </div>
 
     <div class="govuk-grid-column-one-third">
         {% block menuBox %}
-            {% set delete = true %}
-            {{ menuBox("Actions", delete) }}
+        {% set delete = true %}
+        {{ menuBox("Actions", delete) }}
         {% endblock %}
     </div>
 </div>

@@ -70,6 +70,15 @@ app.use(cookieParser())
 
 ctx.auth.configure(app)
 
-app.get('/', ctx.homeController.index())
-app.get('/course', ctx.homeController.course())
+app.param('courseId', ctx.homeController.loadCourse())
+
+app.get('/', function(req, res) {
+	res.redirect('/content-management')
+})
+app.get('/content-management', ctx.homeController.index())
+app.get(
+	'/content-management/course/:courseId',
+	ctx.homeController.courseOverview()
+)
+
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

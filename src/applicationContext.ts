@@ -22,7 +22,7 @@ export class ApplicationContext {
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
 	courseValidator: CourseValidator
-	@EnvValue('lpgUiUrl') private lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') private lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
