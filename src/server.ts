@@ -7,6 +7,7 @@ import * as config from './config'
 import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
+import * as i18n from 'i18n'
 
 const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
@@ -18,6 +19,12 @@ const app = express()
 const FileStore = sessionFileStore(session)
 
 log4js.configure(config.LOGGING)
+
+i18n.configure({
+	directory: 'src/locale',
+})
+
+app.use(i18n.init)
 
 Properties.initialize()
 const ctx = new ApplicationContext()
