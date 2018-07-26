@@ -20,7 +20,7 @@ export class ApplicationContext {
 	auth: Auth
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
-	@EnvValue('lpgUiUrl') private lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') private lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
