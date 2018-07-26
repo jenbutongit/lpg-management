@@ -7,6 +7,7 @@ import * as config from './config'
 import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
+import * as i18n from 'i18n'
 
 const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
@@ -18,6 +19,12 @@ const app = express()
 const FileStore = sessionFileStore(session)
 
 log4js.configure(config.LOGGING)
+
+i18n.configure({
+	directory: 'src/locale',
+})
+
+app.use(i18n.init)
 
 Properties.initialize()
 const ctx = new ApplicationContext()
@@ -65,10 +72,21 @@ ctx.auth.configure(app)
 
 app.param('courseId', ctx.homeController.loadCourse())
 
+<<<<<<< HEAD
 app.get('/', ctx.homeController.index())
 
 app.get('/course/:courseId', ctx.homeController.courseOverview())
 app.get('/add-course', ctx.homeController.addCourse())
 app.get('/add-course-details', ctx.homeController.addCourseDetails())
+=======
+app.get('/', function(req, res) {
+	res.redirect('/content-management')
+})
+app.get('/content-management', ctx.homeController.index())
+app.get(
+	'/content-management/course/:courseId',
+	ctx.homeController.courseOverview()
+)
+>>>>>>> origin
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
