@@ -1,8 +1,45 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu-box/macro.njk" import menuBox %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %} 
+{% extends "../component/Page.njk" %} {% block pageTitle %}Content management - Civil Service Learning{% endblock %}
+
+{% block header %}
+    {{ govukHeader({
+        homepageUrl: "#",
+        containerClasses: "govuk-width-container",
+        serviceName: "Civil Service Learning",
+        serviceUrl: "#",
+        navigation: [
+            {
+                href: lpgUiUrl + "/home",
+                text: "Home",
+                active: true
+            },
+            {
+                href: lpgUiUrl + "/suggestions-for-you",
+                text: "Suggestions for you"
+            },
+            {
+                href: lpgUiUrl + "/learning-record",
+                text: "Learning record"
+            },
+            {
+                href: lpgUiUrl + "/profile",
+                text: "Profile"
+            },
+            {
+                href: "/",
+                text: "Admin"
+            },
+            {
+                href: lpgUiUrl + "/sign-out",
+                text: "Sign out"
+            }
+            ]
+    }) }}
+{% endblock %}
 {% block content %}
+
 
 <div class="u--border--bgrey">
     <h1 class="govuk-heading-l">Content management</h1>
@@ -14,6 +51,7 @@
             {% block list %}
                 {{ list("Courses", pageResults) }}
             {% endblock %}
+
         {% endif %}
 
         {% if pageResults.totalResults !== 0 %}
