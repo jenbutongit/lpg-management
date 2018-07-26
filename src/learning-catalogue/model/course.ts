@@ -5,23 +5,23 @@ export class Course {
 	private _id: string
 
 	@IsNotEmpty({
-		groups: ['default', 'titleOnly'],
+		groups: ['all', 'title'],
 	})
 	private _title: string
 
 	@IsNotEmpty({
-		groups: ['default', 'descriptionsOnly'],
+		groups: ['all', 'shortDescription'],
 	})
 	@MaxLength(160, {
-		groups: ['default', 'descriptionsOnly'],
+		groups: ['all', 'shortDescription'],
 	})
 	private _shortDescription: string
 
 	@IsNotEmpty({
-		groups: ['default', 'descriptionsOnly'],
+		groups: ['all', 'description'],
 	})
 	@MaxLength(1500, {
-		groups: ['default', 'descriptionsOnly'],
+		groups: ['all', 'description'],
 	})
 	private _description: string
 	private _duration: number

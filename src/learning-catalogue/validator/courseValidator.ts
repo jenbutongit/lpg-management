@@ -2,6 +2,44 @@ import {validate, ValidationError} from 'class-validator'
 import {ValidationErrorMapper} from './validationErrorMapper'
 import {CourseFactory} from '../model/factory/courseFactory'
 
+/**
+ * Validates properties of a Course.
+ *
+ * const courseValidator = new CourseValidator()
+ *
+ * By default will validate all properties of a course:
+ *
+ * const errors = courseValidator.check(course)
+ *
+ * Individual properties can also be checked by adding them as an array after the course:
+ *
+ * const errors = courseValidator.check(course, ['title', 'shortDescription', 'description'])
+ *
+ * Currently only title, shortDescription, and description are validated.
+ *
+ * Errors are returned in an object:
+ *
+ * errors = {
+ *   size: 2,
+ *   fields: {
+ *     title: [
+ *       '_title should not be empty'
+ *     ]
+ *   }
+ * }
+ *
+ * Example:
+ *
+ * const errors = courseValidator.check(course)
+ *
+ * if (errors.size()) {
+ *   for (message in errors.fields._title) {
+ *     console.log(message)
+ *   }
+ * }
+
+ */
+
 export class CourseValidator {
 	private _validationErrorMapper: ValidationErrorMapper = new ValidationErrorMapper()
 	private _courseFactory: CourseFactory = new CourseFactory()
@@ -24,7 +62,7 @@ export class CourseValidator {
 
 	async check(
 		params: any,
-		group: 'default' | 'titleOnly' | 'descriptionsOnly' = 'default'
+		group: 'all' | 'title' | 'shortDescription' | 'description' = 'all'
 	) {
 		const validationErrors: ValidationError[] = await validate(
 			this._courseFactory.create(params),
