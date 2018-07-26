@@ -9,6 +9,7 @@ import {AuthConfig} from './identity/authConfig'
 
 import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
 import {LearningCatalogue} from './learning-catalogue'
+import {CourseValidator} from './learning-catalogue/validator/courseValidator'
 import {EnvValue} from 'ts-json-properties'
 
 log4js.configure(config.LOGGING)
@@ -20,6 +21,7 @@ export class ApplicationContext {
 	auth: Auth
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
+	courseValidator: CourseValidator
 	@EnvValue('LPG_UI_URL') private lpgUiUrl: String
 
 	constructor() {
@@ -53,6 +55,8 @@ export class ApplicationContext {
 			this.axiosInstance,
 			this.learningCatalogueConfig
 		)
+
+		this.courseValidator = new CourseValidator()
 
 		this.homeController = new HomeController(
 			this.learningCatalogue,
