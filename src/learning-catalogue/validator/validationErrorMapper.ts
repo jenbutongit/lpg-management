@@ -5,7 +5,10 @@ export class ValidationErrorMapper {
 		const fields: any = {}
 
 		validationErrors.map(
-			x => (fields[x.property] = Object.values(x.constraints))
+			x =>
+				(fields[x.property.replace(/^_+/, '')] = Object.values(
+					x.constraints
+				))
 		)
 
 		return {
