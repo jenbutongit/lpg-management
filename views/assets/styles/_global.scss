@@ -1,3 +1,8 @@
+.app-html-class {
+	font-family: 'nta', Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+}
+
 .govuk-header__navigation-item--active a:link,
 .govuk-header__navigation-item--active a:hover,
 .govuk-header__navigation-item--active a:visited {
@@ -53,6 +58,10 @@ a {
 
 .cancel-button {
 	display: block;
+}
+
+.govuk-error-summary__list {
+	display: none;
 }
 
 @media screen and (min-width: $tablet-small) {

@@ -3,12 +3,16 @@
 {{ govukTextarea({
     name: name,
     id: name,
+    hint: {
+        text: hint
+    },
     attributes:{
         maxlength: maxlength
     },
     label: {
         text: label
-    }
+    },
+    classes: 
+            "form-control js-char-count govuk-c-charcount"
 }) }}
 
-<script src="./charcount.js"></script>
