@@ -72,21 +72,15 @@ ctx.auth.configure(app)
 
 app.param('courseId', ctx.homeController.loadCourse())
 
-<<<<<<< HEAD
-app.get('/', ctx.homeController.index())
-
-app.get('/course/:courseId', ctx.homeController.courseOverview())
-app.get('/add-course', ctx.homeController.addCourse())
-app.get('/add-course-details', ctx.homeController.addCourseDetails())
-=======
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
+app.get('/add-course', ctx.homeController.addCourse())
+app.get('/add-course-details', ctx.homeController.addCourseDetails())
 app.get('/content-management', ctx.homeController.index())
 app.get(
 	'/content-management/course/:courseId',
 	ctx.homeController.courseOverview()
 )
->>>>>>> origin
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
