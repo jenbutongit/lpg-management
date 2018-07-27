@@ -47,6 +47,12 @@ export class HomeController {
 		}
 	}
 
+	public addModule() {
+		return async (request: Request, response: Response) => {
+			response.render(`page/add-module`)
+		}
+	}
+
 	public loadCourse() {
 		const self = this
 

@@ -80,5 +80,6 @@ app.get(
 	'/content-management/course/:courseId',
 	ctx.homeController.courseOverview()
 )
+app.get('/add-module', ctx.homeController.addModule())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

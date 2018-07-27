@@ -57,6 +57,19 @@ a {
 	flex-direction: row-reverse;
 }
 
+.button-blue {
+	background-color: $govuk-link-colour;
+	margin-left: 5px;
+
+	&:hover {
+		background-color: darken($govuk-link-colour, 10%);
+	}
+
+	&:focus {
+		background-color: $govuk-link-colour;
+	}
+}
+
 @media screen and (min-width: $tablet-small) {
 	.pager__controls {
 		font-size: $font-normal;
