@@ -46,9 +46,7 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-            
-            <form action="/form-handler" method="post">
-                {{ govukErrorSummary({
+             {{ govukErrorSummary({
                     titleText: "There is a problem",
                     errorList: [
                         {
@@ -57,6 +55,7 @@
                         }
                     ]
                 }) }}
+            <form action="/form-handler" method="post">
 
                 <fieldset class="govuk-fieldset">
                     {{ govukInput({

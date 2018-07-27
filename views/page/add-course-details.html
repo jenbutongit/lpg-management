@@ -46,16 +46,38 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
+
+             {{ govukErrorSummary({
+                    titleText: "There is a problem",
+                    errorList: [
+                        {
+                        text: "You must include a course title",
+                        href: "#shortDesc"
+                        },
+                        {
+                        text: "You must include a course title",
+                        href: "#description"
+                        },
+                        {
+                        text: "You must include a course title",
+                        href: "#outcomes"
+                        },
+                        {
+                        text: "You must include a course title",
+                        href: "#preparation"
+                        }
+                    ]
+                }) }}
             <form action="/form-handler" method="post">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
-                        {{ textarea("shortDesc", "Maximum of 160 characters", 160, "Short description") }}
+                        {{ textarea("shortDesc", "shortDesc", "Maximum of 160 characters", 160, "Short description") }}
                             
-                        {{ textarea("Description", "Maximum of 1500 characters", 1500, "Description") }}
+                        {{ textarea("Description", "description", "Maximum of 1500 characters", 1500, "Description") }}
                 
-                        {{ textarea("Outcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
+                        {{ textarea("Outcomes", "outcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
                     
-                        {{ textarea("Preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
+                        {{ textarea("Preparation", "preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
                     {% endblock %}
                 </fieldset>
            
@@ -74,10 +96,4 @@
 {% block bodyEnd %}
     <script src="/govuk-frontend/all.js"></script>
     <script src="/govuk-frontend/assets/char-count.js"></script>
-    <script>
-        var charCount = new GOVUK.CharCount()
-        charCount.init({
-            selector: '.js-char-count'
-        })
-    </script>
 {% endblock %}
