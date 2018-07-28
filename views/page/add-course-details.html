@@ -68,16 +68,19 @@
                         }
                     ]
                 }) }}
-            <form action="/form-handler" method="post">
+            <form action="/content-management/add-course-details" method="post">
+
+                <input id="title" name="title" type="hidden" value="{{title}}">
                 <fieldset class="govuk-fieldset">
+
                     {% block textarea %}
-                        {{ textarea("shortDesc", "shortDesc", "Maximum of 160 characters", 160, "Short description") }}
-                            
-                        {{ textarea("Description", "description", "Maximum of 1500 characters", 1500, "Description") }}
+                        {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, "Short description") }}
+
+                        {{ textarea("description", "description", "Maximum of 1500 characters", 1500, "Description") }}
                 
-                        {{ textarea("Outcomes", "outcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
+                        {{ textarea("learningOutcomes", "outcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
                     
-                        {{ textarea("Preparation", "preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
+                        {{ textarea("preparation", "preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
                     {% endblock %}
                 </fieldset>
            

@@ -36,9 +36,9 @@ import {CourseFactory} from '../model/factory/courseFactory'
  *
  * Example:
  *
- * const errors = courseValidator.check(course)
+ * const errors = await courseValidator.check(course)
  *
- * if (errors.size()) {
+ * if (errors.size) {
  *   for (message in errors.fields.title) {
  *     console.log(message)
  *   }

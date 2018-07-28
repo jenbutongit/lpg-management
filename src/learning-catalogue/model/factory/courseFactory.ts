@@ -24,6 +24,7 @@ export class CourseFactory {
 		course.shortDescription = data.shortDescription
 		course.title = data.title
 		course.modules = (data.modules || []).map(this._moduleFactory.create)
+		course.price = 100
 
 		return course
 	}

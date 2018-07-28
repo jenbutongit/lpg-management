@@ -1,8 +1,8 @@
 import {AxiosInstance} from 'axios'
-import {Course} from './model/course'
 import {CourseFactory} from './model/factory/courseFactory'
 import {LearningCatalogueConfig} from './learningCatalogueConfig'
 import {DefaultPageResults} from './model/defaultPageResults'
+import {Course} from './model/course'
 
 export class LearningCatalogue {
 	private _http: AxiosInstance
@@ -48,7 +48,7 @@ export class LearningCatalogue {
 		}
 	}
 
-	async create(course: Course): Promise<Course> {
+	async create(course: Course) {
 		try {
 			const response = await this._http.post(
 				`${this._config.url}/courses/`,
@@ -81,7 +81,7 @@ export class LearningCatalogue {
 					},
 				}
 			)
-
+			console.log(response)
 			return this._courseFactory.create(response.data)
 		} catch (e) {
 			throw new Error(`Error retrieving course: ${e}`)

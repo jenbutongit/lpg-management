@@ -9,15 +9,29 @@ import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
 import * as i18n from 'i18n'
 import * as bodyParser from 'body-parser'
-
 const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
-
+// var nunjucks = require('nunjucks')
 const appRoot = require('app-root-path')
 
 const {PORT = 3005} = process.env
 const app = express()
 const FileStore = sessionFileStore(session)
+
+app.use(serveStatic(appRoot + '/dist/views/assets'))
+
+app.use(
+	'/govuk-frontend',
+	serveStatic(appRoot + '/node_modules/govuk-frontend/')
+)
+
+app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
+
+app.set('views', [
+	appRoot + '/views',
+	appRoot + '/node_modules/govuk-frontend/',
+	appRoot + '/node_modules/govuk-frontend/components',
+])
 
 log4js.configure(config.LOGGING)
 
@@ -26,17 +40,9 @@ i18n.configure({
 })
 
 app.use(i18n.init)
-
 Properties.initialize()
+
 const ctx = new ApplicationContext()
-
-app.set('views', [
-	appRoot + '/views',
-	appRoot + '/node_modules/govuk-frontend/',
-	appRoot + '/node_modules/govuk-frontend/components',
-])
-
-expressNunjucks(app, {})
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
@@ -58,19 +64,11 @@ app.use(
 		}),
 	})
 )
-app.use(serveStatic(appRoot + '/dist/views/assets'))
-
-app.use(
-	'/govuk-frontend',
-	express.static(appRoot + '/node_modules/govuk-frontend/')
-)
-
-app.use(
-	'/assets',
-	express.static(appRoot + '/node_modules/govuk-frontend/assets')
-)
 
 app.use(cookieParser())
+expressNunjucks(app, {})
+
+expressNunjucks.precompile(appRoot + '/views')
 
 ctx.auth.configure(app)
 
@@ -85,10 +83,17 @@ app.get(
 	'/content-management/course/:courseId',
 	ctx.homeController.courseOverview()
 )
-app.get('/content-management/add-course', ctx.homeController.addCourse())
+app.get('/content-management/add-course', ctx.homeController.getCourse())
+app.post('/content-management/add-course', ctx.homeController.setCourseTitle())
+
 app.get(
 	'/content-management/add-course-details',
-	ctx.homeController.addCourseDetails()
+	ctx.homeController.getCourseDetails()
+)
+
+app.post(
+	'/content-management/add-course-details',
+	ctx.homeController.setCourseDetails()
 )
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

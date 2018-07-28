@@ -3,8 +3,13 @@ import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {CourseRequest} from '../extended'
+import * as log4js from 'log4js'
+import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
+import {CourseValidator} from '../learning-catalogue/validator/courseValidator'
 
 export class HomeController {
+	logger = log4js.getLogger('controllers/homeController')
+
 	learningCatalogue: LearningCatalogue
 	lpgUiUrl: String
 
@@ -17,6 +22,8 @@ export class HomeController {
 		const self = this
 		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
+			this.logger.debug('Getting content-management')
+
 			let page = 0
 			let size = 10
 
@@ -37,22 +44,70 @@ export class HomeController {
 		}
 	}
 
-	public addCourse() {
-		//TODO: Return empty list of results here if learning catalogue is down?
+	public getCourse() {
 		return async (request: Request, response: Response) => {
-			response.render('page/add-course-title', {})
+			this.logger.debug('Getting course title')
+
+			response.render('page/add-course-title')
 		}
 	}
 
-	public addCourseDetails() {
-		//TODO: Return empty list of results here if learning catalogue is down?
+	public setCourseTitle() {
 		return async (request: Request, response: Response) => {
+			const title = request.body.title
+
+			this.logger.debug('Title: ' + title)
+
+			response.render('page/add-course-details', {title})
+		}
+	}
+
+	public getCourseDetails() {
+		return async (request: Request, response: Response) => {
+			this.logger.debug('Getting course details')
+
 			response.render('page/add-course-details', {})
+		}
+	}
+
+	public setCourseDetails() {
+		const self = this
+
+		return async (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => {
+			const req = request as CourseRequest
+
+			const data = {
+				...req.body,
+			}
+
+			const courseFactory: CourseFactory = new CourseFactory()
+			const course = courseFactory.create(data)
+
+			const courseValidator = new CourseValidator()
+			const errors = await courseValidator.check(course)
+			// let errorList = new Map<string, string>()
+			if (errors.size) {
+				for (let key of Object.keys(errors.fields)) {
+					let errorsDescription = errors.fields[key]
+					console.log(errorsDescription)
+				}
+				response.render('page/add-course-details')
+				return next()
+			}
+			await self.learningCatalogue.create(course)
+
+			response.redirect('/content-management')
 		}
 	}
 
 	public courseOverview() {
 		return async (request: Request, response: Response) => {
+			this.logger.debug('Getting course overview')
+
 			const req = request as CourseRequest
 
 			const course = req.course
@@ -69,6 +124,8 @@ export class HomeController {
 			response: Response,
 			next: NextFunction
 		) => {
+			this.logger.debug('Loading course')
+
 			const req = request as CourseRequest
 			const courseId: string = req.params.courseId
 			const course = await self.learningCatalogue.get(courseId)
