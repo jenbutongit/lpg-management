@@ -10,7 +10,8 @@ import {ApplicationContext} from './applicationContext'
 import * as i18n from 'i18n'
 
 const logger = log4js.getLogger('server')
-const expressNunjucks = require('express-nunjucks')
+// const expressNunjucks = require('express-nunjucks')
+const nunjucks = require('nunjucks')
 
 const appRoot = require('app-root-path')
 
@@ -34,9 +35,19 @@ app.set('views', [
 	appRoot + '/node_modules/govuk-frontend/',
 	appRoot + '/node_modules/govuk-frontend/components',
 ])
+app.set('view engine', 'html')
 
-expressNunjucks(app, {})
-
+nunjucks.configure(
+	[
+		appRoot + '/views',
+		appRoot + '/node_modules/govuk-frontend/',
+		appRoot + '/node_modules/govuk-frontend/components',
+	],
+	{
+		autoescape: true,
+		express: app,
+	}
+)
 app.use(
 	session({
 		cookie: {
