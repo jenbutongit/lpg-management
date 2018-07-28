@@ -8,6 +8,7 @@ import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
 import * as i18n from 'i18n'
+import * as bodyParser from 'body-parser'
 
 const logger = log4js.getLogger('server')
 const expressNunjucks = require('express-nunjucks')
@@ -36,6 +37,9 @@ app.set('views', [
 ])
 
 expressNunjucks(app, {})
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
 
 app.use(
 	session({
@@ -75,12 +79,16 @@ app.param('courseId', ctx.homeController.loadCourse())
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
-app.get('/add-course', ctx.homeController.addCourse())
-app.get('/add-course-details', ctx.homeController.addCourseDetails())
+
 app.get('/content-management', ctx.homeController.index())
 app.get(
 	'/content-management/course/:courseId',
 	ctx.homeController.courseOverview()
+)
+app.get('/content-management/add-course', ctx.homeController.addCourse())
+app.get(
+	'/content-management/add-course-details',
+	ctx.homeController.addCourseDetails()
 )
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
