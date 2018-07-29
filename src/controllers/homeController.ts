@@ -53,6 +53,12 @@ export class HomeController {
 		}
 	}
 
+	public addModuleBlog() {
+		return async (request: Request, response: Response) => {
+			response.render(`page/add-module-blog`)
+		}
+	}
+
 	public loadCourse() {
 		const self = this
 

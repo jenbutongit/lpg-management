@@ -3,7 +3,39 @@
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}Add a module - Civil Service Learning{% endblock %}
 {% block header %}
-    
+    {{ govukHeader({
+        homepageUrl: "#",
+        containerClasses: "govuk-width-container",
+        serviceName: "Civil Service Learning",
+        serviceUrl: "#",
+        navigation: [
+            {
+                href: lpgUiUrl + "/home",
+                text: "Home",
+                active: true
+            },
+            {
+                href: lpgUiUrl + "/suggestions-for-you",
+                text: "Suggestions for you"
+            },
+            {
+                href: lpgUiUrl + "/learning-record",
+                text: "Learning record"
+            },
+            {
+                href: lpgUiUrl + "/profile",
+                text: "Profile"
+            },
+            {
+                href: "/content-management",
+                text: "Admin"
+            },
+            {
+                href: lpgUiUrl + "/sign-out",
+                text: "Sign out"
+            }
+            ]
+    }) }}
 {% endblock %}
 {% block content %}
  <a href="#" class="govuk-back-link">Back</a>
@@ -14,7 +46,19 @@
             
             <div class="aded-modules govuk-!-padding-bottom-5 govuk-!-padding-top-5">
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
-                <p class="govuk-body">This course does not have any modules yet</p> <!-- TODO add course module list-->
+
+                    {% if Modules.length > 1 %}
+                        <ul class="list">
+                            {% for Module in pageResults.results %}
+                                <li class="list-details u--border--bgrey">
+                                    <p class="govuk-body">{{Modules._title}}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                            <p class="govuk-body">This course does not have any modules yet</p>
+                        {% endif %}
+
             </div>
         
         
