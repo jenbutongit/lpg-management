@@ -57,7 +57,7 @@ export class HomeController {
 			this.logger.debug('Title: ' + title)
 
 			const courseValidator = new CourseValidator()
-			const errors = await courseValidator.check(request.body, 'title')
+			const errors = await courseValidator.check(request.body, ['title'])
 			if (errors.size) {
 				for (let key of Object.keys(errors.fields)) {
 					let errorsDescription = errors.fields[key]
