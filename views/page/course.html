@@ -9,8 +9,10 @@
 {% block content %}
 
 {{ govukBackLink({
-  text: "Back",
-  href: "#"
+    text: "Back",
+    attributes: {
+        onClick: "goBack()"
+        }
 }) }}
 
 <div class="govuk-grid-row">
@@ -23,11 +25,11 @@
 
         {% if course._learningOutcomes%} 
             <h3 class="govuk-heading-m">Learning outcomes</h3>
-            <p class="govuk-body">{{course._learningOutcomes}}</p>
+            <p class="govuk-body"><pre class="govuk-body">{{course._learningOutcomes}}</pre></p>
         {% endif %}
         
         <h3 class="govuk-heading-m">Modules</h3>
-        <p class="govuk-body"></p>
+        <p class="govuk-body">There are no modules added to this course</p>
        
     </div>
 
@@ -37,4 +39,10 @@
         {% endblock %}
     </div>
 </div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 {% endblock %}
