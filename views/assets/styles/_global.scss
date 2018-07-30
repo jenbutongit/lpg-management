@@ -54,7 +54,6 @@ a {
 
 .button-blue {
 	background-color: $govuk-link-colour;
-	margin-left: 5px;
 
 	&:hover {
 		background-color: darken($govuk-link-colour, 10%);
@@ -76,5 +75,9 @@ a {
 @media screen and (min-width: $tablet-small) {
 	.pager__controls {
 		font-size: $font-normal;
+	}
+
+	.button-blue {
+		margin-left: 5px;
 	}
 }

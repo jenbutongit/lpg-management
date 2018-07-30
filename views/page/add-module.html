@@ -47,17 +47,17 @@
             <div class="aded-modules govuk-!-padding-bottom-5 govuk-!-padding-top-5">
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
 
-                    {% if Modules.length > 1 %}
-                        <ul class="list">
-                            {% for Module in pageResults.results %}
-                                <li class="list-details u--border--bgrey">
-                                    <p class="govuk-body">{{Modules._title}}</p>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        {% else %}
-                            <p class="govuk-body">This course does not have any modules yet</p>
-                        {% endif %}
+                {% if Modules.length > 1 %}
+                    <ul class="list">
+                        {% for Module in pageResults.results %}
+                            <li class="list-details u--border--bgrey">
+                                <p class="govuk-body">{{Modules._title}}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="govuk-body">This course does not have any modules yet</p>
+                {% endif %}
 
             </div>
 
@@ -70,9 +70,9 @@
                         {{ govukSelect({
                         id: "modules",
                         name: "module",
-                        classes: "govuk-!-width-one-half",
+                        classes: "govuk-!-width-one-half govuk-!-margin-bottom-6",
                         label: {
-                            text: "Add a new module"
+                            text: "Add a new module" 
                         },
                         items: [
                             {
