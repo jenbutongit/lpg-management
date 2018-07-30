@@ -1,10 +1,10 @@
-.overview {
-	display: flex;
-	justify-content: space-between;
-	padding: 10px 8px 10px 0;
+.course-table {
+	border: 1px solid $border;
+	border-top: 5px solid $theme;
+	background-color: #dee0e2;
+	font-size: $font-mobile;
 
-	.overview-item {
-		line-height: 1.4;
-		font-size: $font-normal;
+	.govuk-table__header {
+		padding-left: 5px;
 	}
 }

@@ -1,24 +1,40 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu-box/macro.njk" import menuBox %}
 {% from "../component/course/macro.njk" import courseDetails with context %}
+{% from "back-link/macro.njk" import govukBackLink %}
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}Course overview - Civil Service Learning{% endblock %}
+
+
+
 {% block content %}
-<div class="u--border--bgrey">
-    <h1 class="govuk-heading-l">{{ course.title }}</h1>
-</div>
+
+{{ govukBackLink({
+  text: "Back",
+  href: "#"
+}) }}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        {% block courseDetails %}
-        {{ courseDetails(course) }}
-        {% endblock %}
+        <h1 class="govuk-heading-l">{{ course.title }}</h1>
+
+        {% if course._description %} 
+            <p class="govuk-body">{{course._description}}</p>
+        {% endif %}
+
+        {% if course._learningOutcomes%} 
+            <h3 class="govuk-heading-m">Learning outcomes</h3>
+            <p class="govuk-body">{{course._learningOutcomes}}</p>
+        {% endif %}
+        
+        <h3 class="govuk-heading-m">Modules</h3>
+        <p class="govuk-body"></p>
+       
     </div>
 
     <div class="govuk-grid-column-one-third">
-        {% block menuBox %}
-        {% set delete = true %}
-        {{ menuBox("Actions", delete) }}
+        {% block courseDetails %}
+        {{ courseDetails(course) }}
         {% endblock %}
     </div>
 </div>
