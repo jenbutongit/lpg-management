@@ -43,8 +43,9 @@
 {% block content %}
     <a href="#" class="govuk-back-link">Back</a>
     {% for field, message in errors.fields %}
-    <p>{{ message }}</p>
+    <p>{{ i18n[message] }}</p>
     {% endfor %}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>

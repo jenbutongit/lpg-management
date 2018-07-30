@@ -56,6 +56,17 @@ export class HomeController {
 
 			this.logger.debug('Title: ' + title)
 
+			const courseValidator = new CourseValidator()
+			const errors = await courseValidator.check(request.body, 'title')
+			if (errors.size) {
+				for (let key of Object.keys(errors.fields)) {
+					let errorsDescription = errors.fields[key]
+					console.log(errorsDescription[0])
+				}
+				return response.render('page/add-course-title', {
+					errors: errors,
+				})
+			}
 			response.render('page/add-course-details', {title})
 		}
 	}
@@ -93,6 +104,7 @@ export class HomeController {
 					console.log(errorsDescription[0])
 				}
 				return response.render('page/add-course-details', {
+					title: data.title,
 					errors: errors,
 				})
 			}

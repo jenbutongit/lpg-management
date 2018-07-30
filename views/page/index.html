@@ -1,7 +1,7 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu-box/macro.njk" import menuBox %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}{{__('home.page.title')}}{% endblock %}
+{% extends "../component/Page.njk" %} {% block pageTitle %}{{__[home.page.title]}}{% endblock %}
 
 {% block header %}
     {{ govukHeader({

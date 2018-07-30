@@ -7,7 +7,6 @@ import * as config from './config'
 import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
-import * as i18n from 'i18n'
 import * as bodyParser from 'body-parser'
 
 Properties.initialize()
@@ -19,6 +18,15 @@ const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
+const i18n = require('i18n-express')
+
+app.use(
+	i18n({
+		translationsPath: appRoot + '/src/locale', // <--- use here. Specify translations files path.
+		siteLangs: ['en'],
+		textsVarName: 'i18n',
+	})
+)
 
 nunjucks.configure(
 	[
@@ -43,11 +51,6 @@ app.use(
 )
 
 log4js.configure(config.LOGGING)
-
-i18n.configure({
-	directory: 'src/locale',
-})
-app.use(i18n.init)
 
 app.use(
 	session({
