@@ -9,43 +9,43 @@ import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
 import * as i18n from 'i18n'
 import * as bodyParser from 'body-parser'
-const logger = log4js.getLogger('server')
-const expressNunjucks = require('express-nunjucks')
-// var nunjucks = require('nunjucks')
-const appRoot = require('app-root-path')
 
+Properties.initialize()
+
+const logger = log4js.getLogger('server')
+const nunjucks = require('nunjucks')
+const appRoot = require('app-root-path')
+const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
-const FileStore = sessionFileStore(session)
+const ctx = new ApplicationContext()
 
+nunjucks.configure(
+	[
+		appRoot + '/views',
+		appRoot + '/node_modules/govuk-frontend/',
+		appRoot + '/node_modules/govuk-frontend/components',
+	],
+	{
+		autoescape: true,
+		express: app,
+	}
+)
+app.set('view engine', 'html')
+
+app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
 app.use(serveStatic(appRoot + '/dist/views/assets'))
-
 app.use(
 	'/govuk-frontend',
 	serveStatic(appRoot + '/node_modules/govuk-frontend/')
 )
-
-app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
-
-app.set('views', [
-	appRoot + '/views',
-	appRoot + '/node_modules/govuk-frontend/',
-	appRoot + '/node_modules/govuk-frontend/components',
-])
 
 log4js.configure(config.LOGGING)
 
 i18n.configure({
 	directory: 'src/locale',
 })
-
 app.use(i18n.init)
-Properties.initialize()
-
-const ctx = new ApplicationContext()
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
 
 app.use(
 	session({
@@ -64,11 +64,10 @@ app.use(
 		}),
 	})
 )
-
 app.use(cookieParser())
-expressNunjucks(app, {})
 
-expressNunjucks.precompile(appRoot + '/views')
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 
@@ -90,7 +89,6 @@ app.get(
 	'/content-management/add-course-details',
 	ctx.homeController.getCourseDetails()
 )
-
 app.post(
 	'/content-management/add-course-details',
 	ctx.homeController.setCourseDetails()
