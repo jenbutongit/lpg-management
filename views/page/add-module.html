@@ -60,13 +60,11 @@
                         {% endif %}
 
             </div>
-        
-        
-            <form action="/form-handler" method="post">
-            <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Add a module</h3>
-            <p class="govuk-body">Choose the type of learning you wish to add to the course</p>
-        
 
+            <form action="/form-handler" method="post">
+                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Add a module</h3>
+                <p class="govuk-body">Choose the type of learning you wish to add to the course</p>
+        
                 <fieldset class="govuk-fieldset module-selector">
         
                         {{ govukSelect({
@@ -108,21 +106,15 @@
                 </fieldset>
             </form>
 
-
             {{ govukButton({
                 text: "Continue",
                 type: "button"
             }) }}
 
-            <a class="cancel-button govuk-body govuk-link" href="#">Cancel</a>
-              
+            <a class="cancel-button govuk-body govuk-link" href="#">Cancel</a>          
         </div>
-
         <div class="govuk-grid-column-one-third">
        
         </div>
     </div>
-<div class="u--border--bgrey">
-    <h1 class="govuk-heading-m"></h1>
-</div>
 {% endblock %}
