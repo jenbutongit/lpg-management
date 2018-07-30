@@ -42,6 +42,9 @@
 
 {% block content %}
     <a href="#" class="govuk-back-link">Back</a>
+    {% for field, message in errors.fields %}
+    <p>{{ message }}</p>
+    {% endfor %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
@@ -68,16 +71,18 @@
                         }
                     ]
                 }) }}
-            <form action="/form-handler" method="post">
+            <form action="/content-management/add-course-details" method="post">
+                <input id="title" name="title" type="hidden" value="{{title}}">
+
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
-                        {{ textarea("shortDesc", "shortDesc", "Maximum of 160 characters", 160, "Short description") }}
+                        {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, "Short description") }}
                             
-                        {{ textarea("Description", "description", "Maximum of 1500 characters", 1500, "Description") }}
+                        {{ textarea("description", "description", "Maximum of 1500 characters", 1500, "Description") }}
                 
-                        {{ textarea("Outcomes", "outcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
+                        {{ textarea("outcomes", "outcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
                     
-                        {{ textarea("Preparation", "preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
+                        {{ textarea("preparation", "preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
                     {% endblock %}
                 </fieldset>
            
@@ -95,5 +100,5 @@
 {% endblock %}
 {% block bodyEnd %}
     <script src="/govuk-frontend/all.js"></script>
-    <script src="/govuk-frontend/assets/char-count.js"></script>
+    <script src="/js/char-count.js"></script>
 {% endblock %}

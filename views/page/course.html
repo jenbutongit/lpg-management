@@ -54,13 +54,13 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">{{ course.title }}</h1>
 
-        {% if course._description %} 
-            <p class="govuk-body">{{course._description}}</p>
+        {% if course.description %}
+            <p class="govuk-body">{{course.description}}</p>
         {% endif %}
 
-        {% if course._learningOutcomes%} 
+        {% if course.learningOutcomes%}
             <h3 class="govuk-heading-m">Learning outcomes</h3>
-            <p class="govuk-body"><pre class="govuk-body">{{course._learningOutcomes}}</pre></p>
+            <p class="govuk-body"><pre class="govuk-body">{{course.learningOutcomes}}</pre></p>
         {% endif %}
         
         <h3 class="govuk-heading-m">Modules</h3>

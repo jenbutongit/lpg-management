@@ -4,5 +4,6 @@
 	"validation.course.shortDescription.empty": "Short description is required",
 	"validation.course.shortDescription.maxLength": "Short description is too long",
 	"validation.course.description.empty": "Description is required",
-	"validation.course.description.maxLength": "Description is too long"
+	"validation.course.description.maxLength": "Description is too long",
+	"message": "message"
 }
