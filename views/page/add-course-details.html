@@ -44,9 +44,7 @@
 {% block content %}
    {{ govukBackLink({
         text: "Back",
-        attributes: {
-            onClick: "goBack()"
-            }
+        href: "#"
     }) }}
 
     {% if errors.fields %}

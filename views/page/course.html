@@ -43,34 +43,32 @@
 
 {% block content %}
 
-{{ govukBackLink({
-    text: "Back",
-    attributes: {
-        onClick: "goBack()"
-        }
-}) }}
+    {{ govukBackLink({
+        text: "Back",
+        href: "/content-management"
+    }) }}
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">{{ course.title }}</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">{{ course.title }}</h1>
 
-        {% if course.description %}
-            <p class="govuk-body">{{course.description}}</p>
-        {% endif %}
+            {% if course.description %}
+                <p class="govuk-body">{{course.description}}</p>
+            {% endif %}
 
-        {% if course._learningOutcomes%}
-            <h3 class="govuk-heading-m">Learning outcomes</h3>
-            <p class="govuk-body"><pre class="govuk-body">{{course.learningOutcomes}}</pre></p>
-        {% endif %}
-        
-        <h3 class="govuk-heading-m">Modules</h3>
-        <p class="govuk-body">There are no modules added to this course</p>       
+            {% if course._learningOutcomes%}
+                <h3 class="govuk-heading-m">Learning outcomes</h3>
+                <p class="govuk-body"><pre class="govuk-body">{{course.learningOutcomes}}</pre></p>
+            {% endif %}
+            
+            <h3 class="govuk-heading-m">Modules</h3>
+            <p class="govuk-body">There are no modules added to this course</p>       
+        </div>
+
+        <div class="govuk-grid-column-one-third">
+            {% block courseDetails %}
+            {{ courseDetails(course) }}
+            {% endblock %}
+        </div>
     </div>
-
-    <div class="govuk-grid-column-one-third">
-        {% block courseDetails %}
-        {{ courseDetails(course) }}
-        {% endblock %}
-    </div>
-</div>
 {% endblock %}
