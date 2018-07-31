@@ -28,7 +28,7 @@ export class HomeController {
 			}
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listAll(page, size)
+			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listCourses(page, size)
 
 			response.render('page/index', {
 				pageResults,
@@ -69,7 +69,7 @@ export class HomeController {
 		) => {
 			const req = request as CourseRequest
 			const courseId: string = req.params.courseId
-			const course = await self.learningCatalogue.get(courseId)
+			const course = await self.learningCatalogue.getCourse(courseId)
 			if (course) {
 				req.course = course
 				next()

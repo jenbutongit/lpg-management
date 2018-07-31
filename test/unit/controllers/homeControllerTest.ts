@@ -36,7 +36,7 @@ describe('Home Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.listAll = listAll
+		learningCatalogue.listCourses = listAll
 
 		const index: (
 			request: Request,
@@ -47,7 +47,7 @@ describe('Home Controller Tests', function() {
 		const response: Response = mockRes()
 		await index(request, response)
 
-		expect(learningCatalogue.listAll).to.have.been.calledWith(0, 10)
+		expect(learningCatalogue.listCourses).to.have.been.calledWith(0, 10)
 
 		expect(response.render).to.have.been.calledOnceWith('page/index')
 	})
@@ -65,7 +65,7 @@ describe('Home Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.listAll = listAll
+		learningCatalogue.listCourses = listAll
 
 		const index: (
 			request: Request,
@@ -80,7 +80,7 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-		expect(learningCatalogue.listAll).to.have.been.calledWith(3, 5)
+		expect(learningCatalogue.listCourses).to.have.been.calledWith(3, 5)
 
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
@@ -127,15 +127,15 @@ describe('Home Controller Tests', function() {
 		const course: Course = new Course()
 		course.id = 'course-id'
 
-		const get = sinon.stub().returns(course)
-		learningCatalogue.get = get
+		const getCourse = sinon.stub().returns(course)
+		learningCatalogue.getCourse = getCourse
 
 		const req = request as CourseRequest
 		req.params.courseId = courseId
 
 		await loadCourse(req, response, next)
 
-		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
 		expect(req.course).to.have.be.eql(course)
 		expect(next).to.have.been.calledOnce
 	})
@@ -153,15 +153,15 @@ describe('Home Controller Tests', function() {
 		const response: Response = mockRes()
 		const next: NextFunction = sinon.stub()
 
-		const get = sinon.stub().returns(null)
-		learningCatalogue.get = get
+		const getCourse = sinon.stub().returns(null)
+		learningCatalogue.getCourse = getCourse
 
 		const req = request as CourseRequest
 		req.params.courseId = courseId
 
 		await loadCourse(req, response, next)
 
-		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
 		expect(req.course).to.have.be.eql(undefined)
 		expect(next).to.have.not.been.calledOnce
 		expect(response.sendStatus).to.have.been.calledWith(404)

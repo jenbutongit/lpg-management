@@ -1,94 +1,48 @@
 import {AxiosInstance} from 'axios'
 import {Course} from './model/course'
-import {CourseFactory} from './model/factory/courseFactory'
 import {LearningCatalogueConfig} from './learningCatalogueConfig'
 import {DefaultPageResults} from './model/defaultPageResults'
+import {CourseService} from './service/courseService'
+import {ModuleService} from './service/moduleService'
+import {Module} from './model/module'
 
 export class LearningCatalogue {
-	private _http: AxiosInstance
-	private _config: LearningCatalogueConfig
-	private _courseFactory: CourseFactory
+	private _courseService: CourseService
+	private _moduleService: ModuleService
 
 	constructor(http: AxiosInstance, config: LearningCatalogueConfig) {
-		this._http = http
-		this._config = config
-		this._courseFactory = new CourseFactory()
+		this._courseService = new CourseService(http, config)
+		this._moduleService = new ModuleService(http, config)
 	}
 
-	async listAll(
+	async listCourses(
 		page: number = 0,
 		size: number = 10
 	): Promise<DefaultPageResults<Course>> {
-		try {
-			const response = await this._http.get(
-				`${this._config.url}/courses?page=${page}&size=${size}`,
-				{
-					auth: {
-						username: this._config.username,
-						password: this._config.password,
-					},
-				}
-			)
-
-			response.data.results = (response.data.results || []).map(
-				this._courseFactory.create
-			)
-
-			// prettier-ignore
-			const coursePageResults: DefaultPageResults<Course> = new DefaultPageResults()
-
-			coursePageResults.size = size
-			coursePageResults.results = response.data.results
-			coursePageResults.page = page
-			coursePageResults.totalResults = response.data.totalResults
-
-			return coursePageResults
-		} catch (e) {
-			throw new Error(`Error listing all courses - ${e}`)
-		}
+		return await this._courseService.listAll()
 	}
 
-	async create(course: Course): Promise<Course> {
-		try {
-			const response = await this._http.post(
-				`${this._config.url}/courses/`,
-				course,
-				{
-					auth: {
-						username: this._config.username,
-						password: this._config.password,
-					},
-				}
-			)
-
-			const location = response.headers.location
-			const courseId = location.substr(location.lastIndexOf('/') + 1)
-
-			return this.get(courseId)
-		} catch (e) {
-			throw new Error(`Error creating course: ${e}`)
-		}
+	async createCourse(course: Course): Promise<Course> {
+		return this._courseService.create(course)
 	}
 
-	async get(courseId: string): Promise<Course> {
-		try {
-			const response = await this._http.get(
-				`${this._config.url}/courses/${courseId}`,
-				{
-					auth: {
-						username: this._config.username,
-						password: this._config.password,
-					},
-				}
-			)
-
-			return this._courseFactory.create(response.data)
-		} catch (e) {
-			throw new Error(`Error retrieving course: ${e}`)
-		}
+	async getCourse(courseId: string): Promise<Course> {
+		return this._courseService.get(courseId)
 	}
 
-	set courseFactory(value: CourseFactory) {
-		this._courseFactory = value
+	async createModule(courseId: string, module: Module): Promise<Module> {
+		return this._moduleService.create(courseId, module)
+	}
+
+	async getModule(courseId: string, moduleId: string): Promise<Module> {
+		return this._moduleService.get(courseId, moduleId)
+	}
+
+	set courseService(value: CourseService) {
+		this._courseService = value
+	}
+
+	set moduleService(value: ModuleService) {
+		this._moduleService = value
 	}
 }
