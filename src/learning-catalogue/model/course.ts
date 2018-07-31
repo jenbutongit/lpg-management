@@ -34,70 +34,6 @@ export class Course {
 	price: number | 'Free'
 	modules: Module[]
 
-	// get getId(): string {
-	// 	return this.id
-	// }
-	//
-	// set setId(value: string) {
-	// 	this.id = value
-	// }
-	//
-	// get title(): string {
-	// 	return this.title
-	// }
-	//
-	// set title(value: string) {
-	// 	this.title = value
-	// }
-	//
-	// get shortDescription(): string {
-	// 	return this._shortDescription
-	// }
-	//
-	// set shortDescription(value: string) {
-	// 	this._shortDescription = value
-	// }
-	//
-	// get description(): string {
-	// 	return this._description
-	// }
-	//
-	// set description(value: string) {
-	// 	this._description = value
-	// }
-	//
-	// get duration(): number {
-	// 	return this._duration
-	// }
-	//
-	// set duration(value: number) {
-	// 	this._duration = value
-	// }
-	//
-	// get learningOutcomes(): string {
-	// 	return this._learningOutcomes
-	// }
-	//
-	// set learningOutcomes(value: string) {
-	// 	this._learningOutcomes = value
-	// }
-	//
-	// get price() {
-	// 	return this._price
-	// }
-	//
-	// set price(value) {
-	// 	this._price = value
-	// }
-	//
-	// get modules(): Module[] {
-	// 	return this._modules
-	// }
-	//
-	// set modules(value: Module[]) {
-	// 	this._modules = value
-	// }
-
 	getCost() {
 		const costArray = this.modules.map(module => module.price)
 		return costArray.length
@@ -107,7 +43,7 @@ export class Course {
 
 	getType() {
 		if (!this.modules.length) {
-			return 'course'
+			return null
 		}
 		if (this.modules.length > 1) {
 			return 'blended'

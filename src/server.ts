@@ -75,7 +75,7 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 
-app.param('courseId', ctx.homeController.loadCourse())
+app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
@@ -84,18 +84,21 @@ app.get('/', function(req, res) {
 app.get('/content-management', ctx.homeController.index())
 app.get(
 	'/content-management/course/:courseId',
-	ctx.homeController.courseOverview()
+	ctx.courseController.courseOverview()
 )
-app.get('/content-management/add-course', ctx.homeController.getCourse())
-app.post('/content-management/add-course', ctx.homeController.setCourseTitle())
+app.get('/content-management/add-course', ctx.courseController.getCourseTitle())
+app.post(
+	'/content-management/add-course',
+	ctx.courseController.setCourseTitle()
+)
 
 app.get(
 	'/content-management/add-course-details',
-	ctx.homeController.getCourseDetails()
+	ctx.courseController.getCourseDetails()
 )
 app.post(
 	'/content-management/add-course-details',
-	ctx.homeController.setCourseDetails()
+	ctx.courseController.setCourseDetails()
 )
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

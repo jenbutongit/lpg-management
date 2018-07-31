@@ -6,6 +6,5 @@
 	"validation.course.description.empty": "Description is required",
 	"validation.course.description.maxLength": "Description is too long",
 	"blended": "Blended",
-	"course": "Course",
 	"face-to-face": "Face to Face"
 }
