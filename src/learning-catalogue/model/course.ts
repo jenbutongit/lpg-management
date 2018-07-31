@@ -102,12 +102,12 @@ export class Course {
 		const costArray = this.modules.map(module => module.price)
 		return costArray.length
 			? costArray.reduce((p, c) => (p || 0) + (c || 0), 0)
-			: null
+			: '0'
 	}
 
 	getType() {
 		if (!this.modules.length) {
-			return null
+			return 'course'
 		}
 		if (this.modules.length > 1) {
 			return 'blended'
