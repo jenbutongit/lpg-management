@@ -77,7 +77,7 @@
                     {% endif %}
 
                     <div class="pager__summary">
-                            Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}
+                            <p class="govuk-body">Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}</p>
                     </div>
                 </div>
             </div>
@@ -89,5 +89,6 @@
         {% endblock %}
     </div>
 </div>
+<script src="./char-count.js"></script>
 {% endblock %}
 

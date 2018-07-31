@@ -1,6 +1,5 @@
-.govuk-template__body {
+.app-html-class {
 	font-family: 'nta', Arial, sans-serif;
-	line-height: 1.31579;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -55,6 +54,14 @@ a {
 	width: 100%;
 	justify-content: space-between;
 	flex-direction: row-reverse;
+}
+
+.cancel-button {
+	display: block;
+}
+
+.govuk-error-summary__list {
+	display: none;
 }
 
 @media screen and (min-width: $tablet-small) {
