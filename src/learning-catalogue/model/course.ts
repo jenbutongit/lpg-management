@@ -43,7 +43,7 @@ export class Course {
 
 	getType() {
 		if (!this.modules.length) {
-			return 'course'
+			return null
 		}
 		if (this.modules.length > 1) {
 			return 'blended'

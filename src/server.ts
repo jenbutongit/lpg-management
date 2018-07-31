@@ -22,7 +22,7 @@ const i18n = require('i18n-express')
 
 app.use(
 	i18n({
-		translationsPath: appRoot + '/src/locale', // <--- use here. Specify translations files path.
+		translationsPath: appRoot + '/src/locale',
 		siteLangs: ['en'],
 		textsVarName: 'i18n',
 	})
