@@ -50,6 +50,8 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">{{ course.title }}</h1>
+        <h3 class="govuk-heading-m">Course Overview</h3>
         {% block courseDetails %}
         {{ courseDetails(course) }}
         {% endblock %} 
@@ -60,4 +62,5 @@
             {{ menuBox("Actions") }}
         {% endblock %} 
     </div>
+</div>
 {% endblock %}

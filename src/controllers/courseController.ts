@@ -29,7 +29,9 @@ export class CourseController {
 
 			const course = req.course
 
-			response.render(`page/course`, {course})
+			response.render(`page/course`, {
+				course,
+			})
 		}
 	}
 

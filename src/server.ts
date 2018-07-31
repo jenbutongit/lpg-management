@@ -74,7 +74,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
-
+app.use(ctx.addToResponseLocals())
 app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {

@@ -9,11 +9,9 @@ export class HomeController {
 	logger = log4js.getLogger('controllers/homeController')
 
 	learningCatalogue: LearningCatalogue
-	lpgUiUrl: String
 
-	constructor(learningCatalogue: LearningCatalogue, lpgUiUrl: String) {
+	constructor(learningCatalogue: LearningCatalogue) {
 		this.learningCatalogue = learningCatalogue
-		this.lpgUiUrl = lpgUiUrl
 	}
 
 	public index() {
@@ -36,7 +34,6 @@ export class HomeController {
 
 			response.render('page/index', {
 				pageResults,
-				lpgUiUrl: this.lpgUiUrl,
 			})
 		}
 	}

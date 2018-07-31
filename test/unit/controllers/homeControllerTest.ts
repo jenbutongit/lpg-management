@@ -13,14 +13,12 @@ import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
 chai.use(sinonChai)
 
 describe('Home Controller Tests', function() {
-	const lpgUiUrl = 'localhost'
-
 	let homeController: HomeController
 	let learningCatalogue: LearningCatalogue
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		homeController = new HomeController(learningCatalogue, lpgUiUrl)
+		homeController = new HomeController(learningCatalogue)
 	})
 
 	it('should render index template with default page and size', async function() {
@@ -84,7 +82,6 @@ describe('Home Controller Tests', function() {
 
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
-			lpgUiUrl: lpgUiUrl,
 		})
 	})
 })
