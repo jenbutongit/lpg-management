@@ -2,5 +2,10 @@
 	color: $govuk-secondary-text-colour;
 	margin-bottom: -35px;
 }
+
+.custom-error-message {
+	font-weight: 700;
+	color: $error-message;
+}
 @media screen and (min-width: $tablet-small) {
 }
