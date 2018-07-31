@@ -42,9 +42,11 @@
 {% endblock %}
 
 {% block content %}
-    {{ govukBackLink({
+   {{ govukBackLink({
         text: "Back",
-        href: "#"
+        attributes: {
+            onClick: "goBack()"
+            }
     }) }}
     
     {% if errors.fields %}
@@ -54,8 +56,8 @@
             </h2>
             <div class="govuk-error-summary__body">
                 <ul class="govuk-list govuk-error-summary__list">
-                {% for field, message in errors.fields %}
-                    <li><a href="#">{{ i18n[message] }}</a></li>
+                    {% for field, message in errors.fields %}
+                        <li><a href="#">{{ i18n[message] }}</a></li>
                     {% endfor %}
                 </ul>
             </div>
@@ -66,7 +68,6 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-
           
             <form action="/content-management/add-course-details" method="post">
                 <input id="title" name="title" type="hidden" value="{{title}}">
