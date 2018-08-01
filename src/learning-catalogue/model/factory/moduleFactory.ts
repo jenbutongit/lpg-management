@@ -33,11 +33,11 @@ export class ModuleFactory {
 		return module
 	}
 
-	public create(data: any): any {
-		return this.methods[data.type](data)
+	public create<T extends Module>(data: any): T {
+		return this.createMethods[data.type](data)
 	}
 
-	private methods: ModuleTypeToCreateMethodMap = {
+	private createMethods: ModuleTypeToCreateMethodMap = {
 		video: (data: any): VideoModule => {
 			const module = this.defaultCreate(data) as VideoModule
 			module.location = data.location
