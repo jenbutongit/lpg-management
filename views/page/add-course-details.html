@@ -1,7 +1,6 @@
 {% extends "../component/Page.njk" %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
 {% from "../component/textarea/macro.njk" import textarea %}
-{% from "button/macro.njk" import govukButton %}
 
 {% block pageTitle %}Add Course - Civil Service Learning{% endblock %} 
 {% block header %}
@@ -85,10 +84,8 @@
                     text: "Continue"
                 }) }}
             </form>
-
             <a class="cancel-button govuk-body govuk-link" href="#">Cancel</a>
         </div>
-
         <div class="govuk-grid-column-one-third">
         </div>
     </div>

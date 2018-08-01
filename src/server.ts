@@ -85,6 +85,11 @@ app.get(
 	'/content-management/course/:courseId',
 	ctx.homeController.courseOverview()
 )
+app.get(
+	'/content-management/course-preview/:courseId',
+	ctx.homeController.coursePreview()
+)
+
 app.get('/content-management/add-course', ctx.homeController.addCourse())
 app.get(
 	'/content-management/add-course-details',
