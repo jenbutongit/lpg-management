@@ -68,11 +68,11 @@ export class CourseValidator {
 
 	async check(
 		params: any,
-		group: 'all' | 'title' | 'shortDescription' | 'description' = 'all'
+		groups: ['all' | 'title' | 'shortDescription' | 'description'] = ['all']
 	) {
 		const validationErrors: ValidationError[] = await validate(
 			this._courseFactory.create(params),
-			{groups: [group]}
+			{groups: groups}
 		)
 
 		return this._validationErrorMapper.map(validationErrors)
