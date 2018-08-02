@@ -23,6 +23,7 @@ describe('Learning Catalogue tests', () => {
 		'http://example.org'
 	)
 
+
 	let learningCatalogue: LearningCatalogue
 
 	beforeEach(() => {

@@ -1,0 +1,17 @@
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{{ govukTextarea({
+    name: name,
+    id: textareaId,
+    hint: {
+        text: hint
+    },
+    attributes: {
+        maxlength: maxlength
+    },
+    label: {
+        text: label
+    },
+    classes: "form-control js-char-count govuk-c-charcount"
+}) }}
+

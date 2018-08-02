@@ -7,35 +7,49 @@ import * as config from './config'
 import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
-import * as i18n from 'i18n'
-
-const logger = log4js.getLogger('server')
-const expressNunjucks = require('express-nunjucks')
-
-const appRoot = require('app-root-path')
-
-const {PORT = 3005} = process.env
-const app = express()
-const FileStore = sessionFileStore(session)
-
-log4js.configure(config.LOGGING)
-
-i18n.configure({
-	directory: 'src/locale',
-})
-
-app.use(i18n.init)
+import * as bodyParser from 'body-parser'
 
 Properties.initialize()
+
+const logger = log4js.getLogger('server')
+const nunjucks = require('nunjucks')
+const appRoot = require('app-root-path')
+const FileStore = sessionFileStore(session)
+const {PORT = 3005} = process.env
+const app = express()
 const ctx = new ApplicationContext()
+const i18n = require('i18n-express')
 
-app.set('views', [
-	appRoot + '/views',
-	appRoot + '/node_modules/govuk-frontend/',
-	appRoot + '/node_modules/govuk-frontend/components',
-])
+app.use(
+	i18n({
+		translationsPath: appRoot + '/src/locale',
+		siteLangs: ['en'],
+		textsVarName: 'i18n',
+	})
+)
 
-expressNunjucks(app, {})
+nunjucks.configure(
+	[
+		appRoot + '/views',
+		appRoot + '/node_modules/govuk-frontend/',
+		appRoot + '/node_modules/govuk-frontend/components',
+	],
+	{
+		autoescape: true,
+		express: app,
+	}
+)
+app.set('view engine', 'html')
+
+app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
+app.use('/js', serveStatic(appRoot + '/views/assets/js'))
+app.use(serveStatic(appRoot + '/dist/views/assets'))
+app.use(
+	'/govuk-frontend',
+	serveStatic(appRoot + '/node_modules/govuk-frontend/')
+)
+
+log4js.configure(config.LOGGING)
 
 app.use(
 	session({
@@ -54,31 +68,37 @@ app.use(
 		}),
 	})
 )
-app.use(serveStatic(appRoot + '/dist/views/assets'))
-
-app.use(
-	'/govuk-frontend',
-	express.static(appRoot + '/node_modules/govuk-frontend/')
-)
-
-app.use(
-	'/assets',
-	express.static(appRoot + '/node_modules/govuk-frontend/assets')
-)
-
 app.use(cookieParser())
 
-ctx.auth.configure(app)
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: false}))
 
-app.param('courseId', ctx.homeController.loadCourse())
+ctx.auth.configure(app)
+app.use(ctx.addToResponseLocals())
+app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
+
 app.get('/content-management', ctx.homeController.index())
 app.get(
 	'/content-management/course/:courseId',
-	ctx.homeController.courseOverview()
+	ctx.courseController.courseOverview()
+)
+app.get('/content-management/add-course', ctx.courseController.getCourseTitle())
+app.post(
+	'/content-management/add-course',
+	ctx.courseController.setCourseTitle()
+)
+
+app.get(
+	'/content-management/add-course-details',
+	ctx.courseController.getCourseDetails()
+)
+app.post(
+	'/content-management/add-course-details',
+	ctx.courseController.setCourseDetails()
 )
 app.get('/add-module', ctx.homeController.addModule())
 app.get('/add-module-blog', ctx.homeController.addModuleBlog())
