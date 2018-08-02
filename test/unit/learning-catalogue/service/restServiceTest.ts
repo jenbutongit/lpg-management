@@ -24,7 +24,8 @@ describe('RestService tests', () => {
 		http = <AxiosInstance>{
 			defaults: {},
 		}
-		restService = new RestService(http, config)
+		restService = new RestService(config)
+		restService.http = http
 	})
 
 	it('should return data from GET request', async () => {

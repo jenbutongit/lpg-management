@@ -8,7 +8,8 @@ describe('LearningCatalogueConfig tests', () => {
 	beforeEach(() => {
 		config = new LearningCatalogueConfig(
 			{username: 'username', password: 'password'},
-			'url'
+			'url',
+			120
 		)
 	})
 
@@ -16,20 +17,34 @@ describe('LearningCatalogueConfig tests', () => {
 		expect(config.auth.username).to.equal('username')
 		expect(config.auth.password).to.equal('password')
 		expect(config.url).to.equal('url')
+		expect(config.timeout).to.equal(120)
 	})
 
-	it('should be able to change username', () => {
-		config.auth.username = 'abc'
-		expect(config.auth.username).to.equal('abc')
-	})
+	it('should be able to change auth', () => {
+		const auth = {
+			username: 'abc',
+			password: 'def',
+		}
 
-	it('should be able to change password', () => {
-		config.auth.password = 'abc'
-		expect(config.auth.password).to.equal('abc')
+		config.auth = auth
+		expect(config.auth).to.eql(auth)
 	})
 
 	it('should be able to change url', () => {
 		config.url = 'abc'
 		expect(config.url).to.equal('abc')
+	})
+
+	it('should be able to change timeout', () => {
+		config.timeout = 60
+		expect(config.timeout).to.equal(60)
+	})
+
+	it('should have default timeout of 15000', () => {
+		const config = new LearningCatalogueConfig(
+			{username: 'username', password: 'password'},
+			'url'
+		)
+		expect(config.timeout).to.equal(15000)
 	})
 })

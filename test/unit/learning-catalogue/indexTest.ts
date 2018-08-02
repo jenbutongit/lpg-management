@@ -9,21 +9,27 @@ import * as chaiAsPromised from 'chai-as-promised'
 import {CourseService} from '../../../src/learning-catalogue/service/courseService'
 import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
 import {Module} from '../../../src/learning-catalogue/model/module'
-import {RestService} from '../../../src/learning-catalogue/service/restService'
+import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
 describe('Learning Catalogue tests', () => {
-	let learningCatalogue: LearningCatalogue
 	let courseService: CourseService
 	let moduleService: ModuleService
+
+	const config = new LearningCatalogueConfig(
+		{username: 'test-user', password: 'test-pass'},
+		'http://example.org'
+	)
+
+	let learningCatalogue: LearningCatalogue
 
 	beforeEach(() => {
 		courseService = <CourseService>{}
 		moduleService = <ModuleService>{}
 
-		learningCatalogue = new LearningCatalogue(<RestService>{})
+		learningCatalogue = new LearningCatalogue(config)
 		learningCatalogue.courseService = courseService
 		learningCatalogue.moduleService = moduleService
 	})

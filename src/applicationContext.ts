@@ -11,7 +11,6 @@ import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueCon
 import {LearningCatalogue} from './learning-catalogue'
 import {CourseValidator} from './learning-catalogue/validator/courseValidator'
 import {EnvValue} from 'ts-json-properties'
-import {RestService} from './learning-catalogue/service/restService'
 
 log4js.configure(config.LOGGING)
 
@@ -56,12 +55,9 @@ export class ApplicationContext {
 			config.COURSE_CATALOGUE.url
 		)
 
-		const restService = new RestService(
-			this.axiosInstance,
+		this.learningCatalogue = new LearningCatalogue(
 			this.learningCatalogueConfig
 		)
-
-		this.learningCatalogue = new LearningCatalogue(restService)
 
 		this.courseValidator = new CourseValidator()
 

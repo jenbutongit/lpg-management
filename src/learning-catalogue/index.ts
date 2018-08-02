@@ -4,14 +4,17 @@ import {CourseService} from './service/courseService'
 import {ModuleService} from './service/moduleService'
 import {Module} from './model/module'
 import {RestService} from './service/restService'
+import {LearningCatalogueConfig} from './learningCatalogueConfig'
 
 export class LearningCatalogue {
 	private _courseService: CourseService
 	private _moduleService: ModuleService
+	private _restService: RestService
 
-	constructor(restService: RestService) {
-		this._courseService = new CourseService(restService)
-		this._moduleService = new ModuleService(restService)
+	constructor(config: LearningCatalogueConfig) {
+		this._restService = new RestService(config)
+		this._courseService = new CourseService(this._restService)
+		this._moduleService = new ModuleService(this._restService)
 	}
 
 	async listCourses(
