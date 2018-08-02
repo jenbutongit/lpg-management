@@ -1,0 +1,64 @@
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../component/Page.njk" %}
+
+{% block content %}
+    {{ govukBackLink({
+        text: "Back",
+        href: "/content-management"
+    }) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">Add new learning provider</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <form action="/form-action" method="post">
+                <fieldset class="govuk-fieldset">
+                    {{ govukInput({
+                        label: {
+                            text: "Learning provider name"
+                        },
+                        id: "name",
+                        name: "name"
+                    }) }}
+                </fieldset>
+
+                <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Cancelation policies</h3>
+                
+                {% if cancelationPolicies %}
+                {% else %}
+                    <p class="govuk-body">This course does not have any policies yet</p>
+                {% endif %}
+
+                {{ govukButton({
+                    text: "Add a cancellation policy",
+                    classes: "button-blue"
+                }) }}
+
+                <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Terms and conditions</h3>
+                
+                {% if termsAndConditions %}
+                {% else %}
+                    <p class="govuk-body">This course does not have any terms and conditions yet</p>
+                {% endif %}
+                
+                {{ govukButton({
+                    text: "Add terms and conditions",
+                    classes: "button-blue bottom-button"
+                }) }}
+                
+                {{ govukButton({
+                    text: "Add a new learning provider"
+                }) }}
+            </form>
+            <a href="#" class="govuk-link">Cancel</a>
+        </div>
+        <div class="govuk-grid-column-one-third">
+        </div>
+    </div>
+
+{% endblock %}
