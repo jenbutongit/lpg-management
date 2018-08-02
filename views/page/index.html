@@ -1,5 +1,5 @@
 {% from "../component/list/macro.njk" import list %}
-{% from "../component/menu-box/macro.njk" import menuBox %}
+{% from "../component/menu/macro.njk" import menu %}
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}{{__[home.page.title]}}{% endblock %}
 
@@ -83,9 +83,21 @@
        {% endif %}
    </div>
    <div class="govuk-grid-column-one-third govuk-!-padding-top-6 ">
-       {% block menuBox %}
-           {{ menuBox("Actions") }}
-       {% endblock %}
+        <div class="right-menu">
+            {% block menu %}
+                {% set actions = [
+                    {
+                        link: '/content-management/add-course',
+                        text: 'Add a new course'
+                    },
+                    {
+                        link: '/content-management/learning-providers',
+                        text: 'Manage learning providers'
+                    }
+                ] %}
+                {{ menu("Actions", actions) }}
+            {% endblock %}
+        </div>
    </div>
 </div>
 {% endblock %}

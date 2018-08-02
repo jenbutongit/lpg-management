@@ -13,6 +13,7 @@ import {CourseValidator} from './learning-catalogue/validator/courseValidator'
 import {EnvValue} from 'ts-json-properties'
 import {CourseController} from './controllers/courseController'
 import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
+import {LearningProviderController} from './controllers/learningProviderController'
 import {NextFunction, Request, Response} from 'express'
 
 log4js.configure(config.LOGGING)
@@ -20,6 +21,7 @@ log4js.configure(config.LOGGING)
 export class ApplicationContext {
 	homeController: HomeController
 	courseController: CourseController
+	learningProviderController: LearningProviderController
 	identityService: IdentityService
 	axiosInstance: AxiosInstance
 	auth: Auth
@@ -70,6 +72,10 @@ export class ApplicationContext {
 			this.learningCatalogue,
 			this.courseValidator,
 			this.courseFactory
+		)
+
+		this.learningProviderController = new LearningProviderController(
+			this.learningCatalogue
 		)
 	}
 

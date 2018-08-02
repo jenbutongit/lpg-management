@@ -7,5 +7,23 @@
 	font-weight: 700;
 	color: $error-message;
 }
+
+.button-blue {
+	background-color: govuk-colour('blue');
+	display: block;
+
+	&:hover {
+		background-color: govuk-colour('blue');
+	}
+
+	&:focus {
+		background-color: govuk-colour('blue');
+	}
+}
+
+.bottom-button {
+	margin-bottom: 60px;
+}
+
 @media screen and (min-width: $tablet-small) {
 }

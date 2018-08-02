@@ -37,18 +37,6 @@ ul {
 	list-style-type: none;
 }
 
-a {
-	color: $link;
-
-	&:visited {
-		color: $link-visited;
-	}
-
-	&:hover {
-		color: $link-hover;
-	}
-}
-
 .pager__controls {
 	display: flex;
 	width: 100%;
@@ -59,6 +47,12 @@ a {
 .cancel-button {
 	display: block;
 	width: 57px;
+}
+
+.action-links {
+	.govuk-link {
+		margin-bottom: 5px;
+	}
 }
 
 @media screen and (min-width: $tablet-small) {

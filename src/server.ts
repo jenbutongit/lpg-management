@@ -101,4 +101,17 @@ app.post(
 	ctx.courseController.setCourseDetails()
 )
 
+app.get(
+	'/content-management/learning-providers',
+	ctx.learningProviderController.getLearningProviders()
+)
+app.get(
+	'/content-management/add-learning-provider',
+	ctx.learningProviderController.getLearningProvider()
+)
+// app.post(
+// 	'/content-management/add-learner-provider',
+// 	ctx.providerController.setLearningProvider()
+// )
+
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
