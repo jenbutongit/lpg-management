@@ -11,10 +11,13 @@ import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueCon
 import {LearningCatalogue} from './learning-catalogue'
 import {CourseValidator} from './learning-catalogue/validator/courseValidator'
 import {EnvValue} from 'ts-json-properties'
+import {RestService} from './learning-catalogue/service/restService'
 
 log4js.configure(config.LOGGING)
 
 export class ApplicationContext {
+	@EnvValue('LPG_UI_URL') private lpgUiUrl: String
+
 	homeController: HomeController
 	identityService: IdentityService
 	axiosInstance: AxiosInstance
@@ -22,7 +25,6 @@ export class ApplicationContext {
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
 	courseValidator: CourseValidator
-	@EnvValue('LPG_UI_URL') private lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -45,16 +47,21 @@ export class ApplicationContext {
 			passport,
 			this.identityService
 		)
+
 		this.learningCatalogueConfig = new LearningCatalogueConfig(
-			config.COURSE_CATALOGUE.auth.username,
-			config.COURSE_CATALOGUE.auth.password,
+			{
+				username: config.COURSE_CATALOGUE.auth.username,
+				password: config.COURSE_CATALOGUE.auth.password,
+			},
 			config.COURSE_CATALOGUE.url
 		)
 
-		this.learningCatalogue = new LearningCatalogue(
+		const restService = new RestService(
 			this.axiosInstance,
 			this.learningCatalogueConfig
 		)
+
+		this.learningCatalogue = new LearningCatalogue(restService)
 
 		this.courseValidator = new CourseValidator()
 

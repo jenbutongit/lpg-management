@@ -6,23 +6,26 @@ describe('LearningCatalogueConfig tests', () => {
 	let config: LearningCatalogueConfig
 
 	beforeEach(() => {
-		config = new LearningCatalogueConfig('username', 'password', 'url')
+		config = new LearningCatalogueConfig(
+			{username: 'username', password: 'password'},
+			'url'
+		)
 	})
 
 	it('should set properties in constructor', () => {
-		expect(config.username).to.equal('username')
-		expect(config.password).to.equal('password')
+		expect(config.auth.username).to.equal('username')
+		expect(config.auth.password).to.equal('password')
 		expect(config.url).to.equal('url')
 	})
 
 	it('should be able to change username', () => {
-		config.username = 'abc'
-		expect(config.username).to.equal('abc')
+		config.auth.username = 'abc'
+		expect(config.auth.username).to.equal('abc')
 	})
 
 	it('should be able to change password', () => {
-		config.password = 'abc'
-		expect(config.password).to.equal('abc')
+		config.auth.password = 'abc'
+		expect(config.auth.password).to.equal('abc')
 	})
 
 	it('should be able to change url', () => {

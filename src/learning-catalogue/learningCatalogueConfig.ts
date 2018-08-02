@@ -1,28 +1,21 @@
 export class LearningCatalogueConfig {
-	private _username: string
-	private _password: string
+	private _auth: {
+		username: string
+		password: string
+	}
 	private _url: string
 
-	constructor(username: string, password: string, url: string) {
-		this._username = username
-		this._password = password
+	constructor(auth: {username: string; password: string}, url: string) {
+		this._auth = auth
 		this._url = url
 	}
 
-	get username(): string {
-		return this._username
+	get auth(): {username: string; password: string} {
+		return this._auth
 	}
 
-	set username(value: string) {
-		this._username = value
-	}
-
-	get password(): string {
-		return this._password
-	}
-
-	set password(value: string) {
-		this._password = value
+	set auth(value: {username: string; password: string}) {
+		this._auth = value
 	}
 
 	get url(): string {

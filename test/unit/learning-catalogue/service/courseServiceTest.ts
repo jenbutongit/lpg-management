@@ -1,65 +1,48 @@
 import {Course} from '../../../../src/learning-catalogue/model/course'
 import {CourseFactory} from '../../../../src/learning-catalogue/model/factory/courseFactory'
 import {beforeEach, describe, it} from 'mocha'
-import {AxiosInstance, AxiosResponse} from 'axios'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learningCatalogueConfig'
 import {CourseService} from '../../../../src/learning-catalogue/service/courseService'
+import {RestService} from '../../../../src/learning-catalogue/service/restService'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
 describe('CourseService tests', () => {
-	let http: AxiosInstance
+	let restService: RestService
 	let courseFactory: CourseFactory
 	let courseService: CourseService
-	let config: LearningCatalogueConfig = new LearningCatalogueConfig(
-		'username',
-		'password',
-		'http://localhost'
-	)
 
 	beforeEach(() => {
-		http = <AxiosInstance>{}
+		restService = <RestService>{}
 		courseFactory = <CourseFactory>{}
-		courseService = new CourseService(http, config)
+		courseService = new CourseService(restService)
 		courseService.courseFactory = courseFactory
 	})
 
-	it('should convert learning catalogue response to paged list of courses', () => {
-		const response = {
-			data: {
-				results: [
-					{
-						id: 'abc',
-					},
-					{
-						id: 'def',
-					},
-				],
-				page: 0,
-				totalResults: 32,
-				size: 10,
-			},
+	it('should convert learning catalogue response to paged list of courses', async () => {
+		const data = {
+			results: [
+				{
+					id: 'abc',
+				},
+				{
+					id: 'def',
+				},
+			],
+			page: 0,
+			totalResults: 32,
+			size: 10,
 		}
 
-		const get = sinon.stub()
-		get.withArgs(`${config.url}/courses?page=0&size=10`, {
-			auth: {
-				username: config.username,
-				password: config.password,
-			},
-		}).returns(
-			new Promise(resolve => {
-				resolve(response)
-			})
-		)
-
-		http.get = get
+		restService.get = sinon
+			.stub()
+			.withArgs(`/courses?page=0&size=10`)
+			.returns(data)
 
 		const course1: Course = new Course()
 		course1.id = 'abc'
@@ -67,332 +50,136 @@ describe('CourseService tests', () => {
 		const course2: Course = new Course()
 		course2.id = 'def'
 
-		const create = sinon.stub()
-		create
-			.withArgs({
-				id: 'abc',
-			})
-			.returns(course1)
-		create
-			.withArgs({
-				id: 'def',
-			})
-			.returns(course2)
+		const createStub = sinon.stub()
+		createStub.withArgs({id: 'abc'}).returns(course1)
+		createStub.withArgs({id: 'def'}).returns(course2)
 
-		courseFactory.create = create
+		courseFactory.create = createStub
 
-		return courseService.listAll().then(result => {
-			expect(create).to.have.been.calledTwice
-			expect(result.results).to.eql([course1, course2])
-			expect(result.page).to.eql(0)
-			expect(result.size).to.eql(10)
-			expect(result.totalResults).to.eql(32)
-			expect(get).to.have.been.calledOnceWith(
-				`${config.url}/courses?page=0&size=10`,
-				{
-					auth: {
-						username: config.username,
-						password: config.password,
-					},
-				}
-			)
-		})
+		const result = await courseService.listAll()
+
+		expect(courseFactory.create).to.have.been.calledTwice
+		expect(result.results).to.eql([course1, course2])
+		expect(result.page).to.eql(0)
+		expect(result.size).to.eql(10)
+		expect(result.totalResults).to.eql(32)
+		expect(restService.get).to.have.been.calledOnceWith(
+			`/courses?page=0&size=10`
+		)
 	})
 
-	it('should pass page parameters to http call', () => {
+	it('should pass page parameters to http call', async () => {
 		const page: number = 2
 		const size: number = 99
 
-		const response = {
-			data: {
-				results: [],
-				page: 0,
-				totalResults: 32,
-				size: 10,
-			},
+		const data = {
+			results: [],
+			page: 0,
+			totalResults: 32,
+			size: 10,
 		}
 
-		http.get = sinon.stub().returns(
-			new Promise(resolve => {
-				resolve(response)
-			})
-		)
+		restService.get = sinon
+			.stub()
+			.withArgs(`/courses?page=${page}&size=${size}`)
+			.returns(data)
 
 		courseFactory.create = sinon.stub()
 
-		return courseService.listAll(page, size).then(result => {
-			expect(http.get).to.have.been.calledOnceWith(
-				`${config.url}/courses?page=${page}&size=${size}`,
-				{
-					auth: {
-						username: config.username,
-						password: config.password,
-					},
-				}
-			)
-		})
-	})
+		await courseService.listAll(page, size)
 
-	it('should return empty list of results if results are null', () => {
-		const response = {
-			data: {
-				results: null,
-				page: 0,
-				totalResults: 32,
-				size: 10,
-			},
-		}
-
-		const get = sinon
-			.stub()
-			.returns(
-				new Promise((resolve, reject) => {
-					resolve(response)
-				})
-			)
-			.withArgs('/courses')
-
-		http.get = get
-
-		const create = sinon.stub()
-		courseFactory.create = create
-
-		return courseService.listAll().then(result => {
-			expect(create).to.not.have.been.called
-			expect(result.results).to.eql([])
-			expect(result.page).to.eql(0)
-			expect(result.size).to.eql(10)
-			expect(result.totalResults).to.eql(32)
-		})
-	})
-
-	it('Should throw error if there is a problem with request to learning catalogue', async () => {
-		const error: Error = new Error('Error thrown from stub')
-
-		const get = sinon.stub().throws(error)
-
-		http.get = get
-
-		return await expect(courseService.listAll()).to.be.rejectedWith(
-			`Error listing all courses - ${error}`
+		return expect(restService.get).to.have.been.calledOnceWith(
+			`/courses?page=${page}&size=${size}`
 		)
 	})
 
-	it('should pass id to http call and build Course from result', async () => {
+	it('should return empty list of results if results are null', async () => {
+		const data = {
+			results: null,
+			page: 0,
+			totalResults: 32,
+			size: 10,
+		}
+
+		restService.get = sinon
+			.stub()
+			.returns(data)
+			.withArgs('/courses?page=0&size=10')
+
+		courseFactory.create = sinon.stub()
+
+		await courseService.listAll()
+
+		expect(courseFactory.create).to.not.have.been.called
+		expect(data.results).to.eql([])
+		expect(data.page).to.eql(0)
+		expect(data.size).to.eql(10)
+		expect(data.totalResults).to.eql(32)
+	})
+
+	it('should call RestService to read a course', async () => {
 		const courseId = 'test-id'
-		const response = {
-			data: {
-				id: courseId,
-				title: 'Test Course Title',
-				shortDescription: 'Test course short description',
-			},
+		const data = {
+			id: courseId,
+			title: 'Test Course Title',
+			shortDescription: 'Test course short description',
 		}
 
 		const course = <Course>{
-			id: response.data.id,
-			title: response.data.title,
-			shortDescription: response.data.shortDescription,
+			id: data.id,
+			title: data.title,
+			shortDescription: data.shortDescription,
 		}
 
-		const get = sinon
+		restService.get = sinon
 			.stub()
-			.withArgs(`${config.url}/courses/${courseId}`, {
-				auth: {
-					username: config.username,
-					password: config.password,
-				},
-			})
-			.returns(response)
+			.withArgs(`/courses/${courseId}`)
+			.returns(data)
 
-		http.get = get
-
-		const create = sinon
+		courseFactory.create = sinon
 			.stub()
-			.withArgs(response.data)
+			.withArgs(data)
 			.returns(course)
-
-		courseFactory.create = create
 
 		const result: Course = await courseService.get(courseId)
 
 		expect(result).to.equal(course)
-		expect(get).to.have.been.calledOnceWith(
-			`${config.url}/courses/${courseId}`,
-			{
-				auth: {
-					username: config.username,
-					password: config.password,
-				},
-			}
+		expect(restService.get).to.have.been.calledOnceWith(
+			`/courses/${courseId}`
 		)
-
-		expect(create).to.have.been.calledOnceWith(response.data)
-	})
-
-	it('should pass id to http call and build Course from result', async () => {
-		const courseId = 'test-id'
-
-		const url = `${config.url}/courses/${courseId}`
-
-		const requestConfig = {
-			auth: {
-				username: config.username,
-				password: config.password,
-			},
-		}
-
-		const response = {
-			data: {
-				id: courseId,
-				title: 'Test Course Title',
-				shortDescription: 'Test course short description',
-			},
-		}
-
-		const course = <Course>{
-			id: response.data.id,
-			title: response.data.title,
-			shortDescription: response.data.shortDescription,
-		}
-
-		const get = sinon
-			.stub()
-			.withArgs(url, requestConfig)
-			.returns(response)
-
-		http.get = get
-
-		const create = sinon
-			.stub()
-			.withArgs(response.data)
-			.returns(course)
-
-		courseFactory.create = create
-
-		const result: Course = await courseService.get(courseId)
-
-		expect(result).to.equal(course)
-		expect(get).to.have.been.calledOnceWith(url, requestConfig)
-
-		expect(create).to.have.been.calledOnceWith(response.data)
-	})
-
-	it('should throw error if get fails', async () => {
-		const courseId = 'test-id'
-
-		const url = `${config.url}/courses/${courseId}`
-
-		const requestConfig = {
-			auth: {
-				username: config.username,
-				password: config.password,
-			},
-		}
-
-		const error = new Error('test-error')
-
-		const get = sinon
-			.stub()
-			.withArgs(url, requestConfig)
-			.throws(error)
-
-		http.get = get
-
-		return await expect(courseService.get(courseId)).to.be.rejectedWith(
-			`Error retrieving course: ${error}`
-		)
+		expect(courseFactory.create).to.have.been.calledOnceWith(data)
 	})
 
 	it('should post course and return result of get', async () => {
-		const postUrl = `${config.url}/courses/`
-		const courseId = 'test-course-id'
+		const path = `/courses/`
 
-		const requestConfig = {
-			auth: {
-				username: config.username,
-				password: config.password,
-			},
-		}
-
-		const course: Course = <Course>{
+		const data = {
 			title: 'Course Title',
 			shortDescription: 'Course short description',
 			description: 'Course description',
 		}
 
-		const postResponse: AxiosResponse = <AxiosResponse>{
-			headers: {
-				location: `${config.url}/courses/${courseId}`,
-			},
+		const course = <Course>{
+			title: 'Course Title',
+			shortDescription: 'Course short description',
+			description: 'Course description',
 		}
 
-		const post = sinon
+		restService.post = sinon
 			.stub()
-			.withArgs(postUrl, course, requestConfig)
-			.returns(postResponse)
+			.withArgs(path, course)
+			.returns(data)
 
-		http.post = post
-
-		const getUrl = `${config.url}/courses/${courseId}`
-
-		const getResponse = {
-			data: {
-				id: courseId,
-				title: 'Test Course Title',
-				shortDescription: 'Test course short description',
-			},
-		}
-
-		const get = sinon
+		courseFactory.create = sinon
 			.stub()
-			.withArgs(getUrl, requestConfig)
-			.returns(getResponse)
-
-		http.get = get
-
-		const create = sinon
-			.stub()
-			.withArgs(getResponse.data)
+			.withArgs(data)
 			.returns(course)
-
-		courseFactory.create = create
 
 		const result: Course = await courseService.create(course)
 
 		expect(result).to.equal(course)
 
-		expect(get).to.have.been.calledOnceWith(getUrl, requestConfig)
-		expect(create).to.have.been.calledOnceWith(getResponse.data)
-		expect(post).to.have.been.calledOnceWith(postUrl, course, requestConfig)
-	})
-
-	it('should throw error if create fails', async () => {
-		const url = `${config.url}/courses/`
-
-		const course: Course = <Course>{
-			title: 'Course Title',
-			shortDescription: 'Course short description',
-			description: 'Course description',
-		}
-
-		const requestConfig = {
-			auth: {
-				username: config.username,
-				password: config.password,
-			},
-		}
-
-		const error = new Error('test-error')
-
-		const post = sinon
-			.stub()
-			.withArgs(url, course, requestConfig)
-			.throws(error)
-
-		http.post = post
-
-		return await expect(courseService.create(course)).to.be.rejectedWith(
-			`Error creating course: ${error}`
-		)
+		expect(restService.post).to.have.been.calledOnceWith(path, course)
+		expect(courseFactory.create).to.have.been.calledOnceWith(data)
 	})
 })
