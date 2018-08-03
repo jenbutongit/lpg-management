@@ -1,12 +1,13 @@
 import {beforeEach, describe, it} from 'mocha'
 import {ModuleValidator} from '../../../../src/learning-catalogue/validator/moduleValidator'
-import {expect} from 'chai'
 import * as chai from 'chai'
+import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-chai.use(chaiAsPromised)
 import * as moment from 'moment'
 import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
 import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
+
+chai.use(chaiAsPromised)
 
 describe('ModuleValidator tests', () => {
 	let validator: ModuleValidator
@@ -502,6 +503,1194 @@ describe('ModuleValidator tests', () => {
 		})
 	})
 
+	describe('Validate all properties of ELearningModule', () => {
+		it('should fail validation if title is not present', async () => {
+			const params = {
+				type: 'elearning',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['title']).to.eql([
+				'validation.module.title.empty',
+			])
+		})
+
+		it('should fail validation if description is not present', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['description']).to.eql([
+				'validation.module.description.empty',
+			])
+		})
+
+		it('should fail validation if duration is not present', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+				'validation.module.duration.empty',
+			])
+		})
+
+		it('should fail validation if duration is negative', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: -99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+			])
+		})
+
+		it('should fail validation if startPage is not present', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['startPage']).to.eql([
+				'validation.module.startPage.empty',
+			])
+		})
+
+		it('should fail validation if audience areasOfWork is empty', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: [],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['areasOfWork']).to.eql([
+				'validation.module.areasOfWork.empty',
+			])
+		})
+
+		it('should fail validation if audience departments is empty', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: [],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['departments']).to.eql([
+				'validation.module.departments.empty',
+			])
+		})
+
+		it('should fail validation if audience grades is empty', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: [],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['grades']).to.eql([
+				'validation.module.grades.empty',
+			])
+		})
+
+		it('should fail validation if audience interests is empty', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: [],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['interests']).to.eql([
+				'validation.module.interests.empty',
+			])
+		})
+
+		it('should fail validation if audience mandatory is missing', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: undefined,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['mandatory']).to.eql([
+				'validation.module.mandatory.empty',
+			])
+		})
+
+		it('should pass validation if all properties are valid', async () => {
+			const params = {
+				type: 'elearning',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				startPage: 'start-page',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(0)
+		})
+	})
+
+	describe('Validate all properties of FaceToFaceModule', () => {
+		it('should fail validation if title is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['title']).to.eql([
+				'validation.module.title.empty',
+			])
+		})
+
+		it('should fail validation if productCode is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['productCode']).to.eql([
+				'validation.module.productCode.empty',
+			])
+		})
+
+		it('should fail validation if description is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['description']).to.eql([
+				'validation.module.description.empty',
+			])
+		})
+
+		it('should fail validation if duration is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+				'validation.module.duration.empty',
+			])
+		})
+
+		it('should fail validation if duration is negative', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: -99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+			])
+		})
+
+		it('should fail validation if audience areasOfWork is empty', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: [],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['areasOfWork']).to.eql([
+				'validation.module.areasOfWork.empty',
+			])
+		})
+
+		it('should fail validation if audience departments is empty', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: [],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['departments']).to.eql([
+				'validation.module.departments.empty',
+			])
+		})
+
+		it('should fail validation if audience grades is empty', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: [],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['grades']).to.eql([
+				'validation.module.grades.empty',
+			])
+		})
+
+		it('should fail validation if audience interests is empty', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: [],
+						mandatory: false,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['interests']).to.eql([
+				'validation.module.interests.empty',
+			])
+		})
+
+		it('should fail validation if audience mandatory is missing', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: undefined,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['mandatory']).to.eql([
+				'validation.module.mandatory.empty',
+			])
+		})
+
+		it('should fail validation if event date missing', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+				events: [
+					{
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['date']).to.eql([
+				'validation.module.event.date.past',
+				'validation.module.event.date.empty',
+			])
+		})
+
+		it('should fail validation if event location is missing', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['location']).to.eql([
+				'validation.module.event.location.empty',
+			])
+		})
+
+		it('should fail validation if event capacity is missing', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['capacity']).to.eql([
+				'validation.module.event.capacity.positive',
+				'validation.module.event.capacity.empty',
+			])
+		})
+
+		it('should fail validation if event capacity is not a positive number', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: -99,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['capacity']).to.eql([
+				'validation.module.event.capacity.positive',
+			])
+		})
+
+		it('should fail validation if event date is in the past', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.subtract(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['date']).to.eql([
+				'validation.module.event.date.past',
+			])
+		})
+
+		it('should pass validation if all properties are valid', async () => {
+			const params = {
+				type: 'face-to-face',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				productCode: 'product code',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+						location: 'event location',
+						capacity: 100,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(0)
+		})
+	})
+
+	describe('Validate all properties of FileModule', () => {
+		it('should fail validation if title is not present', async () => {
+			const params = {
+				type: 'file',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['title']).to.eql([
+				'validation.module.title.empty',
+			])
+		})
+
+		it('should fail validation if description is not present', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['description']).to.eql([
+				'validation.module.description.empty',
+			])
+		})
+
+		it('should fail validation if duration is not present', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+				'validation.module.duration.empty',
+			])
+		})
+
+		it('should fail validation if duration is negative', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: -99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+			])
+		})
+
+		it('should fail validation if url is not present', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				fileSize: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['url']).to.eql(['validation.module.url.empty'])
+		})
+
+		it('should pass validation if url is present', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				fileSize: 99,
+				url: 'http://example.org',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if fileSize is not present', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['fileSize']).to.eql([
+				'validation.module.fileSize.positive',
+				'validation.module.fileSize.empty',
+			])
+		})
+
+		it('should fail validation if fileSize is not a positive number', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: -102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['fileSize']).to.eql([
+				'validation.module.fileSize.positive',
+			])
+		})
+
+		it('should fail validation if audience areasOfWork is empty', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: [],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['areasOfWork']).to.eql([
+				'validation.module.areasOfWork.empty',
+			])
+		})
+
+		it('should fail validation if audience departments is empty', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: [],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['departments']).to.eql([
+				'validation.module.departments.empty',
+			])
+		})
+
+		it('should fail validation if audience grades is empty', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: [],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['grades']).to.eql([
+				'validation.module.grades.empty',
+			])
+		})
+
+		it('should fail validation if audience interests is empty', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: [],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['interests']).to.eql([
+				'validation.module.interests.empty',
+			])
+		})
+
+		it('should fail validation if audience mandatory is missing', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: undefined,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['mandatory']).to.eql([
+				'validation.module.mandatory.empty',
+			])
+		})
+
+		it('should pass validation if all properties are valid', async () => {
+			const params = {
+				type: 'file',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				url: 'http://example.org',
+				fileSize: 102,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(0)
+		})
+	})
+
 	describe('Validate all properties of LinkModule', () => {
 		it('should fail validation if title is not present', async () => {
 			const params = {
@@ -753,6 +1942,277 @@ describe('ModuleValidator tests', () => {
 		it('should pass validation if all properties are valid', async () => {
 			const params = {
 				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(0)
+		})
+	})
+
+	describe('Validate all properties of VideoModule', () => {
+		it('should fail validation if title is not present', async () => {
+			const params = {
+				type: 'video',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['title']).to.eql([
+				'validation.module.title.empty',
+			])
+		})
+
+		it('should fail validation if location is not present', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['location']).to.eql([
+				'validation.module.location.empty',
+			])
+		})
+
+		it('should fail validation if description is not present', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['description']).to.eql([
+				'validation.module.description.empty',
+			])
+		})
+
+		it('should fail validation if duration is not present', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+				'validation.module.duration.empty',
+			])
+		})
+
+		it('should fail validation if duration is negative', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: -99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+			])
+		})
+
+		it('should fail validation if audience areasOfWork is empty', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: [],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['areasOfWork']).to.eql([
+				'validation.module.areasOfWork.empty',
+			])
+		})
+
+		it('should fail validation if audience departments is empty', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: [],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['departments']).to.eql([
+				'validation.module.departments.empty',
+			])
+		})
+
+		it('should fail validation if audience grades is empty', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: [],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['grades']).to.eql([
+				'validation.module.grades.empty',
+			])
+		})
+
+		it('should fail validation if audience interests is empty', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: [],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['interests']).to.eql([
+				'validation.module.interests.empty',
+			])
+		})
+
+		it('should fail validation if audience mandatory is missing', async () => {
+			const params = {
+				type: 'video',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: undefined,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['mandatory']).to.eql([
+				'validation.module.mandatory.empty',
+			])
+		})
+
+		it('should pass validation if all properties are valid', async () => {
+			const params = {
+				type: 'video',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
