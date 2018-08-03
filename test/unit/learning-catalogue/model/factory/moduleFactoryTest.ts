@@ -2,12 +2,11 @@ import {EventFactory} from '../../../../../src/learning-catalogue/model/factory/
 import {AudienceFactory} from '../../../../../src/learning-catalogue/model/factory/audienceFactory'
 import {ModuleFactory} from '../../../../../src/learning-catalogue/model/factory/moduleFactory'
 import {beforeEach, describe, it} from 'mocha'
+import * as chai from 'chai'
 import {expect} from 'chai'
-import {LinkModule} from '../../../../../src/learning-catalogue/model/linkModule'
-import {ELearningModule} from '../../../../../src/learning-catalogue/model/eLearningModule'
-import {FaceToFaceModule} from '../../../../../src/learning-catalogue/model/faceToFaceModule'
-import {FileModule} from '../../../../../src/learning-catalogue/model/fileModule'
-import {VideoModule} from '../../../../../src/learning-catalogue/model/videoModule'
+import * as chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
 
 describe('ModuleFactory tests', () => {
 	let eventFactory: EventFactory
@@ -53,11 +52,11 @@ describe('ModuleFactory tests', () => {
 		}
 	}
 
-	it('should create LinkModule', () => {
+	it('should create LinkModule', async () => {
 		data.location = 'http://example.org'
 		data.type = 'link'
 
-		const module: LinkModule = moduleFactory.create(data)
+		const module = await moduleFactory.create(data)
 
 		testProperties(module, data, ['audiences'])
 		testProperties(module.audiences[0], data.audiences[0], ['requiredBy'])
@@ -67,20 +66,22 @@ describe('ModuleFactory tests', () => {
 		).to.equal(data.audiences[0].requiredBy)
 	})
 
-	it('should create ELearningModule', () => {
+	it('should create ELearningModule', async () => {
 		data.startPage = 'start-page'
 		data.type = 'elearning'
 
-		const module: ELearningModule = moduleFactory.create(data)
+		const module = await moduleFactory.create(data)
 
 		testProperties(module, data, ['audiences'])
 
 		expect(
 			module.audiences[0].requiredBy!.toISOString().substr(0, 19)
 		).to.equal(data.audiences[0].requiredBy)
+
+		expect(module.startPage).to.equal(data.startPage)
 	})
 
-	it('should create FaceToFaceModule', () => {
+	it('should create FaceToFaceModule', async () => {
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
 		data.events = [
@@ -92,7 +93,7 @@ describe('ModuleFactory tests', () => {
 			},
 		]
 
-		const module: FaceToFaceModule = moduleFactory.create(data)
+		const module = await moduleFactory.create(data)
 
 		testProperties(module, data, ['audiences', 'events'])
 
@@ -107,12 +108,12 @@ describe('ModuleFactory tests', () => {
 		)
 	})
 
-	it('should set events and audiences to empt lists of missing', () => {
+	it('should set events and audiences to empt lists of missing', async () => {
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
 		data.audiences = undefined
 
-		const module: FaceToFaceModule = moduleFactory.create(data)
+		const module = await moduleFactory.create(data)
 
 		testProperties(module, data, ['audiences', 'events'])
 
@@ -120,12 +121,12 @@ describe('ModuleFactory tests', () => {
 		expect(module.events).to.eql([])
 	})
 
-	it('should create FileModule', () => {
+	it('should create FileModule', async () => {
 		data.type = 'file'
 		data.fileSize = 99
 		data.url = 'http://example.org'
 
-		const module: FileModule = moduleFactory.create(data)
+		const module = await moduleFactory.create(data)
 
 		testProperties(module, data, ['audiences'])
 		testProperties(module.audiences[0], data.audiences[0], ['requiredBy'])
@@ -135,11 +136,11 @@ describe('ModuleFactory tests', () => {
 		).to.equal(data.audiences[0].requiredBy)
 	})
 
-	it('should create VideoModule', () => {
+	it('should create VideoModule', async () => {
 		data.type = 'video'
 		data.location = 'http://example.org'
 
-		const module: VideoModule = moduleFactory.create(data)
+		const module = await moduleFactory.create(data)
 
 		testProperties(module, data, ['audiences'])
 		testProperties(module.audiences[0], data.audiences[0], ['requiredBy'])
@@ -147,5 +148,12 @@ describe('ModuleFactory tests', () => {
 		expect(
 			module.audiences[0].requiredBy!.toISOString().substr(0, 19)
 		).to.equal(data.audiences[0].requiredBy)
+	})
+
+	it('should throw error if type is not recognised', async () => {
+		data.type = 'unknown'
+		return expect(moduleFactory.create(data)).to.be.rejectedWith(
+			`Unknown module type: unknown ${JSON.stringify(data)}`
+		)
 	})
 })

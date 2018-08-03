@@ -1,0 +1,789 @@
+import {beforeEach, describe, it} from 'mocha'
+import {ModuleValidator} from '../../../../src/learning-catalogue/validator/moduleValidator'
+import {expect} from 'chai'
+import * as chai from 'chai'
+import * as chaiAsPromised from 'chai-as-promised'
+chai.use(chaiAsPromised)
+import * as moment from 'moment'
+import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
+import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
+
+describe('ModuleValidator tests', () => {
+	let validator: ModuleValidator
+
+	beforeEach(() => {
+		validator = new ModuleValidator()
+	})
+
+	describe('Validate properties individually', async () => {
+		it('should fail validation if title is not present', async () => {
+			const params = {
+				type: 'link',
+			}
+
+			const errors = await validator.check(params, ['title'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['title']).to.eql([
+				'validation.module.title.empty',
+			])
+		})
+
+		it('should pass validation if title is present', async () => {
+			const params = {
+				type: 'link',
+				title: 'title',
+			}
+
+			const errors = await validator.check(params, ['title'])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if description is not present', async () => {
+			const params = {
+				type: 'link',
+			}
+
+			const errors = await validator.check(params, ['description'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['description']).to.eql([
+				'validation.module.description.empty',
+			])
+		})
+
+		it('should pass validation if description is present', async () => {
+			const params = {
+				type: 'link',
+				description: 'description',
+			}
+
+			const errors = await validator.check(params, ['description'])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if duration is not present', async () => {
+			const params = {
+				type: 'link',
+			}
+
+			const errors = await validator.check(params, ['duration'])
+
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+				'validation.module.duration.empty',
+			])
+		})
+
+		it('should fail validation if duration is not a positive number', async () => {
+			const params = {
+				type: 'link',
+				duration: -99,
+			}
+
+			const errors = await validator.check(params, ['duration'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+			])
+		})
+
+		it('should pass validation if duration is a positive number', async () => {
+			const params = {
+				type: 'link',
+				duration: 99,
+			}
+
+			const errors = await validator.check(params, ['duration'])
+
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should pass validation if audience is not present', async () => {
+			const params = {
+				type: 'link',
+			}
+
+			const errors = await validator.check(params, ['audiences'])
+
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if audience present but audience areasOfWork is not', async () => {
+			const params = {
+				type: 'link',
+				audiences: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'audiences',
+				'audience.areasOfWork',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['areasOfWork']).to.eql([
+				'validation.module.areasOfWork.empty',
+			])
+		})
+
+		it('should fail validation if audience present but audience departments is not', async () => {
+			const params = {
+				type: 'link',
+				audiences: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'audiences',
+				'audience.departments',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['departments']).to.eql([
+				'validation.module.departments.empty',
+			])
+		})
+
+		it('should fail validation if audience present but audience grades is not', async () => {
+			const params = {
+				type: 'link',
+				audiences: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'audiences',
+				'audience.grades',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['grades']).to.eql([
+				'validation.module.grades.empty',
+			])
+		})
+
+		it('should fail validation if audience present but audience interests is not', async () => {
+			const params = {
+				type: 'link',
+				audiences: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'audiences',
+				'audience.interests',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['interests']).to.eql([
+				'validation.module.interests.empty',
+			])
+		})
+
+		it('should fail validation if audience present but audience mandatory is not', async () => {
+			const params = {
+				type: 'link',
+				audiences: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'audiences',
+				'audience.mandatory',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['mandatory']).to.eql([
+				'validation.module.mandatory.empty',
+			])
+		})
+
+		it('should fail validation if location is not present on LinkModule', async () => {
+			const params = {
+				type: 'link',
+			}
+
+			const errors = await validator.check(params, ['location'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['location']).to.eql([
+				'validation.module.location.empty',
+			])
+		})
+
+		it('should pass validation if location is present on LinkModule', async () => {
+			const params = {
+				type: 'link',
+				location: 'location',
+			}
+
+			const errors = await validator.check(params, ['location'])
+
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if location is not present on VideoModule', async () => {
+			const params = {
+				type: 'video',
+			}
+
+			const errors = await validator.check(params, ['location'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['location']).to.eql([
+				'validation.module.location.empty',
+			])
+		})
+
+		it('should pass validation if location is present on VideoModule', async () => {
+			const params = {
+				type: 'video',
+				location: 'location',
+			}
+
+			const errors = await validator.check(params, ['location'])
+
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if startPage is not present', async () => {
+			const params = {
+				type: 'elearning',
+			}
+
+			const errors = await validator.check(params, ['startPage'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['startPage']).to.eql([
+				'validation.module.startPage.empty',
+			])
+		})
+
+		it('should pass validation if startPage is present', async () => {
+			const params = {
+				type: 'elearning',
+				startPage: 'startPage',
+			}
+
+			const errors = await validator.check(params, ['startPage'])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if url is not present', async () => {
+			const params = {
+				type: 'file',
+			}
+
+			const errors = await validator.check(params, ['url'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['url']).to.eql(['validation.module.url.empty'])
+		})
+
+		it('should pass validation if url is present', async () => {
+			const params = {
+				type: 'file',
+				url: 'url',
+			}
+
+			const errors = await validator.check(params, ['url'])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if fileSize is not present', async () => {
+			const params = {
+				type: 'file',
+			}
+
+			const errors = await validator.check(params, ['fileSize'])
+
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['fileSize']).to.eql([
+				'validation.module.fileSize.positive',
+				'validation.module.fileSize.empty',
+			])
+		})
+
+		it('should fail validation if fileSize is not a positive number', async () => {
+			const params = {
+				type: 'file',
+				fileSize: -99,
+			}
+
+			const errors = await validator.check(params, ['fileSize'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['fileSize']).to.eql([
+				'validation.module.fileSize.positive',
+			])
+		})
+
+		it('should pass validation if fileSize is a positive number', async () => {
+			const params = {
+				type: 'file',
+				fileSize: 100,
+			}
+
+			const errors = await validator.check(params, ['fileSize'])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if productCode is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+			}
+
+			const errors = await validator.check(params, ['productCode'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['productCode']).to.eql([
+				'validation.module.productCode.empty',
+			])
+		})
+
+		it('should pass validation if productCode is present', async () => {
+			const params = {
+				type: 'face-to-face',
+				productCode: 'productCode',
+			}
+
+			const errors = await validator.check(params, ['productCode'])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if event date is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.date',
+			])
+
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['date']).to.eql([
+				'validation.module.event.date.past',
+				'validation.module.event.date.empty',
+			])
+		})
+
+		it('should fail validation if event date is in the past', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [
+					{
+						date: moment()
+							.subtract(1, 'days')
+							.toDate(),
+					},
+				],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.date',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['date']).to.eql([
+				'validation.module.event.date.past',
+			])
+		})
+
+		it('should pass validation if event date is in future', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [
+					{
+						date: moment()
+							.add(1, 'days')
+							.toDate(),
+					},
+				],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.date',
+			])
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if event location is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.location',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['location']).to.eql([
+				'validation.module.event.location.empty',
+			])
+		})
+
+		it('should pass validation if event location is present', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [
+					{
+						location: 'location',
+					},
+				],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.location',
+			])
+
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if event capacity is not present', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [{}],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.capacity',
+			])
+
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['capacity']).to.eql([
+				'validation.module.event.capacity.positive',
+				'validation.module.event.capacity.empty',
+			])
+		})
+
+		it('should fail validation if event capacity is negative', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [
+					{
+						capacity: -99,
+					},
+				],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.capacity',
+			])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['capacity']).to.eql([
+				'validation.module.event.capacity.positive',
+			])
+		})
+
+		it('should pass validation if event capacity is a positive number', async () => {
+			const params = {
+				type: 'face-to-face',
+				events: [
+					{
+						capacity: 99,
+					},
+				],
+			}
+
+			const errors = await validator.check(params, [
+				'events',
+				'event.capacity',
+			])
+
+			expect(errors.size).to.equal(0)
+		})
+	})
+
+	describe('Validate all properties of LinkModule', () => {
+		it('should fail validation if title is not present', async () => {
+			const params = {
+				type: 'link',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['title']).to.eql([
+				'validation.module.title.empty',
+			])
+		})
+
+		it('should fail validation if location is not present', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['location']).to.eql([
+				'validation.module.location.empty',
+			])
+		})
+
+		it('should fail validation if description is not present', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['description']).to.eql([
+				'validation.module.description.empty',
+			])
+		})
+
+		it('should fail validation if duration is not present', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(2)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+				'validation.module.duration.empty',
+			])
+		})
+
+		it('should fail validation if duration is negative', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: -99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['duration']).to.eql([
+				'validation.module.duration.positive',
+			])
+		})
+
+		it('should fail validation if audience areasOfWork is empty', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: [],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['areasOfWork']).to.eql([
+				'validation.module.areasOfWork.empty',
+			])
+		})
+
+		it('should fail validation if audience departments is empty', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: [],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['departments']).to.eql([
+				'validation.module.departments.empty',
+			])
+		})
+
+		it('should fail validation if audience grades is empty', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: [],
+						interests: ['blah'],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['grades']).to.eql([
+				'validation.module.grades.empty',
+			])
+		})
+
+		it('should fail validation if audience interests is empty', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: [],
+						mandatory: false,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['interests']).to.eql([
+				'validation.module.interests.empty',
+			])
+		})
+
+		it('should fail validation if audience mandatory is missing', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: undefined,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['mandatory']).to.eql([
+				'validation.module.mandatory.empty',
+			])
+		})
+
+		it('should pass validation if all properties are valid', async () => {
+			const params = {
+				type: 'link',
+				title: 'module title',
+				location: 'module location',
+				description: 'module description',
+				duration: 99,
+				audiences: [
+					{
+						areasOfWork: ['blah'],
+						departments: ['blah'],
+						grades: ['blah'],
+						interests: ['blah'],
+						mandatory: true,
+					},
+				],
+			}
+
+			const errors = await validator.check(params)
+			expect(errors.size).to.equal(0)
+		})
+	})
+
+	describe('Setters and Getters', () => {
+		it('should be able to set error mapper', () => {
+			const errorMapper = <ValidationErrorMapper>{}
+			validator.validationErrorMapper = errorMapper
+			expect(validator.validationErrorMapper).to.eql(errorMapper)
+		})
+
+		it('should be able to set module factory', () => {
+			const moduleFactory = <ModuleFactory>{}
+			validator.moduleFactory = moduleFactory
+			expect(validator.moduleFactory).to.eql(moduleFactory)
+		})
+	})
+})

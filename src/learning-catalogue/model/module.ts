@@ -1,5 +1,5 @@
 import {Audience} from './audience'
-import {IsNotEmpty, IsNumber, ValidateNested} from 'class-validator'
+import {IsIn, IsNotEmpty, IsPositive, ValidateNested} from 'class-validator'
 
 export class Module {
 	id: string
@@ -8,7 +8,11 @@ export class Module {
 		groups: ['all', 'type'],
 		message: 'validation.module.type.empty',
 	})
-	type: string
+	@IsIn(['face-to-face', 'link', 'video', 'elearning', 'file'], {
+		groups: ['all', 'type'],
+		message: 'validation.module.type.validType',
+	})
+	type: 'face-to-face' | 'link' | 'video' | 'elearning' | 'file'
 
 	@IsNotEmpty({
 		groups: ['all', 'title'],
@@ -26,20 +30,16 @@ export class Module {
 		groups: ['all', 'duration'],
 		message: 'validation.module.duration.empty',
 	})
-	@IsNumber(undefined, {
+	@IsPositive({
 		groups: ['all', 'duration'],
-		message: 'validation.module.duration.number',
+		message: 'validation.module.duration.positive',
 	})
 	duration: number
 
-	@IsNumber(undefined, {
-		groups: ['all', 'price'],
-		message: 'validation.module.price.number',
-	})
 	price?: number
 
 	@ValidateNested({
-		groups: ['all', 'audience'],
+		groups: ['all', 'audiences'],
 	})
 	audiences: Audience[]
 }

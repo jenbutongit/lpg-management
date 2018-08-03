@@ -27,14 +27,12 @@ export class ModuleValidator {
 		this._moduleFactory = value
 	}
 
-	async check(
-		params: any,
-		groups: ['all' | 'title' | 'shortDescription' | 'description'] = ['all']
-	) {
-		const validationErrors: ValidationError[] = await validate(
-			this._moduleFactory.create(params),
-			{groups: groups}
-		)
+	async check(params: any, groups: string[] = ['all']) {
+		const module = await this._moduleFactory.create(params)
+
+		const validationErrors: ValidationError[] = await validate(module, {
+			groups: groups,
+		})
 
 		return this._validationErrorMapper.map(validationErrors)
 	}

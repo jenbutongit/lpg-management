@@ -1,4 +1,3 @@
-import {Module} from '../module'
 import {AudienceFactory} from './audienceFactory'
 import {EventFactory} from './eventFactory'
 import {FaceToFaceModule} from '../faceToFaceModule'
@@ -18,8 +17,7 @@ export class ModuleFactory {
 		this.defaultCreate = this.defaultCreate.bind(this)
 	}
 
-	private defaultCreate(data: any) {
-		const module: Module = new Module()
+	private async defaultCreate(module: any, data: any) {
 		module.id = data.id
 		module.type = data.type
 		module.title = data.title
@@ -33,42 +31,47 @@ export class ModuleFactory {
 		return module
 	}
 
-	public create<T extends Module>(data: any): T {
-		return this.createMethods[data.type](data)
+	public async create(data: any) {
+		if (this.createMethods.hasOwnProperty(data.type)) {
+			return this.createMethods[data.type](data)
+		} else {
+			throw new Error(
+				`Unknown module type: ${data.type} ${JSON.stringify(data)}`
+			)
+		}
 	}
 
-	private createMethods: ModuleTypeToCreateMethodMap = {
-		video: (data: any): VideoModule => {
-			const module = this.defaultCreate(data) as VideoModule
+	private createMethods: {[key: string]: any} = {
+		video: async (data: any) => {
+			const module = await this.defaultCreate(new VideoModule(), data)
 			module.location = data.location
 			return module
 		},
-		link: (data: any): LinkModule => {
-			const module = this.defaultCreate(data) as LinkModule
+		link: async (data: any) => {
+			const module = await this.defaultCreate(new LinkModule(), data)
 			module.location = data.location
 			return module
 		},
-		file: (data: any): FileModule => {
-			const module = this.defaultCreate(data) as FileModule
+		file: async (data: any) => {
+			const module = await this.defaultCreate(new FileModule(), data)
 			module.url = data.url
 			module.fileSize = data.fileSize
 			return module
 		},
-		'face-to-face': (data: any): FaceToFaceModule => {
-			const module = this.defaultCreate(data) as FaceToFaceModule
+		'face-to-face': async (data: any) => {
+			const module = await this.defaultCreate(
+				new FaceToFaceModule(),
+				data
+			)
 			module.events = (data.events || []).map(this.eventFactory.create)
 			module.productCode = data.productCode
 
 			return module
 		},
-		elearning: (data: any): ELearningModule => {
-			const module = this.defaultCreate(data) as ELearningModule
+		elearning: async (data: any) => {
+			const module = await this.defaultCreate(new ELearningModule(), data)
 			module.startPage = data.startPage
 			return module
 		},
 	}
-}
-
-interface ModuleTypeToCreateMethodMap {
-	[key: string]: any
 }
