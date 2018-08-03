@@ -1,40 +1,63 @@
-<h2 class="govuk-heading-m">Course overview</h2>
+{% from "table/macro.njk" import govukTable %}
 
-<ul class="list">
-    <li class="u--border--bgrey">
-        <div class="overview">
-            <span class="overview-item">Added on</span>
-            <span class="overview-item">24th July 2018<span>
-        </div>
-    </li>
-    <li class="u--border--bgrey">
-        <div class="overview">
-            <span class="overview-item">Added by</span>
-            <span class="overview-item">Michael Jones</span>
-        </div>
-    </li>
-    <li class="u--border--bgrey">
-        <div class="overview">
-            <span class="overview-item">Type</span>
-            <span class="overview-item">{{ course.getType() }}</span>
-        </div>
-    </li>
-    <li class="u--border--bgrey">
-        <div class="overview">
-            <span class="overview-item">Cost</span>
-            <span class="overview-item">£{{course.getCost()}}</span>
-        </div>
-    </li>
-    <li class="u--border--bgrey">
-        <div class="overview">
-            <span class="overview-item">Level</span>
-            <span class="overview-item">AO to SEO</span>
-        </div>
-    </li>
-    <li class="u--border--bgrey">
-        <div class="overview">
-            <span class="overview-item">Learning Provider</span>
-            <span class="overview-item">KPMG</span>
-        </div>
-    </li>
-</ul>
+{{ govukTable({
+  firstCellIsHeader: true,
+  classes: "course-table",
+  rows: [
+    [
+      {
+        text: "Added on"
+      },
+      {
+        text: "24th July 2018",
+        format: "numeric"
+      }
+    ],
+    [
+      {
+        text: "Added by"
+      },
+      {
+        text: "Michael Jones",
+        format: "numeric"
+      }
+    ],
+    [
+      {
+        text: "Type"
+      },
+      {
+        text: i18n[course.getType()],
+        format: "numeric"
+      }
+    ],
+    [
+        {
+        text: "Cost"
+        },
+        {
+        text: "£" + course.getCost(),
+        format: "numeric"
+        }
+    ],
+    [
+      {
+        text: "Level"
+      },
+      {
+        text: "AO to SEO",
+        format: "numeric"
+      }
+    ],
+    [
+      {
+        text: "Learning Provider"
+      },
+      {
+        text: "KPMG",
+        format: "numeric"
+      }
+    ]
+  ]
+}) }}
+

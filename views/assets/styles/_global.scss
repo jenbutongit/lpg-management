@@ -1,6 +1,5 @@
-.govuk-template__body {
+.app-html-class {
 	font-family: 'nta', Arial, sans-serif;
-	line-height: 1.31579;
 	-webkit-font-smoothing: antialiased;
 }
 
@@ -70,6 +69,11 @@ a {
 
 .font-light {
 	font-weight: 400;
+}
+
+.cancel-button {
+	display: block;
+	width: 57px;
 }
 
 @media screen and (min-width: $tablet-small) {

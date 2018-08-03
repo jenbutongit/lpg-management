@@ -1,38 +1,35 @@
 import {Course} from '../../../src/learning-catalogue/model/course'
 import {LearningCatalogue} from '../../../src/learning-catalogue/'
 import {beforeEach, describe, it} from 'mocha'
-import {AxiosInstance} from 'axios'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
 import {CourseService} from '../../../src/learning-catalogue/service/courseService'
 import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
 import {Module} from '../../../src/learning-catalogue/model/module'
+import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
 describe('Learning Catalogue tests', () => {
-	let http: AxiosInstance
-	let config: LearningCatalogueConfig = new LearningCatalogueConfig(
-		'username',
-		'password',
-		'http://localhost'
-	)
-
-	let learningCatalogue: LearningCatalogue
 	let courseService: CourseService
 	let moduleService: ModuleService
 
+	const config = new LearningCatalogueConfig(
+		{username: 'test-user', password: 'test-pass'},
+		'http://example.org'
+	)
+
+	let learningCatalogue: LearningCatalogue
+
 	beforeEach(() => {
-		http = <AxiosInstance>{}
 		courseService = <CourseService>{}
 		moduleService = <ModuleService>{}
 
-		learningCatalogue = new LearningCatalogue(http, config)
+		learningCatalogue = new LearningCatalogue(config)
 		learningCatalogue.courseService = courseService
 		learningCatalogue.moduleService = moduleService
 	})

@@ -1,18 +1,20 @@
-import {AxiosInstance} from 'axios'
 import {Course} from './model/course'
-import {LearningCatalogueConfig} from './learningCatalogueConfig'
 import {DefaultPageResults} from './model/defaultPageResults'
 import {CourseService} from './service/courseService'
 import {ModuleService} from './service/moduleService'
 import {Module} from './model/module'
+import {RestService} from './service/restService'
+import {LearningCatalogueConfig} from './learningCatalogueConfig'
 
 export class LearningCatalogue {
 	private _courseService: CourseService
 	private _moduleService: ModuleService
+	private _restService: RestService
 
-	constructor(http: AxiosInstance, config: LearningCatalogueConfig) {
-		this._courseService = new CourseService(http, config)
-		this._moduleService = new ModuleService(http, config)
+	constructor(config: LearningCatalogueConfig) {
+		this._restService = new RestService(config)
+		this._courseService = new CourseService(this._restService)
+		this._moduleService = new ModuleService(this._restService)
 	}
 
 	async listCourses(
