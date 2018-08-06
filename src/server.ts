@@ -109,9 +109,29 @@ app.get(
 	'/content-management/add-learning-provider',
 	ctx.learningProviderController.getLearningProvider()
 )
-// app.post(
-// 	'/content-management/add-learner-provider',
-// 	ctx.providerController.setLearningProvider()
-// )
+app.post(
+	'/content-management/add-learning-provider',
+	ctx.learningProviderController.setLearningProvider()
+)
+
+app.get(
+	'/content-management/terms-and-conditions',
+	ctx.courseController.getTermsAndConditions()
+)
+
+app.post(
+	'/content-management/terms-and-conditions',
+	ctx.courseController.setTermsAndConditions()
+)
+
+app.get(
+	'/content-management/add-learning-provider-to-course',
+	ctx.courseController.getAddLearningProviderToCourse()
+)
+
+app.post(
+	'/content-management/add-learning-provider-to-course',
+	ctx.courseController.setAddLearningProviderToCourse()
+)
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

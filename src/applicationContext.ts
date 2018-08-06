@@ -14,6 +14,8 @@ import {EnvValue} from 'ts-json-properties'
 import {CourseController} from './controllers/courseController'
 import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
 import {LearningProviderController} from './controllers/learningProviderController'
+import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
+import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
 import {NextFunction, Request, Response} from 'express'
 
 log4js.configure(config.LOGGING)
@@ -29,6 +31,8 @@ export class ApplicationContext {
 	learningCatalogue: LearningCatalogue
 	courseValidator: CourseValidator
 	courseFactory: CourseFactory
+	learningProviderValidator: LearningProviderValidator
+	learningProviderFactory: LearningProviderFactory
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
@@ -74,8 +78,13 @@ export class ApplicationContext {
 			this.courseFactory
 		)
 
+		this.learningProviderValidator = new LearningProviderValidator()
+		this.learningProviderFactory = new LearningProviderFactory()
+
 		this.learningProviderController = new LearningProviderController(
-			this.learningCatalogue
+			this.learningCatalogue,
+			this.learningProviderValidator,
+			this.learningProviderFactory
 		)
 	}
 

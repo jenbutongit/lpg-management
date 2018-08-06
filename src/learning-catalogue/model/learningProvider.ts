@@ -1,11 +1,13 @@
 import {IsNotEmpty} from 'class-validator'
 
-export class Provider {
+export class LearningProvider {
 	public id: string
 
 	@IsNotEmpty({
 		groups: ['all', 'name'],
-		message: 'validation.provider.name.empty',
+		message: 'validation.learningProvider.name.empty',
 	})
 	public name: string
+
+	public dateAdded: string
 }

@@ -107,4 +107,28 @@ export class CourseController {
 			response.redirect('/content-management')
 		}
 	}
+
+	public getTermsAndConditions() {
+		return async (request: Request, response: Response) => {
+			response.render('page/add-terms-and-conditions')
+		}
+	}
+
+	public setTermsAndConditions() {
+		return async (request: Request, response: Response) => {
+			response.render('page/add-terms-and-conditions')
+		}
+	}
+
+	public getAddLearningProviderToCourse() {
+		return async (request: Request, response: Response) => {
+			response.render('page/add-learning-provider-to-course')
+		}
+	}
+
+	public setAddLearningProviderToCourse() {
+		return async (request: Request, response: Response) => {
+			response.render('page/add-learning-provider-to-course')
+		}
+	}
 }

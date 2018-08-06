@@ -1,17 +1,16 @@
-{% extends "../component/Page.njk" %}
 {% from "input/macro.njk" import govukInput %}
-{% from "button/macro.njk" import govukButton %}
+{% from "../component/textarea/macro.njk" import textarea %}
 
-{% block pageTitle %}Add Course - Civil Service Learning{% endblock %}
+{% extends "../component/Page.njk" %}
+{% block pageTitle %}Add Terms and Conditions - Civil Service Learning{% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             {{ govukBackLink({
                 text: "Back",
-                href: "/content-management"
+                href: "/content-management/add-learning-provider"
             }) }}
-
             {% if errors.fields %}
                 <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
                     <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -28,18 +27,14 @@
             {%endif%}
         </div>
     </div>
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
-            <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-            <form action="/content-management/add-course" method="post">
-
+            <form action="/form-handler" method="post">
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields %}
                         {{ govukInput({
                         label: {
-                            text: "Course title"
+                            text: "Title"
                             },
                             id: "title",
                             name: "title",
@@ -47,26 +42,25 @@
                                 text: "Title is required"
                             }
                         }) }}
-                    {% else %}
-                        {{ govukInput({
-                        label: {
-                            text: "Course title"
-                            },
-                            id: "title",
-                            name: "title"
-                        }) }}
-                    {% endif %}
-                </fieldset>
+                        {% else %}
+                            {{ govukInput({
+                            label: {
+                                text: "Title"
+                                },
+                                id: "title",
+                                name: "title"
+                            }) }}
+                        {% endif %}
+                    {% block textarea %}
+                        {{ textarea("termsAndConditions", "termsAndConditions", "Maximum of 10000 characters", 10000, "Terms and Conditions") }}
+                    {% endblock %} 
+                </fieldset> 
                 {{ govukButton({
-                    text: "Continue"
-                }) }}
-
-                <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
-            </form>
-        </div>
-
-        <div class="govuk-grid-column-one-third">
-       
+                        text: "Add terms and conditions",
+        
+                    }) }} 
+            </form>                    
         </div>
     </div>
 {% endblock %}
+

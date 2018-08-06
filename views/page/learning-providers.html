@@ -2,6 +2,8 @@
 {% from "../component/menu/macro.njk" import menu %}
 
 {% extends "../component/Page.njk" %}
+{% block pageTitle %}Learning Providers - Civil Service Learning{% endblock %}
+
 
 {% block content %}
     {{ govukBackLink({
@@ -50,8 +52,7 @@
                     {% set actions = [                           
                             {
                                 link: '/content-management/add-learning-provider',
-                                text: 'Add a new learning provider'
-                                
+                                text: 'Add a new learning provider'    
                             }
                     ] %}
 
