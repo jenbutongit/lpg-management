@@ -1,3 +1,4 @@
+{% from "../component/list/macro.njk" import list %}
 {% from "table/macro.njk" import govukTable %}
 {% from "../component/menu/macro.njk" import menu %}
 
@@ -18,33 +19,13 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {{ govukTable({
-                firstCellIsHeader: false,
-                head: [
-                    {
-                        text: 'Learning provider name'
-                    },
-                    {
-                        text: 'Added on'
-                    },
-                    {
-                        text: ''
-                    }
-                ],
-                rows: [
-                    [
-                        {
-                            text: 'Knowledgepool'
-                        },
-                        {
-                            text: '4 Jun 2018'
-                        },
-                        {
-                            html: '<a href="#">Edit</a>'
-                        }
-                    ]
-                ]
-            }) }}
+            {% if pageResults %}
+                {% block providerList %}
+                    {{ providerList(pageResults) }}
+                {% endblock %}
+            {% else %}
+                <p class="govuk-body">There are currently no learning providers</p>
+            {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
