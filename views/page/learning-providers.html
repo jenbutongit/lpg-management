@@ -5,18 +5,16 @@
 {% extends "../component/Page.njk" %}
 {% block pageTitle %}Learning Providers - Civil Service Learning{% endblock %}
 
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("/content-management") }}
+  {% endblock%}
+{% endblock %}
 
 {% block content %}
-    {{ govukBackLink({
-        text: "Back",
-        href: "/learning-providers"
-    }) }}
-
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l">Learning providers</h1>
-        </div>
-    </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {% if pageResults %}

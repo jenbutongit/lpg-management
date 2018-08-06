@@ -3,6 +3,12 @@
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}{{__[home.page.title]}}{% endblock %}
 
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+{% endblock %}
+
 {% block content %}
 <div class="u--border--bgrey">
    <h1 class="govuk-heading-l">Content management</h1>

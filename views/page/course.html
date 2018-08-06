@@ -4,13 +4,15 @@
 {% from "back-link/macro.njk" import govukBackLink %}
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}Course overview - Civil Service Learning{% endblock %}
-
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("/content-management") }}
+  {% endblock%}
+{% endblock %}
 {% block content %}
-
-    {{ govukBackLink({
-        text: "Back",
-        href: "/content-management"
-    }) }}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
