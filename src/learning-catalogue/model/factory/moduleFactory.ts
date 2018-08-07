@@ -27,7 +27,6 @@ export class ModuleFactory {
 		module.audiences = (data.audiences || []).map(
 			this.audienceFactory.create
 		)
-		module.events = (data.events || []).map(this.eventFactory.create)
 
 		return module
 	}
