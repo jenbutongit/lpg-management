@@ -96,10 +96,12 @@ export class CourseController {
 			const course = this.courseFactory.create(data)
 
 			const errors = await this.courseValidator.check(course)
+
 			if (errors.size) {
 				return response.render('page/add-course-details', {
 					title: data.title,
 					errors: errors,
+					course: course,
 				})
 			}
 			await self.learningCatalogue.create(course)

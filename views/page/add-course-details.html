@@ -1,6 +1,6 @@
 {% extends "../component/Page.njk" %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
-{% from "../component/textarea/macro.njk" import textarea %}
+{% from "../component/textarea/macro.njk" import textarea with context %}
 {% from "button/macro.njk" import govukButton %}
 {% from "back-link/macro.njk" import govukBackLink %}
 
@@ -74,13 +74,14 @@
 
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
-                        {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, "Short description") }}
+
+                        {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, course.shortDescription, "Short description") }}
                             
-                        {{ textarea("description", "description", "Maximum of 1500 characters", 1500, "Description") }}
+                        {{ textarea("description", "description", "Maximum of 1500 characters", 1500, course.description, "Description") }}
                 
-                        {{ textarea("learningOutcomes", "learningOutcomes", "Maximum of 1500 characters", 1500, "Learning outcomes (optional)") }}
+                        {{ textarea("learningOutcomes", "learningOutcomes", "Maximum of 1500 characters", 1500, course.learningOutcomes, "Learning outcomes (optional)") }}
                     
-                        {{ textarea("preparation", "preparation", "Maximum of 1500 characters", 1500, "Preparation (optional)") }}
+                        {{ textarea("preparation", "preparation", "Maximum of 1500 characters", 1500, "", "Preparation (optional)") }}
                     {% endblock %}
                 </fieldset>
            
