@@ -41,9 +41,7 @@ export class RestService {
 
 	async get(path: string) {
 		try {
-			// return (await this._http.get(path)).data
-			const response: AxiosResponse = await this._http.get(path)
-			return response.data
+			return (await this._http.get(path)).data
 		} catch (e) {
 			throw new Error(
 				`Error with GET request: ${e} when getting ${
