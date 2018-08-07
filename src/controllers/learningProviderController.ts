@@ -46,24 +46,24 @@ export class LearningProviderController {
 	}
 
 	public getLearningProviders() {
-		const self = this
+		// const self = this
 
 		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
-			let page = 0
-			let size = 10
+			// let page = 0
+			// let size = 10
 
-			if (request.query.p) {
-				page = request.query.p
-			}
-			if (request.query.s) {
-				size = request.query.s
-			}
+			// if (request.query.p) {
+			// 	page = request.query.p
+			// }
+			// if (request.query.s) {
+			// 	size = request.query.s
+			// }
 
-			// prettier-ignore
-			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listAll(page, size)
+			// // prettier-ignore
+			// const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listAll(page, size)
 
-			response.render('page/learning-providers', {pageResults})
+			response.render('page/learning-providers', {})
 		}
 	}
 

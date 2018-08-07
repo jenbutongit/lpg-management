@@ -2,7 +2,7 @@ import {AxiosInstance} from 'axios'
 import {LearningCatalogueConfig} from '../learningCatalogueConfig'
 import {LearningProviderFactory} from '../model/factory/learningProviderFactory'
 import {DefaultPageResults} from '../model/defaultPageResults'
-import {LearningProvider} from '../../../dist/build/src/learning-catalogue/model/learningProvider'
+import {LearningProvider} from '../model/learningProvider'
 
 export class LearningProviderCatalogue {
 	private _http: AxiosInstance
@@ -23,7 +23,7 @@ export class LearningProviderCatalogue {
 			const response = await this._http.get(
 				`${
 					this._config.url
-				}/learning-provider/list?page=${page}&size=${size}`,
+				}/learning-provider/?page=${page}&size=${size}`,
 				{
 					auth: {
 						username: this._config.username,
