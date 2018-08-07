@@ -17,7 +17,7 @@ export class LearningProviderService {
 		size: number = 10
 	): Promise<DefaultPageResults<LearningProvider>> {
 		const data = await this._restService.get(
-			`/learning-provider?page=${page}&size=${size}`
+			`/learning-provider/list?page=${page}&size=${size}`
 		)
 
 		data.results = (data.results || []).map(

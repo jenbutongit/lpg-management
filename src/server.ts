@@ -110,7 +110,7 @@ app.get('/add-module-blog', ctx.homeController.addModuleBlog())
 
 app.get(
 	'/content-management/learning-providers',
-	ctx.learningProviderController.getLearningProviders()
+	ctx.learningProviderController.index()
 )
 app.get(
 	'/content-management/add-learning-provider',

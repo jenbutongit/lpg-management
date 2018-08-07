@@ -17,7 +17,7 @@ export class CourseService {
 		size: number = 10
 	): Promise<DefaultPageResults<Course>> {
 		const data = await this._restService.get(
-			`/courses?page=${page}&size=${size}`
+			`/courses/?page=${page}&size=${size}`
 		)
 
 		data.results = (data.results || []).map(this._courseFactory.create)
