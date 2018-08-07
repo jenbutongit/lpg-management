@@ -2,9 +2,36 @@
 	display: none;
 }
 
+.govuk-label {
+	font-weight: 700;
+}
+
 .form-header {
 	color: $govuk-secondary-text-colour;
 	margin-bottom: -35px;
 }
+
+.time-inputs {
+	display: flex;
+	justify-content: flex-start;
+
+	.govuk-input--width-3 {
+		margin-right: 20px;
+	}
+
+	.govuk-label {
+		font-weight: 400;
+	}
+}
+
+.govuk-checkboxes__label {
+	font-weight: 400;
+
+	.custom-error-message {
+		font-weight: 700;
+		color: $error-message;
+	}
+}
 @media screen and (min-width: $tablet-small) {
+
 }

@@ -2,19 +2,22 @@ import {NextFunction, Request, Response} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
+
+import * as log4js from 'log4js'
 import {CourseRequest} from '../extended'
 
 export class HomeController {
-	learningCatalogue: LearningCatalogue
-	lpgUiUrl: String
+	logger = log4js.getLogger('controllers/homeController')
 
-	constructor(learningCatalogue: LearningCatalogue, lpgUiUrl: String) {
+	learningCatalogue: LearningCatalogue
+
+	constructor(learningCatalogue: LearningCatalogue) {
 		this.learningCatalogue = learningCatalogue
-		this.lpgUiUrl = lpgUiUrl
 	}
 
 	public index() {
 		const self = this
+
 		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
 			let page = 0
@@ -28,26 +31,11 @@ export class HomeController {
 			}
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listAll(page, size)
+			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listCourses(page, size)
 
 			response.render('page/index', {
 				pageResults,
-				lpgUiUrl: this.lpgUiUrl,
 			})
-		}
-	}
-
-	public addCourse() {
-		//TODO: Return empty list of results here if learning catalogue is down?
-		return async (request: Request, response: Response) => {
-			response.render('page/add-course-title', {})
-		}
-	}
-
-	public addCourseDetails() {
-		//TODO: Return empty list of results here if learning catalogue is down?
-		return async (request: Request, response: Response) => {
-			response.render('page/add-course-details', {})
 		}
 	}
 
@@ -58,6 +46,18 @@ export class HomeController {
 			const course = req.course
 
 			response.render(`page/course`, {course})
+		}
+	}
+
+	public addModule() {
+		return async (request: Request, response: Response) => {
+			response.render(`page/add-module`)
+		}
+	}
+
+	public addModuleBlog() {
+		return async (request: Request, response: Response) => {
+			response.render(`page/add-module-blog`)
 		}
 	}
 
@@ -81,7 +81,7 @@ export class HomeController {
 		) => {
 			const req = request as CourseRequest
 			const courseId: string = req.params.courseId
-			const course = await self.learningCatalogue.get(courseId)
+			const course = await self.learningCatalogue.getCourse(courseId)
 			if (course) {
 				req.course = course
 				next()

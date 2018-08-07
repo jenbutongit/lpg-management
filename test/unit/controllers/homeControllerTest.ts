@@ -14,13 +14,12 @@ import {CourseRequest} from '../../../src/extended'
 chai.use(sinonChai)
 
 describe('Home Controller Tests', function() {
-	const lpgUiUrl = 'localhost'
-
 	let homeController: HomeController
 	let learningCatalogue: LearningCatalogue
+
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		homeController = new HomeController(learningCatalogue, lpgUiUrl)
+		homeController = new HomeController(learningCatalogue)
 	})
 
 	it('should render index template with default page and size', async function() {
@@ -36,7 +35,7 @@ describe('Home Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.listAll = listAll
+		learningCatalogue.listCourses = listAll
 
 		const index: (
 			request: Request,
@@ -47,7 +46,7 @@ describe('Home Controller Tests', function() {
 		const response: Response = mockRes()
 		await index(request, response)
 
-		expect(learningCatalogue.listAll).to.have.been.calledWith(0, 10)
+		expect(learningCatalogue.listCourses).to.have.been.calledWith(0, 10)
 
 		expect(response.render).to.have.been.calledOnceWith('page/index')
 	})
@@ -65,7 +64,7 @@ describe('Home Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.listAll = listAll
+		learningCatalogue.listCourses = listAll
 
 		const index: (
 			request: Request,
@@ -80,34 +79,10 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-		expect(learningCatalogue.listAll).to.have.been.calledWith(3, 5)
+		expect(learningCatalogue.listCourses).to.have.been.calledWith(3, 5)
 
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
-			lpgUiUrl: lpgUiUrl,
-		})
-	})
-
-	it('should call course overview page', async function() {
-		const course: Course = new Course()
-		course.id = 'courseOverview-id'
-		course.title = 'courseOverview-title'
-
-		const courseOverview: (
-			request: Request,
-			response: Response
-		) => void = homeController.courseOverview()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-
-		const req = request as CourseRequest
-		req.course = course
-
-		await courseOverview(req, response)
-
-		expect(response.render).to.have.been.calledOnceWith('page/course', {
-			course,
 		})
 	})
 
@@ -127,15 +102,15 @@ describe('Home Controller Tests', function() {
 		const course: Course = new Course()
 		course.id = 'course-id'
 
-		const get = sinon.stub().returns(course)
-		learningCatalogue.get = get
+		const getCourse = sinon.stub().returns(course)
+		learningCatalogue.getCourse = getCourse
 
 		const req = request as CourseRequest
 		req.params.courseId = courseId
 
 		await loadCourse(req, response, next)
 
-		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
 		expect(req.course).to.have.be.eql(course)
 		expect(next).to.have.been.calledOnce
 	})
@@ -153,15 +128,15 @@ describe('Home Controller Tests', function() {
 		const response: Response = mockRes()
 		const next: NextFunction = sinon.stub()
 
-		const get = sinon.stub().returns(null)
-		learningCatalogue.get = get
+		const getCourse = sinon.stub().returns(null)
+		learningCatalogue.getCourse = getCourse
 
 		const req = request as CourseRequest
 		req.params.courseId = courseId
 
 		await loadCourse(req, response, next)
 
-		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
 		expect(req.course).to.have.be.eql(undefined)
 		expect(next).to.have.not.been.calledOnce
 		expect(response.sendStatus).to.have.been.calledWith(404)
