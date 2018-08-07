@@ -1,0 +1,12 @@
+ <h1 class="govuk-heading-l">Learning providers</h1>
+ <ul class="list">
+    {% for learningProvider in pageResults.results %}
+        {# {% set providers = [
+            {
+                learningProvider.name
+            }
+        ] %}
+        <p>{{providers}}</p> #}
+        <p class="govuk-body">{{learningProvider.name}}</p>
+    {% endfor %}
+</ul>
