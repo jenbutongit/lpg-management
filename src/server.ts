@@ -93,6 +93,11 @@ app.post(
 )
 
 app.get(
+	'/content-management/course-preview/:courseId',
+	ctx.homeController.coursePreview()
+)
+
+app.get(
 	'/content-management/add-course-details',
 	ctx.courseController.getCourseDetails()
 )
@@ -100,5 +105,7 @@ app.post(
 	'/content-management/add-course-details',
 	ctx.courseController.setCourseDetails()
 )
+app.get('/add-module', ctx.homeController.addModule())
+app.get('/add-module-blog', ctx.homeController.addModuleBlog())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

@@ -4,11 +4,12 @@ import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
 import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
+import {CourseRequest} from '../../../src/extended'
 
 chai.use(sinonChai)
 
@@ -34,7 +35,7 @@ describe('Home Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.listAll = listAll
+		learningCatalogue.listCourses = listAll
 
 		const index: (
 			request: Request,
@@ -45,7 +46,7 @@ describe('Home Controller Tests', function() {
 		const response: Response = mockRes()
 		await index(request, response)
 
-		expect(learningCatalogue.listAll).to.have.been.calledWith(0, 10)
+		expect(learningCatalogue.listCourses).to.have.been.calledWith(0, 10)
 
 		expect(response.render).to.have.been.calledOnceWith('page/index')
 	})
@@ -63,7 +64,7 @@ describe('Home Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.listAll = listAll
+		learningCatalogue.listCourses = listAll
 
 		const index: (
 			request: Request,
@@ -78,10 +79,66 @@ describe('Home Controller Tests', function() {
 
 		await index(request, response)
 
-		expect(learningCatalogue.listAll).to.have.been.calledWith(3, 5)
+		expect(learningCatalogue.listCourses).to.have.been.calledWith(3, 5)
 
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
 		})
+	})
+
+	it('should call loadCourse', async function() {
+		const courseId: string = 'abc'
+
+		const loadCourse: (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => void = homeController.loadCourse()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+		const next: NextFunction = sinon.stub()
+
+		const course: Course = new Course()
+		course.id = 'course-id'
+
+		const getCourse = sinon.stub().returns(course)
+		learningCatalogue.getCourse = getCourse
+
+		const req = request as CourseRequest
+		req.params.courseId = courseId
+
+		await loadCourse(req, response, next)
+
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
+		expect(req.course).to.have.be.eql(course)
+		expect(next).to.have.been.calledOnce
+	})
+
+	it('should return 404 if course does not exist', async function() {
+		const courseId: string = 'abc'
+
+		const loadCourse: (
+			request: Request,
+			response: Response,
+			next: NextFunction
+		) => void = homeController.loadCourse()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+		const next: NextFunction = sinon.stub()
+
+		const getCourse = sinon.stub().returns(null)
+		learningCatalogue.getCourse = getCourse
+
+		const req = request as CourseRequest
+		req.params.courseId = courseId
+
+		await loadCourse(req, response, next)
+
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
+		expect(req.course).to.have.be.eql(undefined)
+		expect(next).to.have.not.been.calledOnce
+		expect(response.sendStatus).to.have.been.calledWith(404)
 	})
 })

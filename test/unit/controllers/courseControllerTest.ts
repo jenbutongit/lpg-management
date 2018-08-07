@@ -71,15 +71,14 @@ describe('Course Controller Tests', function() {
 		const course: Course = new Course()
 		course.id = 'course-id'
 
-		const get = sinon.stub().returns(course)
-		learningCatalogue.get = get
+		learningCatalogue.getCourse = sinon.stub().returns(course)
 
 		const req = request as CourseRequest
 		req.params.courseId = courseId
 
 		await loadCourse(req, response, next)
 
-		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
 		expect(req.course).to.have.be.eql(course)
 		expect(next).to.have.been.calledOnce
 	})
@@ -97,15 +96,14 @@ describe('Course Controller Tests', function() {
 		const response: Response = mockRes()
 		const next: NextFunction = sinon.stub()
 
-		const get = sinon.stub().returns(null)
-		learningCatalogue.get = get
+		learningCatalogue.getCourse = sinon.stub().returns(null)
 
 		const req = request as CourseRequest
 		req.params.courseId = courseId
 
 		await loadCourse(req, response, next)
 
-		expect(learningCatalogue.get).to.have.been.calledWith(courseId)
+		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
 		expect(req.course).to.have.be.eql(undefined)
 		expect(next).to.have.not.been.calledOnce
 		expect(response.sendStatus).to.have.been.calledWith(404)
@@ -136,8 +134,7 @@ describe('Course Controller Tests', function() {
 
 		request.body = {title: 'New Course'}
 
-		const check = sinon.stub().returns({fields: [], size: 0})
-		courseValidator.check = check
+		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
 
 		await setCourseTitle(request, response)
 
@@ -161,8 +158,7 @@ describe('Course Controller Tests', function() {
 		request.body = {title: ''}
 
 		const errors = {fields: ['validation.course.title.empty'], size: 1}
-		const check = sinon.stub().returns(errors)
-		courseValidator.check = check
+		courseValidator.check = sinon.stub().returns(errors)
 
 		await setCourseTitle(request, response)
 
@@ -208,20 +204,17 @@ describe('Course Controller Tests', function() {
 		}
 
 		const course = new Course()
-		const learningFactoryCreate = sinon.stub().returns('123')
-		learningCatalogue.create = learningFactoryCreate
+		learningCatalogue.createCourse = sinon.stub().returns('123')
 
-		const courseFactoryCreate = sinon.stub().returns(course)
-		courseFactory.create = courseFactoryCreate
+		courseFactory.create = sinon.stub().returns(course)
 
 		const errors = {fields: [], size: 0}
-		const check = sinon.stub().returns(errors)
-		courseValidator.check = check
+		courseValidator.check = sinon.stub().returns(errors)
 
 		await setCourseDetails(request, response)
 		expect(courseFactory.create).to.have.been.calledWith(request.body)
 		expect(courseValidator.check).to.have.been.calledWith(course)
-		expect(learningCatalogue.create).to.have.been.calledWith(course)
+		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
 		expect(response.redirect).to.have.been.calledWith('/content-management')
 	})
 
@@ -242,18 +235,15 @@ describe('Course Controller Tests', function() {
 		}
 
 		const course = new Course()
-		const learningFactoryCreate = sinon.stub().returns('123')
-		learningCatalogue.create = learningFactoryCreate
-
-		const courseFactoryCreate = sinon.stub().returns(course)
-		courseFactory.create = courseFactoryCreate
+		learningCatalogue.createCourse = sinon.stub().returns('123')
+		courseFactory.create = sinon.stub().returns(course)
 
 		const errors = {
 			fields: ['validation.course.description.empty'],
 			size: 1,
 		}
-		const check = sinon.stub().returns(errors)
-		courseValidator.check = check
+
+		courseValidator.check = sinon.stub().returns(errors)
 
 		await setCourseDetails(request, response)
 
