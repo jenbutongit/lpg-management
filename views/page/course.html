@@ -4,6 +4,7 @@
 {% from "back-link/macro.njk" import govukBackLink %}
 
 {% extends "../component/Page.njk" %} {% block pageTitle %}Course overview - Civil Service Learning{% endblock %}
+
 {% block beforeContent %}
   {% block phaseBanner %}
     {{ phaseBanner("beta") }}
@@ -12,8 +13,8 @@
     {{ backLink("/content-management") }}
   {% endblock%}
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-l">{{ course.title }}</h1>
