@@ -3,11 +3,11 @@ import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
-import {NextFunction, Request, Response} from 'express'
+import {Request, Response} from 'express'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
-import {CourseRequest} from '../../../src/extended'
+// import {CourseRequest} from '../../../src/extended'
 import {CourseController} from '../../../src/controllers/courseController'
 import {CourseValidator} from '../../../src/learning-catalogue/validator/courseValidator'
 import {CourseFactory} from '../../../src/learning-catalogue/model/factory/courseFactory'
@@ -52,60 +52,6 @@ describe('Course Controller Tests', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/course', {
 			course,
 		})
-	})
-
-	it('should call loadCourse', async function() {
-		const courseId: string = 'abc'
-
-		const loadCourse: (
-			request: Request,
-			response: Response,
-			next: NextFunction
-		) => void = courseController.loadCourse()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-		const next: NextFunction = sinon.stub()
-
-		const course: Course = new Course()
-		course.id = 'course-id'
-
-		learningCatalogue.getCourse = sinon.stub().returns(course)
-
-		const req = request as CourseRequest
-		req.params.courseId = courseId
-
-		await loadCourse(req, response, next)
-
-		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
-		expect(req.course).to.have.be.eql(course)
-		expect(next).to.have.been.calledOnce
-	})
-
-	it('should return 404 if course does not exist', async function() {
-		const courseId: string = 'abc'
-
-		const loadCourse: (
-			request: Request,
-			response: Response,
-			next: NextFunction
-		) => void = courseController.loadCourse()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-		const next: NextFunction = sinon.stub()
-
-		learningCatalogue.getCourse = sinon.stub().returns(null)
-
-		const req = request as CourseRequest
-		req.params.courseId = courseId
-
-		await loadCourse(req, response, next)
-
-		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
-		expect(req.course).to.have.be.eql(undefined)
-		expect(next).to.have.not.been.calledOnce
-		expect(response.sendStatus).to.have.been.calledWith(404)
 	})
 
 	it('should render add-course-title page', async function() {

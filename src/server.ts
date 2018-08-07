@@ -75,7 +75,6 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 app.use(ctx.addToResponseLocals())
-app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')

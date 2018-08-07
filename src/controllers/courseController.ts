@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from 'express'
+import {Request, Response} from 'express'
 import {CourseValidator} from '../learning-catalogue/validator/courseValidator'
 import {CourseRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
@@ -24,36 +24,13 @@ export class CourseController {
 
 	public courseOverview() {
 		logger.debug('Course Overview page')
-		const self = this
 
 		return async (request: Request, response: Response) => {
-			const courseId: string = request.params.courseId
-			const course = await self.learningCatalogue.getCourse(courseId)
-			if (course) {
-				response.render(`page/course`, {course})
-			} else {
-				response.sendStatus(404)
-			}
-		}
-	}
-
-	public loadCourse() {
-		const self = this
-
-		return async (
-			request: Request,
-			response: Response,
-			next: NextFunction
-		) => {
-			const req = request as CourseRequest
-			const courseId: string = req.params.courseId
-			const course = await self.learningCatalogue.getCourse(courseId)
-			if (course) {
-				req.course = course
-				next()
-			} else {
-				response.sendStatus(404)
-			}
+			await this.getCourseAndRenderTemplate(
+				request,
+				response,
+				`page/course`
+			)
 		}
 	}
 
@@ -113,16 +90,26 @@ export class CourseController {
 	}
 
 	public coursePreview() {
-		const self = this
-
 		return async (request: Request, response: Response) => {
-			const courseId: string = request.params.courseId
-			const course = await self.learningCatalogue.getCourse(courseId)
-			if (course) {
-				response.render(`page/course-preview`, {course})
-			} else {
-				response.sendStatus(404)
-			}
+			await this.getCourseAndRenderTemplate(
+				request,
+				response,
+				`page/course-preview`
+			)
+		}
+	}
+
+	private async getCourseAndRenderTemplate(
+		request: Request,
+		response: Response,
+		view: string
+	) {
+		const courseId: string = request.params.courseId
+		const course = await this.learningCatalogue.getCourse(courseId)
+		if (course) {
+			response.render(view, {course})
+		} else {
+			response.sendStatus(404)
 		}
 	}
 
