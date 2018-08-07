@@ -2,52 +2,68 @@ import {Request, Response} from 'express'
 import {LearningProviderValidator} from '../learning-catalogue/validator/learningProviderValidator'
 import {LearningProviderFactory} from '../learning-catalogue/model/factory/learningProviderFactory'
 // import * as log4js from 'log4js'
-import {LearningCatalogue} from '../learning-catalogue'
+import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
+import {LearningProvider} from '../learning-catalogue/model/learningProvider'
+import {LearningProviderCatalogue} from '../learning-catalogue/learning-provider'
 
 // const logger = log4js.getLogger('controllers/providerController')
 
 export class LearningProviderController {
-	learningCatalogue: LearningCatalogue
+	learningProvider: LearningProviderCatalogue
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
 
 	constructor(
-		learningCatalogue: LearningCatalogue,
+		learningProvider: LearningProviderCatalogue,
 		learningProviderValidator: LearningProviderValidator,
 		learningProviderFactory: LearningProviderFactory
 	) {
-		this.learningCatalogue = learningCatalogue
+		this.learningProvider = learningProvider
 		this.learningProviderValidator = learningProviderValidator
 		this.learningProviderFactory = learningProviderFactory
 	}
 
-	// public index() {
-	// 	const self = this
+	public index() {
+		const self = this
 
-	// 	//TODO: Return empty list of results here if learning catalogue is down?
-	// 	return async (request: Request, response: Response) => {
-	// 		let page = 0
-	// 		let size = 10
+		//TODO: Return empty list of results here if learning catalogue is down?
+		return async (request: Request, response: Response) => {
+			let page = 0
+			let size = 10
 
-	// 		if (request.query.p) {
-	// 			page = request.query.p
-	// 		}
-	// 		if (request.query.s) {
-	// 			size = request.query.s
-	// 		}
+			if (request.query.p) {
+				page = request.query.p
+			}
+			if (request.query.s) {
+				size = request.query.s
+			}
 
-	// 		// prettier-ignore
-	// 		// const pageResults: DefaultPageResults<LearningProvider> = await self.learningCatalogue.listAll(page, size)
+			// prettier-ignore
+			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listAll(page, size)
 
-	// 		response.render('page/leaning-providers', {
-
-	// 		})
-	// 	}
-	// }
+			response.render('page/learning-providers', {pageResults})
+		}
+	}
 
 	public getLearningProviders() {
+		const self = this
+
+		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
-			response.render('page/learning-providers')
+			let page = 0
+			let size = 10
+
+			if (request.query.p) {
+				page = request.query.p
+			}
+			if (request.query.s) {
+				size = request.query.s
+			}
+
+			// prettier-ignore
+			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listAll(page, size)
+
+			response.render('page/learning-providers', {pageResults})
 		}
 	}
 
@@ -58,8 +74,14 @@ export class LearningProviderController {
 	}
 
 	public setLearningProvider() {
+		const self = this
+
 		return async (request: Request, response: Response) => {
-			const name = request.body.name
+			const data = {
+				...request.body,
+			}
+
+			const learningProvider = this.learningProviderFactory.create(data)
 
 			const errors = await this.learningProviderValidator.check(
 				request.body,
@@ -70,7 +92,10 @@ export class LearningProviderController {
 					errors: errors,
 				})
 			}
-			response.render('page/learning-providers', {name})
+
+			await self.learningProvider.create(learningProvider)
+
+			response.redirect('/content-management/learning-providers')
 		}
 	}
 }

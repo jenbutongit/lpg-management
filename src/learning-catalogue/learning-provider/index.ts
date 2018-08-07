@@ -1,10 +1,10 @@
 import {AxiosInstance} from 'axios'
-import {LearningProvider} from './model/learningProvider'
-import {LearningProviderFactory} from './model/factory/learningProviderFactory'
-import {LearningCatalogueConfig} from './learningCatalogueConfig'
-import {DefaultPageResults} from './model/defaultPageResults'
+import {LearningCatalogueConfig} from '../learningCatalogueConfig'
+import {LearningProviderFactory} from '../model/factory/learningProviderFactory'
+import {DefaultPageResults} from '../model/defaultPageResults'
+import {LearningProvider} from '../../../dist/build/src/learning-catalogue/model/learningProvider'
 
-export class LearningCatalogue {
+export class LearningProviderCatalogue {
 	private _http: AxiosInstance
 	private _config: LearningCatalogueConfig
 	private _learningProviderFactory: LearningProviderFactory
@@ -23,7 +23,7 @@ export class LearningCatalogue {
 			const response = await this._http.get(
 				`${
 					this._config.url
-				}/learning-provider?page=${page}&size=${size}`,
+				}/learning-provider/list?page=${page}&size=${size}`,
 				{
 					auth: {
 						username: this._config.username,
@@ -56,7 +56,7 @@ export class LearningCatalogue {
 	): Promise<LearningProvider> {
 		try {
 			const response = await this._http.post(
-				`${this._config.url}/learning-provider/`,
+				`${this._config.url}/learning-provider`,
 				learningProvider,
 				{
 					auth: {
@@ -80,7 +80,7 @@ export class LearningCatalogue {
 	async get(learningProviderId: string): Promise<LearningProvider> {
 		try {
 			const response = await this._http.get(
-				`${this._config.url}/learningProvider/${learningProviderId}`,
+				`${this._config.url}/learning-provider/${learningProviderId}`,
 				{
 					auth: {
 						username: this._config.username,

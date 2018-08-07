@@ -17,6 +17,7 @@ import {LearningProviderController} from './controllers/learningProviderControll
 import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
 import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
 import {NextFunction, Request, Response} from 'express'
+import {LearningProviderCatalogue} from './learning-catalogue/learning-provider'
 
 log4js.configure(config.LOGGING)
 
@@ -33,6 +34,8 @@ export class ApplicationContext {
 	courseFactory: CourseFactory
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
+	learningProvider: LearningProviderCatalogue
+
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
@@ -81,8 +84,13 @@ export class ApplicationContext {
 		this.learningProviderValidator = new LearningProviderValidator()
 		this.learningProviderFactory = new LearningProviderFactory()
 
+		this.learningProvider = new LearningProviderCatalogue(
+			this.axiosInstance,
+			this.learningCatalogueConfig
+		)
+
 		this.learningProviderController = new LearningProviderController(
-			this.learningCatalogue,
+			this.learningProvider,
 			this.learningProviderValidator,
 			this.learningProviderFactory
 		)
