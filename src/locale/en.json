@@ -6,7 +6,7 @@
 		"Short description is too long",
 	"validation.course.description.empty": "Description is required",
 	"validation.course.description.maxLength": "Description is too long",
-	"validation.learningProvider.name.empty": "Name is required",
+	"validation_learningProvider_name_empty": "Name is required",
 	"blended": "Blended",
 	"face-to-face": "Face to Face"
 }

@@ -12,19 +12,11 @@ export class LearningProviderService {
 		this._learningProviderFactory = new LearningProviderFactory()
 	}
 
-	async listAll(
-		page: number = 0,
-		size: number = 10
-	): Promise<DefaultPageResults<LearningProvider>> {
-		const data = await this._restService.get(
-			`/learning-provider/list?page=${page}&size=${size}`
-		)
+	async listAll(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
+		const data = await this._restService.get(`/learning-provider/list?page=${page}&size=${size}`)
 
-		data.results = (data.results || []).map(
-			this._learningProviderFactory.create
-		)
+		data.results = (data.results || []).map(this._learningProviderFactory.create)
 
-		// prettier-ignore
 		const coursePageResults: DefaultPageResults<LearningProvider> = new DefaultPageResults()
 
 		coursePageResults.size = data.size
@@ -35,20 +27,13 @@ export class LearningProviderService {
 		return coursePageResults
 	}
 
-	async create(
-		learningProvider: LearningProvider
-	): Promise<LearningProvider> {
-		const data = await this._restService.post(
-			'/learning-provider/',
-			learningProvider
-		)
+	async create(learningProvider: LearningProvider): Promise<LearningProvider> {
+		const data = await this._restService.post('/learning-provider/', learningProvider)
 		return this._learningProviderFactory.create(data)
 	}
 
 	async get(learningProviderId: string): Promise<LearningProvider> {
-		const data = this._restService.get(
-			`/learning-provider/${learningProviderId}`
-		)
+		const data = await this._restService.get(`/learning-provider/${learningProviderId}`)
 
 		return this._learningProviderFactory.create(data)
 	}

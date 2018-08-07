@@ -5,7 +5,7 @@ export class LearningProvider {
 
 	@IsNotEmpty({
 		groups: ['all', 'name'],
-		message: 'validation.learningProvider.name.empty',
+		message: 'validation_learningProvider_name_empty',
 	})
 	public name: string
 

@@ -1,12 +1,12 @@
 import {Request, Response} from 'express'
 import {LearningProviderValidator} from '../learning-catalogue/validator/learningProviderValidator'
 import {LearningProviderFactory} from '../learning-catalogue/model/factory/learningProviderFactory'
-// import * as log4js from 'log4js'
+import * as log4js from 'log4js'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../learning-catalogue/model/learningProvider'
 import {LearningProviderCatalogue} from '../learning-catalogue/learning-provider'
 
-// const logger = log4js.getLogger('controllers/providerController')
+const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class LearningProviderController {
 	learningProvider: LearningProviderCatalogue
@@ -24,9 +24,9 @@ export class LearningProviderController {
 	}
 
 	public index() {
+		logger.debug('Getting Learning Providers')
 		const self = this
 
-		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
 			let page = 0
 			let size = 10
@@ -46,8 +46,16 @@ export class LearningProviderController {
 	}
 
 	public getLearningProvider() {
+		const self = this
 		return async (request: Request, response: Response) => {
-			response.render('page/add-learning-provider')
+			if (!request.params.learningProviderId) {
+				response.render('page/add-learning-provider')
+			} else {
+				const learningProvider = await self.learningProvider.getLearningProvider(
+					request.params.learningProviderId
+				)
+				response.render('page/add-learning-provider', {learningProvider})
+			}
 		}
 	}
 
@@ -61,10 +69,7 @@ export class LearningProviderController {
 
 			const learningProvider = this.learningProviderFactory.create(data)
 
-			const errors = await this.learningProviderValidator.check(
-				request.body,
-				['name']
-			)
+			const errors = await this.learningProviderValidator.check(request.body, ['name'])
 			if (errors.size) {
 				return response.render('page/add-learning-provider', {
 					errors: errors,

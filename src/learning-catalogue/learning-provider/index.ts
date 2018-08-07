@@ -11,27 +11,18 @@ export class LearningProviderCatalogue {
 
 	constructor(http: AxiosInstance, config: LearningCatalogueConfig) {
 		this._restService = new RestService(config)
-		this._learningProviderService = new LearningProviderService(
-			this._restService
-		)
+		this._learningProviderService = new LearningProviderService(this._restService)
 	}
 
-	async listLearningProviders(
-		page: number = 0,
-		size: number = 10
-	): Promise<DefaultPageResults<LearningProvider>> {
+	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
 		return await this._learningProviderService.listAll(page, size)
 	}
 
-	async createLearningProvider(
-		learningProvider: LearningProvider
-	): Promise<LearningProvider> {
+	async createLearningProvider(learningProvider: LearningProvider): Promise<LearningProvider> {
 		return this._learningProviderService.create(learningProvider)
 	}
 
-	async getLearningProvider(
-		learningProviderId: string
-	): Promise<LearningProvider> {
+	async getLearningProvider(learningProviderId: string): Promise<LearningProvider> {
 		return this._learningProviderService.get(learningProviderId)
 	}
 }

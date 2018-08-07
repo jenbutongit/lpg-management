@@ -1,4 +1,4 @@
-{% from "input/macro.njk" import govukInput %}
+{% from "input/macro.njk" import govukInput with context%}
 {% from "button/macro.njk" import govukButton %}
 
 {% extends "../component/Page.njk" %}
@@ -49,13 +49,24 @@
                         }
                     }) }}
                     {% else %}
+                    {% if learningProvider.name %}
                         {{ govukInput({
                         label: {
                             text: "Learning provider name"
                         },
                         id: "name",
+                        name: "name",
+                        value: learningProvider.name
+                    }) }}
+                    {% else %}
+                    {{ govukInput({
+                        label: {
+                        text: "Learning provider name"
+                        },
+                        id: "name",
                         name: "name"
                     }) }}
+                    {% endif %}
                     {% endif %}
                 </fieldset>
                 <div class="cancellation-policie">
