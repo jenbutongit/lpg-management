@@ -23,15 +23,17 @@ export class CourseController {
 	}
 
 	public courseOverview() {
-		logger.debug('Loading Course Overview page')
+		logger.debug('Course Overview page')
+		const self = this
+
 		return async (request: Request, response: Response) => {
-			const req = request as CourseRequest
-
-			const course = req.course
-
-			response.render(`page/course`, {
-				course,
-			})
+			const courseId: string = request.params.courseId
+			const course = await self.learningCatalogue.getCourse(courseId)
+			if (course) {
+				response.render(`page/course`, {course})
+			} else {
+				response.sendStatus(404)
+			}
 		}
 	}
 
@@ -107,6 +109,32 @@ export class CourseController {
 			await self.learningCatalogue.createCourse(course)
 
 			response.redirect('/content-management')
+		}
+	}
+
+	public coursePreview() {
+		const self = this
+
+		return async (request: Request, response: Response) => {
+			const courseId: string = request.params.courseId
+			const course = await self.learningCatalogue.getCourse(courseId)
+			if (course) {
+				response.render(`page/course-preview`, {course})
+			} else {
+				response.sendStatus(404)
+			}
+		}
+	}
+
+	public addModule() {
+		return async (request: Request, response: Response) => {
+			response.render(`page/add-module`)
+		}
+	}
+
+	public addModuleBlog() {
+		return async (request: Request, response: Response) => {
+			response.render(`page/add-module-blog`)
 		}
 	}
 }

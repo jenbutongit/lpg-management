@@ -39,7 +39,7 @@ export class CourseService {
 	}
 
 	async get(courseId: string): Promise<Course> {
-		const data = this._restService.get(`/courses/${courseId}`)
+		const data = await this._restService.get(`/courses/${courseId}`)
 
 		return this._courseFactory.create(data)
 	}

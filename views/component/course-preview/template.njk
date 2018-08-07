@@ -1,10 +1,10 @@
-<h1 class="govuk-heading-l">{{ course._title }}</h1>
+<h1 class="govuk-heading-l">{{ course.title }}</h1>
 
-<p class="govuk-body">{{ course._description }}</p>
+<p class="govuk-body">{{ course.description }}</p>
 
-{% if course._learningOutcomes %}
+{% if course.learningOutcomes %}
     <h3 class="govuk-heading-m">Learning outcomes</h3>
-    <pre class="govuk-body pre">{{ course._learningOutcomes }}</pre>
+    <pre class="govuk-body pre">{{ course._earningOutcomes }}</pre>
 {% endif %}
 
 
