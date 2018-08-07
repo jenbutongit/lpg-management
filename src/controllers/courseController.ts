@@ -45,7 +45,7 @@ export class CourseController {
 		) => {
 			const req = request as CourseRequest
 			const courseId: string = req.params.courseId
-			const course = await self.learningCatalogue.get(courseId)
+			const course = await self.learningCatalogue.getCourse(courseId)
 			if (course) {
 				req.course = course
 				next()
@@ -104,7 +104,7 @@ export class CourseController {
 					course: course,
 				})
 			}
-			await self.learningCatalogue.create(course)
+			await self.learningCatalogue.createCourse(course)
 
 			response.redirect('/content-management')
 		}
