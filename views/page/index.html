@@ -20,6 +20,7 @@
            {% block list %}
                {{ list("Courses", pageResults) }}
            {% endblock %}
+
        {% endif %}
        {% if pageResults.totalResults !== 0 %}
            <div class="pager">

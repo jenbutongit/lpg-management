@@ -39,31 +39,9 @@ export class LearningProviderController {
 			}
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listAll(page, size)
+			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listLearningProviders(page, size)
 
 			response.render('page/learning-providers', {pageResults})
-		}
-	}
-
-	public getLearningProviders() {
-		// const self = this
-
-		//TODO: Return empty list of results here if learning catalogue is down?
-		return async (request: Request, response: Response) => {
-			// let page = 0
-			// let size = 10
-
-			// if (request.query.p) {
-			// 	page = request.query.p
-			// }
-			// if (request.query.s) {
-			// 	size = request.query.s
-			// }
-
-			// // prettier-ignore
-			// const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listAll(page, size)
-
-			response.render('page/learning-providers', {})
 		}
 	}
 
@@ -93,7 +71,7 @@ export class LearningProviderController {
 				})
 			}
 
-			await self.learningProvider.create(learningProvider)
+			await self.learningProvider.createLearningProvider(learningProvider)
 
 			response.redirect('/content-management/learning-providers')
 		}

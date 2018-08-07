@@ -59,14 +59,16 @@ export class ApplicationContext {
 			passport,
 			this.identityService
 		)
+
 		this.learningCatalogueConfig = new LearningCatalogueConfig(
-			config.COURSE_CATALOGUE.auth.username,
-			config.COURSE_CATALOGUE.auth.password,
+			{
+				username: config.COURSE_CATALOGUE.auth.username,
+				password: config.COURSE_CATALOGUE.auth.password,
+			},
 			config.COURSE_CATALOGUE.url
 		)
 
 		this.learningCatalogue = new LearningCatalogue(
-			this.axiosInstance,
 			this.learningCatalogueConfig
 		)
 
