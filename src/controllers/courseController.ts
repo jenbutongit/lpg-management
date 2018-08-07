@@ -12,11 +12,7 @@ export class CourseController {
 	courseValidator: CourseValidator
 	courseFactory: CourseFactory
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		courseValidator: CourseValidator,
-		courseFactory: CourseFactory
-	) {
+	constructor(learningCatalogue: LearningCatalogue, courseValidator: CourseValidator, courseFactory: CourseFactory) {
 		this.learningCatalogue = learningCatalogue
 		this.courseValidator = courseValidator
 		this.courseFactory = courseFactory
@@ -38,11 +34,7 @@ export class CourseController {
 	public loadCourse() {
 		const self = this
 
-		return async (
-			request: Request,
-			response: Response,
-			next: NextFunction
-		) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const req = request as CourseRequest
 			const courseId: string = req.params.courseId
 			const course = await self.learningCatalogue.getCourse(courseId)
@@ -65,9 +57,7 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			const title = request.body.title
 
-			const errors = await this.courseValidator.check(request.body, [
-				'title',
-			])
+			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
 				return response.render('page/add-course-title', {
 					errors: errors,
@@ -96,10 +86,12 @@ export class CourseController {
 			const course = this.courseFactory.create(data)
 
 			const errors = await this.courseValidator.check(course)
+
 			if (errors.size) {
 				return response.render('page/add-course-details', {
 					title: data.title,
 					errors: errors,
+					course: course,
 				})
 			}
 			await self.learningCatalogue.createCourse(course)

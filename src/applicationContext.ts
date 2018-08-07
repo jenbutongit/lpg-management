@@ -68,28 +68,19 @@ export class ApplicationContext {
 			config.COURSE_CATALOGUE.url
 		)
 
-		this.learningCatalogue = new LearningCatalogue(
-			this.learningCatalogueConfig
-		)
+		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
 
 		this.courseValidator = new CourseValidator()
 		this.courseFactory = new CourseFactory()
 
 		this.homeController = new HomeController(this.learningCatalogue)
 
-		this.courseController = new CourseController(
-			this.learningCatalogue,
-			this.courseValidator,
-			this.courseFactory
-		)
+		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
 
 		this.learningProviderValidator = new LearningProviderValidator()
 		this.learningProviderFactory = new LearningProviderFactory()
 
-		this.learningProvider = new LearningProviderCatalogue(
-			this.axiosInstance,
-			this.learningCatalogueConfig
-		)
+		this.learningProvider = new LearningProviderCatalogue(this.axiosInstance, this.learningCatalogueConfig)
 
 		this.learningProviderController = new LearningProviderController(
 			this.learningProvider,
