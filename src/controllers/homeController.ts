@@ -61,6 +61,16 @@ export class HomeController {
 		}
 	}
 
+	public coursePreview() {
+		return async (request: Request, response: Response) => {
+			const req = request as CourseRequest
+
+			const course = req.course
+
+			response.render('page/course-preview', {course})
+		}
+	}
+
 	public loadCourse() {
 		const self = this
 

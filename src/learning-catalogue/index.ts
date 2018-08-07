@@ -21,7 +21,7 @@ export class LearningCatalogue {
 		page: number = 0,
 		size: number = 10
 	): Promise<DefaultPageResults<Course>> {
-		return await this._courseService.listAll()
+		return await this._courseService.listAll(page, size)
 	}
 
 	async createCourse(course: Course): Promise<Course> {

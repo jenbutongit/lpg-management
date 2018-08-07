@@ -17,7 +17,7 @@ export class ModuleFactory {
 		this.defaultCreate = this.defaultCreate.bind(this)
 	}
 
-	private async defaultCreate(module: any, data: any) {
+	public async defaultCreate(module: any, data: any) {
 		module.id = data.id
 		module.type = data.type
 		module.title = data.title
