@@ -68,3 +68,21 @@
 		}
 	}
 }
+
+.button-blue {
+	background-color: $govuk-link-colour;
+
+	&:hover {
+		background-color: darken($govuk-link-colour, 10%);
+	}
+
+	&:focus {
+		background-color: $govuk-link-colour;
+	}
+}
+
+@media screen and (min-width: $tablet-small) {
+	button.button-blue {
+		margin-left: 10px;
+	}
+}

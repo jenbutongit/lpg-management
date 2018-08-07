@@ -1,0 +1,51 @@
+{% from "input/macro.njk" import govukInput %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}Add Cancellation Policy - Civil Service Learning{% endblock %}
+
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("/content-management/add-learning-provider") }}
+  {% endblock%}
+
+{% block content %}
+    <h1 class="govuk-heading-l">Add new cancellation policy</h1>
+
+    <form>
+        <fieldset class="govuk-fieldset">
+
+            {{ govukInput({
+            label: {
+                text: "Policy name"
+            },
+            id: "policyName",
+            name: "policyName"
+            }) }}
+
+            {{ govukTextarea({
+                name: "shortVersion",
+                id: "shortVersion",
+                label: {
+                    text: "Short version"
+                }
+            }) }}
+
+            {{ govukTextarea({
+                name: "fullVersion",
+                id: "fullVersion",
+                label: {
+                    text: "Full version"
+                }
+            }) }}
+
+
+        </fieldset>
+    </form>
+
+    <a href="#">Cancel</a>
+{% endblock %}

@@ -47,18 +47,6 @@ ul {
 	flex-direction: row-reverse;
 }
 
-.button-blue {
-	background-color: $govuk-link-colour;
-
-	&:hover {
-		background-color: darken($govuk-link-colour, 10%);
-	}
-
-	&:focus {
-		background-color: $govuk-link-colour;
-	}
-}
-
 .font-bold {
 	font-weight: 700;
 }
