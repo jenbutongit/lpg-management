@@ -71,7 +71,6 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 app.use(ctx.addToResponseLocals())
-app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
@@ -86,6 +85,7 @@ app.post('/content-management/add-course', ctx.courseController.setCourseTitle()
 
 app.get('/content-management/add-course-details', ctx.courseController.getCourseDetails())
 app.post('/content-management/add-course-details', ctx.courseController.setCourseDetails())
+app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
 
 app.get('/add-module', ctx.homeController.addModule())
 app.get('/add-module-blog', ctx.homeController.addModuleBlog())

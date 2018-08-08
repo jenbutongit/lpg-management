@@ -1,13 +1,7 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu/macro.njk" import menu %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}{{__[home.page.title]}}{% endblock %}
-
-{% block beforeContent %}
-  {% block phaseBanner %}
-    {{ phaseBanner("beta") }}
-  {% endblock%}
-{% endblock %}
+{% extends "../component/Page.njk" %} {% block pageTitle %}{{ i18n['content_management_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block content %}
 <div class="u--border--bgrey">
@@ -43,30 +37,19 @@
                            {% endif %}
                        </div>
                    {% endif %}
-
-                   <div class="pager__summary">
-                           <p class="govuk-body">Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}</p>
-                   </div>
-               </div>
-           </div>
-       {% endif %}
-   </div>
-   <div class="govuk-grid-column-one-third govuk-!-padding-top-6 ">
+                    <div class="pager__summary">
+                            <p class="govuk-body">Showing {{ pageResults.getRangeStart() }} - {{ pageResults.getRangeEnd() }} of {{ pageResults.totalResults }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="govuk-grid-column-one-third govuk-!-padding-top-6 ">
         <div class="right-menu">
             {% block menu %}
-                {% set actions = [
-                    {
-                        link: '/content-management/add-course',
-                        text: 'Add a new course'
-                    },
-                    {
-                        link: '/content-management/learning-providers',
-                        text: 'Manage learning providers'
-                    }
-                ] %}
-                {{ menu("Actions", actions) }}
+                {{ menu("Actions") }}
             {% endblock %}
         </div>
-   </div>
+    </div>
 </div>
 {% endblock %}
