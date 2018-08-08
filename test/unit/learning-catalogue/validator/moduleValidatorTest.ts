@@ -1,11 +1,11 @@
 import {beforeEach, describe, it} from 'mocha'
-import {ModuleValidator} from '../../../../src/learning-catalogue/validator/moduleValidator'
+import {ModuleValidator} from 'src/learning-catalogue/validator/moduleValidator'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as moment from 'moment'
-import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
-import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
+import {ValidationErrorMapper} from 'src/learning-catalogue/validator/validationErrorMapper'
+import {ModuleFactory} from 'src/learning-catalogue/model/factory/moduleFactory'
 
 chai.use(chaiAsPromised)
 

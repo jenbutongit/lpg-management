@@ -1,13 +1,13 @@
-import {Course} from '../../../../src/learning-catalogue/model/course'
-import {CourseFactory} from '../../../../src/learning-catalogue/model/factory/courseFactory'
+import {Course} from 'src/learning-catalogue/model/course'
+import {CourseFactory} from 'src/learning-catalogue/model/factory/courseFactory'
 import {beforeEach, describe, it} from 'mocha'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {CourseService} from '../../../../src/learning-catalogue/service/courseService'
-import {RestService} from '../../../../src/learning-catalogue/service/restService'
+import {CourseService} from 'src/learning-catalogue/service/courseService'
+import {RestService} from 'src/learning-catalogue/service/restService'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)

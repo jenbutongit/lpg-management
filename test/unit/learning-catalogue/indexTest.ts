@@ -1,15 +1,15 @@
-import {Course} from '../../../src/learning-catalogue/model/course'
-import {LearningCatalogue} from '../../../src/learning-catalogue/'
+import {Course} from 'src/learning-catalogue/model/course'
+import {LearningCatalogue} from 'src/learning-catalogue'
 import {beforeEach, describe, it} from 'mocha'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {CourseService} from '../../../src/learning-catalogue/service/courseService'
-import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
-import {Module} from '../../../src/learning-catalogue/model/module'
-import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
+import {CourseService} from 'src/learning-catalogue/service/courseService'
+import {ModuleService} from 'src/learning-catalogue/service/moduleService'
+import {Module} from 'src/learning-catalogue/model/module'
+import {LearningCatalogueConfig} from 'src/learning-catalogue/learningCatalogueConfig'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)

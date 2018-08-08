@@ -1,5 +1,5 @@
-import {EventFactory} from '../../../../../src/learning-catalogue/model/factory/eventFactory'
-import {Event} from '../../../../../src/learning-catalogue/model/event'
+import {EventFactory} from 'src/learning-catalogue/model/factory/eventFactory'
+import {Event} from 'src/learning-catalogue/model/event'
 import {describe, it} from 'mocha'
 import {expect} from 'chai'
 

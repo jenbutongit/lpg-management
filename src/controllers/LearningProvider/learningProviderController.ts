@@ -1,10 +1,10 @@
 import {Request, Response} from 'express'
-import {LearningProviderValidator} from '../learning-catalogue/validator/learningProviderValidator'
-import {LearningProviderFactory} from '../learning-catalogue/model/factory/learningProviderFactory'
+import {LearningProviderValidator} from '../../learning-catalogue/validator/learningProviderValidator'
+import {LearningProviderFactory} from '../../learning-catalogue/model/factory/learningProviderFactory'
 // import * as log4js from 'log4js'
-import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
-import {LearningProvider} from '../learning-catalogue/model/learningProvider'
-import {LearningProviderCatalogue} from '../learning-catalogue/learning-provider'
+import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
+import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
+import {LearningProviderCatalogue} from '../../learning-catalogue/learning-provider'
 
 // const logger = log4js.getLogger('controllers/providerController')
 

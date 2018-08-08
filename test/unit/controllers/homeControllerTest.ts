@@ -1,15 +1,15 @@
 import {beforeEach, describe, it} from 'mocha'
-import {HomeController} from '../../../src/controllers/homeController'
+import {HomeController} from 'src/controllers/homeController'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
 import {NextFunction, Request, Response} from 'express'
-import {LearningCatalogue} from '../../../src/learning-catalogue'
-import {Course} from '../../../src/learning-catalogue/model/course'
+import {LearningCatalogue} from 'src/learning-catalogue'
+import {Course} from 'src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
-import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
-import {CourseRequest} from '../../../src/extended'
+import {PageResults} from 'src/learning-catalogue/model/pageResults'
+import {CourseRequest} from 'src/extended'
 
 chai.use(sinonChai)
 

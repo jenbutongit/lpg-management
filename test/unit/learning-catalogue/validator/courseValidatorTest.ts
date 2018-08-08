@@ -1,8 +1,8 @@
 import {beforeEach, describe, it} from 'mocha'
-import {CourseValidator} from '../../../../src/learning-catalogue/validator/courseValidator'
+import {CourseValidator} from 'src/learning-catalogue/validator/courseValidator'
 import {expect} from 'chai'
-import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
-import {CourseFactory} from '../../../../src/learning-catalogue/model/factory/courseFactory'
+import {ValidationErrorMapper} from 'src/learning-catalogue/validator/validationErrorMapper'
+import {CourseFactory} from 'src/learning-catalogue/model/factory/courseFactory'
 
 describe('CourseValidator tests', () => {
 	let validator: CourseValidator

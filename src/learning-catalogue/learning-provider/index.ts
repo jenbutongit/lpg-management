@@ -2,11 +2,14 @@ import {AxiosInstance} from 'axios'
 import {LearningCatalogueConfig} from '../learningCatalogueConfig'
 import {DefaultPageResults} from '../model/defaultPageResults'
 import {LearningProvider} from '../model/learningProvider'
+import {CancellationPolicy} from '../model/cancellationPolicy'
 import {RestService} from '../service/restService'
 import {LearningProviderService} from '../service/learningProviderService'
+import {CancellationPolicyService} from '../service/cancellationPolicyService'
 
 export class LearningProviderCatalogue {
 	private _learningProviderService: LearningProviderService
+	private _cancellationPolicyService: CancellationPolicyService
 	private _restService: RestService
 
 	constructor(http: AxiosInstance, config: LearningCatalogueConfig) {
@@ -33,5 +36,18 @@ export class LearningProviderCatalogue {
 		learningProviderId: string
 	): Promise<LearningProvider> {
 		return this._learningProviderService.get(learningProviderId)
+	}
+
+	async listCancellationPolicy(
+		page: number = 0,
+		size: number = 10
+	): Promise<DefaultPageResults<CancellationPolicy>> {
+		return await this._cancellationPolicyService.listAll(page, size)
+	}
+
+	async createCancellationPolicy(
+		cancellationPolicy: CancellationPolicy
+	): Promise<LearningProvider> {
+		return this._cancellationPolicyService.create(cancellationPolicy)
 	}
 }

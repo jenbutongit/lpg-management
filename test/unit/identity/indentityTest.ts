@@ -1,5 +1,5 @@
 import {describe, it} from 'mocha'
-import {Identity} from '../../../src/identity/identity'
+import {Identity} from 'src/identity/identity'
 import {expect} from 'chai'
 
 describe('Identity tests', () => {

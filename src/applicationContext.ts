@@ -13,9 +13,12 @@ import {CourseValidator} from './learning-catalogue/validator/courseValidator'
 import {EnvValue} from 'ts-json-properties'
 import {CourseController} from './controllers/courseController'
 import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
-import {LearningProviderController} from './controllers/learningProviderController'
+import {LearningProviderController} from './controllers/LearningProvider/learningProviderController'
 import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
 import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
+import {CancellationPolicyController} from './controllers/LearningProvider/cancellationPolicyController'
+import {CancellationPolicyFactory} from './learning-catalogue/model/factory/cancellationPolicyFactory'
+import {CancellationPolicyValidator} from './learning-catalogue/validator/cancellationPolicyValidator'
 import {NextFunction, Request, Response} from 'express'
 import {LearningProviderCatalogue} from './learning-catalogue/learning-provider'
 
@@ -25,6 +28,7 @@ export class ApplicationContext {
 	homeController: HomeController
 	courseController: CourseController
 	learningProviderController: LearningProviderController
+	cancellationPolicyController: CancellationPolicyController
 	identityService: IdentityService
 	axiosInstance: AxiosInstance
 	auth: Auth
@@ -34,7 +38,10 @@ export class ApplicationContext {
 	courseFactory: CourseFactory
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
-	learningProvider: LearningProviderCatalogue
+	learningProviderCatalogue: LearningProviderCatalogue
+	cancellationPolicyValidator: CancellationPolicyValidator
+	cancellationPolicyFactory: CancellationPolicyFactory
+	// cancellationPolicy: CancellationPolicyCatalogue
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -86,15 +93,19 @@ export class ApplicationContext {
 		this.learningProviderValidator = new LearningProviderValidator()
 		this.learningProviderFactory = new LearningProviderFactory()
 
-		this.learningProvider = new LearningProviderCatalogue(
-			this.axiosInstance,
-			this.learningCatalogueConfig
-		)
-
 		this.learningProviderController = new LearningProviderController(
-			this.learningProvider,
+			this.learningProviderCatalogue,
 			this.learningProviderValidator,
 			this.learningProviderFactory
+		)
+
+		this.cancellationPolicyValidator = new CancellationPolicyValidator()
+		this.cancellationPolicyFactory = new CancellationPolicyFactory()
+
+		this.cancellationPolicyController = new CancellationPolicyController(
+			this.learningProviderCatalogue,
+			this.cancellationPolicyValidator,
+			this.cancellationPolicyFactory
 		)
 	}
 

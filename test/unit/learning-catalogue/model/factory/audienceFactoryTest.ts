@@ -1,5 +1,5 @@
-import {Audience} from '../../../../../src/learning-catalogue/model/audience'
-import {AudienceFactory} from '../../../../../src/learning-catalogue/model/factory/audienceFactory'
+import {Audience} from 'src/learning-catalogue/model/audience'
+import {AudienceFactory} from 'src/learning-catalogue/model/factory/audienceFactory'
 import {expect} from 'chai'
 import {describe, it} from 'mocha'
 

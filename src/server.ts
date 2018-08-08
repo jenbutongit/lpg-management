@@ -141,4 +141,14 @@ app.post(
 	ctx.courseController.setAddLearningProviderToCourse()
 )
 
+app.get(
+	'/content-management/add-cancellation-policy',
+	ctx.cancellationPolicyController.getCancellationPolicy()
+)
+
+app.post(
+	'/content-management/add-cancellation-policy',
+	ctx.cancellationPolicyController.setCancellationPolicy()
+)
+
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

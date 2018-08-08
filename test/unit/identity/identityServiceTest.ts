@@ -1,8 +1,8 @@
-import {IdentityService} from '../../../src/identity/identityService'
+import {IdentityService} from 'src/identity/identityService'
 import {AxiosInstance} from 'axios'
 import * as sinon from 'sinon'
 import {expect} from 'chai'
-import {Identity} from '../../../src/identity/identity'
+import {Identity} from 'src/identity/identity'
 
 describe('IdentityService tests...', function() {
 	let identityService: IdentityService

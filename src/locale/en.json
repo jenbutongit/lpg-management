@@ -7,6 +7,11 @@
 	"validation.course.description.empty": "Description is required",
 	"validation.course.description.maxLength": "Description is too long",
 	"validation.learningProvider.name.empty": "Name is required",
+	"validation.cancellationPolicy.name.empty": "Name is required",
+	"validation.cancellationPolicy.shortVersion.empty":
+		"Short version is required",
+	"validation.cancellationPolicy.fullVersion.empty":
+		"Full version is required",
 	"blended": "Blended",
 	"face-to-face": "Face to Face"
 }

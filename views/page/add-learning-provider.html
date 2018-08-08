@@ -59,26 +59,21 @@
                     {% endif %}
                 </fieldset>
                 <div class="cancellation-policie">
-                    <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Cancelation policies</h3>
-                    
+                    <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Cancelation policies</h3> 
                         {% if cancelationPolicies %}
                         {% else %}
                             <p class="govuk-body">This course does not have any policies yet</p>
                         {% endif %}
-
                         <a href="/content-management/add-cancellation-policy" class="govuk-button button-blue">Add cancellation policy</a>
                 </div>
                 <div class="terms-conditions">
-                    <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Terms and conditions</h3>
-               
+                    <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Terms and conditions</h3>             
                     {% if termsAndConditions %}
                     {% else %}
                         <p class="govuk-body">This course does not have any terms and conditions yet</p>
                     {% endif %}
-                
                     <a href="/content-management/terms-and-conditions" class="govuk-button button-blue">Add terms and conditions</a>
                 </div>
-                
                 {{ govukButton({
                     text: "Add a new learning provider"
                 }) }}

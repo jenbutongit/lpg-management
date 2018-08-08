@@ -1,10 +1,10 @@
-import {Course} from '../../../../src/learning-catalogue/model/course'
+import {Course} from 'src/learning-catalogue/model/course'
 import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
-import {Module} from '../../../../src/learning-catalogue/model/module'
-import {VideoModule} from '../../../../src/learning-catalogue/model/videoModule'
-import {LinkModule} from '../../../../src/learning-catalogue/model/linkModule'
-import {FaceToFaceModule} from '../../../../src/learning-catalogue/model/faceToFaceModule'
+import {Module} from 'src/learning-catalogue/model/module'
+import {VideoModule} from 'src/learning-catalogue/model/videoModule'
+import {LinkModule} from 'src/learning-catalogue/model/linkModule'
+import {FaceToFaceModule} from 'src/learning-catalogue/model/faceToFaceModule'
 
 describe('Course tests', () => {
 	let course: Course

@@ -1,13 +1,13 @@
 import {AxiosInstance} from 'axios'
-import {RestService} from '../../../../src/learning-catalogue/service/restService'
+import {RestService} from 'src/learning-catalogue/service/restService'
 import {beforeEach, describe, it} from 'mocha'
-import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learningCatalogueConfig'
+import {LearningCatalogueConfig} from 'src/learning-catalogue/learningCatalogueConfig'
 import * as sinon from 'sinon'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as chai from 'chai'
 
 import {expect} from 'chai'
-import {Course} from '../../../../src/learning-catalogue/model/course'
+import {Course} from 'src/learning-catalogue/model/course'
 
 chai.use(chaiAsPromised)
 

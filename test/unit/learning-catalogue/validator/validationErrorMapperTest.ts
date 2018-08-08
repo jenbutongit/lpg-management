@@ -1,6 +1,6 @@
 import {describe, it} from 'mocha'
 import {ValidationError} from 'class-validator'
-import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
+import {ValidationErrorMapper} from 'src/learning-catalogue/validator/validationErrorMapper'
 import {expect} from 'chai'
 
 describe('ValidationErrorMapper tests', () => {

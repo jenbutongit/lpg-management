@@ -1,4 +1,4 @@
-import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
+import {LearningCatalogueConfig} from 'src/learning-catalogue/learningCatalogueConfig'
 import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
 

@@ -1,4 +1,4 @@
-import {AuthConfig} from '../../../src/identity/authConfig'
+import {AuthConfig} from 'src/identity/authConfig'
 import {expect} from 'chai'
 
 describe('AuthConfig tests', () => {
