@@ -93,6 +93,10 @@ export class ApplicationContext {
 		this.learningProviderValidator = new LearningProviderValidator()
 		this.learningProviderFactory = new LearningProviderFactory()
 
+		this.learningProviderCatalogue = new LearningProviderCatalogue(
+			this.learningCatalogueConfig
+		)
+
 		this.learningProviderController = new LearningProviderController(
 			this.learningProviderCatalogue,
 			this.learningProviderValidator,

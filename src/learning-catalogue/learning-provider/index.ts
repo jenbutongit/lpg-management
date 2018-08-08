@@ -1,4 +1,3 @@
-import {AxiosInstance} from 'axios'
 import {LearningCatalogueConfig} from '../learningCatalogueConfig'
 import {DefaultPageResults} from '../model/defaultPageResults'
 import {LearningProvider} from '../model/learningProvider'
@@ -12,8 +11,11 @@ export class LearningProviderCatalogue {
 	private _cancellationPolicyService: CancellationPolicyService
 	private _restService: RestService
 
-	constructor(http: AxiosInstance, config: LearningCatalogueConfig) {
+	constructor(config: LearningCatalogueConfig) {
 		this._restService = new RestService(config)
+		this._cancellationPolicyService = new CancellationPolicyService(
+			this._restService
+		)
 		this._learningProviderService = new LearningProviderService(
 			this._restService
 		)

@@ -121,26 +121,26 @@ app.post(
 	ctx.learningProviderController.setLearningProvider()
 )
 
-app.get(
-	'/content-management/terms-and-conditions',
-	ctx.courseController.getTermsAndConditions()
-)
-
-app.post(
-	'/content-management/terms-and-conditions',
-	ctx.courseController.setTermsAndConditions()
-)
-
-app.get(
-	'/content-management/add-learning-provider-to-course',
-	ctx.courseController.getAddLearningProviderToCourse()
-)
-
-app.post(
-	'/content-management/add-learning-provider-to-course',
-	ctx.courseController.setAddLearningProviderToCourse()
-)
-
+// app.get(
+// 	'/content-management/terms-and-conditions',
+// 	ctx.courseController.getTermsAndConditions()
+// )
+//
+// app.post(
+// 	'/content-management/terms-and-conditions',
+// 	ctx.courseController.setTermsAndConditions()
+// )
+//
+// app.get(
+// 	'/content-management/add-learning-provider-to-course',
+// 	ctx.courseController.getAddLearningProviderToCourse()
+// )
+//
+// app.post(
+// 	'/content-management/add-learning-provider-to-course',
+// 	ctx.courseController.setAddLearningProviderToCourse()
+// )
+//
 app.get(
 	'/content-management/add-cancellation-policy',
 	ctx.cancellationPolicyController.getCancellationPolicy()
