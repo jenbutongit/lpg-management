@@ -1,14 +1,13 @@
-{% extends "../component/Page.njk" %}
-
 {% from "button/macro.njk" import govukButton %}
 {% from "table/macro.njk" import govukTable %}
-
 {% from "../component/course-preview/macro.njk" import coursePreview with context %}
+
+{% extends "../component/Page.njk" %} {% block pageTitle %}{{ i18n['course_preview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block content %}
     {{ govukBackLink({
         text: "Back",
-        href: "/content-management"
+        href: "/content-management/course/"+ course.id
     }) }}
 
     <div class="govuk-grid-row">
@@ -77,7 +76,7 @@
             </div>
             {{ govukButton({
                 text: "Return to course",
-                href: "#"
+                href: "/content-management/course/"+ course.id
             }) }}
         </div>
     </div>

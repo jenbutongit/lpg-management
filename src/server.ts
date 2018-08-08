@@ -75,7 +75,6 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 app.use(ctx.addToResponseLocals())
-app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
@@ -94,7 +93,7 @@ app.post(
 
 app.get(
 	'/content-management/course-preview/:courseId',
-	ctx.homeController.coursePreview()
+	ctx.courseController.coursePreview()
 )
 
 app.get(
@@ -105,7 +104,7 @@ app.post(
 	'/content-management/add-course-details',
 	ctx.courseController.setCourseDetails()
 )
-app.get('/add-module', ctx.homeController.addModule())
-app.get('/add-module-blog', ctx.homeController.addModuleBlog())
+app.get('/add-module', ctx.courseController.addModule())
+app.get('/add-module-blog', ctx.courseController.addModuleBlog())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

@@ -1,46 +1,9 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu/macro.njk" import menu %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}{{__[home.page.title]}}{% endblock %}
+{% extends "../component/Page.njk" %} {% block pageTitle %}{{ i18n['content_management_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
-{% block header %}
-   {{ govukHeader({
-       homepageUrl: "#",
-       containerClasses: "govuk-width-container",
-       serviceName: "Civil Service Learning",
-       serviceUrl: "#",
-       navigation: [
-           {
-               href: lpgUiUrl + "/home",
-               text: "Home",
-               active: true
-           },
-           {
-               href: lpgUiUrl + "/suggestions-for-you",
-               text: "Suggestions for you"
-           },
-           {
-               href: lpgUiUrl + "/learning-record",
-               text: "Learning record"
-           },
-           {
-               href: lpgUiUrl + "/profile",
-               text: "Profile"
-           },
-           {
-               href: "/content-management",
-               text: "Admin"
-           },
-           {
-               href: lpgUiUrl + "/sign-out",
-               text: "Sign out"
-           }
-           ]
-   }) }}
-{% endblock %}
 {% block content %}
-
-
 <div class="u--border--bgrey">
    <h1 class="govuk-heading-l">Content management</h1>
 </div>
