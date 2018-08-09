@@ -17,6 +17,7 @@ import {LearningProviderController} from './controllers/learningProviderControll
 import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
 import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
 import {NextFunction, Request, Response} from 'express'
+import {Pagination} from 'lib/pagination'
 
 log4js.configure(config.LOGGING)
 
@@ -75,14 +76,7 @@ export class ApplicationContext {
 
 		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
 
-		this.learningProviderValidator = new LearningProviderValidator()
-		this.learningProviderFactory = new LearningProviderFactory()
-
-		this.learningProviderController = new LearningProviderController(
-			this.learningCatalogue,
-			this.learningProviderValidator,
-			this.learningProviderFactory
-		)
+		this.learningProviderController = new LearningProviderController(this.learningCatalogue)
 	}
 
 	addToResponseLocals() {

@@ -5,6 +5,7 @@ import * as log4js from 'log4js'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../learning-catalogue/model/learningProvider'
 import {LearningCatalogue} from '../learning-catalogue'
+import {Pagination} from 'lib/pagination'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
@@ -12,15 +13,13 @@ export class LearningProviderController {
 	learningCatalogue: LearningCatalogue
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
+	pagination: Pagination
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		learningProviderValidator: LearningProviderValidator,
-		learningProviderFactory: LearningProviderFactory
-	) {
+	constructor(learningCatalogue: LearningCatalogue) {
 		this.learningCatalogue = learningCatalogue
-		this.learningProviderValidator = learningProviderValidator
-		this.learningProviderFactory = learningProviderFactory
+		this.learningProviderValidator = new LearningProviderValidator()
+		this.learningProviderFactory = new LearningProviderFactory()
+		this.pagination = new Pagination()
 	}
 
 	public index() {
@@ -28,15 +27,7 @@ export class LearningProviderController {
 		const self = this
 
 		return async (request: Request, response: Response) => {
-			let page = 0
-			let size = 100
-
-			if (request.query.p) {
-				page = request.query.p
-			}
-			if (request.query.s) {
-				size = request.query.s
-			}
+			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
 
 			// prettier-ignore
 			const pageResults: DefaultPageResults<LearningProvider> = await self.learningCatalogue.listLearningProviders(page, size)
