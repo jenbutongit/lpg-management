@@ -78,7 +78,7 @@ app.get('/', function(req, res) {
 
 app.get('/content-management', ctx.homeController.index())
 app.get('/content-management/course/:courseId', ctx.courseController.courseOverview())
-app.get('/content-management/course-preview/:courseId', ctx.homeController.coursePreview())
+app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
 
 app.get('/content-management/add-course', ctx.courseController.getCourseTitle())
 app.post('/content-management/add-course', ctx.courseController.setCourseTitle())
@@ -87,8 +87,8 @@ app.get('/content-management/add-course-details', ctx.courseController.getCourse
 app.post('/content-management/add-course-details', ctx.courseController.setCourseDetails())
 app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
 
-app.get('/add-module', ctx.homeController.addModule())
-app.get('/add-module-blog', ctx.homeController.addModuleBlog())
+app.get('/add-module', ctx.courseController.addModule())
+app.get('/add-module-blog', ctx.courseController.addModuleBlog())
 
 app.get('/content-management/learning-providers', ctx.learningProviderController.index())
 app.get(
@@ -98,11 +98,5 @@ app.get(
 
 app.get('/content-management/add-learning-provider', ctx.learningProviderController.getLearningProvider())
 app.post('/content-management/add-learning-provider', ctx.learningProviderController.setLearningProvider())
-
-app.get('/content-management/terms-and-conditions', ctx.courseController.getTermsAndConditions())
-app.post('/content-management/terms-and-conditions', ctx.courseController.setTermsAndConditions())
-
-app.get('/content-management/add-learning-provider-to-course', ctx.courseController.getAddLearningProviderToCourse())
-app.post('/content-management/add-learning-provider-to-course', ctx.courseController.setAddLearningProviderToCourse())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

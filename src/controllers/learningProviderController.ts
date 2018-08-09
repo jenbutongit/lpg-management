@@ -46,16 +46,8 @@ export class LearningProviderController {
 	}
 
 	public getLearningProvider() {
-		const self = this
 		return async (request: Request, response: Response) => {
-			if (!request.params.learningProviderId) {
-				response.render('page/add-learning-provider')
-			} else {
-				const learningProvider = await self.learningProvider.getLearningProvider(
-					request.params.learningProviderId
-				)
-				response.render('page/add-learning-provider', {learningProvider})
-			}
+			response.render('page/add-learning-provider')
 		}
 	}
 
