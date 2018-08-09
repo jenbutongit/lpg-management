@@ -15,9 +15,9 @@ import {CourseController} from './controllers/courseController'
 import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
 import {LearningProviderController} from './controllers/learningProviderController'
 import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
-import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
 import {NextFunction, Request, Response} from 'express'
-import {Pagination} from 'lib/pagination'
+import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
+import {Pagination} from './lib/pagination'
 
 log4js.configure(config.LOGGING)
 
@@ -32,8 +32,9 @@ export class ApplicationContext {
 	learningCatalogue: LearningCatalogue
 	courseValidator: CourseValidator
 	courseFactory: CourseFactory
-	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
+	learningProviderValidator: LearningProviderValidator
+	pagination: Pagination
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -69,14 +70,18 @@ export class ApplicationContext {
 
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
 
-		this.courseValidator = new CourseValidator()
-		this.courseFactory = new CourseFactory()
-
-		this.homeController = new HomeController(this.learningCatalogue)
+		this.learningProviderValidator = new LearningProviderValidator()
+		this.learningProviderFactory = new LearningProviderFactory()
+		this.pagination = new Pagination()
 
 		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
-
-		this.learningProviderController = new LearningProviderController(this.learningCatalogue)
+		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
+		this.learningProviderController = new LearningProviderController(
+			this.learningCatalogue,
+			this.learningProviderValidator,
+			this.learningProviderFactory,
+			this.pagination
+		)
 	}
 
 	addToResponseLocals() {

@@ -15,11 +15,16 @@ export class LearningProviderController {
 	learningProviderFactory: LearningProviderFactory
 	pagination: Pagination
 
-	constructor(learningCatalogue: LearningCatalogue) {
+	constructor(
+		learningCatalogue: LearningCatalogue,
+		learningProviderValidator: LearningProviderValidator,
+		learningProviderFactory: LearningProviderFactory,
+		pagination: Pagination
+	) {
 		this.learningCatalogue = learningCatalogue
-		this.learningProviderValidator = new LearningProviderValidator()
-		this.learningProviderFactory = new LearningProviderFactory()
-		this.pagination = new Pagination()
+		this.learningProviderValidator = learningProviderValidator
+		this.learningProviderFactory = learningProviderFactory
+		this.pagination = pagination
 	}
 
 	public index() {

@@ -1,6 +1,8 @@
 import {Request} from 'express'
 
 export class Pagination {
+	constructor() {}
+
 	public getPageAndSizeFromRequest(request: Request) {
 		let page = 0
 		let size = 10
