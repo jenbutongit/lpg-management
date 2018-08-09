@@ -1,0 +1,12 @@
+<ul class="list">
+    <li class="provider-headers"><span class="govuk-body first-header">Title</span><span class="govuk-body">Added on</span></li>
+    {% for policy in policyResults.results %}
+
+    <li class="list-details plist-details u--border--bgrey">
+        <p class="govuk-body list-item list-name" href="/content-management/course/{{ policy.id }}">{{ policy.name }}</p>
+        <p class="govuk-body list-item list-date">24th Jan 2018</p>
+        <a class="govuk-link list-link " href="/content-management/cancellation-policy/{{ policy.id }}">Delete</a>
+        <a class="govuk-link list-link " href="/content-management/cancellation-policy/{{ policy.id }}">Edit</a>
+    </li>
+    {% endfor %}
+</ul>

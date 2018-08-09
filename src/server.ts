@@ -120,16 +120,14 @@ app.post(
 	'/content-management/add-learning-provider',
 	ctx.learningProviderController.setLearningProvider()
 )
-
-// app.get(
-// 	'/content-management/terms-and-conditions',
-// 	ctx.courseController.getTermsAndConditions()
-// )
-//
-// app.post(
-// 	'/content-management/terms-and-conditions',
-// 	ctx.courseController.setTermsAndConditions()
-// )
+app.get(
+	'/content-management/add-terms-and-conditions',
+	ctx.termsAndConditionsController.getTermsAndConditions()
+)
+app.post(
+	'/content-management/add-terms-and-conditions',
+	ctx.termsAndConditionsController.setTermsAndConditions()
+)
 //
 // app.get(
 // 	'/content-management/add-learning-provider-to-course',

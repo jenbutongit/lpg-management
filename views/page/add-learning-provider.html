@@ -1,5 +1,7 @@
 {% from "input/macro.njk" import govukInput %}
 {% from "button/macro.njk" import govukButton %}
+{% from "../component/policyList/macro.njk" import policyList %}
+{% from "../component/tandcList/macro.njk" import tandcList %}
 
 {% extends "../component/Page.njk" %}
 {% block pageTitle %}Add Learning Provider - Civil Service Learning{% endblock %}
@@ -60,19 +62,21 @@
                 </fieldset>
                 <div class="cancellation-policie">
                     <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Cancelation policies</h3> 
-                        {% if cancelationPolicies %}
-                        {% else %}
-                            <p class="govuk-body">This course does not have any policies yet</p>
-                        {% endif %}
-                        <a href="/content-management/add-cancellation-policy" class="govuk-button button-blue">Add cancellation policy</a>
+                    {% if policyResults %}
+                        {{ policyList(policyResults) }}
+                    {% else %}
+                        <p class="govuk-body">This course does not have any policies yet</p>
+                    {% endif %}
+                    <a href="/content-management/add-cancellation-policy" class="govuk-button button-blue">Add cancellation policy</a>
                 </div>
                 <div class="terms-conditions">
                     <h3 class="govuk-heading-s govuk-!-font-weight-regular govuk-!-margin-bottom-1">Terms and conditions</h3>             
-                    {% if termsAndConditions %}
+                    {% if tandcResults %}
+                        {{ tandcList(tandcResults) }}
                     {% else %}
                         <p class="govuk-body">This course does not have any terms and conditions yet</p>
                     {% endif %}
-                    <a href="/content-management/terms-and-conditions" class="govuk-button button-blue">Add terms and conditions</a>
+                    <a href="/content-management/add-terms-and-conditions" class="govuk-button button-blue">Add terms and conditions</a>
                 </div>
                 {{ govukButton({
                     text: "Add a new learning provider"

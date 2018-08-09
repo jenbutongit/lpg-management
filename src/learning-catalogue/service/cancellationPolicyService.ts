@@ -53,7 +53,7 @@ export class CancellationPolicyService {
 		return this._cancellationPolicyFactory.create(data)
 	}
 
-	set courseFactory(value: CancellationPolicyFactory) {
+	set cancellationPolicyFactory(value: CancellationPolicyFactory) {
 		this._cancellationPolicyFactory = value
 	}
 }

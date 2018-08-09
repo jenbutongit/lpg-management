@@ -19,6 +19,9 @@ import {LearningProviderValidator} from './learning-catalogue/validator/learning
 import {CancellationPolicyController} from './controllers/LearningProvider/cancellationPolicyController'
 import {CancellationPolicyFactory} from './learning-catalogue/model/factory/cancellationPolicyFactory'
 import {CancellationPolicyValidator} from './learning-catalogue/validator/cancellationPolicyValidator'
+import {TermsAndConditionsController} from './controllers/LearningProvider/termsAndConditionsController'
+import {TermsAndConditionsFactory} from './learning-catalogue/model/factory/termsAndConditionsFactory'
+import {TermsAndConditionsValidator} from './learning-catalogue/validator/termsAndConditionsValidator'
 import {NextFunction, Request, Response} from 'express'
 import {LearningProviderCatalogue} from './learning-catalogue/learning-provider'
 
@@ -29,6 +32,7 @@ export class ApplicationContext {
 	courseController: CourseController
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
+	termsAndConditionsController: TermsAndConditionsController
 	identityService: IdentityService
 	axiosInstance: AxiosInstance
 	auth: Auth
@@ -41,7 +45,8 @@ export class ApplicationContext {
 	learningProviderCatalogue: LearningProviderCatalogue
 	cancellationPolicyValidator: CancellationPolicyValidator
 	cancellationPolicyFactory: CancellationPolicyFactory
-	// cancellationPolicy: CancellationPolicyCatalogue
+	termsAndConditionsValidator: TermsAndConditionsValidator
+	termsAndConditionsFactory: TermsAndConditionsFactory
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -110,6 +115,15 @@ export class ApplicationContext {
 			this.learningProviderCatalogue,
 			this.cancellationPolicyValidator,
 			this.cancellationPolicyFactory
+		)
+
+		this.termsAndConditionsValidator = new TermsAndConditionsValidator()
+		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
+
+		this.termsAndConditionsController = new TermsAndConditionsController(
+			this.learningProviderCatalogue,
+			this.termsAndConditionsValidator,
+			this.termsAndConditionsFactory
 		)
 	}
 

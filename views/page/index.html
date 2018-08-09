@@ -10,17 +10,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="u--border--bgrey">
-   <h1 class="govuk-heading-l">Content management</h1>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">Content management</h1>
+    </div>
 </div>
-
 <div class="govuk-grid-row">
    <div class="govuk-grid-column-two-thirds">
        {% if pageResults %}
            {% block list %}
                {{ list("Courses", pageResults) }}
            {% endblock %}
-
        {% endif %}
        {% if pageResults.totalResults !== 0 %}
            <div class="pager">
@@ -51,7 +51,7 @@
            </div>
        {% endif %}
    </div>
-   <div class="govuk-grid-column-one-third govuk-!-padding-top-6 ">
+   <div class="govuk-grid-column-one-third">
         <div class="right-menu">
             {% block menu %}
                 {% set actions = [

@@ -56,7 +56,7 @@ export class CancellationPolicyController {
 				...request.body,
 			}
 
-			const cancellationPolicy2 = this.cancellationPolicyFactory.create(
+			const cancellationPolicy = this.cancellationPolicyFactory.create(
 				data
 			)
 
@@ -71,7 +71,7 @@ export class CancellationPolicyController {
 			}
 
 			await self.cancellationPolicy.createCancellationPolicy(
-				cancellationPolicy2
+				cancellationPolicy
 			)
 
 			response.redirect('/content-management/add-learning-provider')
