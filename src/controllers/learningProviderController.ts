@@ -4,21 +4,21 @@ import {LearningProviderFactory} from '../learning-catalogue/model/factory/learn
 import * as log4js from 'log4js'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../learning-catalogue/model/learningProvider'
-import {LearningProviderCatalogue} from '../learning-catalogue/learning-provider'
+import {LearningCatalogue} from '../learning-catalogue'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class LearningProviderController {
-	learningProvider: LearningProviderCatalogue
+	learningCatalogue: LearningCatalogue
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
 
 	constructor(
-		learningProvider: LearningProviderCatalogue,
+		learningCatalogue: LearningCatalogue,
 		learningProviderValidator: LearningProviderValidator,
 		learningProviderFactory: LearningProviderFactory
 	) {
-		this.learningProvider = learningProvider
+		this.learningCatalogue = learningCatalogue
 		this.learningProviderValidator = learningProviderValidator
 		this.learningProviderFactory = learningProviderFactory
 	}
@@ -29,7 +29,7 @@ export class LearningProviderController {
 
 		return async (request: Request, response: Response) => {
 			let page = 0
-			let size = 10
+			let size = 100
 
 			if (request.query.p) {
 				page = request.query.p
@@ -39,7 +39,7 @@ export class LearningProviderController {
 			}
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listLearningProviders(page, size)
+			const pageResults: DefaultPageResults<LearningProvider> = await self.learningCatalogue.listLearningProviders(page, size)
 
 			response.render('page/learning-providers', {pageResults})
 		}
@@ -68,7 +68,7 @@ export class LearningProviderController {
 				})
 			}
 
-			await self.learningProvider.createLearningProvider(learningProvider)
+			await self.learningCatalogue.createLearningProvider(learningProvider)
 
 			response.redirect('/content-management/learning-providers')
 		}
