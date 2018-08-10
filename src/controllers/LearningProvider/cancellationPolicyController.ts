@@ -74,7 +74,7 @@ export class CancellationPolicyController {
 				cancellationPolicy
 			)
 
-			response.redirect('/content-management/add-learning-provider')
+			response.redirect('/content-management/learning-provider-overview')
 		}
 	}
 }

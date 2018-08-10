@@ -74,7 +74,7 @@ export class TermsAndConditionsController {
 			// 	termsAndConditions
 			// )
 
-			response.redirect('/content-management/add-learning-provider')
+			response.redirect('/content-management/learning-provider-overview')
 		}
 	}
 }
