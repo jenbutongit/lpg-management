@@ -70,6 +70,8 @@ export class ApplicationContext {
 
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
 
+		this.courseValidator = new CourseValidator()
+		this.courseFactory = new CourseFactory()
 		this.learningProviderValidator = new LearningProviderValidator()
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.pagination = new Pagination()
