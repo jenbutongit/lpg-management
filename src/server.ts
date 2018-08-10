@@ -44,10 +44,7 @@ app.set('view engine', 'html')
 app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
 app.use('/js', serveStatic(appRoot + '/views/assets/js'))
 app.use(serveStatic(appRoot + '/dist/views/assets'))
-app.use(
-	'/govuk-frontend',
-	serveStatic(appRoot + '/node_modules/govuk-frontend/')
-)
+app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
 
 log4js.configure(config.LOGGING)
 
@@ -61,8 +58,7 @@ app.use(
 		name: 'lpg-management',
 		resave: true,
 		saveUninitialized: true,
-		secret:
-			'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
+		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
 		store: new FileStore({
 			path: process.env.NOW ? `/tmp/sessions` : `.sessions`,
 		}),
@@ -75,63 +71,35 @@ app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 app.use(ctx.addToResponseLocals())
-app.param('courseId', ctx.courseController.loadCourse())
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
 app.get('/content-management', ctx.homeController.index())
-app.get(
-	'/content-management/course/:courseId',
-	ctx.courseController.courseOverview()
-)
+app.get('/content-management/course/:courseId', ctx.courseController.courseOverview())
+app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
+
 app.get('/content-management/add-course', ctx.courseController.getCourseTitle())
-app.post(
-	'/content-management/add-course',
-	ctx.courseController.setCourseTitle()
-)
+app.post('/content-management/add-course', ctx.courseController.setCourseTitle())
 
-app.get(
-	'/content-management/course-preview/:courseId',
-	ctx.homeController.coursePreview()
-)
+app.get('/content-management/add-course-details', ctx.courseController.getCourseDetails())
+app.post('/content-management/add-course-details', ctx.courseController.setCourseDetails())
+app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
 
-app.get(
-	'/content-management/add-course-details',
-	ctx.courseController.getCourseDetails()
-)
-app.post(
-	'/content-management/add-course-details',
-	ctx.courseController.setCourseDetails()
-)
-app.get('/add-module', ctx.homeController.addModule())
-app.get('/add-module-blog', ctx.homeController.addModuleBlog())
+app.get('/add-module', ctx.courseController.addModule())
+app.get('/add-module-blog', ctx.courseController.addModuleBlog())
 
+app.get('/content-management/learning-providers', ctx.learningProviderController.index())
 app.get(
-	'/content-management/learning-providers',
-	ctx.learningProviderController.index()
-)
-app.get(
-	'/content-management/add-learning-provider',
+	'/content-management/learning-providers/:learningProviderId',
 	ctx.learningProviderController.getLearningProvider()
 )
-app.post(
-	'/content-management/add-learning-provider',
-	ctx.learningProviderController.setLearningProvider()
-)
-app.get(
-	'/content-management/learning-provider-overview',
-	ctx.learningProviderController.getLearningProviderOverview()
-)
-app.get(
-	'/content-management/add-terms-and-conditions',
-	ctx.termsAndConditionsController.getTermsAndConditions()
-)
-app.post(
-	'/content-management/add-terms-and-conditions',
-	ctx.termsAndConditionsController.setTermsAndConditions()
-)
+
+app.get('/content-management/add-learning-provider', ctx.learningProviderController.getLearningProvider())
+app.post('/content-management/add-learning-provider', ctx.learningProviderController.setLearningProvider())
+app.post('/content-management/add-learning-provider', ctx.learningProviderController.setLearningProvider())
+app.get('/content-management/learning-provider-overview', ctx.learningProviderController.getLearningProviderOverview())
 //
 // app.get(
 // 	'/content-management/add-learning-provider-to-course',
@@ -143,14 +111,8 @@ app.post(
 // 	ctx.courseController.setAddLearningProviderToCourse()
 // )
 //
-app.get(
-	'/content-management/add-cancellation-policy',
-	ctx.cancellationPolicyController.getCancellationPolicy()
-)
-
-app.post(
-	'/content-management/add-cancellation-policy',
-	ctx.cancellationPolicyController.setCancellationPolicy()
-)
+// app.get('/content-management/add-cancellation-policy', ctx.cancellationPolicyController.getCancellationPolicy())
+//
+// app.post('/content-management/add-cancellation-policy', ctx.cancellationPolicyController.setCancellationPolicy())
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))

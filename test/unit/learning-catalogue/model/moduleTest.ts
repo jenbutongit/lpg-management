@@ -1,7 +1,7 @@
 import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
-import {Module} from 'src/learning-catalogue/model/module'
-import {Audience} from 'src/learning-catalogue/model/audience'
+import {Module} from '../../../../src/learning-catalogue/model/module'
+import {Audience} from '../../../../src/learning-catalogue/model/audience'
 
 describe('Course tests', () => {
 	let module: Module

@@ -1,25 +1,27 @@
 import {beforeEach, describe, it} from 'mocha'
-import {HomeController} from 'src/controllers/homeController'
+import {HomeController} from '../../../src/controllers/homeController'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
-import {NextFunction, Request, Response} from 'express'
-import {LearningCatalogue} from 'src/learning-catalogue'
-import {Course} from 'src/learning-catalogue/model/course'
+import {Request, Response} from 'express'
+import {LearningCatalogue} from '../../../src/learning-catalogue'
+import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
-import {PageResults} from 'src/learning-catalogue/model/pageResults'
-import {CourseRequest} from 'src/extended'
+import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
+import {Pagination} from '../../../src/lib/pagination'
 
 chai.use(sinonChai)
 
 describe('Home Controller Tests', function() {
 	let homeController: HomeController
 	let learningCatalogue: LearningCatalogue
+	let pagination: Pagination
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		homeController = new HomeController(learningCatalogue)
+		pagination = new Pagination()
+		homeController = new HomeController(learningCatalogue, pagination)
 	})
 
 	it('should render index template with default page and size', async function() {
@@ -37,10 +39,7 @@ describe('Home Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listCourses = listAll
 
-		const index: (
-			request: Request,
-			response: Response
-		) => void = homeController.index()
+		const index: (request: Request, response: Response) => void = homeController.index()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
@@ -66,10 +65,7 @@ describe('Home Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listCourses = listAll
 
-		const index: (
-			request: Request,
-			response: Response
-		) => void = homeController.index()
+		const index: (request: Request, response: Response) => void = homeController.index()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
@@ -84,61 +80,5 @@ describe('Home Controller Tests', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/index', {
 			pageResults,
 		})
-	})
-
-	it('should call loadCourse', async function() {
-		const courseId: string = 'abc'
-
-		const loadCourse: (
-			request: Request,
-			response: Response,
-			next: NextFunction
-		) => void = homeController.loadCourse()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-		const next: NextFunction = sinon.stub()
-
-		const course: Course = new Course()
-		course.id = 'course-id'
-
-		const getCourse = sinon.stub().returns(course)
-		learningCatalogue.getCourse = getCourse
-
-		const req = request as CourseRequest
-		req.params.courseId = courseId
-
-		await loadCourse(req, response, next)
-
-		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
-		expect(req.course).to.have.be.eql(course)
-		expect(next).to.have.been.calledOnce
-	})
-
-	it('should return 404 if course does not exist', async function() {
-		const courseId: string = 'abc'
-
-		const loadCourse: (
-			request: Request,
-			response: Response,
-			next: NextFunction
-		) => void = homeController.loadCourse()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-		const next: NextFunction = sinon.stub()
-
-		const getCourse = sinon.stub().returns(null)
-		learningCatalogue.getCourse = getCourse
-
-		const req = request as CourseRequest
-		req.params.courseId = courseId
-
-		await loadCourse(req, response, next)
-
-		expect(learningCatalogue.getCourse).to.have.been.calledWith(courseId)
-		expect(req.course).to.have.be.eql(undefined)
-		expect(next).to.have.not.been.calledOnce
-		expect(response.sendStatus).to.have.been.calledWith(404)
 	})
 })

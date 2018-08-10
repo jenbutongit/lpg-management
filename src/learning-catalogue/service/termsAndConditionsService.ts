@@ -12,17 +12,10 @@ export class TermsAndConditionsService {
 		this._termsAndConditionsFactory = new TermsAndConditionsFactory()
 	}
 
-	async listAll(
-		page: number = 0,
-		size: number = 10
-	): Promise<DefaultPageResults<TermsAndConditions>> {
-		const data = await this._restService.get(
-			`/learning-provider/list?page=${page}&size=${size}`
-		)
+	async listAll(page: number = 0, size: number = 10): Promise<DefaultPageResults<TermsAndConditions>> {
+		const data = await this._restService.get(`/learning-provider/list?page=${page}&size=${size}`)
 
-		data.results = (data.results || []).map(
-			this._termsAndConditionsFactory.create
-		)
+		data.results = (data.results || []).map(this._termsAndConditionsFactory.create)
 
 		// prettier-ignore
 		const termsAndConditionsPageResults: DefaultPageResults<TermsAndConditions> = new DefaultPageResults()
@@ -35,20 +28,13 @@ export class TermsAndConditionsService {
 		return termsAndConditionsPageResults
 	}
 
-	async create(
-		termsAndConditions: TermsAndConditions
-	): Promise<TermsAndConditions> {
-		const data = await this._restService.post(
-			'/learning-provider/',
-			termsAndConditions
-		)
+	async create(termsAndConditions: TermsAndConditions): Promise<TermsAndConditions> {
+		const data = await this._restService.post('/learning-provider/', termsAndConditions)
 		return this._termsAndConditionsFactory.create(data)
 	}
 
 	async get(termsAndConditionsId: string): Promise<TermsAndConditions> {
-		const data = this._restService.get(
-			`/learning-provider/${termsAndConditionsId}`
-		)
+		const data = this._restService.get(`/learning-provider/${termsAndConditionsId}`)
 
 		return this._termsAndConditionsFactory.create(data)
 	}

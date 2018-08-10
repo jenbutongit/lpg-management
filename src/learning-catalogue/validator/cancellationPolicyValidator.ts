@@ -62,10 +62,9 @@ export class CancellationPolicyValidator {
 	}
 
 	async check(params: any, groups: string[] = ['all']) {
-		const validationErrors: ValidationError[] = await validate(
-			this._cancellationPolicyFactory.create(params),
-			{groups: groups}
-		)
+		const validationErrors: ValidationError[] = await validate(this._cancellationPolicyFactory.create(params), {
+			groups: groups,
+		})
 
 		return this._validationErrorMapper.map(validationErrors)
 	}

@@ -1,22 +1,19 @@
 import {AxiosInstance} from 'axios'
-import {RestService} from 'src/learning-catalogue/service/restService'
 import {beforeEach, describe, it} from 'mocha'
-import {LearningCatalogueConfig} from 'src/learning-catalogue/learningCatalogueConfig'
 import * as sinon from 'sinon'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as chai from 'chai'
 
 import {expect} from 'chai'
-import {Course} from 'src/learning-catalogue/model/course'
+import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learningCatalogueConfig'
+import {RestService} from '../../../../src/learning-catalogue/service/restService'
+import {Course} from '../../../../src/learning-catalogue/model/course'
 
 chai.use(chaiAsPromised)
 
 describe('RestService tests', () => {
 	let http: AxiosInstance
-	let config = new LearningCatalogueConfig(
-		{username: 'test-user', password: 'test-pass'},
-		'http://example.org'
-	)
+	let config = new LearningCatalogueConfig({username: 'test-user', password: 'test-pass'}, 'http://example.org')
 
 	let restService: RestService
 
@@ -103,8 +100,6 @@ describe('RestService tests', () => {
 			.withArgs(path)
 			.throws(new Error('Error thrown from test'))
 
-		return expect(restService.post(path, course)).to.be.rejectedWith(
-			errorMessage
-		)
+		return expect(restService.post(path, course)).to.be.rejectedWith(errorMessage)
 	})
 })

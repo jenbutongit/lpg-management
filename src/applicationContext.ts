@@ -16,14 +16,12 @@ import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
 import {LearningProviderController} from './controllers/LearningProvider/learningProviderController'
 import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
 import {LearningProviderValidator} from './learning-catalogue/validator/learningProviderValidator'
-import {CancellationPolicyController} from './controllers/LearningProvider/cancellationPolicyController'
 import {CancellationPolicyFactory} from './learning-catalogue/model/factory/cancellationPolicyFactory'
 import {CancellationPolicyValidator} from './learning-catalogue/validator/cancellationPolicyValidator'
-import {TermsAndConditionsController} from './controllers/LearningProvider/termsAndConditionsController'
 import {TermsAndConditionsFactory} from './learning-catalogue/model/factory/termsAndConditionsFactory'
 import {TermsAndConditionsValidator} from './learning-catalogue/validator/termsAndConditionsValidator'
 import {NextFunction, Request, Response} from 'express'
-import {LearningProviderCatalogue} from './learning-catalogue/learning-provider'
+import {Pagination} from './lib/pagination'
 
 log4js.configure(config.LOGGING)
 
@@ -31,8 +29,6 @@ export class ApplicationContext {
 	homeController: HomeController
 	courseController: CourseController
 	learningProviderController: LearningProviderController
-	cancellationPolicyController: CancellationPolicyController
-	termsAndConditionsController: TermsAndConditionsController
 	identityService: IdentityService
 	axiosInstance: AxiosInstance
 	auth: Auth
@@ -40,13 +36,13 @@ export class ApplicationContext {
 	learningCatalogue: LearningCatalogue
 	courseValidator: CourseValidator
 	courseFactory: CourseFactory
-	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
-	learningProviderCatalogue: LearningProviderCatalogue
 	cancellationPolicyValidator: CancellationPolicyValidator
 	cancellationPolicyFactory: CancellationPolicyFactory
 	termsAndConditionsValidator: TermsAndConditionsValidator
 	termsAndConditionsFactory: TermsAndConditionsFactory
+	learningProviderValidator: LearningProviderValidator
+	pagination: Pagination
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -80,51 +76,28 @@ export class ApplicationContext {
 			config.COURSE_CATALOGUE.url
 		)
 
-		this.learningCatalogue = new LearningCatalogue(
-			this.learningCatalogueConfig
-		)
+		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
 
 		this.courseValidator = new CourseValidator()
 		this.courseFactory = new CourseFactory()
-
-		this.homeController = new HomeController(this.learningCatalogue)
-
-		this.courseController = new CourseController(
-			this.learningCatalogue,
-			this.courseValidator,
-			this.courseFactory
-		)
-
 		this.learningProviderValidator = new LearningProviderValidator()
 		this.learningProviderFactory = new LearningProviderFactory()
+		this.pagination = new Pagination()
 
-		this.learningProviderCatalogue = new LearningProviderCatalogue(
-			this.learningCatalogueConfig
-		)
-
+		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
+		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderController = new LearningProviderController(
-			this.learningProviderCatalogue,
+			this.learningCatalogue,
 			this.learningProviderValidator,
-			this.learningProviderFactory
+			this.learningProviderFactory,
+			this.pagination
 		)
 
 		this.cancellationPolicyValidator = new CancellationPolicyValidator()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
-		this.cancellationPolicyController = new CancellationPolicyController(
-			this.learningProviderCatalogue,
-			this.cancellationPolicyValidator,
-			this.cancellationPolicyFactory
-		)
-
 		this.termsAndConditionsValidator = new TermsAndConditionsValidator()
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
-
-		this.termsAndConditionsController = new TermsAndConditionsController(
-			this.learningProviderCatalogue,
-			this.termsAndConditionsValidator,
-			this.termsAndConditionsFactory
-		)
 	}
 
 	addToResponseLocals() {

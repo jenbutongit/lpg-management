@@ -35,6 +35,22 @@ ul {
 	list-style-type: none;
 }
 
+.right-menu {
+	border: 1px solid $border;
+	border-top: 4px solid $theme;
+	margin-bottom: 50px;
+
+	.menu-header {
+		font-weight: 700;
+		font-size: 20px;
+		margin: 10px 0;
+	}
+
+	.menu-link {
+		font-size: $font-normal;
+	}
+}
+
 .pager__controls {
 	display: flex;
 	width: 100%;

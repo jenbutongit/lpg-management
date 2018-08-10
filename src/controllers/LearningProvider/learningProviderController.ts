@@ -1,45 +1,41 @@
 import {Request, Response} from 'express'
+import * as log4js from 'log4js'
+import {Pagination} from 'lib/pagination'
+import {LearningCatalogue} from '../../learning-catalogue'
 import {LearningProviderValidator} from '../../learning-catalogue/validator/learningProviderValidator'
 import {LearningProviderFactory} from '../../learning-catalogue/model/factory/learningProviderFactory'
-// import * as log4js from 'log4js'
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
-import {LearningProviderCatalogue} from '../../learning-catalogue/learning-provider'
 
-// const logger = log4js.getLogger('controllers/providerController')
+const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class LearningProviderController {
-	learningProvider: LearningProviderCatalogue
+	learningCatalogue: LearningCatalogue
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
+	pagination: Pagination
 
 	constructor(
-		learningProvider: LearningProviderCatalogue,
+		learningCatalogue: LearningCatalogue,
 		learningProviderValidator: LearningProviderValidator,
-		learningProviderFactory: LearningProviderFactory
+		learningProviderFactory: LearningProviderFactory,
+		pagination: Pagination
 	) {
-		this.learningProvider = learningProvider
+		this.learningCatalogue = learningCatalogue
 		this.learningProviderValidator = learningProviderValidator
 		this.learningProviderFactory = learningProviderFactory
+		this.pagination = pagination
 	}
 
 	public index() {
+		logger.debug('Getting Learning Providers')
 		const self = this
 
-		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
-			let page = 0
-			let size = 10
-
-			if (request.query.p) {
-				page = request.query.p
-			}
-			if (request.query.s) {
-				size = request.query.s
-			}
+			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<LearningProvider> = await self.learningProvider.listLearningProviders(page, size)
+			const pageResults: DefaultPageResults<LearningProvider> = await self.learningCatalogue.listLearningProviders(page, size)
 
 			response.render('page/learning-providers', {pageResults})
 		}
@@ -67,17 +63,14 @@ export class LearningProviderController {
 
 			const learningProvider = this.learningProviderFactory.create(data)
 
-			const errors = await this.learningProviderValidator.check(
-				request.body,
-				['name']
-			)
+			const errors = await this.learningProviderValidator.check(request.body, ['name'])
 			if (errors.size) {
 				return response.render('page/add-learning-provider', {
 					errors: errors,
 				})
 			}
 
-			await self.learningProvider.createLearningProvider(learningProvider)
+			await self.learningCatalogue.createLearningProvider(learningProvider)
 
 			response.redirect('/content-management/learning-provider-overview')
 		}

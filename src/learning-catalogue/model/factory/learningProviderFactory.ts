@@ -10,7 +10,6 @@ export class LearningProviderFactory {
 
 		learningProvider.id = data.id
 		learningProvider.name = data.name
-		learningProvider.dateAdded = data.today
 
 		return learningProvider
 	}
