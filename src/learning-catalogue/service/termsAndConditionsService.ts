@@ -1,7 +1,7 @@
 import {DefaultPageResults} from '../model/defaultPageResults'
 import {RestService} from './restService'
 import {TermsAndConditionsFactory} from '../model/factory/termsAndConditionsFactory'
-import {TermsAndConditions} from '../model/TermsAndConditions'
+import {TermsAndConditions} from '../model/termsAndConditions'
 
 export class TermsAndConditionsService {
 	private _restService: RestService
