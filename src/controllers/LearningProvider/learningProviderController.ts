@@ -51,6 +51,12 @@ export class LearningProviderController {
 		}
 	}
 
+	public getLearningProviderOverview() {
+		return async (request: Request, response: Response) => {
+			response.render('page/learning-provider-overview')
+		}
+	}
+
 	public setLearningProvider() {
 		const self = this
 
@@ -73,7 +79,7 @@ export class LearningProviderController {
 
 			await self.learningProvider.createLearningProvider(learningProvider)
 
-			response.redirect('/content-management/learning-providers')
+			response.redirect('/content-management/learning-provider-overview')
 		}
 	}
 }

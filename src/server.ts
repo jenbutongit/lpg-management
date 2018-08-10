@@ -121,6 +121,10 @@ app.post(
 	ctx.learningProviderController.setLearningProvider()
 )
 app.get(
+	'/content-management/learning-provider-overview',
+	ctx.learningProviderController.getLearningProviderOverview()
+)
+app.get(
 	'/content-management/add-terms-and-conditions',
 	ctx.termsAndConditionsController.getTermsAndConditions()
 )

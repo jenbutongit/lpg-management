@@ -14,7 +14,9 @@
 
 .govuk-button--delete {
 	background-color: $theme;
-	margin-top: 20px;
+	width: 81px;
+	font-weight: 700;
+	margin-top: 30px;
 
 	&:hover {
 		background-color: darken($theme, 10%);
