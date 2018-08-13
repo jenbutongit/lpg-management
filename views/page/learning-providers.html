@@ -25,15 +25,14 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <div class="custom-panel govuk-panel govuk-panel--confirmation">
-                <p class="govuk-body white"><strong>Example provider</strong> has been created</p>
-            </div>
             {% if pageResults %}
+                {% if pageResults.totalResults !== 0 %}
                 {% block providerList %}
                     {{ providerList(pageResults) }}
                 {% endblock %}
-            {% else %}
-                <p class="govuk-body">There are currently no learning providers</p>
+                {% else %}
+                    <p class="govuk-body">There are currently no learning providers</p>
+                {% endif %}
             {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">
@@ -41,7 +40,7 @@
                 {% block menu %}
                     {% set actions = [                           
                         {
-                            link: '/content-management/add-learning-provider',
+                            link: '/content-management/learning-providers/add-learning-provider',
                             text: 'Add a new learning provider'    
                         }
                     ] %}

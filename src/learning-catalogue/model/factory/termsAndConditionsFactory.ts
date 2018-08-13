@@ -9,8 +9,8 @@ export class TermsAndConditionsFactory {
 		const termsAndConditions: TermsAndConditions = new TermsAndConditions()
 
 		termsAndConditions.id = data.id
-		termsAndConditions.title = data.title
-		termsAndConditions.termsAndConditions = data.termsAndConditions
+		termsAndConditions.name = data.title
+		termsAndConditions.content = data.termsAndConditions
 
 		return termsAndConditions
 	}

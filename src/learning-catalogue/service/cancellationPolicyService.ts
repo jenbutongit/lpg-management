@@ -1,4 +1,3 @@
-import {DefaultPageResults} from '../model/defaultPageResults'
 import {RestService} from './restService'
 import {CancellationPolicyFactory} from '../model/factory/cancellationPolicyFactory'
 import {CancellationPolicy} from '../model/cancellationPolicy'
@@ -12,29 +11,18 @@ export class CancellationPolicyService {
 		this._cancellationPolicyFactory = new CancellationPolicyFactory()
 	}
 
-	async listAll(page: number = 0, size: number = 10): Promise<DefaultPageResults<CancellationPolicy>> {
-		const data = await this._restService.get(`/learning-provider/list?page=${page}&size=${size}`)
-
-		data.results = (data.results || []).map(this._cancellationPolicyFactory.create)
-
-		// prettier-ignore
-		const coursePageResults: DefaultPageResults<CancellationPolicy> = new DefaultPageResults()
-
-		coursePageResults.size = data.size
-		coursePageResults.results = data.results
-		coursePageResults.page = data.page
-		coursePageResults.totalResults = data.totalResults
-
-		return coursePageResults
-	}
-
-	async create(cancellationPolicy: CancellationPolicy): Promise<CancellationPolicy> {
-		const data = await this._restService.post('/learning-provider/', cancellationPolicy)
+	async create(learningProviderId: string, cancellationPolicy: CancellationPolicy): Promise<CancellationPolicy> {
+		const data = await this._restService.post(
+			`/learning-providers/${learningProviderId}/cancellation-policies`,
+			cancellationPolicy
+		)
 		return this._cancellationPolicyFactory.create(data)
 	}
 
-	async get(cancellationPolicyId: string): Promise<CancellationPolicy> {
-		const data = this._restService.get(`/learning-provider/${cancellationPolicyId}`)
+	async get(learningProviderId: string, cancellationPolicyId: string): Promise<CancellationPolicy> {
+		const data = this._restService.get(
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicyId}`
+		)
 
 		return this._cancellationPolicyFactory.create(data)
 	}

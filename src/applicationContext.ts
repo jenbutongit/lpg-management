@@ -22,6 +22,8 @@ import {TermsAndConditionsFactory} from './learning-catalogue/model/factory/term
 import {TermsAndConditionsValidator} from './learning-catalogue/validator/termsAndConditionsValidator'
 import {NextFunction, Request, Response} from 'express'
 import {Pagination} from './lib/pagination'
+import {CancellationPolicyController} from './controllers/LearningProvider/cancellationPolicyController'
+import {TermsAndConditionsController} from './controllers/LearningProvider/termsAndConditionsController'
 
 log4js.configure(config.LOGGING)
 
@@ -39,8 +41,10 @@ export class ApplicationContext {
 	learningProviderFactory: LearningProviderFactory
 	cancellationPolicyValidator: CancellationPolicyValidator
 	cancellationPolicyFactory: CancellationPolicyFactory
+	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsValidator: TermsAndConditionsValidator
 	termsAndConditionsFactory: TermsAndConditionsFactory
+	termsAndConditionsController: TermsAndConditionsController
 	learningProviderValidator: LearningProviderValidator
 	pagination: Pagination
 
@@ -96,8 +100,20 @@ export class ApplicationContext {
 		this.cancellationPolicyValidator = new CancellationPolicyValidator()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
+		this.cancellationPolicyController = new CancellationPolicyController(
+			this.learningCatalogue,
+			this.cancellationPolicyValidator,
+			this.cancellationPolicyFactory
+		)
+
 		this.termsAndConditionsValidator = new TermsAndConditionsValidator()
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
+
+		this.termsAndConditionsController = new TermsAndConditionsController(
+			this.learningCatalogue,
+			this.termsAndConditionsValidator,
+			this.termsAndConditionsFactory
+		)
 	}
 
 	addToResponseLocals() {

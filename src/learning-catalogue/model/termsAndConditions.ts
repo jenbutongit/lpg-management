@@ -5,15 +5,13 @@ export class TermsAndConditions {
 
 	@IsNotEmpty({
 		groups: ['all', 'title'],
-		message: 'validation.termsAndConditions.title.empty',
+		message: 'validation.termsAndConditions.name.empty',
 	})
-	public title: string
+	public name: string
 
 	@IsNotEmpty({
 		groups: ['all', 'termsAndConditions'],
-		message: 'validation.termsAndConditions.termsAndConditions.empty',
+		message: 'validation.termsAndConditions.content.empty',
 	})
-	public termsAndConditions: string
-
-	public dateAdded: string
+	public content: string
 }

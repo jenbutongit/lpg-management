@@ -49,7 +49,7 @@ export class LearningProviderController {
 
 	public getLearningProviderOverview() {
 		return async (request: Request, response: Response) => {
-			response.render('page/learning-provider-overview')
+			await this.getLearningProviderAndRenderTemplate(request, response, 'page/learning-provider-overview')
 		}
 	}
 
@@ -70,9 +70,19 @@ export class LearningProviderController {
 				})
 			}
 
-			await self.learningCatalogue.createLearningProvider(learningProvider)
+			const newLearningProvider = await self.learningCatalogue.createLearningProvider(learningProvider)
 
-			response.redirect('/content-management/learning-provider-overview')
+			response.redirect('/content-management/learning-providers/' + newLearningProvider.id)
+		}
+	}
+
+	private async getLearningProviderAndRenderTemplate(request: Request, response: Response, view: string) {
+		const learningProviderId: string = request.params.learningProviderId
+		const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
+		if (learningProvider) {
+			response.render(view, {learningProvider})
+		} else {
+			response.sendStatus(404)
 		}
 	}
 }
