@@ -15,6 +15,8 @@
 {% endblock %}
 
 {% block content %}
+    {% set errors = sessionFlash.errors%}
+
     {% if errors.fields %}
         <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -36,11 +38,12 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
             <form action="/content-management/add-course-details" method="post">
-                <input id="title" name="title" type="hidden" value="{{title}}">
+                <input id="title" name="title" type="hidden" value="{{ sessionFlash.title }}">
 
                 <fieldset class="govuk-fieldset">
-                    {% block textarea %}
+                    {% set course = sessionFlash.course%}
 
+                    {% block textarea %}
                         {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, course.shortDescription, "Short description") }}
                             
                         {{ textarea("description", "description", "Maximum of 1500 characters", 1500, course.description, "Description") }}

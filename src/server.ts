@@ -1,6 +1,5 @@
 import * as express from 'express'
 import * as session from 'express-session'
-import * as sessionFileStore from 'session-file-store'
 import * as cookieParser from 'cookie-parser'
 import * as log4js from 'log4js'
 import * as config from './config'
@@ -14,7 +13,6 @@ Properties.initialize()
 const logger = log4js.getLogger('server')
 const nunjucks = require('nunjucks')
 const appRoot = require('app-root-path')
-const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
@@ -47,7 +45,9 @@ app.use(serveStatic(appRoot + '/dist/views/assets'))
 app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
 
 log4js.configure(config.LOGGING)
+const sessionStore = new session.MemoryStore()
 
+app.use(cookieParser())
 app.use(
 	session({
 		cookie: {
@@ -59,61 +59,30 @@ app.use(
 		resave: true,
 		saveUninitialized: true,
 		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
-		store: new FileStore({
-			path: process.env.NOW ? `/tmp/sessions` : `.sessions`,
-		}),
+		store: sessionStore,
 	})
 )
-app.use(cookieParser())
+// app.use(function(req, res, next) {
+// 	res.locals.sessionFlash = req.session!.sessionFlash
+// 	delete req.session!.sessionFlash
+// 	next()
+// })
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app)
 app.use(ctx.addToResponseLocals())
+app.use(ctx.courseController.router)
+app.use(ctx.learningProviderController.router)
+app.use(ctx.cancellationPolicyController.router)
+app.use(ctx.termsAndConditionsController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
 app.get('/content-management', ctx.homeController.index())
-app.get('/content-management/course/:courseId', ctx.courseController.courseOverview())
-app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
-
-app.get('/content-management/add-course', ctx.courseController.getCourseTitle())
-app.post('/content-management/add-course', ctx.courseController.setCourseTitle())
-
-app.get('/content-management/add-course-details', ctx.courseController.getCourseDetails())
-app.post('/content-management/add-course-details', ctx.courseController.setCourseDetails())
-app.get('/content-management/course-preview/:courseId', ctx.courseController.coursePreview())
-
-app.get('/content-management/:courseId/add-module', ctx.courseController.addModule())
-app.get('/content-management/:courseId/add-module-blog', ctx.courseController.addModuleBlog())
-
-app.get('/content-management/learning-providers', ctx.learningProviderController.index())
-
-app.get(
-	'/content-management/learning-providers/add-learning-provider',
-	ctx.learningProviderController.getLearningProvider()
-)
-app.post(
-	'/content-management/learning-providers/add-learning-provider',
-	ctx.learningProviderController.setLearningProvider()
-)
-app.get(
-	'/content-management/learning-providers/:learningProviderId',
-	ctx.learningProviderController.getLearningProviderOverview()
-)
-
-app.get(
-	'/content-management/learning-providers/:learningProviderId/add-cancellation-policy',
-	ctx.cancellationPolicyController.getCancellationPolicy()
-)
-
-app.post(
-	'/content-management/learning-providers/:learningProviderId/add-cancellation-policy',
-	ctx.cancellationPolicyController.setCancellationPolicy()
-)
 
 app.get(
 	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',

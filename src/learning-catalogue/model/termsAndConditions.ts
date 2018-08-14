@@ -4,13 +4,13 @@ export class TermsAndConditions {
 	public id: string
 
 	@IsNotEmpty({
-		groups: ['all', 'title'],
+		groups: ['all', 'name'],
 		message: 'validation.termsAndConditions.name.empty',
 	})
 	public name: string
 
 	@IsNotEmpty({
-		groups: ['all', 'termsAndConditions'],
+		groups: ['all', 'content'],
 		message: 'validation.termsAndConditions.content.empty',
 	})
 	public content: string

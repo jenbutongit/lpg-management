@@ -18,9 +18,9 @@
 		"Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty":
 		"Full version is required",
-	"validation.termsAndConditions.title.empty": "Title is required",
-	"validation.termsAndConditions.termsAndConditions.empty":
-		"Terms and conditions is required is required",
+	"validation.termsAndConditions.name.empty": "Title is required",
+	"validation.termsAndConditions.content.empty":
+		"Content is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"blended": "Blended",
 	"face-to-face": "Face to Face"

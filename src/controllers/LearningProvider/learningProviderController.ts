@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {Pagination} from 'lib/pagination'
 import {LearningCatalogue} from '../../learning-catalogue'
@@ -6,6 +6,7 @@ import {LearningProviderValidator} from '../../learning-catalogue/validator/lear
 import {LearningProviderFactory} from '../../learning-catalogue/model/factory/learningProviderFactory'
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
+import {ContentRequest} from '../../extended'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
@@ -14,6 +15,7 @@ export class LearningProviderController {
 	learningProviderValidator: LearningProviderValidator
 	learningProviderFactory: LearningProviderFactory
 	pagination: Pagination
+	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
@@ -25,17 +27,42 @@ export class LearningProviderController {
 		this.learningProviderValidator = learningProviderValidator
 		this.learningProviderFactory = learningProviderFactory
 		this.pagination = pagination
+
+		this.router = Router()
+
+		this.setRouterPaths()
+	}
+
+	private setRouterPaths() {
+		this.router.param('learningProviderId', async (ireq, res, next, learningProviderId) => {
+			const req = ireq as ContentRequest
+
+			const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
+
+			if (learningProvider) {
+				req.learningProvider = learningProvider
+			} else {
+				res.sendStatus(404)
+			}
+			next()
+		})
+
+		this.router.get('/content-management/learning-providers', this.index())
+		this.router.get('/content-management/learning-providers/add-learning-provider', this.getLearningProvider())
+		this.router.post('/content-management/learning-providers/add-learning-provider', this.setLearningProvider())
+		this.router.get(
+			'/content-management/learning-providers/:learningProviderId',
+			this.getLearningProviderOverview()
+		)
 	}
 
 	public index() {
 		logger.debug('Getting Learning Providers')
-		const self = this
-
 		return async (request: Request, response: Response) => {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<LearningProvider> = await self.learningCatalogue.listLearningProviders(page, size)
+			const pageResults: DefaultPageResults<LearningProvider> = await this.learningCatalogue.listLearningProviders(page, size)
 
 			response.render('page/learning-providers', {pageResults})
 		}
@@ -49,13 +76,14 @@ export class LearningProviderController {
 
 	public getLearningProviderOverview() {
 		return async (request: Request, response: Response) => {
-			await this.getLearningProviderAndRenderTemplate(request, response, 'page/learning-provider-overview')
+			const req = request as ContentRequest
+			const learningProvider = req.learningProvider
+
+			response.render('page/learning-provider-overview', {learningProvider: learningProvider})
 		}
 	}
 
 	public setLearningProvider() {
-		const self = this
-
 		return async (request: Request, response: Response) => {
 			const data = {
 				...request.body,
@@ -65,24 +93,13 @@ export class LearningProviderController {
 
 			const errors = await this.learningProviderValidator.check(request.body, ['name'])
 			if (errors.size) {
-				return response.render('page/add-learning-provider', {
-					errors: errors,
-				})
+				request.session!.sessionFlash = {errors: errors}
+				return response.redirect('/content-management/learning-providers/add-learning-provider')
 			}
 
-			const newLearningProvider = await self.learningCatalogue.createLearningProvider(learningProvider)
+			const newLearningProvider = await this.learningCatalogue.createLearningProvider(learningProvider)
 
 			response.redirect('/content-management/learning-providers/' + newLearningProvider.id)
-		}
-	}
-
-	private async getLearningProviderAndRenderTemplate(request: Request, response: Response, view: string) {
-		const learningProviderId: string = request.params.learningProviderId
-		const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
-		if (learningProvider) {
-			response.render(view, {learningProvider})
-		} else {
-			response.sendStatus(404)
 		}
 	}
 }

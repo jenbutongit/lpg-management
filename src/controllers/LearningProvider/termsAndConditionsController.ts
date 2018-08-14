@@ -1,8 +1,9 @@
-import {Request, Response} from 'express'
+import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {TermsAndConditionsValidator} from '../../learning-catalogue/validator/termsAndConditionsValidator'
 import {TermsAndConditionsFactory} from '../../learning-catalogue/model/factory/termsAndConditionsFactory'
+import {ContentRequest} from '../../extended'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
@@ -10,6 +11,7 @@ export class TermsAndConditionsController {
 	learningCatalogue: LearningCatalogue
 	termsAndConditionsValidator: TermsAndConditionsValidator
 	termsAndConditionsFactory: TermsAndConditionsFactory
+	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
@@ -19,19 +21,69 @@ export class TermsAndConditionsController {
 		this.learningCatalogue = learningCatalogue
 		this.termsAndConditionsValidator = termsAndConditionsValidator
 		this.termsAndConditionsFactory = termsAndConditionsFactory
+
+		this.router = Router()
+
+		this.setRouterPaths()
+	}
+
+	private setRouterPaths() {
+		this.router.param('termsAndConditionsId', async (ireq, res, next, termsAndConditionsId) => {
+			const req = ireq as ContentRequest
+
+			const learningProviderId = req.params.learningProviderId
+
+			const termsAndConditions = await this.learningCatalogue.getTermsAndConditions(
+				learningProviderId,
+				termsAndConditionsId
+			)
+
+			if (termsAndConditions) {
+				req.termsAndConditions = termsAndConditions
+			} else {
+				res.sendStatus(404)
+			}
+			next()
+		})
+
+		this.router.param('learningProviderId', async (ireq, res, next, learningProviderId) => {
+			const req = ireq as ContentRequest
+
+			const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
+
+			if (learningProvider) {
+				req.learningProvider = learningProvider
+			} else {
+				res.sendStatus(404)
+			}
+			next()
+		})
+
+		this.router.get(
+			'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
+			this.getTermsAndConditions()
+		)
+
+		this.router.post(
+			'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
+			this.setTermsAndConditions()
+		)
 	}
 
 	public getTermsAndConditions() {
 		logger.debug('Getting terms and conditions')
 		return async (request: Request, response: Response) => {
-			await this.getLearningProviderAndRenderTemplate(request, response, 'page/add-terms-and-conditions')
+			const req = request as ContentRequest
+			const learningProvider = req.learningProvider
+
+			response.render('page/add-terms-and-conditions', {learningProvider: learningProvider})
 		}
 	}
 
 	public setTermsAndConditions() {
-		const self = this
-
 		return async (request: Request, response: Response) => {
+			const learningProviderId: string = request.params.learningProviderId
+
 			const data = {
 				...request.body,
 			}
@@ -40,25 +92,15 @@ export class TermsAndConditionsController {
 
 			const errors = await this.termsAndConditionsValidator.check(request.body, ['title'])
 			if (errors.size) {
-				return response.render('page/add-terms-and-conditions', {
-					errors: errors,
-				})
+				request.session!.sessionFlash = {errors: errors}
+				return response.redirect(
+					'/content-management/learning-providers/' + learningProviderId + '/add-terms-and-conditions'
+				)
 			}
-			const learningProviderId: string = request.params.learningProviderId
 
-			await self.learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
+			await this.learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
 
 			response.redirect('/content-management/learning-providers/' + learningProviderId)
-		}
-	}
-
-	private async getLearningProviderAndRenderTemplate(request: Request, response: Response, view: string) {
-		const learningProviderId: string = request.params.learningProviderId
-		const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
-		if (learningProvider) {
-			response.render(view, {learningProvider})
-		} else {
-			response.sendStatus(404)
 		}
 	}
 }
