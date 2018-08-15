@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-    {% set errors = sessionFlash.errors%}
+    {% set errors = sessionFlash.errors %}
     {% if errors.fields %}
         <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -55,7 +55,7 @@
                             text: "Course title"
                             },
                             id: "title",
-                            name: title
+                            name: "title"
                         }) }}
                     {% endif %}
                 </fieldset>

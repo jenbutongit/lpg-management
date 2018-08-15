@@ -36,8 +36,6 @@ export class RestService {
 
 	async get(path: string) {
 		try {
-			const data = (await this._http.get(path)).data
-			console.log(data)
 			return (await this._http.get(path)).data
 		} catch (e) {
 			throw new Error(`Error with GET request: ${e} when getting ${this.config.url}${path}`)

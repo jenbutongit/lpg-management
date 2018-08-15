@@ -26,8 +26,9 @@
             </h3>
             <div class="list-container">
                 <h3 class="govuk-heading-s govuk-!-font-weight-bold govuk-!-margin-bottom-1">Cancellation policies</h3>
-                {% if learningProvider.cancellationPolicies %}
-                    {{ policyList(learningProvider.cancellationPolicies) }}
+                {% set cancellationPolicies = learningProvider.cancellationPolicies %}
+                {% if cancellationPolicies.length > 0 %}
+                    {{ policyList(cancellationPolicies) }}
                 {% else %}
                     <p class="govuk-body">This course does not have any policies yet</p>
                 {% endif %}
@@ -36,7 +37,9 @@
 
             <div class="list-container">
                 <h3 class="govuk-heading-s govuk-!-font-weight-bold govuk-!-margin-bottom-1">Terms and conditions</h3>
-                {% if learningProvider.termsAndConditions %}
+                {% set termsAndConditions = learningProvider.termsAndConditions %}
+
+                {% if termsAndConditions.length > 0 %}
                     {{ tandcList(learningProvider.termsAndConditions) }}
                 {% else %}
                     <p class="govuk-body">This course does not have any terms and conditions yet</p>

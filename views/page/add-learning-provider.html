@@ -9,7 +9,7 @@
     {{ phaseBanner("beta") }}
   {% endblock%}
   {% block backLink %}
-    {{ backLink("/content-management") }}
+    {{ backLink("/content-management/learning-providers") }}
   {% endblock%}
 {% endblock %}
 
@@ -51,16 +51,6 @@
                         }
                     }) }}
                     {% else %}
-                    {% if learningProvider.name %}
-                        {{ govukInput({
-                        label: {
-                            text: "Learning provider name"
-                        },
-                        id: "name",
-                        name: "name",
-                        value: learningProvider.name
-                    }) }}
-                    {% else %}
                     {{ govukInput({
                         label: {
                         text: "Learning provider name"
@@ -68,14 +58,13 @@
                         id: "name",
                         name: "name"
                     }) }}
-                    {% endif %}
-                    {% endif %}
+                {% endif %}
                 </fieldset>
                 {{ govukButton({
                     text: "Add a new learning provider"
                 }) }}
             </form>
-            <a href="#" class="govuk-link">Cancel</a>
+            <a href="/content-management/learning-providers" class="govuk-link">Cancel</a>
         </div>
         <div class="govuk-grid-column-one-third">
         </div>
