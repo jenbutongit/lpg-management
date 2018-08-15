@@ -10,6 +10,7 @@ import * as sinon from 'sinon'
 import {CourseController} from '../../../src/controllers/courseController'
 import {CourseValidator} from '../../../src/learning-catalogue/validator/courseValidator'
 import {CourseFactory} from '../../../src/learning-catalogue/model/factory/courseFactory'
+import {ContentRequest} from '../../../src/extended'
 
 chai.use(sinonChai)
 
@@ -37,12 +38,13 @@ describe('Course Controller Tests', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		learningCatalogue.getCourse = sinon.stub().returns(course)
+		const req = request as ContentRequest
+		req.course = course
 
 		await courseOverview(request, response)
 
 		expect(response.render).to.have.been.calledOnceWith('page/course', {
-			course,
+			course: course,
 		})
 	})
 
@@ -57,7 +59,7 @@ describe('Course Controller Tests', function() {
 		expect(response.render).to.have.been.calledWith('page/add-course-title')
 	})
 
-	it('should check for title errors and render details page', async function() {
+	it('should check for title errors and redirect to details page', async function() {
 		const setCourseTitle: (request: Request, response: Response) => void = courseController.setCourseTitle()
 
 		const request: Request = mockReq()
@@ -70,7 +72,8 @@ describe('Course Controller Tests', function() {
 		await setCourseTitle(request, response)
 
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
-		expect(response.render).to.have.been.calledWith('page/add-course-details', {title: 'New Course'})
+		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
+		expect(request.session!.sessionFlash.title).to.be.equal('New Course')
 	})
 
 	it('should check for title errors and render title page with errors', async function() {
@@ -86,7 +89,8 @@ describe('Course Controller Tests', function() {
 		await setCourseTitle(request, response)
 
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
-		expect(response.render).to.have.been.calledWith('page/add-course-title', {errors: errors})
+		expect(response.redirect).to.have.been.calledWith('/content-management/add-course')
+		expect(request.session!.sessionFlash.errors).to.be.equal(errors)
 	})
 
 	it('should render add-course-details page', async function() {
@@ -156,10 +160,9 @@ describe('Course Controller Tests', function() {
 
 		expect(courseFactory.create).to.have.been.calledWith(request.body)
 		expect(courseValidator.check).to.have.been.calledWith(course)
-		expect(response.render).to.have.been.calledWith('page/add-course-details', {
-			title: 'New Course',
-			errors: errors,
-			course: course,
-		})
+		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
+		expect(request.session!.sessionFlash.errors).to.be.equal(errors)
+		expect(request.session!.sessionFlash.title).to.be.equal('New Course')
+		expect(request.session!.sessionFlash.course).to.be.equal(course)
 	})
 })
