@@ -50,19 +50,13 @@ export class CourseController {
 		logger.debug('Course Overview page')
 
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-			const course = req.course
-
-			response.render(`page/course`, {course: course})
+			this.getCourseAndRenderTemplate(request, response, 'page/course')
 		}
 	}
 
 	public coursePreview() {
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-			const course = req.course
-
-			response.render(`page/course-preview`, {course: course})
+			this.getCourseAndRenderTemplate(request, response, 'page/course-preview')
 		}
 	}
 
@@ -114,5 +108,12 @@ export class CourseController {
 
 			return response.redirect('/content-management')
 		}
+	}
+
+	private getCourseAndRenderTemplate(request: Request, response: Response, view: string) {
+		const req = request as ContentRequest
+		const course = req.course
+
+		response.render(view, {course: course})
 	}
 }
