@@ -10,12 +10,10 @@ import {CourseService} from '../../../src/learning-catalogue/service/courseServi
 import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
 import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
 import {Module} from '../../../src/learning-catalogue/model/module'
-import {CancellationPolicyService} from '../../../src/learning-catalogue/service/cancellationPolicyService'
 import {LearningProvider} from '../../../src/learning-catalogue/model/learningProvider'
-import {LearningProviderService} from '../../../src/learning-catalogue/service/learningProviderService'
 import {CancellationPolicy} from '../../../src/learning-catalogue/model/cancellationPolicy'
 import {TermsAndConditions} from '../../../src/learning-catalogue/model/termsAndConditions'
-import {TermsAndConditionsService} from '../../../src/learning-catalogue/service/termsAndConditionsService'
+import {EntityService} from '../../../src/learning-catalogue/service/entityService'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -23,9 +21,9 @@ chai.use(sinonChai)
 describe('Learning Catalogue tests', () => {
 	let courseService: CourseService
 	let moduleService: ModuleService
-	let learningProviderService: LearningProviderService
-	let cancellationPolicyService: CancellationPolicyService
-	let termsAndConditionsService: TermsAndConditionsService
+	let learningProviderService: EntityService<LearningProvider>
+	let cancellationPolicyService: EntityService<CancellationPolicy>
+	let termsAndConditionsService: EntityService<TermsAndConditions>
 
 	const config = new LearningCatalogueConfig({username: 'test-user', password: 'test-pass'}, 'http://example.org')
 
@@ -34,9 +32,9 @@ describe('Learning Catalogue tests', () => {
 	beforeEach(() => {
 		courseService = <CourseService>{}
 		moduleService = <ModuleService>{}
-		learningProviderService = <LearningProviderService>{}
-		cancellationPolicyService = <CancellationPolicyService>{}
-		termsAndConditionsService = <TermsAndConditionsService>{}
+		learningProviderService = <EntityService<LearningProvider>>{}
+		cancellationPolicyService = <EntityService<CancellationPolicy>>{}
+		termsAndConditionsService = <EntityService<TermsAndConditions>>{}
 
 		learningCatalogue = new LearningCatalogue(config)
 		learningCatalogue.courseService = courseService
@@ -110,7 +108,10 @@ describe('Learning Catalogue tests', () => {
 		learningProviderService.create = sinon.stub()
 
 		await learningCatalogue.createLearningProvider(learningProvider)
-		return expect(learningProviderService.create).to.have.been.calledOnceWith(learningProvider)
+		return expect(learningProviderService.create).to.have.been.calledOnceWith(
+			'/learning-providers/',
+			learningProvider
+		)
 	})
 
 	it('should call learningProviderService when getting a learning provider', async () => {
@@ -118,7 +119,9 @@ describe('Learning Catalogue tests', () => {
 		learningProviderService.get = sinon.stub()
 
 		await learningCatalogue.getLearningProvider(learningProviderId)
-		return expect(learningProviderService.get).to.have.been.calledOnceWith(learningProviderId)
+		return expect(learningProviderService.get).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}`
+		)
 	})
 
 	it('should call learningProviderService when listing learning providers', async () => {
@@ -136,7 +139,7 @@ describe('Learning Catalogue tests', () => {
 
 		await learningCatalogue.createCancellationPolicy(learningProviderId, cancellationPolicy)
 		return expect(cancellationPolicyService.create).to.have.been.calledOnceWith(
-			learningProviderId,
+			`/learning-providers/${learningProviderId}/cancellation-policies`,
 			cancellationPolicy
 		)
 	})
@@ -149,8 +152,7 @@ describe('Learning Catalogue tests', () => {
 
 		await learningCatalogue.getCancellationPolicy(learningProviderId, cancellationPolicyId)
 		return expect(cancellationPolicyService.get).to.have.been.calledOnceWith(
-			learningProviderId,
-			cancellationPolicyId
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicyId}`
 		)
 	})
 
@@ -163,7 +165,7 @@ describe('Learning Catalogue tests', () => {
 		await learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
 
 		return expect(termsAndConditionsService.create).to.have.been.calledOnceWith(
-			learningProviderId,
+			`/learning-providers/${learningProviderId}/terms-and-conditions`,
 			termsAndConditions
 		)
 	})
@@ -177,8 +179,7 @@ describe('Learning Catalogue tests', () => {
 		await learningCatalogue.getTermsAndConditions(learningProviderId, termsAndConditionsId)
 
 		return expect(termsAndConditionsService.get).to.have.been.calledOnceWith(
-			learningProviderId,
-			termsAndConditionsId
+			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
 		)
 	})
 })

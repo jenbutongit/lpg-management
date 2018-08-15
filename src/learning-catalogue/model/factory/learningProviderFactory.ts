@@ -1,10 +1,7 @@
 import {LearningProvider} from '../learningProvider'
+import {Factory} from './factory'
 
-export class LearningProviderFactory {
-	constructor() {
-		this.create = this.create.bind(this)
-	}
-
+export class LearningProviderFactory extends Factory<LearningProvider> {
 	create(data: any) {
 		const learningProvider: LearningProvider = new LearningProvider()
 

@@ -2,30 +2,30 @@ import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {Pagination} from 'lib/pagination'
 import {LearningCatalogue} from '../../learning-catalogue'
-import {LearningProviderValidator} from '../../learning-catalogue/validator/learningProviderValidator'
 import {LearningProviderFactory} from '../../learning-catalogue/model/factory/learningProviderFactory'
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
 import {ContentRequest} from '../../extended'
+import {Validator} from '../../learning-catalogue/validator/validator'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class LearningProviderController {
 	learningCatalogue: LearningCatalogue
-	learningProviderValidator: LearningProviderValidator
+	learningProviderValidator: Validator<LearningProvider>
 	learningProviderFactory: LearningProviderFactory
 	pagination: Pagination
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
-		learningProviderValidator: LearningProviderValidator,
 		learningProviderFactory: LearningProviderFactory,
+		learningProviderValidator: Validator<LearningProvider>,
 		pagination: Pagination
 	) {
 		this.learningCatalogue = learningCatalogue
-		this.learningProviderValidator = learningProviderValidator
 		this.learningProviderFactory = learningProviderFactory
+		this.learningProviderValidator = learningProviderValidator
 		this.pagination = pagination
 
 		this.router = Router()

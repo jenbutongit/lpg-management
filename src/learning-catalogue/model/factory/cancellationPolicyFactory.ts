@@ -1,10 +1,7 @@
 import {CancellationPolicy} from '../cancellationPolicy'
+import {Factory} from './factory'
 
-export class CancellationPolicyFactory {
-	constructor() {
-		this.create = this.create.bind(this)
-	}
-
+export class CancellationPolicyFactory implements Factory<CancellationPolicy> {
 	create(data: any) {
 		const cancellationPolicy: CancellationPolicy = new CancellationPolicy()
 

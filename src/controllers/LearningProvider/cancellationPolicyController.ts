@@ -1,22 +1,23 @@
 import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
-import {CancellationPolicyValidator} from '../../learning-catalogue/validator/cancellationPolicyValidator'
 import {CancellationPolicyFactory} from '../../learning-catalogue/model/factory/cancellationPolicyFactory'
 import {ContentRequest} from '../../extended'
+import {Validator} from '../../learning-catalogue/validator/validator'
+import {CancellationPolicy} from '../../learning-catalogue/model/cancellationPolicy'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class CancellationPolicyController {
 	learningCatalogue: LearningCatalogue
-	cancellationPolicyValidator: CancellationPolicyValidator
+	cancellationPolicyValidator: Validator<CancellationPolicy>
 	cancellationPolicyFactory: CancellationPolicyFactory
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
-		cancellationPolicyValidator: CancellationPolicyValidator,
-		cancellationPolicyFactory: CancellationPolicyFactory
+		cancellationPolicyFactory: CancellationPolicyFactory,
+		cancellationPolicyValidator: Validator<CancellationPolicy>
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.cancellationPolicyValidator = cancellationPolicyValidator

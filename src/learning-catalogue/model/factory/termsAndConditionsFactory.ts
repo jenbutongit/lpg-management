@@ -1,10 +1,7 @@
 import {TermsAndConditions} from '../termsAndConditions'
+import {Factory} from './factory'
 
-export class TermsAndConditionsFactory {
-	constructor() {
-		this.create = this.create.bind(this)
-	}
-
+export class TermsAndConditionsFactory implements Factory<TermsAndConditions> {
 	create(data: any) {
 		const termsAndConditions: TermsAndConditions = new TermsAndConditions()
 

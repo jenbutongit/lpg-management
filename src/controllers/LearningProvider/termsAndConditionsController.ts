@@ -1,22 +1,23 @@
 import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
-import {TermsAndConditionsValidator} from '../../learning-catalogue/validator/termsAndConditionsValidator'
 import {TermsAndConditionsFactory} from '../../learning-catalogue/model/factory/termsAndConditionsFactory'
 import {ContentRequest} from '../../extended'
+import {Validator} from '../../learning-catalogue/validator/validator'
+import {TermsAndConditions} from '../../learning-catalogue/model/termsAndConditions'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class TermsAndConditionsController {
 	learningCatalogue: LearningCatalogue
-	termsAndConditionsValidator: TermsAndConditionsValidator
+	termsAndConditionsValidator: Validator<TermsAndConditions>
 	termsAndConditionsFactory: TermsAndConditionsFactory
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
-		termsAndConditionsValidator: TermsAndConditionsValidator,
-		termsAndConditionsFactory: TermsAndConditionsFactory
+		termsAndConditionsFactory: TermsAndConditionsFactory,
+		termsAndConditionsValidator: Validator<TermsAndConditions>
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.termsAndConditionsValidator = termsAndConditionsValidator
