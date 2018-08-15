@@ -6,7 +6,8 @@
   {% from "panel/macro.njk" import govukPanel %}
 
 {% extends "../component/Page.njk" %}
-{% block pageTitle %}Learning Providers - Civil Service Learning{% endblock %}
+
+{% block pageTitle %}{{ i18n['learning_providers_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}

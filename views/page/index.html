@@ -1,7 +1,10 @@
 {% from "../component/list/macro.njk" import list %}
 {% from "../component/menu/macro.njk" import menu %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}{{ i18n['content_management_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['content_management_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
 {% block beforeContent %}
   {% block phaseBanner %}
     {{ phaseBanner("beta") }}

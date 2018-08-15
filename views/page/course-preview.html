@@ -2,7 +2,9 @@
 {% from "table/macro.njk" import govukTable %}
 {% from "../component/course-preview/macro.njk" import coursePreview with context %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}{{ i18n['course_preview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['course_preview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}

@@ -1,10 +1,10 @@
 {% from "input/macro.njk" import govukInput %}
 {% from "textarea/macro.njk" import govukTextarea %}
- {% from "button/macro.njk" import govukButton %}
+{% from "button/macro.njk" import govukButton %}
 
 {% extends "../component/Page.njk" %}
 
-{% block pageTitle %}Add Cancellation Policy - Civil Service Learning{% endblock %}
+{% block pageTitle %}{{ i18n['cancellation_policy_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}

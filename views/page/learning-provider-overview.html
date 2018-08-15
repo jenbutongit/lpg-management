@@ -2,7 +2,9 @@
 {% from "../component/tandcList/macro.njk" import tandcList with context %}
 {% from "../component/delete/macro.njk" import delete %}
 
-{% extends "../component/Page.njk" %}{% block pageTitle %}{{ i18n['learning_provider_overview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['learning_provider_overview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}
