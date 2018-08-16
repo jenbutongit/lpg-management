@@ -1,6 +1,5 @@
 import {Course} from './model/course'
 import {DefaultPageResults} from './model/defaultPageResults'
-import {CourseService} from './service/courseService'
 import {ModuleService} from './service/moduleService'
 import {Module} from './model/module'
 import {RestService} from './service/restService'
@@ -12,10 +11,11 @@ import {EntityService} from './service/entityService'
 import {LearningProviderFactory} from './model/factory/learningProviderFactory'
 import {CancellationPolicyFactory} from './model/factory/cancellationPolicyFactory'
 import {TermsAndConditionsFactory} from './model/factory/termsAndConditionsFactory'
+import {CourseFactory} from './model/factory/courseFactory'
 
 export class LearningCatalogue {
-	private _courseService: CourseService
 	private _moduleService: ModuleService
+	private _courseService: EntityService<Course>
 	private _learningProviderService: EntityService<LearningProvider>
 	private _cancellationPolicyService: EntityService<CancellationPolicy>
 	private _termsAndConditionsService: EntityService<TermsAndConditions>
@@ -23,17 +23,20 @@ export class LearningCatalogue {
 
 	constructor(config: LearningCatalogueConfig) {
 		this._restService = new RestService(config)
-		this._courseService = new CourseService(this._restService)
 		this._moduleService = new ModuleService(this._restService)
+
+		this._courseService = new EntityService<Course>(this._restService, new CourseFactory())
 
 		this._learningProviderService = new EntityService<LearningProvider>(
 			this._restService,
 			new LearningProviderFactory()
 		)
+
 		this._cancellationPolicyService = new EntityService<CancellationPolicy>(
 			this._restService,
 			new CancellationPolicyFactory()
 		)
+
 		this._termsAndConditionsService = new EntityService<TermsAndConditions>(
 			this._restService,
 			new TermsAndConditionsFactory()
@@ -41,15 +44,15 @@ export class LearningCatalogue {
 	}
 
 	async listCourses(page: number = 0, size: number = 10): Promise<DefaultPageResults<Course>> {
-		return await this._courseService.listAll(page, size)
+		return await this._courseService.listAll(`/courses?page=${page}&size=${size}`)
 	}
 
 	async createCourse(course: Course): Promise<Course> {
-		return this._courseService.create(course)
+		return this._courseService.create('/courses/', course)
 	}
 
 	async getCourse(courseId: string): Promise<Course> {
-		return this._courseService.get(courseId)
+		return this._courseService.get(`/courses/${courseId}`)
 	}
 
 	async createModule(courseId: string, module: Module): Promise<Module> {
@@ -104,7 +107,7 @@ export class LearningCatalogue {
 		)
 	}
 
-	set courseService(value: CourseService) {
+	set courseService(value: EntityService<Course>) {
 		this._courseService = value
 	}
 

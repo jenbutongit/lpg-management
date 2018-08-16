@@ -6,7 +6,6 @@ import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
-import {CourseService} from '../../../src/learning-catalogue/service/courseService'
 import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
 import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
 import {Module} from '../../../src/learning-catalogue/model/module'
@@ -19,7 +18,7 @@ chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
 describe('Learning Catalogue tests', () => {
-	let courseService: CourseService
+	let courseService: EntityService<Course>
 	let moduleService: ModuleService
 	let learningProviderService: EntityService<LearningProvider>
 	let cancellationPolicyService: EntityService<CancellationPolicy>
@@ -30,7 +29,7 @@ describe('Learning Catalogue tests', () => {
 	let learningCatalogue: LearningCatalogue
 
 	beforeEach(() => {
-		courseService = <CourseService>{}
+		courseService = <EntityService<Course>>{}
 		moduleService = <ModuleService>{}
 		learningProviderService = <EntityService<LearningProvider>>{}
 		cancellationPolicyService = <EntityService<CancellationPolicy>>{}
