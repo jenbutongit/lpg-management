@@ -48,7 +48,7 @@ describe('Learning Catalogue tests', () => {
 		courseService.create = sinon.stub()
 
 		await learningCatalogue.createCourse(course)
-		return expect(courseService.create).to.have.been.calledOnceWith(course)
+		return expect(courseService.create).to.have.been.calledOnceWith('/courses/', course)
 	})
 
 	it('should call courseService when getting a course', async () => {
@@ -56,7 +56,7 @@ describe('Learning Catalogue tests', () => {
 		courseService.get = sinon.stub()
 
 		await learningCatalogue.getCourse(courseId)
-		return expect(courseService.get).to.have.been.calledOnceWith(courseId)
+		return expect(courseService.get).to.have.been.calledOnceWith(`/courses/${courseId}`)
 	})
 
 	it('should call courseService when listing courses', async () => {
