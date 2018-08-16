@@ -8,21 +8,21 @@ import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
 import {CourseController} from '../../../src/controllers/courseController'
-import {CourseValidator} from '../../../src/learning-catalogue/validator/courseValidator'
 import {CourseFactory} from '../../../src/learning-catalogue/model/factory/courseFactory'
 import {ContentRequest} from '../../../src/extended'
+import {Validator} from '../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)
 
 describe('Course Controller Tests', function() {
 	let courseController: CourseController
 	let learningCatalogue: LearningCatalogue
-	let courseValidator: CourseValidator
+	let courseValidator: Validator<Course>
 	let courseFactory: CourseFactory
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		courseValidator = <CourseValidator>{}
+		courseValidator = <Validator<Course>>{}
 		courseFactory = <CourseFactory>{}
 
 		courseController = new CourseController(learningCatalogue, courseValidator, courseFactory)

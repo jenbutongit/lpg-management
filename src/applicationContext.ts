@@ -9,7 +9,6 @@ import {AuthConfig} from './identity/authConfig'
 
 import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
 import {LearningCatalogue} from './learning-catalogue'
-import {CourseValidator} from './learning-catalogue/validator/courseValidator'
 import {EnvValue} from 'ts-json-properties'
 import {CourseController} from './controllers/courseController'
 import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
@@ -25,6 +24,7 @@ import {Validator} from './learning-catalogue/validator/validator'
 import {LearningProvider} from './learning-catalogue/model/learningProvider'
 import {CancellationPolicy} from './learning-catalogue/model/cancellationPolicy'
 import {TermsAndConditions} from './learning-catalogue/model/termsAndConditions'
+import {Course} from './learning-catalogue/model/course'
 
 log4js.configure(config.LOGGING)
 
@@ -36,7 +36,7 @@ export class ApplicationContext {
 	learningCatalogueConfig: LearningCatalogueConfig
 	learningCatalogue: LearningCatalogue
 	courseController: CourseController
-	courseValidator: CourseValidator
+	courseValidator: Validator<Course>
 	courseFactory: CourseFactory
 	learningProviderFactory: LearningProviderFactory
 	cancellationPolicyFactory: CancellationPolicyFactory
@@ -83,18 +83,19 @@ export class ApplicationContext {
 
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
 
-		this.courseValidator = new CourseValidator()
 		this.courseFactory = new CourseFactory()
 
 		this.pagination = new Pagination()
 
+		this.courseValidator = new Validator<Course>(this.courseFactory)
 		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
-		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 
+		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
-		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 
+		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
+		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
 		this.cancellationPolicyValidator = new Validator<CancellationPolicy>(this.cancellationPolicyFactory)
 		this.termsAndConditionsValidator = new Validator<TermsAndConditions>(this.termsAndConditionsFactory)

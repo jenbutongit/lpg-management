@@ -1,19 +1,24 @@
 import {Request, Response, Router} from 'express'
-import {CourseValidator} from '../learning-catalogue/validator/courseValidator'
 import {ContentRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../learning-catalogue'
+import {Course} from '../learning-catalogue/model/course'
+import {Validator} from '../learning-catalogue/validator/validator'
 
 const logger = log4js.getLogger('controllers/courseController')
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
-	courseValidator: CourseValidator
+	courseValidator: Validator<Course>
 	courseFactory: CourseFactory
 	router: Router
 
-	constructor(learningCatalogue: LearningCatalogue, courseValidator: CourseValidator, courseFactory: CourseFactory) {
+	constructor(
+		learningCatalogue: LearningCatalogue,
+		courseValidator: Validator<Course>,
+		courseFactory: CourseFactory
+	) {
 		this.learningCatalogue = learningCatalogue
 		this.courseValidator = courseValidator
 		this.courseFactory = courseFactory
