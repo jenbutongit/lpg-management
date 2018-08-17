@@ -20,11 +20,16 @@ import {NextFunction, Request, Response} from 'express'
 import {Pagination} from './lib/pagination'
 import {CancellationPolicyController} from './controllers/LearningProvider/cancellationPolicyController'
 import {TermsAndConditionsController} from './controllers/LearningProvider/termsAndConditionsController'
+import {ModuleController} from './controllers/Module/moduleController'
 import {Validator} from './learning-catalogue/validator/validator'
 import {LearningProvider} from './learning-catalogue/model/learningProvider'
 import {CancellationPolicy} from './learning-catalogue/model/cancellationPolicy'
 import {TermsAndConditions} from './learning-catalogue/model/termsAndConditions'
 import {Course} from './learning-catalogue/model/course'
+import {Module} from './learning-catalogue/model/module'
+import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
+import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
+import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -47,9 +52,15 @@ export class ApplicationContext {
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
+	moduleController: ModuleController
+	moduleValidator: Validator<Module>
+	moduleFactory: ModuleFactory
+	audienceFactory: AudienceFactory
+	eventFactory: EventFactory
 	pagination: Pagination
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -93,6 +104,11 @@ export class ApplicationContext {
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
+
+		this.audienceFactory = new AudienceFactory()
+		this.eventFactory = new EventFactory()
+		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
+		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
