@@ -3,7 +3,9 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "checkboxes/macro.njk" import govukCheckboxes %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}Add a blog- Civil Service Learning{% endblock %}
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['module_blog_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}
@@ -13,6 +15,7 @@
     {{ backLink("/content-management") }}
   {% endblock%}
 {% endblock %}
+
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

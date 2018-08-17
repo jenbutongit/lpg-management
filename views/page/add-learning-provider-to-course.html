@@ -2,7 +2,8 @@
 {% from "button/macro.njk" import govukButton %}
 
 {% extends "../component/Page.njk" %}
-{% block pageTitle %}Add Learning Provider to Course - Civil Service Learning{% endblock %}
+
+{% block pageTitle %}{{ i18n['learning_provider_add_to_course_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}

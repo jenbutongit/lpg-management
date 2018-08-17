@@ -1,37 +1,46 @@
-import {Course} from '../../../src/learning-catalogue/model/course'
-import {LearningCatalogue} from '../../../src/learning-catalogue/'
+import {Course} from 'src/learning-catalogue/model/course'
 import {beforeEach, describe, it} from 'mocha'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {CourseService} from '../../../src/learning-catalogue/service/courseService'
+import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
-import {Module} from '../../../src/learning-catalogue/model/module'
 import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
+import {Module} from '../../../src/learning-catalogue/model/module'
+import {LearningProvider} from '../../../src/learning-catalogue/model/learningProvider'
+import {CancellationPolicy} from '../../../src/learning-catalogue/model/cancellationPolicy'
+import {TermsAndConditions} from '../../../src/learning-catalogue/model/termsAndConditions'
+import {EntityService} from '../../../src/learning-catalogue/service/entityService'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
 describe('Learning Catalogue tests', () => {
-	let courseService: CourseService
+	let courseService: EntityService<Course>
 	let moduleService: ModuleService
+	let learningProviderService: EntityService<LearningProvider>
+	let cancellationPolicyService: EntityService<CancellationPolicy>
+	let termsAndConditionsService: EntityService<TermsAndConditions>
 
-	const config = new LearningCatalogueConfig(
-		{username: 'test-user', password: 'test-pass'},
-		'http://example.org'
-	)
+	const config = new LearningCatalogueConfig({username: 'test-user', password: 'test-pass'}, 'http://example.org')
 
 	let learningCatalogue: LearningCatalogue
 
 	beforeEach(() => {
-		courseService = <CourseService>{}
+		courseService = <EntityService<Course>>{}
 		moduleService = <ModuleService>{}
+		learningProviderService = <EntityService<LearningProvider>>{}
+		cancellationPolicyService = <EntityService<CancellationPolicy>>{}
+		termsAndConditionsService = <EntityService<TermsAndConditions>>{}
 
 		learningCatalogue = new LearningCatalogue(config)
 		learningCatalogue.courseService = courseService
 		learningCatalogue.moduleService = moduleService
+		learningCatalogue.learningProviderService = learningProviderService
+		learningCatalogue.cancellationPolicyService = cancellationPolicyService
+		learningCatalogue.termsAndConditionsService = termsAndConditionsService
 	})
 
 	it('should call courseService when creating a course', async () => {
@@ -39,7 +48,7 @@ describe('Learning Catalogue tests', () => {
 		courseService.create = sinon.stub()
 
 		await learningCatalogue.createCourse(course)
-		return expect(courseService.create).to.have.been.calledOnceWith(course)
+		return expect(courseService.create).to.have.been.calledOnceWith('/courses/', course)
 	})
 
 	it('should call courseService when getting a course', async () => {
@@ -47,7 +56,7 @@ describe('Learning Catalogue tests', () => {
 		courseService.get = sinon.stub()
 
 		await learningCatalogue.getCourse(courseId)
-		return expect(courseService.get).to.have.been.calledOnceWith(courseId)
+		return expect(courseService.get).to.have.been.calledOnceWith(`/courses/${courseId}`)
 	})
 
 	it('should call courseService when listing courses', async () => {
@@ -63,10 +72,7 @@ describe('Learning Catalogue tests', () => {
 		moduleService.create = sinon.stub()
 
 		await learningCatalogue.createModule(courseId, module)
-		return expect(moduleService.create).to.have.been.calledOnceWith(
-			courseId,
-			module
-		)
+		return expect(moduleService.create).to.have.been.calledOnceWith(courseId, module)
 	})
 
 	it('should call moduleService when getting a module', async () => {
@@ -75,9 +81,104 @@ describe('Learning Catalogue tests', () => {
 		moduleService.get = sinon.stub()
 
 		await learningCatalogue.getModule(courseId, moduleId)
-		return expect(moduleService.get).to.have.been.calledOnceWith(
-			courseId,
-			moduleId
+		return expect(moduleService.get).to.have.been.calledOnceWith(courseId, moduleId)
+	})
+
+	it('should call moduleService when creating a module', async () => {
+		const courseId: string = 'course-id'
+		const module: Module = <Module>{}
+		moduleService.create = sinon.stub()
+
+		await learningCatalogue.createModule(courseId, module)
+		return expect(moduleService.create).to.have.been.calledOnceWith(courseId, module)
+	})
+
+	it('should call moduleService when getting a module', async () => {
+		const courseId: string = 'course-id'
+		const moduleId: string = 'module-id'
+		moduleService.get = sinon.stub()
+
+		await learningCatalogue.getModule(courseId, moduleId)
+		return expect(moduleService.get).to.have.been.calledOnceWith(courseId, moduleId)
+	})
+
+	it('should call learningProviderService when creating a learning provider', async () => {
+		const learningProvider: LearningProvider = <LearningProvider>{}
+		learningProviderService.create = sinon.stub()
+
+		await learningCatalogue.createLearningProvider(learningProvider)
+		return expect(learningProviderService.create).to.have.been.calledOnceWith(
+			'/learning-providers/',
+			learningProvider
+		)
+	})
+
+	it('should call learningProviderService when getting a learning provider', async () => {
+		const learningProviderId: string = 'learning-provider-id'
+		learningProviderService.get = sinon.stub()
+
+		await learningCatalogue.getLearningProvider(learningProviderId)
+		return expect(learningProviderService.get).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}`
+		)
+	})
+
+	it('should call learningProviderService when listing learning providers', async () => {
+		learningProviderService.listAll = sinon.stub()
+
+		await learningCatalogue.listLearningProviders()
+		return expect(learningProviderService.listAll).to.have.been.calledOnce
+	})
+
+	it('should call cancellationPolicyService when creating a cancellation policy', async () => {
+		const cancellationPolicy: CancellationPolicy = <CancellationPolicy>{}
+		const learningProviderId: string = 'learning-provider-id'
+
+		cancellationPolicyService.create = sinon.stub()
+
+		await learningCatalogue.createCancellationPolicy(learningProviderId, cancellationPolicy)
+		return expect(cancellationPolicyService.create).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/cancellation-policies`,
+			cancellationPolicy
+		)
+	})
+
+	it('should call cancellationPolicyService when getting a cancellation policy', async () => {
+		const cancellationPolicyId: string = 'cancellation-policy-id'
+		const learningProviderId: string = 'learning-provider-id'
+
+		cancellationPolicyService.get = sinon.stub()
+
+		await learningCatalogue.getCancellationPolicy(learningProviderId, cancellationPolicyId)
+		return expect(cancellationPolicyService.get).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicyId}`
+		)
+	})
+
+	it('should call termsAndConditionsService when creating a terms and conditions', async () => {
+		const termsAndConditions: TermsAndConditions = <TermsAndConditions>{}
+		const learningProviderId: string = 'learning-provider-id'
+
+		termsAndConditionsService.create = sinon.stub()
+
+		await learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
+
+		return expect(termsAndConditionsService.create).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/terms-and-conditions`,
+			termsAndConditions
+		)
+	})
+
+	it('should call termsAndConditionsService when getting a terms and conditions', async () => {
+		const termsAndConditionsId: string = 'terms-and-conditions-id'
+		const learningProviderId: string = 'learning-provider-id'
+
+		termsAndConditionsService.get = sinon.stub()
+
+		await learningCatalogue.getTermsAndConditions(learningProviderId, termsAndConditionsId)
+
+		return expect(termsAndConditionsService.get).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
 		)
 	})
 })

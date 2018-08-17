@@ -3,7 +3,9 @@
 {% from "../component/course-details/macro.njk" import courseDetails with context %}
 {% from "back-link/macro.njk" import govukBackLink %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}{{ i18n['course_overview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['course_overview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}
@@ -29,12 +31,8 @@
             {% block menu %}
                 {% set actions = [
                     {
-                        link: '/content-management/add-course',
-                        text: 'Add a new course'
-                    },
-                    {
-                        link: '/content-management/learning-providers',
-                        text: 'Manage learning providers'
+                        link: '/content-management/course-preview/' + course.id ,
+                        text: 'Preview and edit'
                     }
                 ] %}
                 {{ menu("Actions", actions) }}

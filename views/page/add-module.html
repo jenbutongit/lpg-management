@@ -1,7 +1,10 @@
 {% from "select/macro.njk" import govukSelect %}
 {% from "button/macro.njk" import govukButton %}
 
-{% extends "../component/Page.njk" %} {% block pageTitle %}Add a module - Civil Service Learning{% endblock %}
+{% extends "../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['module_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
 {% block beforeContent %}
   {% block phaseBanner %}
     {{ phaseBanner("beta") }}
