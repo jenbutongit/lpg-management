@@ -29,21 +29,14 @@ describe('Course Controller Tests', function() {
 	})
 
 	it('should call course overview page', async function() {
-		const course: Course = new Course()
-
 		const courseOverview: (request: Request, response: Response) => void = courseController.courseOverview()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		const req = request as ContentRequest
-		req.course = course
-
 		await courseOverview(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/course', {
-			course: course,
-		})
+		expect(response.render).to.have.been.calledOnceWith('page/course')
 	})
 
 	it('should call course preview page', async function() {
@@ -59,9 +52,7 @@ describe('Course Controller Tests', function() {
 
 		await coursePreview(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/course-preview', {
-			course: course,
-		})
+		expect(response.render).to.have.been.calledOnceWith('page/course-preview')
 	})
 
 	it('should render add-course-title page', async function() {

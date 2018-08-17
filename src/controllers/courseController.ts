@@ -28,17 +28,15 @@ export class CourseController {
 	}
 
 	private setRouterPaths() {
-		this.router.param('courseId', async (ireq, res, next, courseId) => {
-			const req = ireq as ContentRequest
-
+		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
 
 			if (course) {
-				req.course = course
+				res.locals.course = course
+				next()
 			} else {
 				res.sendStatus(404)
 			}
-			next()
 		})
 
 		this.router.get('/content-management/course/:courseId', this.courseOverview())
@@ -55,13 +53,13 @@ export class CourseController {
 		logger.debug('Course Overview page')
 
 		return async (request: Request, response: Response) => {
-			this.getCourseAndRenderTemplate(request, response, 'page/course')
+			response.render('page/course')
 		}
 	}
 
 	public coursePreview() {
 		return async (request: Request, response: Response) => {
-			this.getCourseAndRenderTemplate(request, response, 'page/course-preview')
+			response.render('page/course-preview')
 		}
 	}
 
@@ -113,12 +111,5 @@ export class CourseController {
 
 			return response.redirect('/content-management')
 		}
-	}
-
-	private getCourseAndRenderTemplate(request: Request, response: Response, view: string) {
-		const req = request as ContentRequest
-		const course = req.course
-
-		response.render(view, {course: course})
 	}
 }
