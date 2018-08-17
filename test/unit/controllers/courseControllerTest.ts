@@ -143,7 +143,9 @@ describe('Course Controller Tests', function() {
 		expect(courseValidator.check).to.have.been.calledWith(course)
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
-		expect(response.redirect).to.have.been.calledWith('/content-management')
+		expect(request.session!.sessionFlash).to.contain({courseAddedSuccessMessage: 'course_added_success_message'})
+
+		expect(response.redirect).to.have.been.calledWith(`/content-management/course/${course.id}`)
 	})
 
 	it('should check for description errors and render add-course-details if errors present', async function() {
@@ -178,6 +180,9 @@ describe('Course Controller Tests', function() {
 		expect(request.session!.sessionFlash.errors).to.be.equal(errors)
 		expect(request.session!.sessionFlash.title).to.be.equal('New Course')
 		expect(request.session!.sessionFlash.course).to.be.equal(course)
+		expect(request.session!.sessionFlash).to.not.contain({
+			courseAddedSuccessMessage: 'course_added_success_message',
+		})
 		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
 	})
 })

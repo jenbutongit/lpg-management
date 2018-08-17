@@ -107,9 +107,11 @@ export class CourseController {
 				request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
 				return response.redirect('/content-management/add-course-details')
 			}
-			await this.learningCatalogue.createCourse(course)
+			request.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
 
-			return response.redirect('/content-management')
+			const savedCourse = await this.learningCatalogue.createCourse(course)
+
+			return response.redirect(`/content-management/course/${savedCourse.id}`)
 		}
 	}
 }
