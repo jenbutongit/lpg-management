@@ -42,6 +42,14 @@ export class RestService {
 		}
 	}
 
+	async put(path: string, resource: any) {
+		try {
+			return (await this._http.put(path, resource)).data
+		} catch (e) {
+			throw new Error(`Error with PUT request: ${e} when getting ${this.config.url}${path}`)
+		}
+	}
+
 	set http(value: AxiosInstance) {
 		this._http = value
 	}

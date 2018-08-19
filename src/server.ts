@@ -1,6 +1,7 @@
 import * as express from 'express'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
+import * as sessionFileStore from 'session-file-store'
 import * as log4js from 'log4js'
 import * as config from './config'
 import * as serveStatic from 'serve-static'
@@ -13,6 +14,7 @@ Properties.initialize()
 const logger = log4js.getLogger('server')
 const nunjucks = require('nunjucks')
 const appRoot = require('app-root-path')
+const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
@@ -45,7 +47,6 @@ app.use(serveStatic(appRoot + '/dist/views/assets'))
 app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
 
 log4js.configure(config.LOGGING)
-const sessionStore = new session.MemoryStore()
 
 app.use(cookieParser())
 app.use(
@@ -59,7 +60,7 @@ app.use(
 		resave: true,
 		saveUninitialized: true,
 		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
-		store: sessionStore,
+		store: new FileStore({path: process.env.NOW ? `/tmp/sessions` : `.sessions`}),
 	})
 )
 
