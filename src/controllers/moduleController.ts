@@ -39,7 +39,8 @@ export class ModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/modules', this.addModule())
+		this.router.get('/content-management/courses/:courseId/add-module', this.addModule())
+		this.router.post('/content-management/courses/:courseId/add-module', this.setModule())
 
 		// this.router.get('/content-management/add-course', this.getCourseTitle())
 		// this.router.post('/content-management/add-course', this.setCourseTitle())
@@ -53,65 +54,19 @@ export class ModuleController {
 		logger.debug('Add module page')
 
 		return async (request: Request, response: Response) => {
-			response.render('page/add-module')
+			response.render('page/course/module/add-module')
 		}
 	}
 
-	// public coursePreview() {
-	// 	return async (request: Request, response: Response) => {
-	// 		response.render('page/course-preview')
-	// 	}
-	// }
+	public setModule() {
+		return async (request: Request, response: Response) => {
+			const errors = await this.moduleValidator.check(request.body, ['module'])
+			if (errors.size) {
+				request.session!.sessionFlash = {errors: errors}
+				return response.redirect('/content-management/courses/:courseID/add-module')
+			}
 
-	// public getCourseTitle() {
-	// 	return async (request: Request, response: Response) => {
-	// 		response.render('page/add-course-title')
-	// 	}
-	// }
-
-	// public setCourseTitle() {
-	// 	return async (request: Request, response: Response) => {
-	// 		const errors = await this.courseValidator.check(request.body, ['title'])
-
-	// 		if (errors.size) {
-	// 			request.session!.sessionFlash = {errors: errors}
-	// 			return response.redirect('/content-management/add-course')
-	// 		}
-
-	// 		const title = request.body.title
-	// 		request.session!.sessionFlash = {title: title}
-
-	// 		return response.redirect('/content-management/add-course-details')
-	// 	}
-	// }
-
-	// public getCourseDetails() {
-	// 	return async (request: Request, response: Response) => {
-	// 		response.render('page/add-course-details')
-	// 	}
-	// }
-
-	// public setCourseDetails() {
-	// 	return async (request: Request, response: Response) => {
-	// 		const req = request as ContentRequest
-
-	// 		const data = {
-	// 			...req.body,
-	// 		}
-
-	// 		const course = this.courseFactory.create(data)
-
-	// 		const errors = await this.courseValidator.check(course)
-
-	// 		if (errors.size) {
-	// 			request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
-	// 			return response.redirect('/content-management/add-course-details')
-	// 		}
-	// 		request.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
-
-	// 		const savedCourse = await this.learningCatalogue.createCourse(course)
-
-	// 		return response.redirect(`/content-management/course/${savedCourse.id}`)
-	// 	}
-	// }
+			response.render('page/course/module/:courseID/{{module}}')
+		}
+	}
 }

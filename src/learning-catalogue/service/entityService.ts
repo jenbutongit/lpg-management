@@ -37,6 +37,12 @@ export class EntityService<T> {
 		return this._factory.create(data)
 	}
 
+	async update(path: string, entity: any): Promise<T> {
+		const data = await this._restService.put(path, entity)
+
+		return this._factory.create(data)
+	}
+
 	set factory(value: Factory<T>) {
 		this._factory = value
 	}

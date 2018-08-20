@@ -5,15 +5,16 @@ import * as chaiAsPromised from 'chai-as-promised'
 import * as moment from 'moment'
 import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
 import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
-import {ModuleValidator} from '../../../../src/learning-catalogue/validator/moduleValidator'
+import {Validator} from '../../../../src/learning-catalogue/validator/validator'
+import {Module} from '../../../../src/learning-catalogue/model/module'
 
 chai.use(chaiAsPromised)
 
 describe('ModuleValidator tests', () => {
-	let validator: ModuleValidator
+	let validator: Validator<Module>
 
 	beforeEach(() => {
-		validator = new ModuleValidator()
+		validator = <Validator<Module>>{}
 	})
 
 	describe('Validate properties individually', async () => {
