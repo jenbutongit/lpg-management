@@ -1,8 +1,8 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "table/macro.njk" import govukTable %}
-{% from "../component/course-preview/macro.njk" import coursePreview with context %}
+{% from "../../component/course-preview/macro.njk" import coursePreview with context %}
 
-{% extends "../component/Page.njk" %}
+{% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}{{ i18n['course_preview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
@@ -20,7 +20,8 @@
         <div class="govuk-grid-column-full govuk-!-margin-bottom-6">
             <div class="panel panel-blue">
                 <h5 class="govuk-heading-s">This page is in preview and has not been published yet.</h5>
-                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="#" class="govuk-link panel-links">Details</a> <a href="#" class="govuk-link panel-links">Content</a> <a href="#" class="govuk-link panel-links">Files</a> <a href="/content-management/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="#" class="govuk-link panel-links">Audiences</a></p>
+
+                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="/content-management/courses/title/{{ course.id }}" class="govuk-link panel-links">Title</a> <a href="/content-management/courses/details/{{ course.id }}" +{{course.id}} class="govuk-link panel-links">Details</a> <a href="#" class="govuk-link panel-links">Content</a> <a href="#" class="govuk-link panel-links">Files</a> <a href="/content-management/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="#" class="govuk-link panel-links">Audiences</a></p>
             </div>
         </div>
     </div>
@@ -82,7 +83,7 @@
             </div>
             {{ govukButton({
                 text: "Return to course",
-                href: "/content-management/course/"+ course.id
+                href: "/content-management/courses/"+ course.id + "/overview"
             }) }}
         </div>
     </div>

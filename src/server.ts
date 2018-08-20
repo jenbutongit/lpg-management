@@ -1,18 +1,21 @@
 import * as express from 'express'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
+import * as sessionFileStore from 'session-file-store'
 import * as log4js from 'log4js'
 import * as config from './config'
 import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
 import * as bodyParser from 'body-parser'
+import {AppConfig} from './config/appConfig'
 
 Properties.initialize()
 
 const logger = log4js.getLogger('server')
 const nunjucks = require('nunjucks')
 const appRoot = require('app-root-path')
+const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
@@ -45,21 +48,18 @@ app.use(serveStatic(appRoot + '/dist/views/assets'))
 app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
 
 log4js.configure(config.LOGGING)
-const sessionStore = new session.MemoryStore()
 
 app.use(cookieParser())
+
+const appConfig = new AppConfig()
 app.use(
 	session({
-		cookie: {
-			httpOnly: true,
-			maxAge: 31536000,
-			secure: false,
-		},
-		name: 'lpg-management',
-		resave: true,
-		saveUninitialized: true,
-		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
-		store: sessionStore,
+		cookie: appConfig.cookie,
+		name: appConfig.name,
+		resave: appConfig.resave,
+		saveUninitialized: appConfig.saveUninitialized,
+		secret: appConfig.secret,
+		store: new FileStore({path: appConfig.path}),
 	})
 )
 

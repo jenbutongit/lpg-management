@@ -2,7 +2,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
 
-{% extends "../component/Page.njk" %}
+{% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}{{ i18n['course_title_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
@@ -34,32 +34,22 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            {% if course %}
+            <p class="govuk-body form-header govuk-!-font-size-24">Edit course title</p>
+            {% else %}
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
+            {% endif %}
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-
-            <form action="/content-management/add-course" method="post">
-                {% set course = sessionFlash.title %}
+            <form action="/content-management/courses/title/{{ course.id }}" method="post">
                 <fieldset class="govuk-fieldset">
-                    {% if errors.fields %}
-                        {{ govukInput({
-                        label: {
-                            text: "Course title"
-                            },
-                            id: "title",
-                            name: "title",
-                            errorMessage: {
-                                text: "Title is required"
-                            }
-                        }) }}
-                    {% else %}
-                        {{ govukInput({
-                        label: {
-                            text: "Course title"
-                            },
-                            id: "title",
-                            name: "title"
-                        }) }}
-                    {% endif %}
+                    {{ govukInput({
+                    label: {
+                        text: "Course title"
+                        },
+                        id: "title",
+                        name: "title",
+                        value: course.title
+                    }) }}
                 </fieldset>
                 {{ govukButton({
                     text: "Continue"
