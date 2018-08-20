@@ -37,14 +37,9 @@
 	CharCount.prototype.getStyle = function(element, attributeName) {
 		var attributeValue = ''
 		if (document.defaultView && document.defaultView.getComputedStyle) {
-			attributeValue = document.defaultView
-				.getComputedStyle(element, '')
-				.getPropertyValue(attributeName)
+			attributeValue = document.defaultView.getComputedStyle(element, '').getPropertyValue(attributeName)
 		} else if (element.currentStyle) {
-			attributeName = attributeName.replace(/-(\w)/g, function(
-				strMatch,
-				p1
-			) {
+			attributeName = attributeName.replace(/-(\w)/g, function(strMatch, p1) {
 				return p1.toUpperCase()
 			})
 			attributeValue = element.currentStyle[attributeName]
@@ -64,12 +59,8 @@
 	// Fix iOS default padding
 	// iOS adds 3px of (unremovable) padding to the left and right of a textarea, so adjust highlights div to match
 	CharCount.prototype.fixIOSInput = function(element) {
-		var paddingLeft = parseInt(
-			CharCount.prototype.getStyle(element, 'padding-left')
-		)
-		var paddingRight = parseInt(
-			CharCount.prototype.getStyle(element, 'padding-right')
-		)
+		var paddingLeft = parseInt(CharCount.prototype.getStyle(element, 'padding-left'))
+		var paddingRight = parseInt(CharCount.prototype.getStyle(element, 'padding-right'))
 		element.style.paddingLeft = paddingLeft + 3 + 'px'
 		element.style.paddingRight = paddingRight + 3 + 'px'
 	}
@@ -78,9 +69,7 @@
 	CharCount.prototype.attach = function(options) {
 		// Determine the limit attribute
 		var countAttribute =
-			options && options.wordCount
-				? this.defaults.wordCountAttribute
-				: this.defaults.charCountAttribute
+			options && options.wordCount ? this.defaults.wordCountAttribute : this.defaults.charCountAttribute
 
 		// Iterate through each `character count` element
 		var countElements = document.querySelectorAll(options.selector)
@@ -90,10 +79,7 @@
 
 				// Highlights
 				if (options && options.highlight) {
-					var wrapper = CharCount.prototype.wrapElement(
-						countElement,
-						'govuk-c-charcount__wrapper'
-					)
+					var wrapper = CharCount.prototype.wrapElement(countElement, 'govuk-c-charcount__wrapper')
 					var elementId = countElement.getAttribute('id')
 					var countHighlightClass =
 						countElement.type === 'text'
@@ -108,13 +94,10 @@
 							'" aria-hidden="true" role="presentation"></div>'
 					)
 
-					var countHighlight = document.getElementById(
-						elementId + '-hl'
-					)
+					var countHighlight = document.getElementById(elementId + '-hl')
 					// countHighlight.style.height = CharCount.prototype.getHeight(countElement) + 'px'
 					// countHighlight.style.height = countElement.getBoundingClientRect().height + 'px'
-					countHighlight.style.height =
-						countElement.offsetHeight + 'px'
+					countHighlight.style.height = countElement.offsetHeight + 'px'
 					countHighlight.style.width = countElement.offsetWidth + 'px'
 
 					// We have to disable resize on highlighted components to avoid the async scroll and boundaries
@@ -130,9 +113,7 @@
 				var maxLength = countElement.getAttribute(countAttribute)
 
 				// Generate and reference message
-				var countMessage = CharCount.prototype.createCountMessage(
-					countElement
-				)
+				var countMessage = CharCount.prototype.createCountMessage(countElement)
 
 				// Bind the on change events
 				if (maxLength && countMessage) {
@@ -159,16 +140,9 @@
 
 					countElement.classList.add('govuk-c-charcount')
 				} else {
-					if (!countMessage)
-						window.console.warn(
-							'Make sure you set an id for each of your field(s)'
-						)
+					if (!countMessage) window.console.warn('Make sure you set an id for each of your field(s)')
 					if (!maxLength)
-						window.console.warn(
-							'Make sure you set the ' +
-								countAttribute +
-								' for each of your field(s)'
-						)
+						window.console.warn('Make sure you set the ' + countAttribute + ' for each of your field(s)')
 				}
 			}
 		}
@@ -226,9 +200,7 @@
 			// IE 9 does not fire an input event when the user deletes characters from an input (e.g. by pressing Backspace or Delete, or using the "Cut" operation).
 			countElementExtended.countElement.addEventListener(
 				'keyup',
-				CharCount.prototype.updateCountMessage.bind(
-					countElementExtended
-				)
+				CharCount.prototype.updateCountMessage.bind(countElementExtended)
 			)
 		} else {
 			// Microsoft event model: onpropertychange/onkeyup
@@ -244,10 +216,7 @@
 				'scroll',
 				CharCount.prototype.handleScroll.bind(countElementExtended)
 			)
-			window.addEventListener(
-				'resize',
-				CharCount.prototype.handleResize.bind(countElementExtended)
-			)
+			window.addEventListener('resize', CharCount.prototype.handleResize.bind(countElementExtended))
 		}
 
 		// Bind focus/blur events for polling
@@ -264,14 +233,9 @@
 	// Applications like Dragon NaturallySpeaking will modify the fields by directly changing its `value`.
 	// These events don't trigger in JavaScript, so we need to poll to handle when and if they occur.
 	CharCount.prototype.checkIfValueChanged = function(countElementExtended) {
-		if (!countElementExtended.countElement.oldValue)
-			countElementExtended.countElement.oldValue = ''
-		if (
-			countElementExtended.countElement.value !==
-			countElementExtended.countElement.oldValue
-		) {
-			countElementExtended.countElement.oldValue =
-				countElementExtended.countElement.value
+		if (!countElementExtended.countElement.oldValue) countElementExtended.countElement.oldValue = ''
+		if (countElementExtended.countElement.value !== countElementExtended.countElement.oldValue) {
+			countElementExtended.countElement.oldValue = countElementExtended.countElement.value
 			CharCount.prototype.updateCountMessage(countElementExtended)
 		}
 	}
@@ -285,10 +249,7 @@
 		// var countMessage = document.getElementById(countElement.getAttribute('aria-describedby'))
 
 		// Determine the remainingNumber
-		var currentLength = CharCount.prototype.count(
-			countElement.value,
-			options
-		)
+		var currentLength = CharCount.prototype.count(countElement.value, options)
 		var maxLength = countElementExtended.maxLength
 		var remainingNumber = maxLength - currentLength
 
@@ -301,9 +262,7 @@
 		if (thresholdValue > currentLength) {
 			countMessage.classList.add('govuk-c-charcount__message--disabled')
 		} else {
-			countMessage.classList.remove(
-				'govuk-c-charcount__message--disabled'
-			)
+			countMessage.classList.remove('govuk-c-charcount__message--disabled')
 		}
 
 		if (!options.defaultBorder) {
@@ -311,17 +270,13 @@
 			if (remainingNumber < 0) {
 				countElement.classList.add('form-control-error')
 				if (options && options.validation) {
-					countElement.parentNode.classList.add(
-						'govuk-c-charcount__wrapper-error'
-					)
+					countElement.parentNode.classList.add('govuk-c-charcount__wrapper-error')
 				}
 				countMessage.classList.add('error-message')
 			} else {
 				countElement.classList.remove('form-control-error')
 				if (options && options.validation) {
-					countElement.parentNode.classList.remove(
-						'govuk-c-charcount__wrapper-error'
-					)
+					countElement.parentNode.classList.remove('govuk-c-charcount__wrapper-error')
 				}
 				countMessage.classList.remove('error-message')
 			}
@@ -335,33 +290,17 @@
 		if (options && options.wordCount) {
 			charNoun = 'word'
 		}
-		charNoun =
-			charNoun +
-			(remainingNumber === -1 || remainingNumber === 1 ? '' : 's')
+		charNoun = charNoun + (remainingNumber === -1 || remainingNumber === 1 ? '' : 's')
 
 		charVerb = remainingNumber < 0 ? '' : 'remaining'
 		charError = remainingNumber < 0 ? 'entered ' : ''
-		displayNumber =
-			remainingNumber < 0
-				? Math.abs(currentLength)
-				: Math.abs(remainingNumber) // postive count of numbers
-		console.log((currentLength += 1))
+		displayNumber = remainingNumber < 0 ? Math.abs(currentLength) : Math.abs(remainingNumber) // postive count of numbers
 
-		countMessage.innerHTML =
-			'You have ' +
-			charError +
-			displayNumber +
-			' ' +
-			charNoun +
-			' ' +
-			charVerb
+		countMessage.innerHTML = 'You have ' + charError + displayNumber + ' ' + charNoun + ' ' + charVerb
 
 		// Update Highlight
 		if (countHighlight) {
-			var highlightedText = CharCount.prototype.highlight(
-				countElement.value,
-				maxLength
-			)
+			var highlightedText = CharCount.prototype.highlight(countElement.value, maxLength)
 			countHighlight.innerHTML = highlightedText
 		}
 	}
@@ -373,16 +312,10 @@
 
 	// Check if value changed on focus
 	CharCount.prototype.handleFocus = function(event) {
-		this.valueChecker = setInterval(
-			CharCount.prototype.checkIfValueChanged,
-			100,
-			this
-		)
+		this.valueChecker = setInterval(CharCount.prototype.checkIfValueChanged, 100, this)
 		// The following line sets the height properly when the component is hidden at load time
-		this.countHighlight.style.height =
-			this.countElement.getBoundingClientRect().height + 'px' // TODO: bind the resize handler
-		this.countHighlight.style.width =
-			this.countElement.getBoundingClientRect().width + 'px' // TODO: bind the resize handler
+		this.countHighlight.style.height = this.countElement.getBoundingClientRect().height + 'px' // TODO: bind the resize handler
+		this.countHighlight.style.width = this.countElement.getBoundingClientRect().width + 'px' // TODO: bind the resize handler
 	}
 
 	// Cancel valaue checking on blur
@@ -398,10 +331,8 @@
 
 	// Update element's height after window resize
 	CharCount.prototype.handleResize = function(event) {
-		this.countHighlight.style.height =
-			this.countElement.getBoundingClientRect().height + 'px'
-		this.countHighlight.style.width =
-			this.countElement.getBoundingClientRect().width + 'px'
+		this.countHighlight.style.height = this.countElement.getBoundingClientRect().height + 'px'
+		this.countHighlight.style.width = this.countElement.getBoundingClientRect().width + 'px'
 	}
 
 	// Initialize component
@@ -410,17 +341,10 @@
 			CharCount.prototype.attach(options)
 			CharCount.options = options
 		} else {
-			window.console.warn(
-				'Please specify the selector for the char/word count field'
-			)
+			window.console.warn('Please specify the selector for the char/word count field')
 		}
 	}
 
 	GOVUK.CharCount = CharCount
 	global.GOVUK = GOVUK
 })(window) // eslint-disable-line semi
-
-var charCount = new GOVUK.CharCount()
-charCount.init({
-	selector: '.js-char-count',
-})
