@@ -69,7 +69,6 @@ export class ModuleController {
 					response.sendStatus(500)
 					return
 				}
-
 				data.duration = duration
 				data.title = data.title || info.title
 			}
