@@ -26,10 +26,10 @@ import {LearningProvider} from './learning-catalogue/model/learningProvider'
 import {CancellationPolicy} from './learning-catalogue/model/cancellationPolicy'
 import {TermsAndConditions} from './learning-catalogue/model/termsAndConditions'
 import {Course} from './learning-catalogue/model/course'
-import {Module} from './learning-catalogue/model/module'
 import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
 import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
+import {ModuleValidator} from './learning-catalogue/validator/moduleValidator'
 
 log4js.configure(config.LOGGING)
 
@@ -53,7 +53,7 @@ export class ApplicationContext {
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
 	moduleController: ModuleController
-	moduleValidator: Validator<Module>
+	moduleValidator: ModuleValidator
 	moduleFactory: ModuleFactory
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
@@ -108,6 +108,7 @@ export class ApplicationContext {
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
+		this.moduleValidator = new ModuleValidator()
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()

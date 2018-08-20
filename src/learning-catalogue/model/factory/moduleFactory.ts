@@ -18,15 +18,13 @@ export class ModuleFactory {
 	}
 
 	public async defaultCreate(module: any, data: any) {
-		module.id = data.id
-		module.type = data.type
-		module.title = data.title
-		module.description = data.description
-		module.duration = data.duration
-		module.price = data.price
-		module.audiences = (data.audiences || []).map(
-			this.audienceFactory.create
-		)
+		// module.id = data.id
+		// module.type = data.type
+		// module.title = data.title
+		// module.description = data.description
+		// module.duration = data.duration
+		// module.price = data.price
+		module.audiences = (module.audiences || []).map(this.audienceFactory.create)
 
 		return module
 	}
@@ -35,9 +33,7 @@ export class ModuleFactory {
 		if (this.createMethods.hasOwnProperty(data.type)) {
 			return this.createMethods[data.type](data)
 		} else {
-			throw new Error(
-				`Unknown module type: ${data.type} ${JSON.stringify(data)}`
-			)
+			throw new Error(`Unknown module type: ${data.type} ${JSON.stringify(data)}`)
 		}
 	}
 
@@ -59,10 +55,7 @@ export class ModuleFactory {
 			return module
 		},
 		'face-to-face': async (data: any) => {
-			const module = await this.defaultCreate(
-				new FaceToFaceModule(),
-				data
-			)
+			const module = await this.defaultCreate(new FaceToFaceModule(), data)
 			module.events = (data.events || []).map(this.eventFactory.create)
 			module.productCode = data.productCode
 

@@ -3,25 +3,21 @@ import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {Module} from '../../learning-catalogue/model/module'
-import {Validator} from '../../learning-catalogue/validator/validator'
 import axios from 'axios'
 import * as config from '../../config'
 import {ContentRequest} from '../../extended'
 import * as datetime from '../../lib/datetime'
+import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
 
 const logger = log4js.getLogger('controllers/courseController')
 
 export class ModuleController {
 	learningCatalogue: LearningCatalogue
-	moduleValidator: Validator<Module>
+	moduleValidator: ModuleValidator
 	moduleFactory: ModuleFactory
 	router: Router
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		moduleValidator: Validator<Module>,
-		moduleFactory: ModuleFactory
-	) {
+	constructor(learningCatalogue: LearningCatalogue, moduleValidator: ModuleValidator, moduleFactory: ModuleFactory) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory
@@ -51,7 +47,17 @@ export class ModuleController {
 				...req.body,
 			}
 
-			// && Object.keys(req.files).length == 0
+			const errors = await this.moduleValidator.check(data, ['title', 'location'])
+
+			const courseId = request.params.courseId
+			const course = await this.learningCatalogue.getCourse(courseId)
+
+			if (errors.size) {
+				request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
+				return response.redirect(`/content-management/course-preview/${courseId}`)
+			}
+
+			// && Object.keys(req.files).length == 0cd
 			if (data.type == 'video') {
 				const info = await this.getBasicYoutubeInfo(data.location)
 				if (!info) {
@@ -72,15 +78,11 @@ export class ModuleController {
 			}
 
 			data.startPage = 'Not set' // need this as placeholder or java falls over
+			data.url = data.location
 
 			module = await this.moduleFactory.create(data)
 
-			const courseId = request.params.courseId
-			const course = await this.learningCatalogue.getCourse(courseId)
-
 			course.modules.push(module)
-
-			await this.learningCatalogue.createModule(courseId, module)
 
 			response.redirect(`/content-management/course-preview/${courseId}`)
 		}

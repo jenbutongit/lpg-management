@@ -7,10 +7,7 @@ export class CourseFactory {
 	private _moduleFactory: ModuleFactory
 
 	constructor() {
-		this._moduleFactory = new ModuleFactory(
-			new AudienceFactory(),
-			new EventFactory()
-		)
+		this._moduleFactory = new ModuleFactory(new AudienceFactory(), new EventFactory())
 
 		this.create = this.create.bind(this)
 	}
@@ -23,9 +20,7 @@ export class CourseFactory {
 		course.learningOutcomes = data.learningOutcomes
 		course.shortDescription = data.shortDescription
 		course.title = data.title
-		course.modules = (data.modules || []).map(
-			this._moduleFactory.defaultCreate
-		)
+		course.modules = (data.modules || []).map(this._moduleFactory.defaultCreate)
 
 		return course
 	}
