@@ -39,34 +39,33 @@ export class CourseController {
 			}
 		})
 
-		this.router.get('/content-management/course/:courseId', this.courseOverview())
+		this.router.get('/content-management/courses/:courseId/overview', this.courseOverview())
+		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
 
-		this.router.get('/content-management/add-course/:courseId?', this.getCourseTitle())
-		this.router.post('/content-management/add-course/:courseId?', this.setCourseTitle())
+		this.router.get('/content-management/courses/title/:courseId?', this.getCourseTitle())
+		this.router.post('/content-management/courses/title/:courseId?', this.setCourseTitle())
 
-		this.router.get('/content-management/add-course-details/:courseId?', this.getCourseDetails())
-		this.router.post('/content-management/add-course-details/:courseId?', this.setCourseDetails())
-
-		this.router.get('/content-management/course-preview/:courseId', this.coursePreview())
+		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
+		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 	}
 
 	public courseOverview() {
 		logger.debug('Course Overview page')
 
 		return async (request: Request, response: Response) => {
-			response.render('page/course')
+			response.render('page/course/course-overview')
 		}
 	}
 
 	public coursePreview() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course-preview')
+			response.render('page/course/course-preview')
 		}
 	}
 
 	public getCourseTitle() {
 		return async (request: Request, response: Response) => {
-			response.render('page/add-course-title')
+			response.render('page/course/course-title')
 		}
 	}
 
@@ -75,25 +74,25 @@ export class CourseController {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors}
-				return response.redirect('/content-management/add-course')
+				return response.redirect('/content-management/courses/title')
 			}
 
 			if (request.params.courseId) {
 				await this.editCourse(request, response)
 
-				return response.redirect(`/content-management/course-preview/${request.params.courseId}`)
+				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 			}
 
 			const course = this.courseFactory.create(request.body)
 			request.session!.sessionFlash = {course: course}
 
-			return response.redirect('/content-management/add-course-details')
+			return response.redirect('/content-management/courses/details')
 		}
 	}
 
 	public getCourseDetails() {
 		return async (request: Request, response: Response) => {
-			response.render('page/add-course-details')
+			response.render('page/course/course-details')
 		}
 	}
 
@@ -111,20 +110,20 @@ export class CourseController {
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, course: course}
-				return response.redirect('/content-management/add-course-details')
+				return response.redirect('/content-management/courses/details')
 			}
 
 			if (request.params.courseId) {
 				await this.editCourse(request, response)
 
-				return response.redirect(`/content-management/course-preview/${request.params.courseId}`)
+				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 			}
 
 			request.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
 
 			const savedCourse = await this.learningCatalogue.createCourse(course)
 
-			return response.redirect(`/content-management/course/${savedCourse.id}`)
+			return response.redirect(`/content-management/courses/${savedCourse.id}/overview`)
 		}
 	}
 
@@ -133,7 +132,7 @@ export class CourseController {
 			...request.body,
 			id: response.locals.course.id,
 			title: request.body.title || response.locals.course.title,
-			description: request.body.requiredBy || response.locals.course.description,
+			description: request.body.description || response.locals.course.description,
 			shortDescription: request.body.shortDescription || response.locals.course.shortDescription,
 			learningOutcomes: request.body.learningOutcomes || response.locals.course.learningOutcomes,
 			modules: request.body.modules || response.locals.course.modules,

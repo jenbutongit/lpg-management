@@ -36,7 +36,7 @@ describe('Course Controller Tests', function() {
 
 		await courseOverview(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/course')
+		expect(response.render).to.have.been.calledOnceWith('page/course/course-overview')
 	})
 
 	it('should call course preview page', async function() {
@@ -52,7 +52,7 @@ describe('Course Controller Tests', function() {
 
 		await coursePreview(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/course-preview')
+		expect(response.render).to.have.been.calledOnceWith('page/course/course-preview')
 	})
 
 	it('should render add-course-title page', async function() {
@@ -63,7 +63,7 @@ describe('Course Controller Tests', function() {
 
 		await getCourseTitle(request, response)
 
-		expect(response.render).to.have.been.calledWith('page/add-course-title')
+		expect(response.render).to.have.been.calledWith('page/course/course-title')
 	})
 
 	it('should check for title errors and redirect to details page if no errors', async function() {
@@ -86,7 +86,7 @@ describe('Course Controller Tests', function() {
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(request.session!.sessionFlash.course).to.be.equal(course)
-		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
+		expect(response.redirect).to.have.been.calledWith('/content-management/courses/details')
 	})
 
 	it('should check for title errors and render title page with errors if errors present', async function() {
@@ -105,7 +105,7 @@ describe('Course Controller Tests', function() {
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(request.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(response.redirect).to.have.been.calledWith('/content-management/add-course')
+		expect(response.redirect).to.have.been.calledWith('/content-management/courses/title')
 	})
 
 	it('should edit title', async function() {
@@ -132,7 +132,7 @@ describe('Course Controller Tests', function() {
 
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
 		expect(response.redirect).to.have.been.calledWith(
-			`/content-management/course-preview/${request.params.courseId}`
+			`/content-management/courses/${request.params.courseId}/preview`
 		)
 	})
 
@@ -144,7 +144,7 @@ describe('Course Controller Tests', function() {
 
 		await getCourseDetails(request, response)
 
-		expect(response.render).to.have.been.calledWith('page/add-course-details')
+		expect(response.render).to.have.been.calledWith('page/course/course-details')
 	})
 
 	it('should check for details errors and redirect to content-management page if no errors', async function() {
@@ -176,7 +176,7 @@ describe('Course Controller Tests', function() {
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
 		expect(request.session!.sessionFlash).to.contain({courseAddedSuccessMessage: 'course_added_success_message'})
 
-		expect(response.redirect).to.have.been.calledWith(`/content-management/course/${course.id}`)
+		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/${course.id}/overview`)
 	})
 
 	it('should check for description errors and render add-course-details if errors present', async function() {
@@ -213,7 +213,7 @@ describe('Course Controller Tests', function() {
 		expect(request.session!.sessionFlash).to.not.contain({
 			courseAddedSuccessMessage: 'course_added_success_message',
 		})
-		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
+		expect(response.redirect).to.have.been.calledWith('/content-management/courses/details')
 	})
 
 	it('should edit course details', async function() {
@@ -239,7 +239,7 @@ describe('Course Controller Tests', function() {
 
 		expect(courseValidator.check).to.have.been.calledWith(course)
 		expect(response.redirect).to.have.been.calledWith(
-			`/content-management/course-preview/${request.params.courseId}`
+			`/content-management/courses/${request.params.courseId}/preview`
 		)
 	})
 })

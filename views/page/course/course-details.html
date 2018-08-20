@@ -12,7 +12,7 @@
     {{ phaseBanner("beta") }}
   {% endblock%}
   {% block backLink %}
-    {{ backLink("/content-management/courses/course-title") }}
+    {{ backLink("/content-management/courses/title/" + course.id) }}
   {% endblock%}
 {% endblock %}
 
@@ -43,7 +43,7 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             {% endif %}
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-            <form action="/content-management/courses/{{ course.id }}/details" method="post">
+            <form action="/content-management/courses/details/{{ course.id }}" method="post">
                 {% set course = sessionFlash.course %}
                 <input id="title" name="title" type="hidden" value="{{ course.title }}">
                 <fieldset class="govuk-fieldset">

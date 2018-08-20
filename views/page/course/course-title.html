@@ -40,7 +40,7 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             {% endif %}
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-            <form action="/content-management/courses/{{ course.id }}/title" method="post">
+            <form action="/content-management/courses/title/{{ course.id }}" method="post">
                 <fieldset class="govuk-fieldset">
                     {{ govukInput({
                     label: {
