@@ -38,6 +38,8 @@ export class Module {
 
 	price?: number
 
+	location: string
+
 	@ValidateNested({
 		groups: ['all', 'audiences'],
 	})

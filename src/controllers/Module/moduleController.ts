@@ -3,10 +3,8 @@ import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {Module} from '../../learning-catalogue/model/module'
-import axios from 'axios'
-import * as config from '../../config'
+import * as youtube from '../../lib/youtube'
 import {ContentRequest} from '../../extended'
-import * as datetime from '../../lib/datetime'
 import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
 
 const logger = log4js.getLogger('controllers/courseController')
@@ -43,7 +41,7 @@ export class ModuleController {
 
 			let module: Module
 
-			const data = {
+			let data = {
 				...req.body,
 			}
 
@@ -57,16 +55,15 @@ export class ModuleController {
 				return response.redirect(`/content-management/course-preview/${courseId}`)
 			}
 
-			// && Object.keys(req.files).length == 0cd
 			if (data.type == 'video') {
-				const info = await this.getBasicYoutubeInfo(data.location)
+				const info = await youtube.getBasicYoutubeInfo(data.location)
 				if (!info) {
 					logger.error('Unable to get info on module via the Yotube API')
 					response.sendStatus(500)
 					return
 				}
 
-				const duration = await this.getDuration(info.id)
+				const duration = await youtube.getDuration(info.id)
 				if (!duration) {
 					logger.error('Unable to get duration of module via the YouTube API')
 					response.sendStatus(500)
@@ -78,81 +75,12 @@ export class ModuleController {
 			}
 
 			data.startPage = 'Not set' // need this as placeholder or java falls over
-			data.url = data.location
 
 			module = await this.moduleFactory.create(data)
 
-			course.modules.push(module)
+			await this.learningCatalogue.createModule(courseId, module)
 
 			response.redirect(`/content-management/course-preview/${courseId}`)
 		}
 	}
-
-	private async getBasicYoutubeInfo(url: string): Promise<BasicInfo | undefined> {
-		let response
-
-		try {
-			response = await axios.get(
-				`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=${
-					config.YOUTUBE_API_KEY
-				}`
-			)
-		} catch (err) {
-			console.error(`Error fetching basic info from YouTube: ${err}`)
-			return
-		}
-
-		if (response.status !== 200) {
-			return
-		}
-		if (response.data.type !== 'video' && response.data.html) {
-			return
-		}
-
-		const suffix = response.data.html.split('embed/')[1]
-		if (!suffix) {
-			return
-		}
-		const id = suffix.split('?')[0]
-		if (!id) {
-			return
-		}
-
-		return {
-			height: response.data.height,
-			id,
-			thumbnail_height: response.data.thumbnail_height,
-			thumbnail_url: response.data.thumbnail_url,
-			thumbnail_width: response.data.thumbnail_width,
-			title: response.data.title,
-			width: response.data.width,
-		}
-	}
-
-	private async getDuration(videoID: string): Promise<number | undefined> {
-		let resp
-		try {
-			resp = await axios.get(
-				`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoID}&key=${
-					config.YOUTUBE_API_KEY
-				}`
-			)
-		} catch (err) {
-			console.error(`Error fetching metadata from YouTube: ${err}`)
-			return
-		}
-		if (resp.data && resp.data.items && resp.data.items[0]) {
-			return datetime.parseDuration(resp.data.items[0].contentDetails.duration)
-		}
-	}
-}
-
-export interface BasicInfo {
-	height: number
-	id: string
-	thumbnail_height: string
-	thumbnail_url: string
-	thumbnail_width: string
-	title: string
-	width: number
 }

@@ -18,12 +18,13 @@ export class ModuleFactory {
 	}
 
 	public async defaultCreate(module: any, data: any) {
-		// module.id = data.id
-		// module.type = data.type
-		// module.title = data.title
-		// module.description = data.description
-		// module.duration = data.duration
-		// module.price = data.price
+		module.id = data.id
+		module.type = data.type
+		module.title = data.title
+		module.description = data.description
+		module.duration = data.duration
+		module.price = data.price
+		module.location = data.location
 		module.audiences = (module.audiences || []).map(this.audienceFactory.create)
 
 		return module
