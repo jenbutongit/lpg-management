@@ -13,7 +13,7 @@ export class CourseFactory {
 	}
 
 	create(data: any) {
-		const course: Course = new Course()
+		const course = new Course()
 
 		course.id = data.id
 		course.description = data.description

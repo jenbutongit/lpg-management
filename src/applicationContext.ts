@@ -20,7 +20,7 @@ import {NextFunction, Request, Response} from 'express'
 import {Pagination} from './lib/pagination'
 import {CancellationPolicyController} from './controllers/LearningProvider/cancellationPolicyController'
 import {TermsAndConditionsController} from './controllers/LearningProvider/termsAndConditionsController'
-import {ModuleController} from './controllers/Module/moduleController'
+import {YoutubeModuleController} from './controllers/Module/youtubeModuleController'
 import {Validator} from './learning-catalogue/validator/validator'
 import {LearningProvider} from './learning-catalogue/model/learningProvider'
 import {CancellationPolicy} from './learning-catalogue/model/cancellationPolicy'
@@ -52,7 +52,7 @@ export class ApplicationContext {
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
-	moduleController: ModuleController
+	moduleController: YoutubeModuleController
 	moduleValidator: ModuleValidator
 	moduleFactory: ModuleFactory
 	audienceFactory: AudienceFactory
@@ -109,7 +109,11 @@ export class ApplicationContext {
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
 		this.moduleValidator = new ModuleValidator()
-		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.moduleController = new YoutubeModuleController(
+			this.learningCatalogue,
+			this.moduleValidator,
+			this.moduleFactory
+		)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)

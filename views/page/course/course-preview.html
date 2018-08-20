@@ -1,8 +1,8 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "table/macro.njk" import govukTable %}
-{% from "../component/course-preview/macro.njk" import coursePreview with context %}
+{% from "../../component/course-preview/macro.njk" import coursePreview with context %}
 
-{% extends "../component/Page.njk" %}
+{% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}{{ i18n['course_preview_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
@@ -20,14 +20,15 @@
         <div class="govuk-grid-column-full govuk-!-margin-bottom-6">
             <div class="panel panel-blue">
                 <h5 class="govuk-heading-s">This page is in preview and has not been published yet.</h5>
-                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="#" class="govuk-link panel-links">Details</a> <a href="#" class="govuk-link panel-links">Content</a> <a href="#" class="govuk-link panel-links">Files</a> <a href="/content-management/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="#" class="govuk-link panel-links">Audiences</a></p>
+
+                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="/content-management/courses/title/{{ course.id }}" class="govuk-link panel-links">Title</a> <a href="/content-management/courses/details/{{ course.id }}" +{{course.id}} class="govuk-link panel-links">Details</a> <a href="#" class="govuk-link panel-links">Content</a> <a href="#" class="govuk-link panel-links">Files</a> <a href="/content-management/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="#" class="govuk-link panel-links">Audiences</a></p>
             </div>
         </div>
     </div>
 
-    <a href="/content-management/add-module">Add Module</a>
-
-    <form action="/content-management/{{course.id}}/add-module" method="post">
+    {% set module = sessionFlash.module %}
+    <p>Add Module</p>
+    <form action="/content-management/course/{{course.id}}/add-module" method="post">
         <fieldset class="govuk-fieldset">
             <input name="type" type="hidden" value="video">
             <div class="form-group">
@@ -41,7 +42,7 @@
                 <label for="description" class="form-label">
                     Description
                 </label>
-                <textarea class="form-control form-control-2-3" id="description" name="description" rows="3"></textarea>
+                <textarea class="form-control form-control-2-3" id="description" name="description" rows="3" value="{{module.description}}"></textarea>
             </div>
             <div class="form-group">
                 <label for="uri" class="form-label">
@@ -55,8 +56,9 @@
         </fieldset>
     </form>
 
-    {% if errors.fields %}
-        <p>There are errors</p>
+    {% set errors = sessionFlash.errors %}
+    {% if errors.fields.title %}
+        <p>ERROR!</p>
     {% endif %}
 
     <div class="govuk-grid-row">
@@ -116,7 +118,7 @@
             </div>
             {{ govukButton({
                 text: "Return to course",
-                href: "/content-management/course/"+ course.id
+                href: "/content-management/courses/"+ course.id + "/overview"
             }) }}
         </div>
     </div>

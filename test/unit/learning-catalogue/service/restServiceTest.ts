@@ -102,4 +102,44 @@ describe('RestService tests', () => {
 
 		return expect(restService.post(path, course)).to.be.rejectedWith(errorMessage)
 	})
+
+	it('should return data from PUT request', async () => {
+		const path = '/courses/course-id'
+
+		const course = <Course>{
+			id: 'course-id',
+		}
+
+		const getResponse = {
+			data: {
+				id: 'course-id',
+			},
+		}
+
+		http.put = sinon
+			.stub()
+			.withArgs(path, course)
+			.returns(getResponse)
+
+		const data = await restService.put(path, course)
+
+		return expect(data).to.eql(getResponse.data)
+	})
+
+	it('should throw error if problem with PUT request', async () => {
+		const path = '/courses/course-id'
+		const errorMessage =
+			'Error with PUT request: Error: Error thrown from test when putting {"id":"course-id"} to http://example.org/courses/course-id'
+
+		const course = <Course>{
+			id: 'course-id',
+		}
+
+		http.put = sinon
+			.stub()
+			.withArgs(path)
+			.throws(new Error('Error thrown from test'))
+
+		return expect(restService.put(path, course)).to.be.rejectedWith(errorMessage)
+	})
 })
