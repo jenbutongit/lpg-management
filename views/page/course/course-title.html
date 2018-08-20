@@ -2,7 +2,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
 
-{% extends "../component/Page.njk" %}
+{% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}{{ i18n['course_title_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
@@ -40,7 +40,7 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             {% endif %}
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-            <form action="/content-management/add-course/{{ course.id }}" method="post">
+            <form action="/content-management/courses/{{ course.id }}/title" method="post">
                 <fieldset class="govuk-fieldset">
                     {{ govukInput({
                     label: {

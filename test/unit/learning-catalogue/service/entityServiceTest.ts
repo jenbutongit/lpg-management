@@ -175,4 +175,36 @@ describe('EntityService tests', () => {
 		expect(restService.post).to.have.been.calledOnceWith(path, learningProvider)
 		expect(learningProviderFactory.create).to.have.been.calledOnceWith(data)
 	})
+
+	it('should put learning provider and return result', async () => {
+		const path = `/learning-providers/`
+		const learningProviderId = 'test-id'
+
+		const data = {
+			id: learningProviderId,
+			name: 'Test LP Title',
+		}
+
+		const learningProvider = <LearningProvider>{
+			id: data.id,
+			name: data.name,
+		}
+
+		restService.put = sinon
+			.stub()
+			.withArgs(path, learningProvider)
+			.returns(data)
+
+		learningProviderFactory.create = sinon
+			.stub()
+			.withArgs(data)
+			.returns(learningProvider)
+
+		const result: LearningProvider = await entityService.update(`/learning-providers/`, learningProvider)
+
+		expect(result).to.equal(learningProvider)
+
+		expect(restService.put).to.have.been.calledOnceWith(path, learningProvider)
+		expect(learningProviderFactory.create).to.have.been.calledOnceWith(data)
+	})
 })

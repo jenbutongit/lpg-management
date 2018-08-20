@@ -66,11 +66,6 @@ export class CourseController {
 
 	public getCourseTitle() {
 		return async (request: Request, response: Response) => {
-			if (request.params.courseId) {
-				console.log('editing course title')
-			} else {
-				console.log('creating new course')
-			}
 			response.render('page/add-course-title')
 		}
 	}

@@ -72,17 +72,20 @@ describe('Course Controller Tests', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		request.body = {title: 'New Course'}
-
 		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
 
 		const errors = {fields: [], size: 0}
+
+		const course = new Course()
+		course.title = 'New Course'
+
+		courseFactory.create = sinon.stub().returns(course)
 
 		await setCourseTitle(request, response)
 
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
 		expect(courseValidator.check).to.have.returned(errors)
-		expect(request.session!.sessionFlash.title).to.be.equal('New Course')
+		expect(request.session!.sessionFlash.course).to.be.equal(course)
 		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
 	})
 
@@ -103,6 +106,34 @@ describe('Course Controller Tests', function() {
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(request.session!.sessionFlash.errors).to.be.equal(errors)
 		expect(response.redirect).to.have.been.calledWith('/content-management/add-course')
+	})
+
+	it('should edit title', async function() {
+		const setCourseTitle: (request: Request, response: Response) => void = courseController.setCourseTitle()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.body = {title: ''}
+		request.params.courseId = 'abc123'
+
+		const course = new Course()
+		course.title = 'New Course'
+		course.id = 'abc123'
+		response.locals.course = course
+
+		const errors = {fields: [], size: 0}
+		courseValidator.check = sinon.stub().returns(errors)
+
+		courseFactory.create = sinon.stub().returns(course)
+		learningCatalogue.updateCourse = sinon.stub().returns(course)
+
+		await setCourseTitle(request, response)
+
+		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
+		expect(response.redirect).to.have.been.calledWith(
+			`/content-management/course-preview/${request.params.courseId}`
+		)
 	})
 
 	it('should render add-course-details page', async function() {
@@ -178,11 +209,37 @@ describe('Course Controller Tests', function() {
 		expect(courseValidator.check).to.have.been.calledWith(course)
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(request.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(request.session!.sessionFlash.title).to.be.equal('New Course')
 		expect(request.session!.sessionFlash.course).to.be.equal(course)
 		expect(request.session!.sessionFlash).to.not.contain({
 			courseAddedSuccessMessage: 'course_added_success_message',
 		})
 		expect(response.redirect).to.have.been.calledWith('/content-management/add-course-details')
+	})
+
+	it('should edit course details', async function() {
+		const setCourseDetails: (request: Request, response: Response) => void = courseController.setCourseDetails()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.params.courseId = 'abc123'
+
+		const course = new Course()
+		course.title = 'New Course'
+		course.id = 'abc123'
+		response.locals.course = course
+
+		const errors = {fields: [], size: 0}
+		courseValidator.check = sinon.stub().returns(errors)
+
+		courseFactory.create = sinon.stub().returns(course)
+		learningCatalogue.updateCourse = sinon.stub().returns(course)
+
+		await setCourseDetails(request, response)
+
+		expect(courseValidator.check).to.have.been.calledWith(course)
+		expect(response.redirect).to.have.been.calledWith(
+			`/content-management/course-preview/${request.params.courseId}`
+		)
 	})
 })
