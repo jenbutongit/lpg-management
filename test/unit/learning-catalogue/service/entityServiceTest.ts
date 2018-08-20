@@ -176,7 +176,7 @@ describe('EntityService tests', () => {
 		expect(learningProviderFactory.create).to.have.been.calledOnceWith(data)
 	})
 
-	it('should put learning provider and return result', async () => {
+	it('should put learning provider and return updated learning provider', async () => {
 		const path = `/learning-providers/`
 		const learningProviderId = 'test-id'
 
