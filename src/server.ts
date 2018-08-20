@@ -8,6 +8,7 @@ import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
 import * as bodyParser from 'body-parser'
+import {AppConfig} from './config/appConfig'
 
 Properties.initialize()
 
@@ -49,18 +50,16 @@ app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'
 log4js.configure(config.LOGGING)
 
 app.use(cookieParser())
+
+const appConfig = new AppConfig()
 app.use(
 	session({
-		cookie: {
-			httpOnly: true,
-			maxAge: 31536000,
-			secure: false,
-		},
-		name: 'lpg-management',
-		resave: true,
-		saveUninitialized: true,
-		secret: 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt',
-		store: new FileStore({path: process.env.NOW ? `/tmp/sessions` : `.sessions`}),
+		cookie: appConfig.cookie,
+		name: appConfig.name,
+		resave: appConfig.resave,
+		saveUninitialized: appConfig.saveUninitialized,
+		secret: appConfig.secret,
+		store: new FileStore({path: appConfig.path}),
 	})
 )
 
