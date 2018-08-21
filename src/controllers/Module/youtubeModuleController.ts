@@ -61,19 +61,19 @@ export class YoutubeModuleController {
 			const youtubeResponse = await youtube.getYoutubeResponse(data.location)
 
 			if (!youtubeResponse) {
-				errors.fields.youtubeResponse = 'validation.course.video.notFound'
+				errors.fields.youtubeResponse = 'validation.module.video.notFound'
 			} else {
 				const youtubeResponseValid = youtube.checkYoutubeResponse(youtubeResponse)
 
 				if (!youtubeResponseValid) {
-					errors.fields.youtubeResponse = 'validation.course.video.notFound'
+					errors.fields.youtubeResponse = 'validation.module.video.notFound'
 				} else {
 					const info = youtube.getBasicYoutubeInfo(youtubeResponse)
 
 					duration = await youtube.getDuration(info.id)
 
 					if (!duration) {
-						errors.fields.youtubeDuration = 'validation.course.video.noDuration'
+						errors.fields.youtubeDuration = 'validation.module.video.noDuration'
 					}
 				}
 			}
