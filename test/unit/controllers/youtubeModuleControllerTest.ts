@@ -1,6 +1,6 @@
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
-import {YoutubeModuleController} from '../../../src/controllers/Module/youtubeModuleController'
+import {YoutubeModuleController} from '../../../src/controllers/module/youtubeModuleController'
 import {ModuleValidator} from '../../../src/learning-catalogue/validator/moduleValidator'
 import {ModuleFactory} from '../../../src/learning-catalogue/model/factory/moduleFactory'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
