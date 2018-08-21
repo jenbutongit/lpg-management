@@ -10,17 +10,17 @@ const logger = log4js.getLogger('controllers/moduleController')
 
 export class ModuleController {
 	learningCatalogue: LearningCatalogue
-	moduleValidator: Validator<Module>
+	// moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
-		moduleValidator: Validator<Module>,
+		// moduleValidator: Validator<Module>,
 		moduleFactory: ModuleFactory
 	) {
 		this.learningCatalogue = learningCatalogue
-		this.moduleValidator = moduleValidator
+		// this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory
 		this.router = Router()
 
@@ -56,7 +56,9 @@ export class ModuleController {
 			const moduleType = request.body.module
 			const courseId = response.locals.course.id
 			if (moduleType !== '') {
-				response.redirect(`/content-management/courses/${courseId}/add-module-${moduleType}`)
+				// will be implemented in later PR
+				// response.redirect(`/content-management/courses/${courseId}/add-module-${moduleType}`)
+				response.redirect(`./content-management/courses/${courseId}/add-module`)
 			} else {
 				response.redirect(`./content-management/courses/${courseId}/add-module`)
 			}
