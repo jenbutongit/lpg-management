@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import * as config from '../config'
 import * as datetime from './datetime'
 
@@ -12,7 +12,7 @@ export interface BasicInfo {
 	width: number
 }
 
-export async function getBasicYoutubeInfo(url: string): Promise<BasicInfo | undefined> {
+export async function getYoutubeResponse(url: string): Promise<AxiosResponse | undefined> {
 	let response
 
 	try {
@@ -24,21 +24,32 @@ export async function getBasicYoutubeInfo(url: string): Promise<BasicInfo | unde
 		return
 	}
 
+	return response
+}
+
+export function checkYoutubeResponse(response: AxiosResponse): Boolean {
 	if (response.status !== 200) {
-		return
+		return false
 	}
 	if (response.data.type !== 'video' && response.data.html) {
-		return
+		return false
 	}
 
 	const suffix = response.data.html.split('embed/')[1]
 	if (!suffix) {
-		return
+		return false
 	}
 	const id = suffix.split('?')[0]
 	if (!id) {
-		return
+		return false
 	}
+
+	return true
+}
+
+export function getBasicYoutubeInfo(response: AxiosResponse): BasicInfo {
+	const suffix = response.data.html.split('embed/')[1]
+	const id = suffix.split('?')[0]
 
 	return {
 		height: response.data.height,

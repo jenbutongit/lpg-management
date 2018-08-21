@@ -1,13 +1,9 @@
 import {Request, Response, Router} from 'express'
-import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import * as youtube from '../../lib/youtube'
 import {ContentRequest} from '../../extended'
 import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
-import {Module} from '../../learning-catalogue/model/module'
-
-const logger = log4js.getLogger('controllers/courseController')
 
 export class YoutubeModuleController {
 	learningCatalogue: LearningCatalogue
@@ -60,27 +56,33 @@ export class YoutubeModuleController {
 
 			let errors = await this.moduleValidator.check(data, ['title', 'location'])
 
-			if (errors.size) {
+			let duration
+
+			const youtubeResponse = await youtube.getYoutubeResponse(data.location)
+
+			if (!youtubeResponse) {
+				errors.fields.youtubeResponse = 'validation.course.video.notFound'
+			} else {
+				const youtubeResponseValid = youtube.checkYoutubeResponse(youtubeResponse)
+
+				if (!youtubeResponseValid) {
+					errors.fields.youtubeResponse = 'validation.course.video.notFound'
+				} else {
+					const info = youtube.getBasicYoutubeInfo(youtubeResponse)
+
+					duration = await youtube.getDuration(info.id)
+
+					if (!duration) {
+						errors.fields.youtubeDuration = 'validation.course.video.noDuration'
+					}
+				}
+			}
+
+			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, module: module}
 				return response.redirect(`/content-management/courses/${course.id}/add-youtube-module`)
 			}
 
-			const info = await youtube.getBasicYoutubeInfo(data.location)
-			if (!info) {
-				logger.error('Unable to get info on module via the Yotube API')
-
-				return this.throwError('validation.course.video.notFound', 1, request, response, module)
-			}
-
-			const duration = await youtube.getDuration(info.id)
-			if (!duration) {
-				logger.error('Unable to get duration of module via the YouTube API')
-
-				return this.throwError('validation.course.video.noDuration', 1, request, response, module)
-			}
-
-			data.duration = duration
-			data.title = data.title || info.title
 			data.startPage = 'Not set' // need this as placeholder or java falls over
 
 			if (data.isOptional) {
@@ -89,17 +91,20 @@ export class YoutubeModuleController {
 				data.optional = false
 			}
 
-			module = await this.moduleFactory.create(data)
+			const newData = {
+				id: data.id || 'testid',
+				type: data.type,
+				title: data.title,
+				description: data.description,
+				duration: duration || 0,
+				optional: data.isOptional || false,
+			}
+
+			module = await this.moduleFactory.create(newData)
 
 			await this.learningCatalogue.createModule(course.id, module)
 
 			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}
-	}
-
-	private throwError(errorMessage: string, size: number, request: Request, response: Response, module: Module) {
-		const errors = {fields: {location: errorMessage}, size: size}
-		request.session!.sessionFlash = {errors: errors, module: module}
-		return response.redirect(`/content-management/courses/${response.locals.course.id}/add-youtube-module`)
 	}
 }
