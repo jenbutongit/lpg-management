@@ -41,13 +41,6 @@ export class ModuleController {
 
 		this.router.get('/content-management/courses/:courseId/add-module', this.addModule())
 		this.router.post('/content-management/courses/:courseId/add-module', this.setModule())
-
-		// this.router.get('/content-management/add-course', this.getCourseTitle())
-		// this.router.post('/content-management/add-course', this.setCourseTitle())
-		// this.router.get('/content-management/add-course-details', this.getCourseDetails())
-		// this.router.post('/content-management/add-course-details', this.setCourseDetails())
-
-		// this.router.get('/content-management/course-preview/:courseId', this.coursePreview())
 	}
 
 	public addModule() {
@@ -60,13 +53,13 @@ export class ModuleController {
 
 	public setModule() {
 		return async (request: Request, response: Response) => {
-			const errors = await this.moduleValidator.check(request.body, ['module'])
-			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors}
-				return response.redirect('/content-management/courses/:courseID/add-module')
+			const moduleType = request.body.module
+			const courseId = response.locals.course.id
+			if (moduleType !== '') {
+				response.redirect(`/content-management/courses/${courseId}/add-module-${moduleType}`)
+			} else {
+				response.redirect(`./content-management/courses/${courseId}/add-module`)
 			}
-
-			response.render('page/course/module/:courseID/{{module}}')
 		}
 	}
 }
