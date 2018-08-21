@@ -83,19 +83,11 @@ export class YoutubeModuleController {
 				return response.redirect(`/content-management/courses/${course.id}/add-youtube-module`)
 			}
 
-			data.startPage = 'Not set' // need this as placeholder or java falls over
-
-			if (data.isOptional) {
-				data.optional = true
-			} else {
-				data.optional = false
-			}
-
 			const newData = {
 				id: data.id || 'testid',
-				type: data.type,
-				title: data.title,
-				description: data.description,
+				type: data.type || 'video',
+				title: data.title || 'test title',
+				description: data.description || 'test description',
 				duration: duration || 0,
 				optional: data.isOptional || false,
 			}
