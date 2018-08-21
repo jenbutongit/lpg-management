@@ -25,7 +25,8 @@ export class ModuleFactory {
 		module.duration = data.duration
 		module.price = data.price
 		module.location = data.location
-		module.audiences = (module.audiences || []).map(this.audienceFactory.create)
+		module.optional = data.optional
+		module.audiences = (data.audiences || []).map(this.audienceFactory.create)
 
 		return module
 	}

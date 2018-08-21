@@ -5,6 +5,7 @@ import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactor
 import * as youtube from '../../lib/youtube'
 import {ContentRequest} from '../../extended'
 import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
+import {Module} from '../../learning-catalogue/model/module'
 
 const logger = log4js.getLogger('controllers/courseController')
 
@@ -24,13 +25,24 @@ export class YoutubeModuleController {
 	}
 
 	private setRouterPaths() {
-		this.router.get('/content-management/course/:courseId/add-module', this.getModule())
-		this.router.post('/content-management/course/:courseId/add-module', this.setModule())
+		this.router.param('courseId', async (req, res, next, courseId) => {
+			const course = await this.learningCatalogue.getCourse(courseId)
+
+			if (course) {
+				res.locals.course = course
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
+		this.router.get('/content-management/courses/:courseId/add-youtube-module', this.getModule())
+		this.router.post('/content-management/courses/:courseId/add-youtube-module', this.setModule())
 	}
 
 	public getModule() {
 		return async (request: Request, response: Response) => {
-			response.render('page/add-module')
+			response.render('page/add-module-youtube')
 		}
 	}
 
@@ -42,43 +54,52 @@ export class YoutubeModuleController {
 				...req.body,
 			}
 
-			const courseId = request.params.courseId
-			const course = await this.learningCatalogue.getCourse(courseId)
+			const course = response.locals.course
 
-			const module = await this.moduleFactory.create(data)
+			let module = await this.moduleFactory.create(data)
 
 			let errors = await this.moduleValidator.check(data, ['title', 'location'])
 
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors, module: module, course: course}
-				return response.redirect(`/content-management/courses/${courseId}/preview`)
+				request.session!.sessionFlash = {errors: errors, module: module}
+				return response.redirect(`/content-management/courses/${course.id}/add-youtube-module`)
 			}
 
 			const info = await youtube.getBasicYoutubeInfo(data.location)
 			if (!info) {
 				logger.error('Unable to get info on module via the Yotube API')
 
-				errors = {fields: {location: 'validation.course.video.notFound'}, size: 1}
-				request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
-				return response.redirect(`/content-management/courses/${courseId}/preview`)
+				return this.throwError('validation.course.video.notFound', 1, request, response, module)
 			}
 
 			const duration = await youtube.getDuration(info.id)
 			if (!duration) {
 				logger.error('Unable to get duration of module via the YouTube API')
 
-				errors = {fields: {location: 'validation.course.video.noDuration'}, size: 1}
-				request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
-				return response.redirect(`/content-management/courses/${courseId}/preview`)
+				return this.throwError('validation.course.video.noDuration', 1, request, response, module)
 			}
 
 			data.duration = duration
 			data.title = data.title || info.title
 			data.startPage = 'Not set' // need this as placeholder or java falls over
 
-			await this.learningCatalogue.createModule(courseId, module)
+			if (data.isOptional) {
+				data.optional = true
+			} else {
+				data.optional = false
+			}
 
-			response.redirect(`/content-management/courses/${courseId}/preview`)
+			module = await this.moduleFactory.create(data)
+
+			await this.learningCatalogue.createModule(course.id, module)
+
+			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}
+	}
+
+	private throwError(errorMessage: string, size: number, request: Request, response: Response, module: Module) {
+		const errors = {fields: {location: errorMessage}, size: size}
+		request.session!.sessionFlash = {errors: errors, module: module}
+		return response.redirect(`/content-management/courses/${response.locals.course.id}/add-youtube-module`)
 	}
 }

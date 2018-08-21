@@ -26,42 +26,7 @@
         </div>
     </div>
 
-    {% set module = sessionFlash.module %}
-    <p>Add Module</p>
-    <form action="/content-management/course/{{course.id}}/add-module" method="post">
-        <fieldset class="govuk-fieldset">
-            <input name="type" type="hidden" value="video">
-            <div class="form-group">
-                <label for="title" class="form-label">
-                    Title
-                </label>
-                <input class="form-control form-control-2-3" id="title" name="title" type="text" value="{{module.title}}">
-            </div>
-
-            <div class="form-group">
-                <label for="description" class="form-label">
-                    Description
-                </label>
-                <textarea class="form-control form-control-2-3" id="description" name="description" rows="3">{{module.description}}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="uri" class="form-label">
-                    URL
-                </label>
-                <input class="form-control form-control-2-3" id="location" name="location" type="text" value="{{module.location}}">
-            </div>
-            <div>
-                <input name="submit" type="submit" class="button" value="Add">
-            </div>
-        </fieldset>
-    </form>
-
-    <ul>
-        {% set errors = sessionFlash.errors %}
-        {% for field, message in errors.fields %}
-            <li>{{i18n[message]}}</li>
-        {% endfor %}
-    </ul>
+    <a href="/content-management/courses/{{course.id}}/add-youtube-module">Add Module</a>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
