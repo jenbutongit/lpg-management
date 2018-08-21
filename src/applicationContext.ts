@@ -137,7 +137,7 @@ export class ApplicationContext {
 			this.termsAndConditionsValidator
 		)
 
-		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 	}
 
 	addToResponseLocals() {

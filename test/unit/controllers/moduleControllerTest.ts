@@ -4,9 +4,10 @@ import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
 import {Request, Response} from 'express'
-import {LearningCatalogue} from 'src/learning-catalogue'
-import {ModuleController} from 'src/controllers/moduleController'
-import {ModuleFactory} from 'src/learning-catalogue/model/factory/moduleFactory'
+import {LearningCatalogue} from '../../../src/learning-catalogue'
+import {ModuleController} from '../../../src/controllers/moduleController'
+import {ModuleFactory} from '../../../src/learning-catalogue/model/factory/moduleFactory'
+import {Course} from '../../../src/learning-catalogue/model/course'
 
 chai.use(sinonChai)
 
@@ -41,9 +42,12 @@ describe('Module Controller Tests', function() {
 		const response: Response = mockRes()
 
 		request.body = {module: 'blog'}
-
+		const course = new Course()
+		course.title = 'New Course'
+		course.id = 'abc123'
+		response.locals.course = course
 		await setModule(request, response)
 		//To be done - would expect to render form for specific module type
-		expect(response.render).to.have.been.calledOnceWith('page/course/module/add-module')
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
 	})
 })

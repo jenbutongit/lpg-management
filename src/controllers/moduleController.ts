@@ -1,26 +1,17 @@
 import {Request, Response, Router} from 'express'
-// import {ContentRequest} from '../extended'
 import {ModuleFactory} from '../learning-catalogue/model/factory/moduleFactory'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../learning-catalogue'
-import {Module} from '../learning-catalogue/model/module'
-import {Validator} from 'src/learning-catalogue/validator/validator'
 
 const logger = log4js.getLogger('controllers/moduleController')
 
 export class ModuleController {
 	learningCatalogue: LearningCatalogue
-	// moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	router: Router
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		// moduleValidator: Validator<Module>,
-		moduleFactory: ModuleFactory
-	) {
+	constructor(learningCatalogue: LearningCatalogue, moduleFactory: ModuleFactory) {
 		this.learningCatalogue = learningCatalogue
-		// this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory
 		this.router = Router()
 
@@ -58,9 +49,9 @@ export class ModuleController {
 			if (moduleType !== '') {
 				// will be implemented in later PR
 				// response.redirect(`/content-management/courses/${courseId}/add-module-${moduleType}`)
-				response.redirect(`./content-management/courses/${courseId}/add-module`)
+				response.redirect(`/content-management/courses/${courseId}/add-module`)
 			} else {
-				response.redirect(`./content-management/courses/${courseId}/add-module`)
+				response.redirect(`/content-management/courses/${courseId}/add-module`)
 			}
 		}
 	}
