@@ -35,20 +35,20 @@
                 <label for="title" class="form-label">
                     Title
                 </label>
-                <input class="form-control form-control-2-3" id="title" name="title" type="text" value="">
+                <input class="form-control form-control-2-3" id="title" name="title" type="text" value="{{module.title}}">
             </div>
 
             <div class="form-group">
                 <label for="description" class="form-label">
                     Description
                 </label>
-                <textarea class="form-control form-control-2-3" id="description" name="description" rows="3" value="{{module.description}}"></textarea>
+                <textarea class="form-control form-control-2-3" id="description" name="description" rows="3">{{module.description}}</textarea>
             </div>
             <div class="form-group">
                 <label for="uri" class="form-label">
                     URL
                 </label>
-                <input class="form-control form-control-2-3" id="location" name="location" type="text">
+                <input class="form-control form-control-2-3" id="location" name="location" type="text" value="{{module.location}}">
             </div>
             <div>
                 <input name="submit" type="submit" class="button" value="Add">
@@ -56,10 +56,12 @@
         </fieldset>
     </form>
 
-    {% set errors = sessionFlash.errors %}
-    {% if errors.fields.title %}
-        <p>ERROR!</p>
-    {% endif %}
+    <ul>
+        {% set errors = sessionFlash.errors %}
+        {% for field, message in errors.fields %}
+            <li>{{i18n[message]}}</li>
+        {% endfor %}
+    </ul>
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

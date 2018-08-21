@@ -36,7 +36,7 @@ export class YoutubeModuleController {
 
 	public setModule() {
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest & {files: any}
+			const req = request as ContentRequest
 
 			let data = {
 				...req.body,
@@ -58,7 +58,7 @@ export class YoutubeModuleController {
 			if (!info) {
 				logger.error('Unable to get info on module via the Yotube API')
 
-				errors = {fields: ['validation.course.video.notFound'], size: 1}
+				errors = {fields: {location: 'validation.course.video.notFound'}, size: 1}
 				request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
 				return response.redirect(`/content-management/courses/${courseId}/preview`)
 			}
@@ -67,7 +67,7 @@ export class YoutubeModuleController {
 			if (!duration) {
 				logger.error('Unable to get duration of module via the YouTube API')
 
-				errors = {fields: ['validation.course.video.noDuration'], size: 1}
+				errors = {fields: {location: 'validation.course.video.noDuration'}, size: 1}
 				request.session!.sessionFlash = {errors: errors, title: data.title, course: course}
 				return response.redirect(`/content-management/courses/${courseId}/preview`)
 			}
