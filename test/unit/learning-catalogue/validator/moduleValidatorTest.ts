@@ -19,7 +19,7 @@ describe('ModuleValidator tests', () => {
 	describe('Validate properties individually', async () => {
 		it('should fail validation if title is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 			}
 
 			const errors = await validator.check(params, ['title'])
@@ -30,7 +30,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should pass validation if title is present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'title',
 			}
 
@@ -40,7 +40,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if description is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 			}
 
 			const errors = await validator.check(params, ['description'])
@@ -51,7 +51,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should pass validation if description is present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				description: 'description',
 			}
 
@@ -61,7 +61,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if duration is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 			}
 
 			const errors = await validator.check(params, ['duration'])
@@ -75,7 +75,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if duration is not a positive number', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				duration: -99,
 			}
 
@@ -87,7 +87,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should pass validation if duration is a positive number', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				duration: 99,
 			}
 
@@ -98,7 +98,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should pass validation if audience is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 			}
 
 			const errors = await validator.check(params, ['audiences'])
@@ -108,7 +108,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience present but audience areasOfWork is not', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				audiences: [{}],
 			}
 
@@ -120,7 +120,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience present but audience departments is not', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				audiences: [{}],
 			}
 
@@ -132,7 +132,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience present but audience grades is not', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				audiences: [{}],
 			}
 
@@ -144,7 +144,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience present but audience interests is not', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				audiences: [{}],
 			}
 
@@ -156,7 +156,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience present but audience mandatory is not', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				audiences: [{}],
 			}
 
@@ -168,7 +168,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if location is not present on LinkModule', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 			}
 
 			const errors = await validator.check(params, ['location'])
@@ -179,7 +179,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should pass validation if location is present on LinkModule', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				location: 'location',
 			}
 
@@ -1563,7 +1563,7 @@ describe('ModuleValidator tests', () => {
 	describe('Validate all properties of LinkModule', () => {
 		it('should fail validation if title is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				location: 'module location',
 				description: 'module description',
 				duration: 99,
@@ -1585,7 +1585,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if location is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				description: 'module description',
 				duration: 99,
@@ -1607,7 +1607,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if description is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				duration: 99,
@@ -1629,7 +1629,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if duration is not present', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1654,7 +1654,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if duration is negative', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1677,7 +1677,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience areasOfWork is empty', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1700,7 +1700,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience departments is empty', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1723,7 +1723,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience grades is empty', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1746,7 +1746,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience interests is empty', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1769,7 +1769,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if audience mandatory is missing', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
@@ -1792,7 +1792,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should pass validation if all properties are valid', async () => {
 			const params = {
-				type: 'link',
+				type: 'blog',
 				title: 'module title',
 				location: 'module location',
 				description: 'module description',
