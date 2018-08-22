@@ -52,7 +52,7 @@ export class ApplicationContext {
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
-	moduleController: YoutubeModuleController
+	youtubeModuleController: YoutubeModuleController
 	moduleValidator: ModuleValidator
 	moduleFactory: ModuleFactory
 	audienceFactory: AudienceFactory
@@ -109,7 +109,7 @@ export class ApplicationContext {
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
 		this.moduleValidator = new ModuleValidator()
-		this.moduleController = new YoutubeModuleController(
+		this.youtubeModuleController = new YoutubeModuleController(
 			this.learningCatalogue,
 			this.moduleValidator,
 			this.moduleFactory
