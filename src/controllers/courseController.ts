@@ -29,17 +29,6 @@ export class CourseController {
 		this.configureRouterPaths()
 	}
 
-	private configureRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/overview', this.courseOverview())
-		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
-
-		this.router.get('/content-management/courses/title/:courseId?', this.getCourseTitle())
-		this.router.post('/content-management/courses/title/:courseId?', this.setCourseTitle())
-
-		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
-		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
-	}
-
 	private getCourseFromRouterParamAndSetOnLocals() {
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
@@ -51,6 +40,17 @@ export class CourseController {
 				res.sendStatus(404)
 			}
 		})
+	}
+
+	private configureRouterPaths() {
+		this.router.get('/content-management/courses/:courseId/overview', this.courseOverview())
+		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
+
+		this.router.get('/content-management/courses/title/:courseId?', this.getCourseTitle())
+		this.router.post('/content-management/courses/title/:courseId?', this.setCourseTitle())
+
+		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
+		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 	}
 
 	public courseOverview() {
