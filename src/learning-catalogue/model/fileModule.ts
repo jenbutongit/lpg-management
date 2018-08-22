@@ -9,6 +9,18 @@ export class FileModule extends Module {
 	url: string
 
 	@IsNotEmpty({
+		groups: ['all', 'title'],
+		message: 'validation.module.title.empty',
+	})
+	title: string
+
+	@IsNotEmpty({
+		groups: ['all', 'description'],
+		message: 'validation.module.description.empty',
+	})
+	description: string
+
+	@IsNotEmpty({
 		groups: ['all', 'fileSize'],
 		message: 'validation.module.fileSize.empty',
 	})

@@ -32,6 +32,7 @@ export class ModuleController {
 
 		this.router.get('/content-management/courses/:courseId/add-module', this.addModule())
 		this.router.post('/content-management/courses/:courseId/add-module', this.setModule())
+		this.router.get('/content-management/courses/:courseId/module/add-file', this.addFile())
 	}
 
 	public addModule() {
@@ -47,12 +48,16 @@ export class ModuleController {
 			const moduleType = request.body.module
 			const courseId = response.locals.course.id
 			if (moduleType !== '') {
-				// will be implemented in later PR
-				// response.redirect(`/content-management/courses/${courseId}/add-module-${moduleType}`)
-				response.redirect(`/content-management/courses/${courseId}/add-module`)
+				response.redirect(`/content-management/courses/${courseId}/module/add-${moduleType}`)
 			} else {
 				response.redirect(`/content-management/courses/${courseId}/add-module`)
 			}
+		}
+	}
+
+	public addFile() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/add-file')
 		}
 	}
 }

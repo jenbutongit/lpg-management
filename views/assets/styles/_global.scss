@@ -118,6 +118,36 @@ ul {
 	color: $white;
 }
 
+.add-file-form {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+
+	span {
+		font-size: $font-mobile;
+	}
+
+	.btn {
+		border: 2px solid $border;
+		color: $border;
+		background-color: white;
+		padding: 8px;
+		border-radius: 5px;
+		font-size: $font-mobile;
+		font-weight: bold;
+	}
+
+	input[type='file'] {
+		width: 106px;
+		height: 38px;
+		position: absolute;
+		left: 0;
+		top: 61px;
+		opacity: 0;
+		cursor: pointer;
+	}
+}
+
 @media screen and (min-width: $tablet-small) {
 	.pager__controls {
 		font-size: $font-normal;

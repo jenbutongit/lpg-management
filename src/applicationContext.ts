@@ -30,6 +30,7 @@ import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
 import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
 import {Module} from './learning-catalogue/model/module'
+import {FileController} from './controllers/module/fileController'
 
 log4js.configure(config.LOGGING)
 
@@ -58,6 +59,7 @@ export class ApplicationContext {
 	pagination: Pagination
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
+	fileController: FileController
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
