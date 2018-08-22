@@ -188,24 +188,24 @@ describe('ModuleValidator tests', () => {
 			expect(errors.size).to.equal(0)
 		})
 
-		it('should fail validation if location is not present on VideoModule', async () => {
+		it('should fail validation if url is not present on VideoModule', async () => {
 			const params = {
 				type: 'video',
 			}
 
-			const errors = await validator.check(params, ['location'])
+			const errors = await validator.check(params, ['url'])
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['location']).to.eql(['validation.module.location.empty'])
+			expect(errors.fields['url']).to.eql(['validation.module.url.empty'])
 		})
 
-		it('should pass validation if location is present on VideoModule', async () => {
+		it('should pass validation if url is present on VideoModule', async () => {
 			const params = {
 				type: 'video',
-				location: 'location',
+				url: 'url',
 			}
 
-			const errors = await validator.check(params, ['location'])
+			const errors = await validator.check(params, ['url'])
 
 			expect(errors.size).to.equal(0)
 		})
@@ -1817,7 +1817,7 @@ describe('ModuleValidator tests', () => {
 		it('should fail validation if title is not present', async () => {
 			const params = {
 				type: 'video',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -1836,7 +1836,7 @@ describe('ModuleValidator tests', () => {
 			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
 		})
 
-		it('should fail validation if location is not present', async () => {
+		it('should fail validation if url is not present', async () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
@@ -1855,14 +1855,14 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['location']).to.eql(['validation.module.location.empty'])
+			expect(errors.fields['url']).to.eql(['validation.module.url.empty'])
 		})
 
 		it('should fail validation if description is not present', async () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				duration: 99,
 				audiences: [
 					{
@@ -1884,7 +1884,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				audiences: [
 					{
@@ -1909,7 +1909,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: -99,
 				audiences: [
@@ -1932,7 +1932,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -1955,7 +1955,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -1978,7 +1978,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -2001,7 +2001,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -2024,7 +2024,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -2047,7 +2047,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				location: 'module location',
+				url: 'module url',
 				description: 'module description',
 				duration: 99,
 				audiences: [

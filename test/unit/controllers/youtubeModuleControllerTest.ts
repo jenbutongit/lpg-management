@@ -63,7 +63,7 @@ describe('Youtube Module Controller Test', function() {
 		response.locals.course = course
 
 		req.body.type = 'video'
-		req.body.location = url
+		req.body.url = url
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 
@@ -133,7 +133,7 @@ describe('Youtube Module Controller Test', function() {
 		req.params.courseId = 'abc'
 
 		req.body.type = 'video'
-		req.body.location = url
+		req.body.url = url
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 
