@@ -38,8 +38,6 @@ export class Module {
 
 	price?: number
 
-	location: string
-
 	optional: boolean
 
 	@ValidateNested({

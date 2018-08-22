@@ -54,11 +54,11 @@ export class YoutubeModuleController {
 
 			let module = await this.moduleFactory.create(data)
 
-			let errors = await this.moduleValidator.check(data, ['title', 'location'])
+			let errors = await this.moduleValidator.check(data, ['title', 'url'])
 
 			let duration
 
-			const youtubeResponse = await youtube.getYoutubeResponse(data.location)
+			const youtubeResponse = await youtube.getYoutubeResponse(data.url)
 
 			if (!youtubeResponse) {
 				errors.fields.youtubeResponse = 'validation.module.video.notFound'
@@ -89,8 +89,7 @@ export class YoutubeModuleController {
 				description: data.description || 'test description',
 				duration: duration || 0,
 				optional: data.isOptional || false,
-				location: data.location,
-				url: data.location,
+				url: data.url,
 			}
 
 			module = await this.moduleFactory.create(newData)

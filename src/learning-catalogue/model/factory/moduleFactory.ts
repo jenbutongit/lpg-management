@@ -24,7 +24,6 @@ export class ModuleFactory {
 		module.description = data.description
 		module.duration = data.duration
 		module.price = data.price
-		module.location = data.location
 		module.optional = data.optional
 		module.audiences = (data.audiences || []).map(this.audienceFactory.create)
 
