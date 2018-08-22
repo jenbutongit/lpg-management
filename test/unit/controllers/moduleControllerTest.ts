@@ -5,7 +5,7 @@ import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
 import {Request, Response} from 'express'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
-import {ModuleController} from '../../../src/controllers/moduleController'
+import {ModuleController} from '../../../src/controllers/module/moduleController'
 import {ModuleFactory} from '../../../src/learning-catalogue/model/factory/moduleFactory'
 import {Course} from '../../../src/learning-catalogue/model/course'
 

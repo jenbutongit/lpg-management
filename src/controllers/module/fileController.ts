@@ -44,18 +44,9 @@ export class FileController {
 			let module = await this.moduleFactory.create(data)
 			let errors = await this.moduleValidator.check(data, ['title', 'description'])
 
-			const fileResponse = await file.getFileResponse(data.description)
-			if (!fileResponse) {
-				errors.fields.fileResponse = 'validation.module.file.notFound'
-			} else {
-				const fileResponseValid = file.checkFileResponse(fileResponse)
-				if (!fileResponseValid) {
-					errors.fields.youtubeResponse = 'validation.module.file.notFound'
-				}
-			}
 			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, module: module}
-				return response.redirect(`/content-management/courses/${course.id}/add-youtube-module`)
+				return response.redirect(`/content-management/courses/${course.id}/add-file`)
 			}
 			const newData = {
 				id: data.id || 'testid',
