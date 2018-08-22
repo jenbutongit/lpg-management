@@ -54,7 +54,7 @@ describe('ModuleFactory tests', () => {
 
 	it('should create LinkModule', async () => {
 		data.location = 'http://example.org'
-		data.type = 'link'
+		data.type = 'blog'
 
 		const module = await moduleFactory.create(data)
 
@@ -140,8 +140,8 @@ describe('ModuleFactory tests', () => {
 
 	it('should throw error if type is not recognised', async () => {
 		data.type = 'unknown'
-		return expect(moduleFactory.create(data)).to.be.rejectedWith(
-			`Unknown module type: unknown ${JSON.stringify(data)}`
-		)
+		expect(function() {
+			moduleFactory.create(data)
+		}).to.throw(`Unknown module type: unknown ${JSON.stringify(data)}`)
 	})
 })
