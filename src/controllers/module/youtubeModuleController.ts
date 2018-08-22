@@ -84,12 +84,13 @@ export class YoutubeModuleController {
 			}
 
 			const newData = {
-				id: data.id || 'testid',
 				type: data.type || 'video',
 				title: data.title || 'test title',
 				description: data.description || 'test description',
 				duration: duration || 0,
 				optional: data.isOptional || false,
+				location: data.location,
+				url: data.location,
 			}
 
 			module = await this.moduleFactory.create(newData)

@@ -7,4 +7,5 @@ export class VideoModule extends Module {
 		message: 'validation.module.location.empty',
 	})
 	location: string
+	url: string
 }

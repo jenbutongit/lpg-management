@@ -43,6 +43,7 @@ export class ModuleFactory {
 		video: async (data: any) => {
 			const module = await this.defaultCreate(new VideoModule(), data)
 			module.location = data.location
+			module.url = data.url
 			return module
 		},
 		link: async (data: any) => {
