@@ -32,7 +32,6 @@ export class ModuleController {
 
 		this.router.get('/content-management/courses/:courseId/add-module', this.addModule())
 		this.router.post('/content-management/courses/:courseId/add-module', this.setModule())
-		this.router.get('/content-management/courses/:courseId/module/add-file', this.addFile())
 	}
 
 	public addModule() {

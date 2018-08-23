@@ -118,33 +118,42 @@ ul {
 	color: $white;
 }
 
-.add-file-form {
-	position: relative;
-	overflow: hidden;
-	display: inline-block;
+.btn {
+	display: none;
+}
 
-	span {
-		font-size: $font-mobile;
-	}
+.js-enabled {
+	.add-file-form {
+		span {
+			font-size: $font-mobile;
+		}
 
-	.btn {
-		border: 2px solid $border;
-		color: $border;
-		background-color: white;
-		padding: 8px;
-		border-radius: 5px;
-		font-size: $font-mobile;
-		font-weight: bold;
-	}
+		.btn {
+			border: 2px solid $font-color;
+			color: $font-color;
+			background-color: white;
+			padding: 8px;
+			border-radius: 5px;
+			font-size: $font-mobile;
+			font-weight: bold;
+			display: inline-block;
+			cursor: pointer;
+		}
 
-	input[type='file'] {
-		width: 106px;
-		height: 38px;
-		position: absolute;
-		left: 0;
-		top: 61px;
-		opacity: 0;
-		cursor: pointer;
+		.custom-uploader {
+			width: 0.1px;
+			height: 0.1px;
+			opacity: 0;
+			overflow: hidden;
+			position: absolute;
+			z-index: -1;
+
+			&:focus {
+				& + label {
+					outline: 3px solid #ffbf47;
+				}
+			}
+		}
 	}
 }
 

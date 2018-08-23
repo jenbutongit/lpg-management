@@ -42,7 +42,7 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
             <p class="govuk-body">You are adding a <strong>file</strong> module</p>
                   
-            <form action="/form-handler" method="post">
+            <form action="/content-management/courses/{{ course.id }}/module/add-file" method="post">
                 <fieldset class="govuk-fieldset">
                    
                         {{ govukInput({
@@ -60,15 +60,14 @@
                                 text: "Description"
                             }
                         }) }}
-
+                    </fieldset>
                     <div class="add-file-form govuk-form-group">         
                         <label class="govuk-label">File</label>
                         <span id="file-upload-hint" class="govuk-hint">You can upload the following file types: PDF, Powerpoint, Excel, Word, video(MP4)</span> 
-                        <button class="btn">Choose file</button>
-
                         <input class="govuk-file-upload custom-uploader" id="file-upload" name="file-upload" type="file" aria-describedby="file-upload-hint">
+                        <label class="btn" for="file-upload"><span>Choose file</span></label>
                     </div>
-                </fieldset>
+             
                     {{ govukCheckboxes({
                         idPrefix: "isOptional",
                         name: "isOptional",
@@ -90,7 +89,7 @@
 
                 {{ govukButton({
                     text: "Continue",
-                    type: "button"
+                    type: "submit"
                 }) }}
             </form>
 
@@ -101,4 +100,14 @@
        
         </div>
     </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk-frontend/all.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+     <script>
+        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
+    </script>
+
+    <script src="/js/file-uploader.js"></script>
 {% endblock %}
