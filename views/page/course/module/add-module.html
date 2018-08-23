@@ -22,14 +22,20 @@
             <div class="aded-modules govuk-!-padding-bottom-5 govuk-!-padding-top-5">
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
 
-                {% if Modules.length > 1 %}
-                    <ul class="list">
-                        {% for Module in pageResults.results %}
-                            <li class="list-details u--border--bgrey">
-                                <p class="govuk-body">{{Modules._title}}</p>
-                            </li>
-                        {% endfor %}
-                    </ul>
+
+                {% set modules = course.modules %}
+
+                {% if modules.length > 0 %}
+                <ul class="list">
+                    {% for module in modules %}
+                    <li class="list-details u--border--bgrey">
+                        <p class="govuk-body">{{ module.title | default("Module", true) }}</p>
+                        <p class="govuk-body">{{ i18n[module.type] | default("Unknown Type", true) }}</p>
+                        <p class="govuk-body">{{ module.addedOn | default("23rd August 2018", true) }}</p>
+                        <p class="govuk-body">Delete</p>
+                    </li>
+                    {% endfor %}
+                </ul>
                 {% else %}
                     <p class="govuk-body">This course does not have any modules yet</p>
                 {% endif %}

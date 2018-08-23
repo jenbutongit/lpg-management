@@ -32,5 +32,6 @@
   "validation.termsAndConditions.name.empty": "Title is required",
   "validation.termsAndConditions.content.empty":
   "Content is required",
-  "validation_learningProvider_name_empty": "Name is required"
+  "validation_learningProvider_name_empty": "Name is required",
+  "video": "Video"
 }
