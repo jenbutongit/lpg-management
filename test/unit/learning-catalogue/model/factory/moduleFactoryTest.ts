@@ -140,8 +140,8 @@ describe('ModuleFactory tests', () => {
 
 	it('should throw error if type is not recognised', async () => {
 		data.type = 'unknown'
-		return expect(moduleFactory.create(data)).to.be.rejectedWith(
-			`Unknown module type: unknown ${JSON.stringify(data)}`
-		)
+		expect(function() {
+			moduleFactory.create(data)
+		}).to.throw(`Unknown module type: unknown ${JSON.stringify(data)}`)
 	})
 })

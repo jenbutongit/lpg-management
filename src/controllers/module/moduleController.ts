@@ -14,14 +14,12 @@ export class ModuleController {
 		this.learningCatalogue = learningCatalogue
 		this.moduleFactory = moduleFactory
 		this.router = Router()
-
 		this.setRouterPaths()
 	}
 
 	private setRouterPaths() {
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
-
 			if (course) {
 				res.locals.course = course
 				next()
@@ -29,7 +27,6 @@ export class ModuleController {
 				res.sendStatus(404)
 			}
 		})
-
 		this.router.get('/content-management/courses/:courseId/add-module', this.addModule())
 		this.router.post('/content-management/courses/:courseId/add-module', this.setModule())
 	}
