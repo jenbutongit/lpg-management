@@ -35,7 +35,7 @@ describe('Module Controller Tests', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/add-module')
 	})
 
-	it('should render add module type page', async function() {
+	it('should render add module file page', async function() {
 		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
 
 		const request: Request = mockReq()
@@ -66,5 +66,16 @@ describe('Module Controller Tests', function() {
 		response.locals.course = course
 		await setModule(request, response)
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
+	})
+
+	it('should render add file page', async function() {
+		const addFile: (request: Request, response: Response) => void = moduleController.addFile()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		await addFile(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/add-file')
 	})
 })
