@@ -16,7 +16,7 @@ export class Module {
 
 	@IsNotEmpty({
 		groups: ['all', 'title'],
-		message: 'validation.module.title.empty',
+		message: 'validation_module_title_empty',
 	})
 	title: string
 

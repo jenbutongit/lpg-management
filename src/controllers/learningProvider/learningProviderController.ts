@@ -41,10 +41,10 @@ export class LearningProviderController {
 
 			if (learningProvider) {
 				req.learningProvider = learningProvider
+				next()
 			} else {
 				res.sendStatus(404)
 			}
-			next()
 		})
 
 		this.router.get('/content-management/learning-providers', this.index())

@@ -30,6 +30,8 @@ import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
 import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
 import {ModuleValidator} from './learning-catalogue/validator/moduleValidator'
+import {YoutubeService} from './lib/youtubeService'
+import {YoutubeConfig} from './lib/youtubeConfig'
 
 log4js.configure(config.LOGGING)
 
@@ -58,6 +60,8 @@ export class ApplicationContext {
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
 	pagination: Pagination
+	youtube: YoutubeService
+	youtubeConfig: YoutubeConfig
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -105,6 +109,8 @@ export class ApplicationContext {
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
+		this.youtubeConfig = new YoutubeConfig('', 15000)
+		this.youtube = new YoutubeService(this.youtubeConfig)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
@@ -112,7 +118,8 @@ export class ApplicationContext {
 		this.youtubeModuleController = new YoutubeModuleController(
 			this.learningCatalogue,
 			this.moduleValidator,
-			this.moduleFactory
+			this.moduleFactory,
+			this.youtube
 		)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()

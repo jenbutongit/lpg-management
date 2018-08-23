@@ -13,14 +13,16 @@ import {expect} from 'chai'
 import axios from 'axios'
 import {Module} from '../../../src/learning-catalogue/model/module'
 import * as config from '../../../src/config'
+import {YoutubeService} from 'lib/youtubeService'
 
 chai.use(sinonChai)
 
-describe('Youtube Module Controller Test', function() {
+describe('YoutubeService Module Controller Test', function() {
 	let moduleController: YoutubeModuleController
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: ModuleValidator
 	let moduleFactory: ModuleFactory
+	let youtube: YoutubeService
 
 	let youtubeResponse = {
 		status: 200,
@@ -42,7 +44,7 @@ describe('Youtube Module Controller Test', function() {
 		moduleValidator = <ModuleValidator>{}
 		moduleFactory = <ModuleFactory>{}
 
-		moduleController = new YoutubeModuleController(learningCatalogue, moduleValidator, moduleFactory)
+		moduleController = new YoutubeModuleController(learningCatalogue, moduleValidator, moduleFactory, youtube)
 	})
 
 	it('should check for errors and redirect to course preview page', async function() {

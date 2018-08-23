@@ -1,21 +1,28 @@
 import {Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
-import * as youtube from '../../lib/youtube'
 import {ContentRequest} from '../../extended'
 import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
+import {YoutubeService} from '../../lib/youtubeService'
 
 export class YoutubeModuleController {
 	learningCatalogue: LearningCatalogue
 	moduleValidator: ModuleValidator
 	moduleFactory: ModuleFactory
 	router: Router
+	youtube: YoutubeService
 
-	constructor(learningCatalogue: LearningCatalogue, moduleValidator: ModuleValidator, moduleFactory: ModuleFactory) {
+	constructor(
+		learningCatalogue: LearningCatalogue,
+		moduleValidator: ModuleValidator,
+		moduleFactory: ModuleFactory,
+		youtube: YoutubeService
+	) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory
 		this.router = Router()
+		this.youtube = youtube
 
 		this.setRouterPaths()
 	}
@@ -32,13 +39,13 @@ export class YoutubeModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/add-youtube-module', this.getModule())
-		this.router.post('/content-management/courses/:courseId/add-youtube-module', this.setModule())
+		this.router.get('/content-management/courses/:courseId/youtube-module', this.getModule())
+		this.router.post('/content-management/courses/:courseId/youtube-module', this.setModule())
 	}
 
 	public getModule() {
 		return async (request: Request, response: Response) => {
-			response.render('page/add-module-youtube')
+			response.render('page/course/module/module-youtube')
 		}
 	}
 
@@ -58,36 +65,30 @@ export class YoutubeModuleController {
 
 			let duration
 
-			const youtubeResponse = await youtube.getYoutubeResponse(data.url)
+			const youtubeResponse = await this.youtube.getYoutubeResponse(data.url)
 
-			if (!youtubeResponse) {
-				errors.fields.youtubeResponse = 'validation.module.video.notFound'
+			if (!youtubeResponse || !this.youtube.checkYoutubeResponse(youtubeResponse)) {
+				errors.fields.youtubeResponse = 'validation_module_video_notFound'
 			} else {
-				const youtubeResponseValid = youtube.checkYoutubeResponse(youtubeResponse)
+				const info = this.youtube.getBasicYoutubeInfo(youtubeResponse)
 
-				if (!youtubeResponseValid) {
-					errors.fields.youtubeResponse = 'validation.module.video.notFound'
-				} else {
-					const info = youtube.getBasicYoutubeInfo(youtubeResponse)
+				duration = await this.youtube.getDuration(info.id)
 
-					duration = await youtube.getDuration(info.id)
-
-					if (!duration) {
-						errors.fields.youtubeDuration = 'validation.module.video.noDuration'
-					}
+				if (!duration) {
+					errors.fields.youtubeDuration = 'validation_module_video_noDuration'
 				}
 			}
 
 			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, module: module}
-				return response.redirect(`/content-management/courses/${course.id}/add-youtube-module`)
+				return response.redirect(`/content-management/courses/${course.id}/youtube-module`)
 			}
 
 			const newData = {
 				type: data.type || 'video',
-				title: data.title || 'test title',
-				description: data.description || 'test description',
-				duration: duration || 0,
+				title: data.title,
+				description: data.description || 'No description',
+				duration: duration,
 				optional: data.isOptional || false,
 				url: data.url,
 			}

@@ -41,23 +41,21 @@ export class CancellationPolicyController {
 
 			if (cancellationPolicy) {
 				req.cancellationPolicy = cancellationPolicy
+				next()
 			} else {
 				res.sendStatus(404)
 			}
-			next()
 		})
 
 		this.router.param('learningProviderId', async (ireq, res, next, learningProviderId) => {
-			const req = ireq as ContentRequest
-
 			const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
 
 			if (learningProvider) {
-				req.learningProvider = learningProvider
+				res.locals.learningProvider = learningProvider
+				next()
 			} else {
 				res.sendStatus(404)
 			}
-			next()
 		})
 
 		this.router.get(
@@ -74,10 +72,7 @@ export class CancellationPolicyController {
 	public getCancellationPolicy() {
 		logger.debug('Getting cancellation policy')
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-			const learningProvider = req.learningProvider
-
-			response.render('page/add-cancellation-policy', {learningProvider: learningProvider})
+			response.render('page/add-cancellation-policy')
 		}
 	}
 
