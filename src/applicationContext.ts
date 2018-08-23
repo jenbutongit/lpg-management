@@ -29,7 +29,6 @@ import {Course} from './learning-catalogue/model/course'
 import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
 import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
-// import {ModuleValidator} from './learning-catalogue/validator/moduleValidator'
 import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
 import {ModuleController} from './controllers/moduleController'
@@ -57,7 +56,6 @@ export class ApplicationContext {
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
 	youtubeModuleController: YoutubeModuleController
-	//moduleValidator: ModuleValidator
 	moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	audienceFactory: AudienceFactory
@@ -118,7 +116,6 @@ export class ApplicationContext {
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
-		// this.moduleValidator = new ModuleValidator()
 		this.moduleValidator = new Validator<Module>(this.moduleFactory)
 		this.youtubeModuleController = new YoutubeModuleController(
 			this.learningCatalogue,
