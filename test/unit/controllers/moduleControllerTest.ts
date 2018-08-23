@@ -24,7 +24,7 @@ describe('Module Controller Tests', function() {
 		moduleController = new ModuleController(learningCatalogue, moduleFactory)
 	})
 
-	it('should call add module page', async function() {
+	it('should render add module page', async function() {
 		const addModule: (request: Request, response: Response) => void = moduleController.addModule()
 
 		const request: Request = mockReq()
@@ -35,7 +35,7 @@ describe('Module Controller Tests', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/add-module')
 	})
 
-	it('should call add module type page', async function() {
+	it('should render add module type page', async function() {
 		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
 
 		const request: Request = mockReq()
@@ -48,6 +48,21 @@ describe('Module Controller Tests', function() {
 		response.locals.course = course
 		await setModule(request, response)
 		//To be done - would expect to render form for specific module type
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
+	})
+
+	it('should remain on add module page if no course is selected', async function() {
+		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.body = {module: ''}
+		const course = new Course()
+		course.title = 'New Course'
+		course.id = 'abc123'
+		response.locals.course = course
+		await setModule(request, response)
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
 	})
 })
