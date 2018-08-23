@@ -44,14 +44,27 @@
                   
             <form action="/content-management/courses/{{ course.id }}/module/add-file" method="post">
                 <fieldset class="govuk-fieldset">
-                   
-                        {{ govukInput({
-                        label: {
-                            text: "Module title"
-                        },
-                        id: "moduleTitle",
-                        name: "moduleTitle"
-                        }) }}
+                        <input name="type" type="hidden" value="file">
+                        {% if errors %}
+                            {{ govukInput({
+                            label: {
+                                text: "Module title"
+                            },
+                            id: "moduleTitle",
+                            name: "moduleTitle",
+                            errorMerssage: {
+                                text: "Module title is required"
+                                }
+                            }) }}
+                        {% else %}
+                            {{ govukInput({
+                            label: {
+                                text: "Module title"
+                            },
+                            id: "moduleTitle",
+                            name: "moduleTitle"
+                            }) }}
+                        {% endif %}
            
                         {{ govukTextarea({
                             name: "description",
@@ -64,7 +77,7 @@
                     <div class="add-file-form govuk-form-group">         
                         <label class="govuk-label">File</label>
                         <span id="file-upload-hint" class="govuk-hint">You can upload the following file types: PDF, Powerpoint, Excel, Word, video(MP4)</span> 
-                        <input class="govuk-file-upload custom-uploader" id="file-upload" name="file-upload" type="file" aria-describedby="file-upload-hint">
+                        <input class="govuk-file-upload custom-uploader" id="file-upload" name="file" type="file" aria-describedby="file-upload-hint">
                         <label class="btn" for="file-upload"><span>Choose file</span></label>
                     </div>
              
@@ -105,9 +118,6 @@
 {% block bodyEnd %}
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
-     <script>
-        document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    </script>
 
     <script src="/js/file-uploader.js"></script>
 {% endblock %}

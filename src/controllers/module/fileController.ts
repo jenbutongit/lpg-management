@@ -1,18 +1,24 @@
 import {Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
-// import {ContentRequest} from '../../extended'
-import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
+import {ContentRequest} from '../../extended'
+import {Validator} from '../../learning-catalogue/validator/validator'
+import {Module} from '../../learning-catalogue/model/module'
 
 export class FileController {
 	learningCatalogue: LearningCatalogue
-	moduleValidator: ModuleValidator
+	moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	router: Router
 
-	constructor(learningCatalogue: LearningCatalogue, moduleFactory: ModuleFactory) {
+	constructor(
+		learningCatalogue: LearningCatalogue,
+		moduleValidator: Validator<Module>,
+		moduleFactory: ModuleFactory
+	) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleFactory = moduleFactory
+		this.moduleValidator = moduleValidator
 		this.router = Router()
 		this.setRouterPaths()
 	}
@@ -36,26 +42,29 @@ export class FileController {
 	}
 	public setFile() {
 		return async (request: Request, response: Response) => {
-			// const req = request as ContentRequest
-			// let data = {
-			// 	...req.body,
-			// }
+			const req = request as ContentRequest
+			let data = {
+				...req.body,
+			}
 			const course = response.locals.course
-			// let module = await this.moduleFactory.create(data)
-			// let errors = await this.moduleValidator.check(data, ['title', 'description'])
+			let module = await this.moduleFactory.create(data)
+			let errors = await this.moduleValidator.check(data, ['title', 'description', 'file'])
 
-			// if (Object.keys(errors.fields).length != 0) {
-			// 	request.session!.sessionFlash = {errors: errors, module: module}
-			// 	return response.redirect(`/content-management/courses/${course.id}/module/add-file`)
-			// }
-			// const newData = {
-			// 	id: data.id || 'testid',
-			// 	type: data.type || 'file',
-			// 	title: data.title || 'test title',
-			// 	description: data.description || 'test description',
-			// 	optional: data.isOptional || false,
-			// }
-			// module = await this.moduleFactory.create(newData)
+			if (Object.keys(errors.fields).length != 0) {
+				request.session!.sessionFlash = {errors: errors, module: module}
+				return response.redirect(`/content-management/courses/${course.id}/module/add-file`)
+			}
+
+			const newData = {
+				id: data.id,
+				type: data.type,
+				title: data.title,
+				description: data.description,
+				file: data.file,
+				optional: data.isOptional || false,
+			}
+			module = await this.moduleFactory.create(newData)
+			// To be implemented at a later stage
 			// await this.learningCatalogue.createModule(course.id, module)
 			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}

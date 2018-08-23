@@ -141,7 +141,7 @@ export class ApplicationContext {
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 
-		this.fileController = new FileController(this.learningCatalogue, this.moduleFactory)
+		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 	}
 
 	addToResponseLocals() {
