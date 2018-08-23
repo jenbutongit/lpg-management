@@ -20,8 +20,7 @@ export class CourseFactory {
 		course.learningOutcomes = data.learningOutcomes
 		course.shortDescription = data.shortDescription
 		course.title = data.title
-		course.modules = (data.modules || []).map(this._moduleFactory.defaultCreate)
-
+		course.modules = (data.modules || []).map(this._moduleFactory.create)
 		return course
 	}
 

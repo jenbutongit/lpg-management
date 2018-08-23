@@ -54,7 +54,7 @@ describe('ModuleFactory tests', () => {
 
 	it('should create LinkModule', async () => {
 		data.location = 'http://example.org'
-		data.type = 'link'
+		data.type = 'blog'
 
 		const module = await moduleFactory.create(data)
 
