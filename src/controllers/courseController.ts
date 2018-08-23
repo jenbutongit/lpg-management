@@ -24,10 +24,12 @@ export class CourseController {
 		this.courseFactory = courseFactory
 		this.router = Router()
 
-		this.setRouterPaths()
+		this.getCourseFromRouterParamAndSetOnLocals()
+
+		this.configureRouterPaths()
 	}
 
-	private setRouterPaths() {
+	private getCourseFromRouterParamAndSetOnLocals() {
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
 
@@ -38,7 +40,9 @@ export class CourseController {
 				res.sendStatus(404)
 			}
 		})
+	}
 
+	private configureRouterPaths() {
 		this.router.get('/content-management/courses/:courseId/overview', this.courseOverview())
 		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
 
