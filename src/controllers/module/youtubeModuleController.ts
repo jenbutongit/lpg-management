@@ -2,19 +2,20 @@ import {Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {ContentRequest} from '../../extended'
-import {ModuleValidator} from '../../learning-catalogue/validator/moduleValidator'
 import {YoutubeService} from '../../lib/youtubeService'
+import {Module} from '../../learning-catalogue/model/module'
+import {Validator} from '../../learning-catalogue/validator/validator'
 
 export class YoutubeModuleController {
 	learningCatalogue: LearningCatalogue
-	moduleValidator: ModuleValidator
+	moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	router: Router
 	youtube: YoutubeService
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
-		moduleValidator: ModuleValidator,
+		moduleValidator: Validator<Module>,
 		moduleFactory: ModuleFactory,
 		youtube: YoutubeService
 	) {

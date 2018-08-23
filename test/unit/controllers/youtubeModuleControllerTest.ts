@@ -1,7 +1,6 @@
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {YoutubeModuleController} from '../../../src/controllers/module/youtubeModuleController'
-import {ModuleValidator} from '../../../src/learning-catalogue/validator/moduleValidator'
 import {ModuleFactory} from '../../../src/learning-catalogue/model/factory/moduleFactory'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {mockReq, mockRes} from 'sinon-express-mock'
@@ -10,19 +9,18 @@ import * as sinon from 'sinon'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import {Request, Response} from 'express'
 import {expect} from 'chai'
-import axios from 'axios'
 import {Module} from '../../../src/learning-catalogue/model/module'
-import * as config from '../../../src/config'
 import {YoutubeService} from 'lib/youtubeService'
+import {Validator} from '../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)
 
 describe('YoutubeService Module Controller Test', function() {
 	let moduleController: YoutubeModuleController
 	let learningCatalogue: LearningCatalogue
-	let moduleValidator: ModuleValidator
+	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
-	let youtube: YoutubeService
+	let youtubeService: YoutubeService
 
 	let youtubeResponse = {
 		status: 200,
@@ -41,10 +39,16 @@ describe('YoutubeService Module Controller Test', function() {
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		moduleValidator = <ModuleValidator>{}
+		moduleValidator = <Validator<Module>>{}
 		moduleFactory = <ModuleFactory>{}
+		youtubeService = <YoutubeService>{}
 
-		moduleController = new YoutubeModuleController(learningCatalogue, moduleValidator, moduleFactory, youtube)
+		moduleController = new YoutubeModuleController(
+			learningCatalogue,
+			moduleValidator,
+			moduleFactory,
+			youtubeService
+		)
 	})
 
 	it('should check for errors and redirect to course preview page', async function() {
@@ -61,10 +65,8 @@ describe('YoutubeService Module Controller Test', function() {
 		const url = 'https://www.youtube.com/example'
 
 		const req = request as ContentRequest
-		req.params.courseId = 'abc'
 		response.locals.course = course
 
-		req.body.type = 'video'
 		req.body.url = url
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
@@ -73,20 +75,17 @@ describe('YoutubeService Module Controller Test', function() {
 
 		learningCatalogue.createModule = sinon.stub()
 
-		learningCatalogue.getCourse = sinon.stub().returns(course)
-
-		axios.get = sinon.stub().returns(youtubeResponse)
+		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
+		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
+		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse.data)
+		youtubeService.getDuration = sinon.stub().returns(1)
 
 		await setModule(request, response)
 
-		expect(axios.get).to.have.been.calledWith(
-			`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=${config.YOUTUBE_API_KEY}`
-		)
-		expect(axios.get).to.have.been.calledWith(
-			`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=eyU3bRy2x44"&key=${
-				config.YOUTUBE_API_KEY
-			}`
-		)
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
+		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getDuration).to.have.been.calledOnce
 		expect(learningCatalogue.createModule).to.have.been.calledWith('abc', module)
 		expect(response.redirect).to.have.been.calledWith('/content-management/courses/abc/preview')
 	})
@@ -108,16 +107,17 @@ describe('YoutubeService Module Controller Test', function() {
 
 		moduleValidator.check = sinon.stub().returns({fields: ['validation.course.title.empty'], size: 1})
 
-		learningCatalogue.getCourse = sinon.stub().returns(course)
-
 		moduleFactory.create = sinon.stub().returns(module)
+
+		youtubeService.getYoutubeResponse = sinon.stub().returns(undefined)
 
 		await setModule(request, response)
 
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/add-youtube-module`)
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/youtube-module`)
 	})
 
-	it('should get basic youtube info and redirect to course preview page', async function() {
+	it('should get video duration and redirect to course preview page', async function() {
 		const course: Course = new Course()
 
 		course.id = 'abc'
@@ -134,23 +134,23 @@ describe('YoutubeService Module Controller Test', function() {
 		const req = request as ContentRequest
 		req.params.courseId = 'abc'
 
-		req.body.type = 'video'
 		req.body.url = url
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 
-		learningCatalogue.getCourse = sinon.stub().returns(course)
-
-		youtubeResponse.status = 404
-		axios.get = sinon.stub().returns(youtubeResponse)
+		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
+		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
+		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse.data)
+		youtubeService.getDuration = sinon.stub().returns(0)
 
 		moduleFactory.create = sinon.stub().returns(module)
 
 		await setModule(request, response)
 
-		expect(axios.get).to.have.been.calledWith(
-			`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=${config.YOUTUBE_API_KEY}`
-		)
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/add-youtube-module`)
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
+		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getDuration).to.have.been.calledOnce
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/youtube-module`)
 	})
 })

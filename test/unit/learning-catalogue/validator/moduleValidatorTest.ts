@@ -5,15 +5,24 @@ import * as chaiAsPromised from 'chai-as-promised'
 import * as moment from 'moment'
 import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
 import {ValidationErrorMapper} from '../../../../src/learning-catalogue/validator/validationErrorMapper'
-import {ModuleValidator} from '../../../../src/learning-catalogue/validator/moduleValidator'
+import {Module} from '../../../../src/learning-catalogue/model/module'
+import {Validator} from '../../../../src/learning-catalogue/validator/validator'
+import {EventFactory} from '../../../../src/learning-catalogue/model/factory/eventFactory'
+import {AudienceFactory} from '../../../../src/learning-catalogue/model/factory/audienceFactory'
 
 chai.use(chaiAsPromised)
 
 describe('ModuleValidator tests', () => {
-	let validator: ModuleValidator
+	let validator: Validator<Module>
+	let eventFactory: EventFactory
+	let audienceFactory: AudienceFactory
+	let moduleFactory: ModuleFactory
 
 	beforeEach(() => {
-		validator = new ModuleValidator()
+		eventFactory = new EventFactory()
+		audienceFactory = new AudienceFactory()
+		moduleFactory = new ModuleFactory(audienceFactory, eventFactory)
+		validator = new Validator<Module>(moduleFactory)
 	})
 
 	describe('Validate properties individually', async () => {
@@ -25,7 +34,7 @@ describe('ModuleValidator tests', () => {
 			const errors = await validator.check(params, ['title'])
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
+			expect(errors.fields['title']).to.eql(['validation_module_title_empty'])
 		})
 
 		it('should pass validation if title is present', async () => {
@@ -196,7 +205,7 @@ describe('ModuleValidator tests', () => {
 			const errors = await validator.check(params, ['url'])
 
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['url']).to.eql(['validation.module.url.empty'])
+			expect(errors.fields['url']).to.eql(['validation_module_url_empty'])
 		})
 
 		it('should pass validation if url is present on VideoModule', async () => {
@@ -453,7 +462,7 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
+			expect(errors.fields['title']).to.eql(['validation_module_title_empty'])
 		})
 
 		it('should fail validation if description is not present', async () => {
@@ -725,7 +734,7 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
+			expect(errors.fields['title']).to.eql(['validation_module_title_empty'])
 		})
 
 		it('should fail validation if productCode is not present', async () => {
@@ -1231,7 +1240,7 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
+			expect(errors.fields['title']).to.eql(['validation_module_title_empty'])
 		})
 
 		it('should fail validation if description is not present', async () => {
@@ -1580,7 +1589,7 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
+			expect(errors.fields['title']).to.eql(['validation_module_title_empty'])
 		})
 
 		it('should fail validation if location is not present', async () => {
@@ -1833,7 +1842,7 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['title']).to.eql(['validation.module.title.empty'])
+			expect(errors.fields['title']).to.eql(['validation_module_title_empty'])
 		})
 
 		it('should fail validation if url is not present', async () => {
@@ -1855,7 +1864,7 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params)
 			expect(errors.size).to.equal(1)
-			expect(errors.fields['url']).to.eql(['validation.module.url.empty'])
+			expect(errors.fields['url']).to.eql(['validation_module_url_empty'])
 		})
 
 		it('should fail validation if description is not present', async () => {

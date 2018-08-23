@@ -29,9 +29,11 @@ import {Course} from './learning-catalogue/model/course'
 import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
 import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
-import {ModuleValidator} from './learning-catalogue/validator/moduleValidator'
+// import {ModuleValidator} from './learning-catalogue/validator/moduleValidator'
 import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
+import {ModuleController} from './controllers/moduleController'
+import {Module} from './learning-catalogue/model/module'
 
 log4js.configure(config.LOGGING)
 
@@ -55,10 +57,12 @@ export class ApplicationContext {
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
 	youtubeModuleController: YoutubeModuleController
-	moduleValidator: ModuleValidator
+	//moduleValidator: ModuleValidator
+	moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
+	moduleController: ModuleController
 	pagination: Pagination
 	youtube: YoutubeService
 	youtubeConfig: YoutubeConfig
@@ -114,7 +118,8 @@ export class ApplicationContext {
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
-		this.moduleValidator = new ModuleValidator()
+		// this.moduleValidator = new ModuleValidator()
+		this.moduleValidator = new Validator<Module>(this.moduleFactory)
 		this.youtubeModuleController = new YoutubeModuleController(
 			this.learningCatalogue,
 			this.moduleValidator,
@@ -150,6 +155,8 @@ export class ApplicationContext {
 			this.termsAndConditionsFactory,
 			this.termsAndConditionsValidator
 		)
+
+		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 	}
 
 	addToResponseLocals() {
