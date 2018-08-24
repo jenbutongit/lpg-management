@@ -16,7 +16,7 @@ import {Validator} from '../../../src/learning-catalogue/validator/validator'
 chai.use(sinonChai)
 
 describe('YoutubeService Module Controller Test', function() {
-	let moduleController: YoutubeModuleController
+	let youtubeModuleController: YoutubeModuleController
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
@@ -26,7 +26,7 @@ describe('YoutubeService Module Controller Test', function() {
 		status: 200,
 		data: {
 			type: 'video',
-			html: '<iframe width="560" height="315" src="https://www.youtube.com/embed/eyU3bRy2x44"',
+			html: '<iframe width="560" height="315" src="https://www.youtubeService.com/embed/example"',
 			items: [
 				{
 					contentDetails: {
@@ -43,7 +43,7 @@ describe('YoutubeService Module Controller Test', function() {
 		moduleFactory = <ModuleFactory>{}
 		youtubeService = <YoutubeService>{}
 
-		moduleController = new YoutubeModuleController(
+		youtubeModuleController = new YoutubeModuleController(
 			learningCatalogue,
 			moduleValidator,
 			moduleFactory,
@@ -51,22 +51,32 @@ describe('YoutubeService Module Controller Test', function() {
 		)
 	})
 
-	it('should check for errors and redirect to course preview page', async function() {
-		const course: Course = new Course()
-		const module: Module = new Module()
-
-		course.id = 'abc'
-
-		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
+	it('should render youtubeService module page', async function() {
+		const getModule: (request: Request, response: Response) => void = youtubeModuleController.getModule()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		const url = 'https://www.youtube.com/example'
+		await getModule(request, response)
 
-		const req = request as ContentRequest
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/module-youtubeService')
+	})
+
+	it('should check for errors and redirect to course preview page', async function() {
+		const course: Course = new Course()
+		const module: Module = new Module()
+		course.id = 'abc'
+
+		const url = 'https://www.youtubeService.com/example'
+
+		const setModule: (request: Request, response: Response) => void = youtubeModuleController.setModule()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
 		response.locals.course = course
 
+		const req = request as ContentRequest
 		req.body.url = url
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
@@ -77,11 +87,12 @@ describe('YoutubeService Module Controller Test', function() {
 
 		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
 		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
-		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse.data)
+		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse)
 		youtubeService.getDuration = sinon.stub().returns(1)
 
 		await setModule(request, response)
 
+		expect(moduleFactory.create).to.have.been.calledTwice
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
 		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
 		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
@@ -92,18 +103,14 @@ describe('YoutubeService Module Controller Test', function() {
 
 	it('should check for and find errors and redirect to course preview page', async function() {
 		const course: Course = new Course()
-
 		course.id = 'abc'
 
-		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
+		const setModule: (request: Request, response: Response) => void = youtubeModuleController.setModule()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
 		response.locals.course = course
-
-		const req = request as ContentRequest
-		req.params.courseId = 'abc'
 
 		moduleValidator.check = sinon.stub().returns({fields: ['validation.course.title.empty'], size: 1})
 
@@ -113,6 +120,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		await setModule(request, response)
 
+		expect(moduleFactory.create).to.have.been.calledOnce
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/youtube-module`)
 	})
@@ -122,14 +130,14 @@ describe('YoutubeService Module Controller Test', function() {
 
 		course.id = 'abc'
 
-		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
+		const setModule: (request: Request, response: Response) => void = youtubeModuleController.setModule()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
 		response.locals.course = course
 
-		const url = 'https://www.youtube.com/example'
+		const url = 'https://www.youtubeService.com/example'
 
 		const req = request as ContentRequest
 		req.params.courseId = 'abc'
@@ -147,6 +155,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		await setModule(request, response)
 
+		expect(moduleFactory.create).to.have.been.calledOnce
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
 		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
 		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)

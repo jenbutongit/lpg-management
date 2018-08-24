@@ -62,7 +62,7 @@ export class ApplicationContext {
 	eventFactory: EventFactory
 	moduleController: ModuleController
 	pagination: Pagination
-	youtube: YoutubeService
+	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 
 	@EnvValue('LPG_UI_URL')
@@ -112,7 +112,7 @@ export class ApplicationContext {
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
 		this.youtubeConfig = new YoutubeConfig('', 15000)
-		this.youtube = new YoutubeService(this.youtubeConfig)
+		this.youtubeService = new YoutubeService(this.youtubeConfig)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
@@ -121,7 +121,7 @@ export class ApplicationContext {
 			this.learningCatalogue,
 			this.moduleValidator,
 			this.moduleFactory,
-			this.youtube
+			this.youtubeService
 		)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()

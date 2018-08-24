@@ -1,27 +1,18 @@
 export class YoutubeConfig {
+	private _url: string
+	private _timeout: number
+
+	constructor(url: string, timeout: number = 15000) {
+		this._url = url
+		this._timeout = timeout
+	}
+
 	get timeout(): number {
 		return this._timeout
 	}
 
 	set timeout(value: number) {
 		this._timeout = value
-	}
-	private _auth: any
-	private _url: string
-	private _timeout: number
-
-	constructor(url: string, timeout: number = 15000) {
-		this._auth = undefined
-		this._url = url
-		this._timeout = timeout
-	}
-
-	get auth(): {username: string; password: string} {
-		return this._auth
-	}
-
-	set auth(value: {username: string; password: string}) {
-		this._auth = value
 	}
 
 	get url(): string {
