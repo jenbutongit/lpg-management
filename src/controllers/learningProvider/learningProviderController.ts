@@ -35,12 +35,10 @@ export class LearningProviderController {
 
 	private setRouterPaths() {
 		this.router.param('learningProviderId', async (ireq, res, next, learningProviderId) => {
-			const req = ireq as ContentRequest
-
 			const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
 
 			if (learningProvider) {
-				req.learningProvider = learningProvider
+				res.locals.learningProvider = learningProvider
 				next()
 			} else {
 				res.sendStatus(404)
@@ -76,10 +74,7 @@ export class LearningProviderController {
 
 	public getLearningProviderOverview() {
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-			const learningProvider = req.learningProvider
-
-			response.render('page/learning-provider-overview', {learningProvider: learningProvider})
+			response.render('page/learning-provider-overview')
 		}
 	}
 
