@@ -40,13 +40,13 @@ export class YoutubeModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/youtubeService-module', this.getModule())
-		this.router.post('/content-management/courses/:courseId/youtubeService-module', this.setModule())
+		this.router.get('/content-management/courses/:courseId/youtube-module', this.getModule())
+		this.router.post('/content-management/courses/:courseId/youtube-module', this.setModule())
 	}
 
 	public getModule() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/module-youtubeService')
+			response.render('page/course/module/module-youtube')
 		}
 	}
 

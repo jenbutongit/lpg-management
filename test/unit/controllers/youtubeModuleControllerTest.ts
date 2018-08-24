@@ -59,7 +59,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		await getModule(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/course/module/module-youtubeService')
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/module-youtube')
 	})
 
 	it('should check for errors and redirect to course preview page', async function() {
