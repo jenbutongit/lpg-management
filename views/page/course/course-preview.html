@@ -1,6 +1,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "table/macro.njk" import govukTable %}
 {% from "../../component/course-preview/macro.njk" import coursePreview with context %}
+{% from "../../component/course-preview-modules/macro.njk" import coursePreviewModules with context %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -30,6 +31,11 @@
             {% block coursePreview %}
                 {{ coursePreview(course) }}
             {% endblock %}
+
+            {% block coursePreviewModules %}
+                {{ coursePreviewModules(course) }}
+            {% endblock %}
+
         </div>
 
         <div class="govuk-grid-column-one-third">
