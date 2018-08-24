@@ -2,7 +2,7 @@ import {AudienceFactory} from './audienceFactory'
 import {EventFactory} from './eventFactory'
 import {FaceToFaceModule} from '../faceToFaceModule'
 import {VideoModule} from '../videoModule'
-import {BlogModule} from '../blogModule'
+import {LinkModule} from '../linkModule'
 import {FileModule} from '../fileModule'
 import {ELearningModule} from '../eLearningModule'
 
@@ -46,9 +46,15 @@ export class ModuleFactory {
 			module.location = data.location
 			return module
 		},
-		blog: (data: any) => {
-			const module = this.defaultCreate(new BlogModule(), data)
-			module.location = data.location
+		link: (data: any) => {
+			const module = this.defaultCreate(new LinkModule(), data)
+			module.id = data.id
+			module.title = data.moduleTitle
+			module.description = data.description
+			module.url = data.url
+			module.duration = data.duration
+			module.isOptional = data.isOptional
+
 			return module
 		},
 		file: (data: any) => {

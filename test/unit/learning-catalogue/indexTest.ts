@@ -6,7 +6,6 @@ import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
-import {ModuleService} from '../../../src/learning-catalogue/service/moduleService'
 import {LearningCatalogueConfig} from '../../../src/learning-catalogue/learningCatalogueConfig'
 import {Module} from '../../../src/learning-catalogue/model/module'
 import {LearningProvider} from '../../../src/learning-catalogue/model/learningProvider'
@@ -19,7 +18,7 @@ chai.use(sinonChai)
 
 describe('Learning Catalogue tests', () => {
 	let courseService: EntityService<Course>
-	let moduleService: ModuleService
+	let moduleService: EntityService<Module>
 	let learningProviderService: EntityService<LearningProvider>
 	let cancellationPolicyService: EntityService<CancellationPolicy>
 	let termsAndConditionsService: EntityService<TermsAndConditions>
@@ -30,7 +29,7 @@ describe('Learning Catalogue tests', () => {
 
 	beforeEach(() => {
 		courseService = <EntityService<Course>>{}
-		moduleService = <ModuleService>{}
+		moduleService = <EntityService<Module>>{}
 		learningProviderService = <EntityService<LearningProvider>>{}
 		cancellationPolicyService = <EntityService<CancellationPolicy>>{}
 		termsAndConditionsService = <EntityService<TermsAndConditions>>{}
@@ -72,7 +71,7 @@ describe('Learning Catalogue tests', () => {
 		moduleService.create = sinon.stub()
 
 		await learningCatalogue.createModule(courseId, module)
-		return expect(moduleService.create).to.have.been.calledOnceWith(courseId, module)
+		return expect(moduleService.create).to.have.been.calledOnceWith(`/courses/${courseId}/modules/`, module)
 	})
 
 	it('should call moduleService when getting a module', async () => {

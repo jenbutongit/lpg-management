@@ -42,7 +42,7 @@ export const AUTHENTICATION = set({
 	callbackUrl: env.CALLBACK_URL || 'http://lpg.local.cshr.digital:3005',
 })
 
-export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000
+export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000000
 
 export const AUTHENTICATION_PATH = '/authenticate'
 
