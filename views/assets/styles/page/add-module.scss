@@ -12,6 +12,13 @@
 .module-container {
 	margin-bottom: 30px;
 }
+.sortable-chosen {
+	background-color: $border;
+}
+
+.sortable-ghost {
+	background-color: $border;
+}
 
 @media screen and (min-width: $tablet-small) {
 	.modules {
