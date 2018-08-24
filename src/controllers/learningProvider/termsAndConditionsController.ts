@@ -2,7 +2,6 @@ import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {TermsAndConditionsFactory} from '../../learning-catalogue/model/factory/termsAndConditionsFactory'
-import {ContentRequest} from '../../extended'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {TermsAndConditions} from '../../learning-catalogue/model/termsAndConditions'
 
@@ -29,9 +28,7 @@ export class TermsAndConditionsController {
 	}
 
 	private setRouterPaths() {
-		this.router.param('termsAndConditionsId', async (ireq, res, next, termsAndConditionsId) => {
-			const req = ireq as ContentRequest
-
+		this.router.param('termsAndConditionsId', async (req, res, next, termsAndConditionsId) => {
 			const learningProviderId = req.params.learningProviderId
 
 			const termsAndConditions = await this.learningCatalogue.getTermsAndConditions(
@@ -40,24 +37,22 @@ export class TermsAndConditionsController {
 			)
 
 			if (termsAndConditions) {
-				req.termsAndConditions = termsAndConditions
+				res.locals.termsAndConditions = termsAndConditions
+				next()
 			} else {
 				res.sendStatus(404)
 			}
-			next()
 		})
 
-		this.router.param('learningProviderId', async (ireq, res, next, learningProviderId) => {
-			const req = ireq as ContentRequest
-
+		this.router.param('learningProviderId', async (req, res, next, learningProviderId) => {
 			const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)
 
 			if (learningProvider) {
-				req.learningProvider = learningProvider
+				res.locals.learningProvider = learningProvider
+				next()
 			} else {
 				res.sendStatus(404)
 			}
-			next()
 		})
 
 		this.router.get(
@@ -74,10 +69,7 @@ export class TermsAndConditionsController {
 	public getTermsAndConditions() {
 		logger.debug('Getting terms and conditions')
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-			const learningProvider = req.learningProvider
-
-			response.render('page/add-terms-and-conditions', {learningProvider: learningProvider})
+			response.render('page/add-terms-and-conditions')
 		}
 	}
 
