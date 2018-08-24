@@ -5,7 +5,6 @@ import {LearningCatalogue} from '../../learning-catalogue'
 import {LearningProviderFactory} from '../../learning-catalogue/model/factory/learningProviderFactory'
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
-import {ContentRequest} from '../../extended'
 import {Validator} from '../../learning-catalogue/validator/validator'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
