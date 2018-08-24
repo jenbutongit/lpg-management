@@ -55,6 +55,8 @@ describe('ModuleFactory tests', () => {
 	it('should create LinkModule', async () => {
 		data.url = 'http://example.org'
 		data.type = 'link'
+		data.moduleTitle = 'module title'
+		data.description = 'this a description'
 
 		const module = await moduleFactory.create(data)
 
@@ -62,7 +64,6 @@ describe('ModuleFactory tests', () => {
 		testProperties(module.audiences[0], data.audiences[0], ['requiredBy'])
 
 		expect(module.audiences[0].requiredBy!.toISOString().substr(0, 19)).to.equal(data.audiences[0].requiredBy)
-		expect(module.url).to.equal(data.url)
 	})
 
 	it('should create ELearningModule', async () => {
