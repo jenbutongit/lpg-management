@@ -80,25 +80,7 @@ describe('Learning Catalogue tests', () => {
 		moduleService.get = sinon.stub()
 
 		await learningCatalogue.getModule(courseId, moduleId)
-		return expect(moduleService.get).to.have.been.calledOnceWith(courseId, moduleId)
-	})
-
-	it('should call moduleService when creating a module', async () => {
-		const courseId: string = 'course-id'
-		const module: Module = <Module>{}
-		moduleService.create = sinon.stub()
-
-		await learningCatalogue.createModule(courseId, module)
-		return expect(moduleService.create).to.have.been.calledOnceWith(courseId, module)
-	})
-
-	it('should call moduleService when getting a module', async () => {
-		const courseId: string = 'course-id'
-		const moduleId: string = 'module-id'
-		moduleService.get = sinon.stub()
-
-		await learningCatalogue.getModule(courseId, moduleId)
-		return expect(moduleService.get).to.have.been.calledOnceWith(courseId, moduleId)
+		return expect(moduleService.get).to.have.been.calledOnceWith(`/courses/${courseId}/modules/${moduleId}`)
 	})
 
 	it('should call learningProviderService when creating a learning provider', async () => {
