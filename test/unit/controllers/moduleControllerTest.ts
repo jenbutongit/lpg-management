@@ -41,14 +41,14 @@ describe('Module Controller Tests', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		request.body = {module: 'blog'}
+		request.body = {module: 'link'}
 		const course = new Course()
 		course.title = 'New Course'
 		course.id = 'abc123'
 		response.locals.course = course
 		await setModule(request, response)
 		//To be done - would expect to render form for specific module type
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-link`)
 	})
 
 	it('should remain on add module page if no course is selected', async function() {

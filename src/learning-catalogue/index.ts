@@ -1,6 +1,5 @@
 import {Course} from './model/course'
 import {DefaultPageResults} from './model/defaultPageResults'
-import {ModuleService} from './service/moduleService'
 import {Module} from './model/module'
 import {RestService} from './service/restService'
 import {LearningCatalogueConfig} from './learningCatalogueConfig'
@@ -12,9 +11,12 @@ import {LearningProviderFactory} from './model/factory/learningProviderFactory'
 import {CancellationPolicyFactory} from './model/factory/cancellationPolicyFactory'
 import {TermsAndConditionsFactory} from './model/factory/termsAndConditionsFactory'
 import {CourseFactory} from './model/factory/courseFactory'
+import {ModuleFactory} from './model/factory/moduleFactory'
+import {AudienceFactory} from './model/factory/audienceFactory'
+import {EventFactory} from './model/factory/eventFactory'
 
 export class LearningCatalogue {
-	private _moduleService: ModuleService
+	private _moduleService: EntityService<Module>
 	private _courseService: EntityService<Course>
 	private _learningProviderService: EntityService<LearningProvider>
 	private _cancellationPolicyService: EntityService<CancellationPolicy>
@@ -23,7 +25,10 @@ export class LearningCatalogue {
 
 	constructor(config: LearningCatalogueConfig) {
 		this._restService = new RestService(config)
-		this._moduleService = new ModuleService(this._restService)
+		this._moduleService = new EntityService<Module>(
+			this._restService,
+			new ModuleFactory(new AudienceFactory(), new EventFactory())
+		)
 
 		this._courseService = new EntityService<Course>(this._restService, new CourseFactory())
 
@@ -60,11 +65,11 @@ export class LearningCatalogue {
 	}
 
 	async createModule(courseId: string, module: Module): Promise<Module> {
-		return this._moduleService.create(courseId, module)
+		return this._moduleService.create(`/courses/${courseId}/modules/`, module)
 	}
 
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
-		return this._moduleService.get(courseId, moduleId)
+		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
 	}
 
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
@@ -115,7 +120,7 @@ export class LearningCatalogue {
 		this._courseService = value
 	}
 
-	set moduleService(value: ModuleService) {
+	set moduleService(value: EntityService<Module>) {
 		this._moduleService = value
 	}
 

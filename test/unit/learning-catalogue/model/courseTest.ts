@@ -2,7 +2,7 @@ import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
 import {Course} from '../../../../src/learning-catalogue/model/course'
 import {VideoModule} from '../../../../src/learning-catalogue/model/videoModule'
-import {BlogModule} from '../../../../src/learning-catalogue/model/blogModule'
+import {LinkModule} from '../../../../src/learning-catalogue/model/linkModule'
 import {FaceToFaceModule} from '../../../../src/learning-catalogue/model/faceToFaceModule'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 
@@ -60,7 +60,7 @@ describe('Course tests', () => {
 		const module1 = new VideoModule()
 		module1.price = 100
 
-		const module2 = new BlogModule()
+		const module2 = new LinkModule()
 		module2.price = 50
 
 		const module3 = new FaceToFaceModule()
