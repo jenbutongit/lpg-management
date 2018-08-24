@@ -46,6 +46,7 @@ app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
 app.use('/js', serveStatic(appRoot + '/views/assets/js'))
 app.use(serveStatic(appRoot + '/dist/views/assets'))
 app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
+app.use('/sortablejs', serveStatic(appRoot + '/node_modules/sortablejs/'))
 
 log4js.configure(config.LOGGING)
 
