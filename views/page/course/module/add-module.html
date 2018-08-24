@@ -19,7 +19,9 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
             {% set modules = course.modules %}
-                {# {% if modules.length > 0 %}
+                {# uncomment this when pointing to live data
+                
+                {% if modules.length > 0 %}
                     <p class="govuk-body">Sort the modules into the order they should appear in on the course details page</p>
                 {% endif %}
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
@@ -46,8 +48,13 @@
                 </ul>
                 {% else %}
                     <p class="govuk-body">This course does not have any modules yet</p>
-                {% endif %} #}
+                {% endif %}
+                
+                 #}
 
+                <!-- Hardcoded data below to be deleted -->
+                <p class="govuk-body">Sort the modules into the order they should appear in on the course details page</p>
+                
                  <ul class="list modules">
                     <li class="module-headers">
                         <p class="govuk-body header title"><strong>Module title</strong></p>
@@ -102,6 +109,7 @@
                         <span class="handle"></span>
                     </li>
                 </ul>
+                <!-- end of hardcoded data -->
             </div>
         </div>
         <div class="govuk-grid-row">
