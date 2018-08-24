@@ -138,4 +138,14 @@ describe('Youtube Service Test', function() {
 
 		expect(response).to.be.undefined
 	})
+
+	it('should get duration from Youtube and return undefined', async function() {
+		youtubeResponse.data.items = null
+
+		_restService.get = sinon.stub().returns(youtubeResponse.data)
+
+		const response = await youtubeService.getDuration('example')
+
+		expect(response).to.be.undefined
+	})
 })
