@@ -14,7 +14,7 @@ export class ModuleService {
 	}
 
 	async create(courseId: string, module: Module): Promise<Module> {
-		const data = await this._restService.post(`/courses/${courseId}/modules`, module)
+		const data = await this._restService.post(`/courses/${courseId}/modules/`, module)
 
 		return this._moduleFactory.create(data)
 	}
