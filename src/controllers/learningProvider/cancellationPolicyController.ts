@@ -27,6 +27,7 @@ export class CancellationPolicyController {
 		this.setRouterPaths()
 	}
 
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param('cancellationPolicyId', async (req, res, next, cancellationPolicyId) => {
 			const learningProviderId = req.params.learningProviderId
@@ -92,7 +93,7 @@ export class CancellationPolicyController {
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors}
 				return response.redirect(
-					'/content-management/learning-providers/' + learningProviderId + '/cancellation-policies'
+					`/content-management/learning-providers/${learningProviderId}/cancellation-policies`
 				)
 			}
 
@@ -104,7 +105,7 @@ export class CancellationPolicyController {
 
 			await this.learningCatalogue.createCancellationPolicy(learningProviderId, cancellationPolicy)
 
-			response.redirect('/content-management/learning-providers/' + learningProviderId)
+			response.redirect(`/content-management/learning-providers/${learningProviderId}`)
 		}
 	}
 
@@ -115,7 +116,7 @@ export class CancellationPolicyController {
 
 			await this.learningCatalogue.deleteCancellationPolicy(learningProviderId, cancellationPolicyId)
 
-			response.redirect('/content-management/learning-providers/' + learningProviderId)
+			response.redirect(`/content-management/learning-providers/${learningProviderId}`)
 		}
 	}
 

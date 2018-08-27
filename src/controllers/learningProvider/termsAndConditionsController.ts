@@ -27,6 +27,7 @@ export class TermsAndConditionsController {
 		this.setRouterPaths()
 	}
 
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param('termsAndConditionsId', async (req, res, next, termsAndConditionsId) => {
 			const learningProviderId = req.params.learningProviderId
@@ -104,7 +105,7 @@ export class TermsAndConditionsController {
 
 			await this.learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
 
-			response.redirect('/content-management/learning-providers/' + learningProviderId)
+			response.redirect(`/content-management/learning-providers/${learningProviderId}`)
 		}
 	}
 

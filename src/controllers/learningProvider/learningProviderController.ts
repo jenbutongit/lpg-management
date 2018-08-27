@@ -32,6 +32,7 @@ export class LearningProviderController {
 		this.setRouterPaths()
 	}
 
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param('learningProviderId', async (ireq, res, next, learningProviderId) => {
 			const learningProvider = await this.learningCatalogue.getLearningProvider(learningProviderId)

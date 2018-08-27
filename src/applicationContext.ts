@@ -31,9 +31,9 @@ import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactor
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
 import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
-import {ModuleController} from './controllers/moduleController'
+import {ModuleController} from './controllers/module/moduleController'
 import {Module} from './learning-catalogue/model/module'
-import {LinkModuleController} from './controllers/linkModuleController'
+import {LinkModuleController} from './controllers/module/linkModuleController'
 
 log4js.configure(config.LOGGING)
 
