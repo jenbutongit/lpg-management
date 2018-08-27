@@ -8,11 +8,11 @@ export class Module {
 		groups: ['all', 'type'],
 		message: 'validation.module.type.empty',
 	})
-	@IsIn(['face-to-face', 'blog', 'video', 'elearning', 'file'], {
+	@IsIn(['face-to-face', 'link', 'video', 'elearning', 'file'], {
 		groups: ['all', 'type'],
 		message: 'validation.module.type.validType',
 	})
-	type: 'face-to-face' | 'blog' | 'video' | 'elearning' | 'file'
+	type: 'face-to-face' | 'link' | 'video' | 'elearning' | 'file'
 
 	@IsNotEmpty({
 		groups: ['all', 'title'],

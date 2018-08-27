@@ -40,8 +40,8 @@ export class YoutubeModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/youtube-module', this.getModule())
-		this.router.post('/content-management/courses/:courseId/youtube-module', this.setModule())
+		this.router.get('/content-management/courses/:courseId/module-video', this.getModule())
+		this.router.post('/content-management/courses/:courseId/module-video', this.setModule())
 	}
 
 	public getModule() {

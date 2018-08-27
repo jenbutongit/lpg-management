@@ -33,6 +33,7 @@ import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
 import {ModuleController} from './controllers/moduleController'
 import {Module} from './learning-catalogue/model/module'
+import {LinkModuleController} from './controllers/linkModuleController'
 
 log4js.configure(config.LOGGING)
 
@@ -55,18 +56,18 @@ export class ApplicationContext {
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
+	moduleController: ModuleController
+	linkModuleController: LinkModuleController
+	moduleFactory: ModuleFactory
 	youtubeModuleController: YoutubeModuleController
 	moduleValidator: Validator<Module>
-	moduleFactory: ModuleFactory
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
-	moduleController: ModuleController
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -154,6 +155,7 @@ export class ApplicationContext {
 		)
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
+		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 	}
 
 	addToResponseLocals() {

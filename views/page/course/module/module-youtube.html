@@ -42,7 +42,7 @@
 
         {% set module = sessionFlash.module %}
 
-        <form action="/content-management/courses/{{course.id}}/youtube-module" method="post">
+        <form action="/content-management/courses/{{course.id}}/module-video" method="post">
             <input name="type" type="hidden" value="video">
             <fieldset class="govuk-fieldset">
                 {{ govukInput({
