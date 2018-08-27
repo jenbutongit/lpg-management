@@ -34,5 +34,9 @@
   "validation.termsAndConditions.name.empty": "Title is required",
   "validation.termsAndConditions.content.empty":
   "Content is required",
-  "validation_learningProvider_name_empty": "Name is required"
+  "validation_learningProvider_name_empty": "Name is required",
+  "validation_module_url_empty": "URL is required",
+  "validation_module_title_empty": "Title is required",
+  "validation_module_video_notFound": "There was a problem finding this video",
+  "validation_module_video_noDuration": "There was a problem finding the length of this video"
 }
