@@ -52,6 +52,14 @@ export class RestService {
 		}
 	}
 
+	async delete(path: string) {
+		try {
+			return await this._http.delete(path)
+		} catch (e) {
+			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${path}`)
+		}
+	}
+
 	set http(value: AxiosInstance) {
 		this._http = value
 	}
