@@ -13,11 +13,11 @@
 	margin-bottom: 30px;
 }
 .sortable-chosen {
-	background-color: $border;
+	background-color: govuk-colour('grey-4');
 }
 
 .sortable-ghost {
-	background-color: $border;
+	background-color: govuk-colour('grey-4');
 }
 
 @media screen and (min-width: $tablet-small) {
@@ -52,18 +52,19 @@
 			.spacer {
 				justify-self: flex-end;
 				display: block;
-				width: 20px;
-				height: 35px;
+				width: 114px;
+				height: 40px;
 			}
 
 			.handle {
 				justify-self: flex-end;
 				display: block;
-				width: 20px;
-				height: 35px;
+				width: 114px;
+				height: 40px;
 				background-color: red;
+				background-image: url('./mattm.png');
 				cursor: pointer;
-				margin: -20px 0 -10px 0;
+				margin: -10px 0 -10px 0;
 				align-self: center;
 			}
 		}
