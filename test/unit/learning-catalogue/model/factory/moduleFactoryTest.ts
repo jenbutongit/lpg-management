@@ -24,6 +24,7 @@ describe('ModuleFactory tests', () => {
 			id: 'MBlZJv-ZRDCYZsCByjzRuQ',
 			title: 'module title',
 			description: 'module description',
+			url: 'module url',
 			duration: 3600,
 			price: 100,
 			audiences: [
