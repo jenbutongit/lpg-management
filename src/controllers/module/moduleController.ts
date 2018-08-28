@@ -43,11 +43,12 @@ export class ModuleController {
 		return async (request: Request, response: Response) => {
 			const moduleType = request.body.module
 			const courseId = response.locals.course.id
-			if (moduleType !== '') {
-				response.redirect(`/content-management/courses/${courseId}/module/module-${moduleType}`)
-			} else {
-				response.redirect(`/content-management/courses/${courseId}/add-module`)
+
+			if (moduleType === '') {
+				return response.redirect(`/content-management/courses/${courseId}/add-module`)
 			}
+
+			return response.redirect(`/content-management/courses/${courseId}/module-${moduleType}`)
 		}
 	}
 
