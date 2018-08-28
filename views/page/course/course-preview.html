@@ -32,9 +32,11 @@
                 {{ coursePreview(course) }}
             {% endblock %}
 
-            {% block coursePreviewModules %}
-                {{ coursePreviewModules(course) }}
-            {% endblock %}
+            {% if modules.length > 0 %}
+                {% block coursePreviewModules %}
+                    {{ coursePreviewModules(course) }}
+                {% endblock %}
+            {% endif %}
 
         </div>
 
