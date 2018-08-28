@@ -44,7 +44,7 @@ export class ModuleController {
 			const moduleType = request.body.module
 			const courseId = response.locals.course.id
 			if (moduleType !== '') {
-				response.redirect(`/content-management/courses/${courseId}/module/add-${moduleType}`)
+				response.redirect(`/content-management/courses/${courseId}/module/module-${moduleType}`)
 			} else {
 				response.redirect(`/content-management/courses/${courseId}/add-module`)
 			}
@@ -53,7 +53,7 @@ export class ModuleController {
 
 	public addFile() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/add-file')
+			response.render('page/course/module/module-file')
 		}
 	}
 }

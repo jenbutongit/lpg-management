@@ -49,7 +49,25 @@ describe('Module Controller Tests', function() {
 		await setModule(request, response)
 
 		expect(response.redirect).to.have.been.calledOnceWith(
-			`/content-management/courses/${course.id}/module/add-file`
+			`/content-management/courses/${course.id}/module/module-file`
+		)
+	})
+
+	it('should render add module blog page', async function() {
+		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.body = {module: 'blog'}
+		const course = new Course()
+		course.title = 'New Course'
+		course.id = 'abc123'
+		response.locals.course = course
+		await setModule(request, response)
+
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/${course.id}/module/module-blog`
 		)
 	})
 
@@ -76,6 +94,6 @@ describe('Module Controller Tests', function() {
 
 		await addFile(request, response)
 
-		expect(response.render).to.have.been.calledOnceWith('page/course/module/add-file')
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/module-file')
 	})
 })

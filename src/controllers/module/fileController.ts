@@ -32,12 +32,12 @@ export class FileController {
 				res.sendStatus(404)
 			}
 		})
-		this.router.get('/content-management/courses/:courseId/module/add-file', this.getFile())
-		this.router.post('/content-management/courses/:courseId/module/add-file', this.setFile())
+		this.router.get('/content-management/courses/:courseId/module/module-file', this.getFile())
+		this.router.post('/content-management/courses/:courseId/module/module-file', this.setFile())
 	}
 	public getFile() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/add-file')
+			response.render('page/course/module/module-file')
 		}
 	}
 	public setFile() {
@@ -52,7 +52,7 @@ export class FileController {
 
 			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, module: module}
-				return response.redirect(`/content-management/courses/${course.id}/module/add-file`)
+				return response.redirect(`/content-management/courses/${course.id}/module/module-file`)
 			}
 
 			const newData = {
