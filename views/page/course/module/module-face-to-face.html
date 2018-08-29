@@ -23,67 +23,82 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
             <p class="govuk-body">You are adding a <strong>classroom</strong> module</p>
 
-            <form action="/content-management/courses/{{ course.id }}/module-face-to-face" method="post">
-                <input name="type" type="hidden" value="face-to-face">
-                <fieldset class="govuk-fieldset">
+            {% set errors = sessionFlash.errors%}
+            {% if errors.fields %}
+            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                <h2 class="govuk-error-summary__title" id="error-summary-title">
+                    There is a problem
+                </h2>
+                <div class="govuk-error-summary__body">
+                    <ul class="govuk-list govuk-error-summary__list">
+                        {% for field, message in errors.fields %}
+                        <li><a href="#">{{ i18n[message] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {%endif%}
+        <form action="/content-management/courses/{{ course.id }}/module-face-to-face" method="post">
+            <input name="type" type="hidden" value="face-to-face">
+            <fieldset class="govuk-fieldset">
+                {{ govukInput({
+                label: {
+                    text: "Module title"
+                },
+                id: "moduleTitle",
+                name: "moduleTitle"
+                }) }}
+
+                {{ govukTextarea({
+                name: "description",
+                id: "description",
+                label: {
+                    text: "Description"
+                }
+                }) }}
+            </fieldset>
+            <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
+            <div class="time-inputs">
+
                     {{ govukInput({
-                    label: {
-                        text: "Module title"
-                    },
-                    id: "moduleTitle",
-                    name: "moduleTitle"
+                        type: "number",
+                        label: {
+                            text: "Days"
+                        },
+                            attributes: {
+                                maxlength: "3"
+                        },
+                        id: "days",
+                        name: "days",
+                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
                     }) }}
 
-                    {{ govukTextarea({
-                    name: "description",
-                    id: "description",
-                    label: {
-                        text: "Description"
-                    }
-                    }) }}
-                </fieldset>
-                <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
-                <div class="time-inputs">
-                    <fieldset class="govuk-fieldset">
-                        {{ govukInput({
-                            type: "number",
-                            label: {
-                                text: "Days"
-                            },
-                             attributes: {
-                                  maxlength: "3"
-                            },
-                            id: "days",
-                            name: "days",
-                            classes: "govuk-date-input__input govuk-input--width-3 font-light"
-                        }) }}
-   
-                        {{ govukInput({
-                            type: "number",
-                            label: {
-                                text: "Hours"
-                            },
-                             attributes: {
-                                  maxlength: "3"
-                            },
-                            id: "hours",
-                            name: "hours",
-                            classes: "govuk-date-input__input govuk-input--width-3 font-light"
-                        }) }}
-                        {{ govukInput({
-                            type: "number",
-                            label: {
-                                text: "Minutes"
-                            },
+                    {{ govukInput({
+                        type: "number",
+                        label: {
+                            text: "Hours"
+                        },
                             attributes: {
-                                maxlength: "2"
-                            },
-                            id: "minutes",
-                            name: "miniutes",
-                            classes: "govuk-date-input__input govuk-input--width-3"
-                        }) }}
-                    </fieldset>
-                </div>
+                                maxlength: "3"
+                        },
+                        id: "hours",
+                        name: "hours",
+                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
+                    }) }}
+                    {{ govukInput({
+                        type: "number",
+                        label: {
+                            text: "Minutes"
+                        },
+                        attributes: {
+                            maxlength: "2"
+                        },
+                        id: "minutes",
+                        name: "miniutes",
+                        classes: "govuk-date-input__input govuk-input--width-3"
+                    }) }}
+
+            </div>
                 
                 {{ govukCheckboxes({
                     idPrefix: "isOptional",
