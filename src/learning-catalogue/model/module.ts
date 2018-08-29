@@ -8,15 +8,15 @@ export class Module {
 		groups: ['all', 'type'],
 		message: 'validation.module.type.empty',
 	})
-	@IsIn(['face-to-face', 'blog', 'video', 'elearning', 'file'], {
+	@IsIn(['face-to-face', 'link', 'video', 'elearning', 'file'], {
 		groups: ['all', 'type'],
 		message: 'validation.module.type.validType',
 	})
-	type: 'face-to-face' | 'blog' | 'video' | 'elearning' | 'file'
+	type: Module.Type
 
 	@IsNotEmpty({
 		groups: ['all', 'title'],
-		message: 'validation.module.title.empty',
+		message: 'validation_module_title_empty',
 	})
 	title: string
 
@@ -38,8 +38,20 @@ export class Module {
 
 	price?: number
 
+	optional: boolean
+
 	@ValidateNested({
 		groups: ['all', 'audiences'],
 	})
 	audiences: Audience[]
+}
+
+export namespace Module {
+	export enum Type {
+		FACE_TO_FACE = 'face-to-face',
+		LINK = 'link' ,
+		VIDEO = 'video',
+		E_LEARNING = 'elearning',
+		FILE = 'file'
+	}
 }
