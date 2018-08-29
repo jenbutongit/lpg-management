@@ -21,7 +21,7 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
-            <p class="govuk-body">You are adding a <strong>classroom</strong> module</p>
+            <p class="govuk-body">You are adding a <strong>face-to-face</strong> module</p>
 
             {% set errors = sessionFlash.errors%}
             {% if errors.fields %}
@@ -61,59 +61,28 @@
                             name: "title"
                         }) }}
                     {% endif %}
+
+                    {% if errors.fields.description %}
                     {{ govukTextarea({
-                    name: "description",
-                    id: "description",
-                    label: {
-                        text: "Description"
-                    }
-                    }) }}
+                        name: "description",
+                        id: "description",
+                        label: {
+                            text: "Description"
+                        },
+                        errorMessage: {
+                            text: "Description is required"
+                        }
+                        }) }}
+                    {% else %}
+                        {{ govukTextarea({
+                        name: "description",
+                        id: "description",
+                        label: {
+                            text: "Description"
+                        }
+                        }) }}
+                    {% endif %}
                 </fieldset>
-                <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
-                <div class="time-inputs">
-                {% if error.fields.duration%}
-
-                {% else %}
-                    {{ govukInput({
-                        type: "number",
-                        label: {
-                            text: "Days"
-                        },
-                            attributes: {
-                                maxlength: "3"
-                        },
-                        id: "days",
-                        name: "days",
-                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
-                    }) }}
-
-                    {{ govukInput({
-                        type: "number",
-                        label: {
-                            text: "Hours"
-                        },
-                            attributes: {
-                                maxlength: "3"
-                        },
-                        id: "hours",
-                        name: "hours",
-                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
-                    }) }}
-                    {{ govukInput({
-                        type: "number",
-                        label: {
-                            text: "Minutes"
-                        },
-                        attributes: {
-                            maxlength: "2"
-                        },
-                        id: "minutes",
-                        name: "minutes",
-                        classes: "govuk-date-input__input govuk-input--width-3"
-                    }) }}
-                {% endif %}
-
-            </div>
                 
                 {{ govukCheckboxes({
                     idPrefix: "isOptional",
