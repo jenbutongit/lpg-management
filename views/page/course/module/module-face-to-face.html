@@ -32,7 +32,7 @@
                 <div class="govuk-error-summary__body">
                     <ul class="govuk-list govuk-error-summary__list">
                         {% for field, message in errors.fields %}
-                        <li><a href="#">{{ i18n[message] }}</a></li>
+                            <li><a href="#">{{ i18n[message[0]] }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -45,8 +45,8 @@
                 label: {
                     text: "Module title"
                 },
-                id: "moduleTitle",
-                name: "moduleTitle"
+                id: "title",
+                name: "title"
                 }) }}
 
                 {{ govukTextarea({
@@ -94,7 +94,7 @@
                             maxlength: "2"
                         },
                         id: "minutes",
-                        name: "miniutes",
+                        name: "minutes",
                         classes: "govuk-date-input__input govuk-input--width-3"
                     }) }}
 
