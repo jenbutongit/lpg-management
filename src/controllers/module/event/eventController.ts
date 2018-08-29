@@ -43,7 +43,10 @@ export class eventController {
 			}
 		})
 
-		this.router.get('/content-management/course/:courseId/module/:moduleId/event-date', this.getDateTime())
+		this.router.get(
+			'/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
+			this.getDateTime()
+		)
 		this.router.post('/content-management/course/:courseId/:moduleId/event-date', this.setDateTime())
 	}
 
