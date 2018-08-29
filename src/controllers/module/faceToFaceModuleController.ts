@@ -56,21 +56,7 @@ export class FaceToFaceModuleController {
 
 			const course = response.locals.course
 
-			if (data.days || data.hours || data.minutes) {
-				if (data.days.isUndefined) {
-					data.days = 0
-				}
-				if (data.hours.isUndefined) {
-					data.hours = 0
-				}
-				if (data.minutes.isUndefined) {
-					data.minutes = 0
-				}
-
-				data.duration = data.days * 86400 + data.hours * 3600 + data.minutes * 60
-			}
-
-			const errors = await this.moduleValidator.check(data, ['title', 'duration', 'description'])
+			const errors = await this.moduleValidator.check(data, ['title', 'description'])
 
 			const module = await this.moduleFactory.create(data)
 
