@@ -25,40 +25,52 @@
 
             {% set errors = sessionFlash.errors%}
             {% if errors.fields %}
-            <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-                <h2 class="govuk-error-summary__title" id="error-summary-title">
-                    There is a problem
-                </h2>
-                <div class="govuk-error-summary__body">
-                    <ul class="govuk-list govuk-error-summary__list">
-                        {% for field, message in errors.fields %}
-                            <li><a href="#">{{ i18n[message[0]] }}</a></li>
-                        {% endfor %}
-                    </ul>
+                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            {% for field, message in errors.fields %}
+                            <li><p class="error-message">{{ i18n[message[0]] }}</p></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        {%endif%}
-        <form action="/content-management/courses/{{ course.id }}/module-face-to-face" method="post">
-            <input name="type" type="hidden" value="face-to-face">
-            <fieldset class="govuk-fieldset">
-                {{ govukInput({
-                label: {
-                    text: "Module title"
-                },
-                id: "title",
-                name: "title"
-                }) }}
-
-                {{ govukTextarea({
-                name: "description",
-                id: "description",
-                label: {
-                    text: "Description"
-                }
-                }) }}
-            </fieldset>
-            <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
-            <div class="time-inputs">
+            {%endif%}
+            <form action="/content-management/courses/{{ course.id }}/module-face-to-face" method="post">
+                <input name="type" type="hidden" value="face-to-face">
+                <fieldset class="govuk-fieldset">
+                    {% if errors.fields.title %}
+                        {{ govukInput({
+                        label: {
+                            text: "Module title"
+                        },
+                        id: "title",
+                        name: "title",
+                        errorMessage: {
+                            text: "Module title is required"
+                        }
+                        }) }}
+                    {% else %}
+                        {{ govukInput({
+                            label: {
+                                text: "Module title"
+                            },
+                            id: "title",
+                            name: "title"
+                        }) }}
+                    {% endif %}
+                    {{ govukTextarea({
+                    name: "description",
+                    id: "description",
+                    label: {
+                        text: "Description"
+                    }
+                    }) }}
+                </fieldset>
+                <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
+                <div class="time-inputs">
 
                     {{ govukInput({
                         type: "number",
