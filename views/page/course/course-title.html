@@ -48,14 +48,28 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
             <form action="/content-management/courses/title/{{ course.id }}" method="post">
                 <fieldset class="govuk-fieldset">
+                    {% if errors.fields.title %}
+                        {{ govukInput({
+                        label: {
+                            text: "Course title"
+                            },
+                            id: "title",
+                            name: "title",
+                            value: course.title,
+                            errorMessage: {
+                                text: "Title is required"
+                            }
+                        }) }}
+                    {% else %}
                     {{ govukInput({
-                    label: {
-                        text: "Course title"
-                        },
-                        id: "title",
-                        name: "title",
-                        value: course.title
-                    }) }}
+                        label: {
+                            text: "Course title"
+                            },
+                            id: "title",
+                            name: "title",
+                            value: course.title
+                        }) }}
+                    {% endif %}
                 </fieldset>
                 {{ govukButton({
                     text: "Continue"
