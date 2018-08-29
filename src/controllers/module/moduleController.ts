@@ -48,7 +48,7 @@ export class ModuleController {
 				return response.redirect(`/content-management/courses/${courseId}/add-module`)
 			}
 
-			return response.redirect(`/content-management/courses/${courseId}/module-${moduleType}`)
+			return response.redirect(`/content-management/courses/${courseId}/module/module-${moduleType}`)
 		}
 	}
 
