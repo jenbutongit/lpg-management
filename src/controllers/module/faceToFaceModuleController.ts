@@ -37,7 +37,7 @@ export class FaceToFaceModuleController {
 		})
 		//'/content-management/courses/:courseId/module-video'
 		this.router.get('/content-management/courses/:courseId/module-face-to-face', this.getModule())
-		this.router.post('/content-management/courses/:courseId/module-face-to-face', this.setModule)
+		this.router.post('/content-management/courses/:courseId/module-face-to-face', this.setModule())
 	}
 
 	public getModule() {
@@ -48,6 +48,8 @@ export class FaceToFaceModuleController {
 
 	public setModule() {
 		return async (request: Request, response: Response) => {
+			console.log('!!!')
+
 			const req = request as ContentRequest
 
 			const data = {
