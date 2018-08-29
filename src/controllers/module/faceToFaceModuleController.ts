@@ -36,8 +36,8 @@ export class FaceToFaceModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/module-face-to-face', this.getModule())
-		this.router.post('/content-management/courses/:courseId/module-face-to-face', this.setModule())
+		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId?', this.getModule())
+		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId?', this.setModule())
 	}
 
 	public getModule() {
