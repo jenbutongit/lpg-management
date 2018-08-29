@@ -35,7 +35,7 @@ export class FaceToFaceModuleController {
 				res.sendStatus(404)
 			}
 		})
-		//'/content-management/courses/:courseId/module-video'
+
 		this.router.get('/content-management/courses/:courseId/module-face-to-face', this.getModule())
 		this.router.post('/content-management/courses/:courseId/module-face-to-face', this.setModule())
 	}
@@ -56,18 +56,18 @@ export class FaceToFaceModuleController {
 
 			const course = response.locals.course
 
-			const errors = await this.moduleValidator.check(data)
+			const errors = await this.moduleValidator.check(data, ['title', 'duration'])
 
 			const module = await this.moduleFactory.create(data)
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, module: module}
-				response.redirect(`/content-management/course/${course.id}/module-face-to-face`)
+				return response.redirect(`/content-management/courses/${course.id}/module-face-to-face`)
 			}
 
 			await this.learningCatalogue.createModule(course.id, module)
 
-			response.redirect(`/content-management/course/${course.id}/preview`)
+			return response.redirect(`/content-management/courses/${course.id}/preview`)
 		}
 	}
 }
