@@ -83,7 +83,7 @@ export class YoutubeModuleController {
 
 			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, module: module}
-				return response.redirect(`/content-management/courses/${course.id}/youtube-module`)
+				return response.redirect(`/content-management/courses/${course.id}/module-video`)
 			}
 
 			const newData = {
