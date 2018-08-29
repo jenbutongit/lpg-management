@@ -24,6 +24,7 @@
             <p class="govuk-body">You are adding a <strong>classroom</strong> module</p>
 
             <form action="/content-management/courses/{{ course.id }}/module-face-to-face" method="post">
+                <input name="type" type="hidden" value="face-to-face">
                 <fieldset class="govuk-fieldset">
                     {{ govukInput({
                     label: {

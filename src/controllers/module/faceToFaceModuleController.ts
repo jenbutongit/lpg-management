@@ -48,8 +48,6 @@ export class FaceToFaceModuleController {
 
 	public setModule() {
 		return async (request: Request, response: Response) => {
-			console.log('!!!')
-
 			const req = request as ContentRequest
 
 			const data = {
