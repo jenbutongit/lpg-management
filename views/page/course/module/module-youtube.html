@@ -45,14 +45,28 @@
         <form action="/content-management/courses/{{course.id}}/module-video" method="post">
             <input name="type" type="hidden" value="video">
             <fieldset class="govuk-fieldset">
-                {{ govukInput({
-                label: {
-                text: "Module title"
-                },
-                id: "title",
-                name: "title",
-                value: module.title
-                }) }}
+                {% if errors.fields.title %}
+                    {{ govukInput({
+                    label: {
+                    text: "Module title"
+                    },
+                    id: "title",
+                    name: "title",
+                    value: module.title,
+                    errorMessage: {
+                        text: "Title is required"
+                    }
+                    }) }}
+                {% else %}
+                    {{ govukInput({
+                    label: {
+                    text: "Module title"
+                    },
+                    id: "title",
+                    name: "title",
+                    value: module.title
+                    }) }}
+                {% endif %}
 
                 {{ govukTextarea({
                 name: "description",
@@ -63,14 +77,28 @@
                 value: module.description
                 }) }}
 
-                {{ govukInput({
-                label: {
-                text: "URL"
-                },
-                id: "url",
-                name: "url",
-                value: module.url
-                }) }}
+                {% if errors.fields.url %}
+                    {{ govukInput({
+                    label: {
+                    text: "URL"
+                    },
+                    id: "url",
+                    name: "url",
+                    value: module.url,
+                    errorMessage: {
+                        text: "URL is required"
+                    }
+                    }) }}
+                {% else %}
+                    {{ govukInput({
+                    label: {
+                    text: "URL"
+                    },
+                    id: "url",
+                    name: "url",
+                    value: module.url
+                    }) }}
+                {% endif %}
 
             </fieldset>
             {{ govukCheckboxes({
