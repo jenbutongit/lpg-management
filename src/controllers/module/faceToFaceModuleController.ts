@@ -2,7 +2,6 @@ import {LearningCatalogue} from '../../learning-catalogue'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {Request, Response, Router} from 'express'
-import {ContentRequest} from '../../extended'
 import {Module} from '../../learning-catalogue/model/module'
 
 export class FaceToFaceModuleController {
@@ -48,10 +47,8 @@ export class FaceToFaceModuleController {
 
 	public setModule() {
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-
 			const data = {
-				...req.body,
+				...request.body,
 			}
 
 			const course = response.locals.course
