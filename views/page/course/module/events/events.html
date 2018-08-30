@@ -26,7 +26,7 @@
             
             
             
-            <form action="/form-handler" method="post">
+            <form action="/content-management/courses/modules/events/date" method="post">
                 {{ govukDateInput({
                     id: "start-date",
                     name: "start-date",
@@ -137,6 +137,11 @@
                             }) }}
                         </div>
                     </div>
+
+                    {{ govukButton({
+                    text: "Continue",
+                    type: "submit"
+                    }) }}
             </form>
         </div>
     </div>

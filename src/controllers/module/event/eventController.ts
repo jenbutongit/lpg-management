@@ -43,14 +43,11 @@ export class EventController {
 				...request.body,
 			}
 
-			console.log(data['start-date-Month'])
-
 			const courseId = request.params.courseId
 			const moduleId = request.params.moduleId
 
-			data.date = this.parseDateTime(data)
-
-			console.log(data.date)
+			data.startTime = this.parseDateTime(data, true)
+			data.endTime = this.parseDateTime(data, false)
 
 			const errors = await this.eventValidator.check(data, ['date'])
 
@@ -66,14 +63,21 @@ export class EventController {
 		}
 	}
 
-	private parseDateTime(data: any): Date {
+	private parseDateTime(data: any, start: boolean): Date {
 		let date: Date = new Date()
 
 		date.setFullYear(data['start-date-Month'])
 		date.setMonth(data['start-date-Month'])
 		date.setDate(data['start-date-Day'])
-		date.setHours(data.hour)
-		date.setMinutes(data.minute)
+
+		if (start) {
+			date.setHours(data['start-hour'])
+			date.setMinutes(data['start-minute'])
+		} else {
+			date.setHours(data['hour'])
+			date.setMinutes(data['end-minute'])
+		}
+
 		date.setSeconds(0)
 		date.setMilliseconds(0)
 
