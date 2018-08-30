@@ -40,6 +40,6 @@
 	"validation.module.duration.positive": "Duration must be positive",
 	"validation.module.description.empty": "Description is required",
 	"validation_module_video_notFound": "There was a problem finding this video",
-	"validation_module_video_noDuration": "There was a problem finding the length of this video"
+	"validation_module_video_noDuration": "There was a problem finding the length of this video",
 	"video": "Video"
 }
