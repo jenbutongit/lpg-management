@@ -1,17 +1,16 @@
 import {LearningCatalogue} from '../../../learning-catalogue/index'
 import {Validator} from '../../../learning-catalogue/validator/validator'
-import {ModuleFactory} from '../../../learning-catalogue/model/factory/moduleFactory'
 import {Request, Response, Router} from 'express'
 import {ContentRequest} from '../../../extended'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
 
-export class eventController {
+export class EventController {
 	learningCatalogue: LearningCatalogue
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	router: Router
 
-	constructor(learningCatalogue: LearningCatalogue, eventValidator: Validator<Event>, eventFactory: ModuleFactory) {
+	constructor(learningCatalogue: LearningCatalogue, eventValidator: Validator<Event>, eventFactory: EventFactory) {
 		this.learningCatalogue = learningCatalogue
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
@@ -44,7 +43,8 @@ export class eventController {
 		})
 
 		this.router.get(
-			'/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
+			// '/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
+			'/content-management/course/module/events/date',
 			this.getDateTime()
 		)
 		this.router.post('/content-management/course/:courseId/:moduleId/event-date', this.setDateTime())
@@ -52,7 +52,7 @@ export class eventController {
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/event/')
+			response.render('page/course/module/events/events.html')
 		}
 	}
 

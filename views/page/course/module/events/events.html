@@ -1,0 +1,78 @@
+{% from "button/macro.njk" import govukButton %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "select/macro.njk" import govukSelect %}
+
+{% extends "../../../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['event_add'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("/content-management/courses/") }}
+  {% endblock%}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
+            <p class="govuk-body">This event is for the {{ module.title }} on the {{ course.title }} course.</p>
+
+            <form action="/form-handler" method="post">
+                {{ govukDateInput({
+                    id: "start-date",
+                    name: "start-date",
+                    fieldset: {
+                        legend: {
+                        text: "Start date",
+                        isPageHeading: true,
+                        classes: "govuk-fieldset__legend--s"
+                        }
+                    },
+                    items: [
+                        {
+                        name: "Day"
+                        },
+                        {
+                        name: "Month"
+                        },
+                        {
+                        name: "Year"
+                        }
+                    ]
+                    }) }}
+
+                    {# {% set hours = [06,07,08,09,10,11,12,13,14,15,16,17,18,19,20] %}
+                    {% set hours2 = [] %}
+                    {% for i in hours %}
+
+                    {% endfor %}
+                    {{ govukSelect({
+                        id: "sort",
+                        name: "sort",
+                        label: {
+                            text: "Sort by"
+                        },
+                        items: hours
+                        }) }}
+
+
+                    {% set minutes = [00, 15, 30, 45] %}
+
+                        {{ govukSelect({
+                        id: "sort",
+                        name: "sort",
+                        label: {
+                            text: "Sort by"
+                        },
+                        items: minutes
+                        }) }} #}
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
