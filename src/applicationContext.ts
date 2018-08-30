@@ -169,6 +169,7 @@ export class ApplicationContext {
 			this.moduleFactory
 		)
 
+		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
 	}
 

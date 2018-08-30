@@ -1,7 +1,6 @@
 import {LearningCatalogue} from '../../../learning-catalogue/index'
 import {Validator} from '../../../learning-catalogue/validator/validator'
 import {Request, Response, Router} from 'express'
-import {ContentRequest} from '../../../extended'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
 
 export class EventController {
@@ -20,35 +19,14 @@ export class EventController {
 	}
 
 	private setRouterPaths() {
-		this.router.param('courseId', async (req, res, next, courseId) => {
-			const course = await this.learningCatalogue.getCourse(courseId)
-
-			if (course) {
-				res.locals.course = course
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
-
-		this.router.param('moduleId', async (req, res, next, courseId, moduleId) => {
-			const module = await this.learningCatalogue.getModule(courseId, moduleId)
-
-			if (module) {
-				res.locals.module = module
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
-
 		this.router.get(
 			// '/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
-			'/content-management/course/module/events/date',
+			'/content-management/courses/modules/events/date',
 			this.getDateTime()
 		)
 		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/event-date/:eventId?',
+			//'/content-management/courses/:courseId/modules/:moduleId/event-date/:eventId?',
+			'/content-management/courses/modules/events/date',
 			this.setDateTime()
 		)
 	}
@@ -61,16 +39,15 @@ export class EventController {
 
 	public setDateTime() {
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-
 			const data = {
-				...req.body,
+				...request.body,
 			}
 
-			const course = response.locals.course
-			const module = response.locals.module
+			const courseId = request.params.courseId
+			const moduleId = request.params.moduleId
 
-			data.date = this.parseDateTime(data)
+			data.startTime = this.parseDateTime(data, true)
+			data.endTime = this.parseDateTime(data, false)
 
 			const errors = await this.eventValidator.check(data, ['date'])
 
@@ -78,22 +55,29 @@ export class EventController {
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				response.redirect(`/content-management/courses/${course.id}/module/${module.id}/event`)
+				response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 			}
 
 			request.session!.sessionFlash = {event: event}
-			response.redirect(`/content-management/courses/${course.id}/module/${module.id}/event`)
+			response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 		}
 	}
 
-	private parseDateTime(data: any): Date {
+	private parseDateTime(data: any, start: boolean): Date {
 		let date: Date = new Date()
 
-		date.setFullYear(data.year)
-		date.setMonth(data.month)
-		date.setDate(data.day)
-		date.setHours(data.hour)
-		date.setMinutes(data.minute)
+		date.setFullYear(data['start-date-Month'])
+		date.setMonth(data['start-date-Month'])
+		date.setDate(data['start-date-Day'])
+
+		if (start) {
+			date.setHours(data['start-hour'])
+			date.setMinutes(data['start-minute'])
+		} else {
+			date.setHours(data['hour'])
+			date.setMinutes(data['end-minute'])
+		}
+
 		date.setSeconds(0)
 		date.setMilliseconds(0)
 
