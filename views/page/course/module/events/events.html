@@ -22,7 +22,11 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
             <p class="govuk-body">This event is for the {{ module.title }} on the {{ course.title }} course.</p>
 
-            <form action="/content-management/courses/modules/events/date" method="post">
+            
+            
+            
+            
+            <form action="/form-handler" method="post">
                 {{ govukDateInput({
                     id: "start-date",
                     name: "start-date",
@@ -45,53 +49,94 @@
                         }
                     ]
                     }) }}
+                    <h3 class="govuk-heading-s">Start time</h3>
+                    <div class="time-inputs">  
+                        <div class="govuk-date-input__item">
+                            {% set hoursList = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
+                            {% set hours = [] %}
 
-                    {% set hourList = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
-                    {% set hour = [] %}
+                            {% for i in hoursList %}
+                            {% set hour = hours.push({
+                                    "text": i,
+                                    "value": i
+                                }) %}        
+                            {% endfor %} 
 
-                    {% for i in hourList %}
-                       {% set hours = hour.push({
-                            "text": i,
-                            "value": i
-                        }) 
-                   
-                        %}        
-                    {% endfor %}   
-                    {{ govukSelect({
-                        id: "hour",
-                        name: "hour",
-                        label: {
-                            text: "Sort by"
-                        },
-                        items: hour
-                        }) }}
+                            {{ govukSelect({
+                                id: "start-hour",
+                                name: "start-hour",
+                                label: {
+                                    text: "Hours"
+                                },
+                                items: hours,
+                                classes: "hours"
+                            }) }}
+                        </div>
+                        <div class="govuk-date-input__item">
+                            {% set minutesList = ["00", "15", "30", "45"] %}
+                            {% set minutes = [] %}
 
+                            {% for j in minutesList %}
+                                {% set minute = minutes.push({
+                                    "text": j,
+                                    "value": j
+                                }) %} 
+                            {% endfor %}
 
-                    {% set minuteList = ["00", "15", "30", "45"] %}
-                    {% set minute = [] %}
+                            {{ govukSelect({
+                                id: "start-minute",
+                                name: "start-minute",
+                                label: {
+                                    text: "Minute"
+                                },
+                                items: minutes
+                            }) }}
+                        </div>
+                    </div>
+                     <h3 class="govuk-heading-s">End time</h3>
+                    <div class="time-inputs">  
+                        <div class="govuk-date-input__item">
+                            {% set hoursList = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
+                            {% set hours = [] %}
 
-                    {% for j in minuteList %}
+                            {% for i in hoursList %}
+                            {% set hour = hours.push({
+                                    "text": i,
+                                    "value": i
+                                }) %}        
+                            {% endfor %} 
 
-                    {% set minutes = minute.push({
-                        "text": j,
-                        "value": j
-                        })
-                    %} 
-                       
-                    {% endfor %} 
-                    {{ govukSelect({
-                    id: "minute",
-                    name: "minute",
-                    label: {
-                        text: "Minute"
-                    },
-                    items: minute
-                    }) }}
+                            {{ govukSelect({
+                                id: "hour",
+                                name: "hour",
+                                label: {
+                                    text: "Hours"
+                                },
+                                items: hours,
+                                classes: "hours"
+                            }) }}
+                        </div>
+                        <div class="govuk-date-input__item">
+                            {% set minutesList = ["00", "15", "30", "45"] %}
+                            {% set minutes = [] %}
 
-                    {{ govukButton({
-                    text: "Continue",
-                    type: "submit"
-                    }) }}
+                            {% for j in minutesList %}
+                                {% set minute = minutes.push({
+                                    "text": j,
+                                    "value": j
+                                }) %} 
+                            {% endfor %}
+
+                            {{ govukSelect({
+                                id: "end-minute",
+                                name: "end-minute",
+                                label: {
+                                    text: "Minute"
+                                },
+                                items: minutes
+                            }) }}
+                        </div>
+                    </div>
             </form>
         </div>
     </div>
