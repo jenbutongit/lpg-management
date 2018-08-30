@@ -22,7 +22,7 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
             <p class="govuk-body">This event is for the {{ module.title }} on the {{ course.title }} course.</p>
 
-            <form action="/form-handler" method="post">
+            <form action="/content-management/courses/modules/events/date" method="post">
                 {{ govukDateInput({
                     id: "start-date",
                     name: "start-date",
@@ -86,6 +86,11 @@
                         text: "Minute"
                     },
                     items: minute
+                    }) }}
+
+                    {{ govukButton({
+                    text: "Continue",
+                    type: "submit"
                     }) }}
             </form>
         </div>
