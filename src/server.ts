@@ -76,6 +76,7 @@ app.use(ctx.termsAndConditionsController.router)
 app.use(ctx.moduleController.router)
 app.use(ctx.youtubeModuleController.router)
 app.use(ctx.linkModuleController.router)
+app.use(ctx.faceToFaceController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')

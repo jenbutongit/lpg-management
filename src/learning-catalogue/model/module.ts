@@ -26,13 +26,13 @@ export class Module {
 	})
 	description: string
 
-	@IsNotEmpty({
-		groups: ['all', 'duration'],
-		message: 'validation.module.duration.empty',
-	})
 	@IsPositive({
 		groups: ['all', 'duration'],
 		message: 'validation.module.duration.positive',
+	})
+	@IsNotEmpty({
+		groups: ['all', 'duration'],
+		message: 'validation.module.duration.empty',
 	})
 	duration: number
 
