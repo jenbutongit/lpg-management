@@ -47,6 +47,10 @@
 	&:focus {
 		background-color: govuk-colour('blue');
 	}
+
+	&.left-aligned {
+		margin-left: 0;
+	}
 }
 
 .bottom-button {
@@ -65,6 +69,12 @@
 	}
 	.govuk-button {
 		margin: 0 0 30px 0;
+	}
+}
+
+.date-set {
+	label {
+		font-weight: normal;
 	}
 }
 
