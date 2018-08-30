@@ -46,33 +46,48 @@
                     ]
                     }) }}
 
-                    {# {% set hours = [06,07,08,09,10,11,12,13,14,15,16,17,18,19,20] %}
-                    {% set hours2 = [] %}
-                    {% for i in hours %}
+                    {% set hourList = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
+                    {% set hour = [] %}
 
-                    {% endfor %}
+                    {% for i in hourList %}
+                       {% set hours = hour.push({
+                            "text": i,
+                            "value": i
+                        }) 
+                   
+                        %}        
+                    {% endfor %}   
                     {{ govukSelect({
-                        id: "sort",
-                        name: "sort",
+                        id: "hour",
+                        name: "hour",
                         label: {
                             text: "Sort by"
                         },
-                        items: hours
+                        items: hour
                         }) }}
 
 
-                    {% set minutes = [00, 15, 30, 45] %}
+                    {% set minuteList = ["00", "15", "30", "45"] %}
+                    {% set minute = [] %}
 
-                        {{ govukSelect({
-                        id: "sort",
-                        name: "sort",
-                        label: {
-                            text: "Sort by"
-                        },
-                        items: minutes
-                        }) }} #}
+                    {% for j in minuteList %}
+
+                    {% set minutes = minute.push({
+                        "text": j,
+                        "value": j
+                        })
+                    %} 
+                       
+                    {% endfor %} 
+                    {{ govukSelect({
+                    id: "minute",
+                    name: "minute",
+                    label: {
+                        text: "Minute"
+                    },
+                    items: minute
+                    }) }}
             </form>
-
         </div>
     </div>
 {% endblock %}
