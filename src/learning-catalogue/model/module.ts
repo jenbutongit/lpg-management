@@ -44,6 +44,4 @@ export class Module {
 		groups: ['all', 'audiences'],
 	})
 	audiences: Audience[]
-
-	events: Event[] = []
 }

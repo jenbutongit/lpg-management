@@ -40,11 +40,13 @@ export class EventController {
 			'/content-management/courses/modules/events/date',
 			this.setDateTime()
 		)
+
+		this.router.get('/content-management/course/modules/events/events-preview', this.getDatePreview())
 	}
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events.html')
+			response.render('page/course/module/events/events')
 		}
 	}
 
@@ -54,10 +56,10 @@ export class EventController {
 				...request.body,
 			}
 
-			const courseId = request.params.courseId
-			const moduleId = request.params.moduleId
+			// const courseId = request.params.courseId
+			// const moduleId = request.params.moduleId
 
-			const module = response.locals.module
+			//const module = response.locals.module
 
 			data.startTime = this.parseDateTime(data, true)
 			data.endTime = this.parseDateTime(data, false)
@@ -68,13 +70,21 @@ export class EventController {
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
+				//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
+				response.redirect(`/content-management/courses/modules/events/date`)
 			}
 
-			module.events.push(event)
+			//module.events.push(event)
 
 			request.session!.sessionFlash = {event: event}
-			response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
+			//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
+			response.redirect('/content-management/course/modules/events/events-preview')
+		}
+	}
+
+	public getDatePreview() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/events-preview')
 		}
 	}
 
