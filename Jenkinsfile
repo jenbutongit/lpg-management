@@ -26,10 +26,10 @@ pipeline {
             agent none
             steps {
                 script {
-                    def deployToStaging = input(message: 'Deploy to Staging?', ok: 'Yes',
+                    def deployToIntegration = input(message: 'Deploy to Integration?', ok: 'Yes',
                     parameters: [booleanParam(defaultValue: true,
                     description: 'Press the button to deploy',name: 'Yes?')])
-                    echo "Deploy to Staging:" + deployToStaging
+                    echo "Deploy to Integration:" + deployToIntegration
                 }
             }
         }
@@ -105,10 +105,10 @@ pipeline {
             agent none
             steps {
                 script {
-                    /* def deployToStaging = input(message: 'Deploy to Production?', ok: 'Yes',
+                    /* def deployToProduction = input(message: 'Deploy to Production?', ok: 'Yes',
                     parameters: [booleanParam(defaultValue: true,
                     description: 'Press the button to deploy',name: 'Yes?')])
-                    echo "Deploy to Staging:" + deployToStaging
+                    echo "Deploy to Production:" + deployToProduction
                     */
                     echo 'skipping production step'
                 }
