@@ -47,7 +47,10 @@ export class EventController {
 			'/content-management/course/module/events/date',
 			this.getDateTime()
 		)
-		this.router.post('/content-management/course/:courseId/:moduleId/event-date', this.setDateTime())
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/event-date/:eventId?',
+			this.setDateTime()
+		)
 	}
 
 	public getDateTime() {
@@ -64,9 +67,10 @@ export class EventController {
 				...req.body,
 			}
 
-			// const date = data.date
 			const course = response.locals.course
 			const module = response.locals.module
+
+			data.date = this.parseDateTime(data)
 
 			const errors = await this.eventValidator.check(data, ['date'])
 
@@ -80,5 +84,19 @@ export class EventController {
 			request.session!.sessionFlash = {event: event}
 			response.redirect(`/content-management/courses/${course.id}/module/${module.id}/event`)
 		}
+	}
+
+	private parseDateTime(data: any): Date {
+		let date: Date = new Date()
+
+		date.setFullYear(data.year)
+		date.setMonth(data.month)
+		date.setDate(data.day)
+		date.setHours(data.hour)
+		date.setMinutes(data.minute)
+		date.setSeconds(0)
+		date.setMilliseconds(0)
+
+		return date
 	}
 }
