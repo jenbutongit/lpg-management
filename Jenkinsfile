@@ -137,7 +137,7 @@ pipeline {
                         sh "terraform plan -target=module.lpg-management2 -var 'lpg_management2_tag=${env.BUILD_ID}' -var 'docker_registry_server_username=${acr_username}' -var 'docker_registry_server_password=${acr_password}'"
                         sh "terraform apply -target=module.lpg-management2 -var 'lpg_management2_tag=${env.BUILD_ID}' -var 'docker_registry_server_username=${acr_username}' -var 'docker_registry_server_password=${acr_password}' -auto-approve"
                     }
-                } /*
+                } */
                 script {
                     echo 'skipping production step'
                 }
