@@ -21,29 +21,10 @@ export class eventController {
 	}
 
 	private setRouterPaths() {
-		this.router.param('courseId', async (req, res, next, courseId) => {
-			const course = await this.learningCatalogue.getCourse(courseId)
-
-			if (course) {
-				res.locals.course = course
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
-
-		this.router.param('moduleId', async (req, res, next, courseId, moduleId) => {
-			const module = await this.learningCatalogue.getModule(courseId, moduleId)
-
-			if (module) {
-				res.locals.module = module
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
-
-		this.router.get('/content-management/course/:courseId/module/:moduleId/event-date', this.getDateTime())
+		this.router.get(
+			'/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
+			this.getDateTime()
+		)
 		this.router.post('/content-management/course/:courseId/:moduleId/event-date', this.setDateTime())
 	}
 
@@ -61,9 +42,8 @@ export class eventController {
 				...req.body,
 			}
 
-			// const date = data.date
-			const course = response.locals.course
-			const module = response.locals.module
+			const courseId = request.params.courseId
+			const moduleId = request.params.moduleId
 
 			const errors = await this.eventValidator.check(data, ['date'])
 
@@ -71,11 +51,11 @@ export class eventController {
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				response.redirect(`/content-management/courses/${course.id}/module/${module.id}/event`)
+				response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 			}
 
 			request.session!.sessionFlash = {event: event}
-			response.redirect(`/content-management/courses/${course.id}/module/${module.id}/event`)
+			response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 		}
 	}
 }

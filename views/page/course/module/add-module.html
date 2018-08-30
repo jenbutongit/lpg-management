@@ -15,32 +15,57 @@
 {% endblock %}
 {% block content %}
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-full module-container">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
-            
-            <div class="aded-modules govuk-!-padding-bottom-5 govuk-!-padding-top-5">
+            {% set modules = course.modules %}
+
+                
+                {% if modules.length > 0 %}
+                    <p class="govuk-body">Sort the modules into the order they should appear in on the course details page</p>
+                {% endif %}
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
 
-                {% if course.modules.length > 0 %}
-                    <ul class="list">
-                        {% for module in course.modules %}
-                            <li class="list-details u--border--bgrey">
-                                <p class="govuk-body">{{module.title}}</p>
-                            </li>
-                        {% endfor %}
-                    </ul>
+
+                {% if modules.length > 0 %}
+                <ul class="list modules">
+                    <li class="module-headers">
+                        <p class="govuk-body header title"><strong>Module title</strong></p>
+                        <p class="govuk-body header type"><strong>Type</strong></p>
+                        <p class="govuk-body header added-on"><strong>Added on</strong></p>
+                        <p class="govuk-body header buttons"></p>
+                    </li>
+                </ul>
+                <ul class="list modules" id="modules">
+                    {% for module in modules %}
+                    <li class="list-details u--border--bgrey">
+                        <p class="govuk-body title">{{ module.title | default("Module", true) }}</p>
+                        <p class="govuk-body type">{{ i18n[module.type] | default("Unknown Type", true) }}</p>
+                        <p class="govuk-body added-on">{{ module.addedOn | default("23rd August 2018", true) }}</p>
+                        <p class="govuk-body buttons"><a class="govuk-link" href="#">Delete</a></p>                        <span class="handle"></span>
+                    </li>
+                    {% endfor %}
+                   
+                </ul>
+                
                 {% else %}
                     <p class="govuk-body">This course does not have any modules yet</p>
                 {% endif %}
+                
+            
 
+             
             </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+                <div class="aded-modules govuk-!-padding-bottom-5 govuk-!-padding-top-5">
 
-            <form action="/content-management/courses/{{ course.id }}/add-module" method="post">
-                <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Add a module</h3>
-                <p class="govuk-body">Choose the type of learning you wish to add to the course</p>
-        
-                <fieldset class="govuk-fieldset module-selector">
+                    <form action="/content-management/courses/{{ course.id }}/add-module" method="post">
+                        <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Add a module</h3>
+                        <p class="govuk-body">Choose the type of learning you wish to add to the course</p>
+                
+                        <fieldset class="govuk-fieldset module-selector">
         
                         {{ govukSelect({
                         id: "modules",
@@ -49,6 +74,7 @@
                         label: {
                             text: "Add a new module" 
                         },
+                    
                         items: [
                             {
                             value: "",
@@ -65,7 +91,7 @@
                             },
                             {
                             value: "face-to-face",
-                            text: "Face to face"
+                            text: "Face-to-face"
                             },
                             {
                             value: "video",
@@ -78,18 +104,32 @@
                             classes: "button-blue"
                         }) }}
 
-                </fieldset>
-            </form>
+                    </fieldset>
+                </form>
 
-            {{ govukButton({
-                text: "Continue",
-                type: "button"
-            }) }}
+                {{ govukButton({
+                    text: "Continue",
+                    type: "button"
+                }) }}
 
-            <a class="cancel-button govuk-body govuk-link" href="#">Cancel</a>          
+                <a class="cancel-button govuk-body govuk-link" href="#">Cancel</a>          
+            </div>
+            <div class="govuk-grid-column-one-third">
+        
+            </div>
+        
         </div>
-        <div class="govuk-grid-column-one-third">
-       
-        </div>
-    </div>
+    {% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk-frontend/all.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+    <script src="/sortablejs/Sortable.js"></script>
+    <script>
+        var el = document.getElementById('modules');
+        var sortable = Sortable.create(el, {
+            handle: '.handle'
+        });
+    </script>
 {% endblock %}
+

@@ -2,7 +2,6 @@ import {LearningCatalogue} from '../../learning-catalogue'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {Request, Response, Router} from 'express'
-import {ContentRequest} from '../../extended'
 import {Module} from '../../learning-catalogue/model/module'
 
 export class FaceToFaceModuleController {
@@ -36,8 +35,8 @@ export class FaceToFaceModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/module-face-to-face', this.getModule())
-		this.router.post('/content-management/courses/:courseId/module-face-to-face', this.setModule())
+		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId?', this.getModule())
+		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId?', this.setModule())
 	}
 
 	public getModule() {
@@ -48,29 +47,13 @@ export class FaceToFaceModuleController {
 
 	public setModule() {
 		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-
 			const data = {
-				...req.body,
+				...request.body,
 			}
 
 			const course = response.locals.course
 
-			if (data.days || data.hours || data.minutes) {
-				if (data.days.isUndefined) {
-					data.days = 0
-				}
-				if (data.hours.isUndefined) {
-					data.hours = 0
-				}
-				if (data.minutes.isUndefined) {
-					data.minutes = 0
-				}
-
-				data.duration = data.days * 86400 + data.hours * 3600 + data.minutes * 60
-			}
-
-			const errors = await this.moduleValidator.check(data, ['title', 'duration', 'description'])
+			const errors = await this.moduleValidator.check(data, ['title', 'description'])
 
 			const module = await this.moduleFactory.create(data)
 
