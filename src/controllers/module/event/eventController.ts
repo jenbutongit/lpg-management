@@ -19,6 +19,17 @@ export class EventController {
 	}
 
 	private setRouterPaths() {
+		this.router.param('moduleId', async (req, res, next, moduleId, courseId) => {
+			const module = await this.learningCatalogue.getModule(courseId, moduleId)
+
+			if (module) {
+				res.locals.module = module
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
 		this.router.get(
 			// '/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
 			'/content-management/courses/modules/events/date',
@@ -46,6 +57,8 @@ export class EventController {
 			const courseId = request.params.courseId
 			const moduleId = request.params.moduleId
 
+			const module = response.locals.module
+
 			data.startTime = this.parseDateTime(data, true)
 			data.endTime = this.parseDateTime(data, false)
 
@@ -57,6 +70,8 @@ export class EventController {
 				request.session!.sessionFlash = {errors: errors, event: event}
 				response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 			}
+
+			module.events.push(event)
 
 			request.session!.sessionFlash = {event: event}
 			response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)

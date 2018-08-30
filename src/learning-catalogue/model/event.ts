@@ -11,7 +11,7 @@ export class Event {
 		groups: ['all', 'event.all', 'event.startTimes'],
 		message: 'validation.module.event.startTimes.past',
 	})
-	startTimes: Date[] = []
+	startTimes: Date[]
 
 	@IsNotEmpty({
 		groups: ['all', 'event.all', 'event.endTimes'],
@@ -21,7 +21,7 @@ export class Event {
 		groups: ['all', 'event.all', 'event.endTimes'],
 		message: 'validation.module.event.endTimes.past',
 	})
-	endTimes: Date[] = []
+	endTimes: Date[]
 
 	@IsNotEmpty({
 		groups: ['all', 'event.all', 'event.location'],
