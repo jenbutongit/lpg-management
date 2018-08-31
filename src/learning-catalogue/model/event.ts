@@ -3,23 +3,23 @@ import {IsNotEmpty, IsPositive, MinDate} from 'class-validator'
 export class Event {
 	id: string
 
-	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.startTimes'],
-		message: 'validation.module.event.startTimes.empty',
-	})
 	@MinDate(new Date(Date.now()), {
 		groups: ['all', 'event.all', 'event.startTimes'],
 		message: 'validation.module.event.startTimes.past',
 	})
+	@IsNotEmpty({
+		groups: ['all', 'event.all', 'event.startTimes'],
+		message: 'validation.module.event.startTimes.empty',
+	})
 	startTimes: Date[]
 
-	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.endTimes'],
-		message: 'validation.module.event.endTimes.empty',
-	})
 	@MinDate(new Date(Date.now()), {
 		groups: ['all', 'event.all', 'event.endTimes'],
 		message: 'validation.module.event.endTimes.past',
+	})
+	@IsNotEmpty({
+		groups: ['all', 'event.all', 'event.endTimes'],
+		message: 'validation.module.event.endTimes.empty',
 	})
 	endTimes: Date[]
 

@@ -61,24 +61,26 @@ export class EventController {
 
 			//const module = response.locals.module
 
-			data.startTime = this.parseDateTime(data, true)
-			data.endTime = this.parseDateTime(data, false)
+			if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
+				data.startTime = this.parseDateTime(data, true)
+				data.endTime = this.parseDateTime(data, false)
+			}
 
-			const errors = await this.eventValidator.check(data, ['date'])
+			const errors = await this.eventValidator.check(data, ['event.startTimes'])
 
 			const event = await this.eventFactory.create(data)
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
 				//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
-				response.redirect(`/content-management/courses/modules/events/date`)
+				return response.redirect(`/content-management/courses/modules/events/date`)
 			}
 
 			//module.events.push(event)
 
 			request.session!.sessionFlash = {event: event}
 			//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
-			response.redirect('/content-management/course/modules/events/events-preview')
+			return response.redirect('/content-management/course/modules/events/events-preview')
 		}
 	}
 
@@ -91,7 +93,7 @@ export class EventController {
 	private parseDateTime(data: any, start: boolean): Date {
 		let date: Date = new Date()
 
-		date.setFullYear(data['start-date-Month'])
+		date.setFullYear(data['start-date-Year'])
 		date.setMonth(data['start-date-Month'])
 		date.setDate(data['start-date-Day'])
 
