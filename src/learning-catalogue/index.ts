@@ -16,6 +16,7 @@ import {AudienceFactory} from './model/factory/audienceFactory'
 import {EventFactory} from './model/factory/eventFactory'
 
 export class LearningCatalogue {
+	private _eventService: EntityService<Event>
 	private _moduleService: EntityService<Module>
 	private _courseService: EntityService<Course>
 	private _learningProviderService: EntityService<LearningProvider>
@@ -25,6 +26,9 @@ export class LearningCatalogue {
 
 	constructor(config: LearningCatalogueConfig) {
 		this._restService = new RestService(config)
+
+		this._eventService = new EntityService<Event>(this._restService, new EventFactory())
+
 		this._moduleService = new EntityService<Module>(
 			this._restService,
 			new ModuleFactory(new AudienceFactory(), new EventFactory())
@@ -70,6 +74,14 @@ export class LearningCatalogue {
 
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
 		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
+	}
+
+	async createEvent(courseId: string, moduleId: string, event: Event): Promise<Event> {
+		return this._eventService.create(`/courses/${courseId}/modules/${moduleId}/events`, event)
+	}
+
+	async getEvent(courseId: string, moduleId: string, eventId: string): Promise<Event> {
+		return this._eventService.get(`/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
 	}
 
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {

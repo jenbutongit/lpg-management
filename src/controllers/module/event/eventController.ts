@@ -56,8 +56,9 @@ export class EventController {
 				...request.body,
 			}
 
-			// const courseId = request.params.courseId
-			// const moduleId = request.params.moduleId
+			const courseId = 'BV6TMBPISsaobwqanrvK2Q'
+			const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
+			//const module = await this.learningCatalogue.getModule(courseId, moduleId)
 
 			//const module = response.locals.module
 
@@ -66,20 +67,19 @@ export class EventController {
 				data.endTime = this.parseDateTime(data, false)
 			}
 
-			const errors = await this.eventValidator.check(data, ['event.startTimes'])
+			const errors = await this.eventValidator.check(data, ['event.dateRanges'])
 
-			const event = await this.eventFactory.create(data)
+			const event = await this.eventFactory.create(data.startTime)
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 				return response.redirect(`/content-management/courses/modules/events/date`)
 			}
 
-			//module.events.push(event)
+			const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
 
-			request.session!.sessionFlash = {event: event}
-			//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
+			request.session!.sessionFlash = {event: savedEvent}
+
 			return response.redirect('/content-management/course/modules/events/events-preview')
 		}
 	}
