@@ -42,5 +42,5 @@
 	"validation_module_video_notFound": "There was a problem finding this video",
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
 	"validation.module.event.startTimes.empty": "Start date is required",
-	"validation.module.event.startTimes.empty": "Start date is in the past"
+	"validation.module.event.startTimes.past": "Start date is in the past"
 }

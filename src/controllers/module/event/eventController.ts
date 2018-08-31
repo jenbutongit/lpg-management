@@ -98,11 +98,11 @@ export class EventController {
 		date.setDate(data['start-date-Day'])
 
 		if (start) {
-			date.setHours(data['start-hour'])
-			date.setMinutes(data['start-minute'])
+			date.setHours(data['start-time'][0])
+			date.setMinutes(data['start-time'][1])
 		} else {
-			date.setHours(data['hour'])
-			date.setMinutes(data['end-minute'])
+			date.setHours(data['end-time'][0])
+			date.setMinutes(data['end-time'][1])
 		}
 
 		date.setSeconds(0)
