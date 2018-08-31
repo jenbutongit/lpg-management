@@ -26,32 +26,76 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
-            <p class="govuk-body">This event is for the {{ module.title }} on the {{ course.title }} course.</p>
+            <p class="govuk-body">This event is for the <strong>{{ module.title }}</strong> on the <strong>{{ course.title }}</strong> course.</p>
+
+            {% if events > 0%}
+                <div class="event-container">
+                    <ul class="event-list headers">
+                        <li class="events">
+                            <p class="govuk-body event-header date">Date</p><p class="govuk-body event-header time">Start time</p><p class="govuk-body event-header time">End time</p><span class="spacer"></span> 
+                        </li> 
+                    </ul>
+                    <ul class="event-list">
+                        {% for event in events %}
+                            <li class="events u--border--bgrey">
+                                <p class="govuk-body event date">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event edit"><a href="#" class="govuk-link">Edit</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
 
             <form action="/content-management/courses/modules/events/date" method="post">
-                {{ govukDateInput({
-                    id: "start-date",
-                    name: "start-date",
-                    fieldset: {
-                        legend: {
-                        text: "Start date",
-                        isPageHeading: true,
-                        classes: "govuk-fieldset__legend--s"
-                        }
-                    },
-                    items: [
-                        {
-                        name: "Day"
+                {% if errors %}
+                    {{ govukDateInput({
+                        id: "start-date",
+                        name: "start-date",
+                        fieldset: {
+                            legend: {
+                            text: "Start date",
+                            isPageHeading: true,
+                            classes: "govuk-fieldset__legend--s"
+                            }
                         },
-                        {
-                        name: "Month"
+                        errorMessage: {
+                            text: "A valid start date is required"
                         },
-                        {
-                        name: "Year"
-                        }
-                    ]
-                    }) }}
-                </fieldset>
+                        items: [
+                            {
+                            name: "Day"
+                            },
+                            {
+                            name: "Month"
+                            },
+                            {
+                            name: "Year"
+                            }
+                        ]
+                        }) }}
+                    {% else %}
+                     {{ govukDateInput({
+                        id: "start-date",
+                        name: "start-date",
+                        fieldset: {
+                            legend: {
+                            text: "Start date",
+                            isPageHeading: true,
+                            classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        items: [
+                            {
+                            name: "Day"
+                            },
+                            {
+                            name: "Month"
+                            },
+                            {
+                            name: "Year"
+                            }
+                        ]
+                        }) }}
+                    {% endif %}
 
                 {% set setHours = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
                 {% set setMinutes = ["00", "15", "30", "45"] %}
