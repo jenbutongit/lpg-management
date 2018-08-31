@@ -22,13 +22,29 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
-            <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
-            <p class="govuk-body">This event is for the {{ module.title }} on the {{ course.title }} course.</p>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Event date and time</h2>
+            <p class="govuk-body">This event is for the <strong>{{ module.title }}</strong> on the {{ course.title }} course.</p>
 
-            {% if event > 0 %}
-                <a href="#">Continue</a>
-            {% endif %}
-            <a href="#">Cancel</a>
+            <div class="event-container">
+                <ul class="event-list headers">
+                    <li class="events">
+                        <p class="govuk-body event-header date">Date</p><p class="govuk-body event-header time">Start time</p><p class="govuk-body event-header time">End time</p><span class="spacer"></span> 
+                    </li> 
+                </ul>
+                <ul class="event-list">
+                    {% for event in events %}
+                        <li class="events u--border--bgrey">
+                            <p class="govuk-body event date">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event edit"><p class="govuk-body"><a href="#" class="govuk-link">Delete</a><a href="#" class="govuk-link">Edit</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <a href="#" class="govuk-button button-blue left-aligned">Add another date</a>
+            <div class="button-container">
+                <a href="#" class="govuk-button">Continue</a>
+            </div>
+            <a href="#" class="govuk-button">Cancel</a>
         </div>
     </div>
 {% endblock %}

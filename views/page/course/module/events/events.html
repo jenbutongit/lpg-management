@@ -25,10 +25,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
-            <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Event date and time</h2>
             <p class="govuk-body">This event is for the <strong>{{ module.title }}</strong> on the <strong>{{ course.title }}</strong> course.</p>
 
-            {% if events > 0%}
+            {% if events > 0 %}
                 <div class="event-container">
                     <ul class="event-list headers">
                         <li class="events">
@@ -109,7 +109,9 @@
             </form>
 
             {% if event > 0 %}
-                <a href="#">Continue</a>
+                <div class="button-container">
+                    <a class="govuk-button" href="#">Continue</a>
+                </div>
             {% endif %}
             <a href="#">Cancel</a>
         </div>
