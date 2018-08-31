@@ -1,0 +1,21 @@
+<div class="govuk-row">
+    <div class="govuk-column-width-full">
+        {% if errors %}
+        {% set errorSummary = [] %}
+
+            {% for field, message in errors %}
+            {% set myMessage =  i18n[message[0]] %}
+                {% set error = errorSummary.push({
+                    "text": myMessage
+                })%}
+            {% endfor %} 
+
+        {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorSummary,
+        classes: "custom-error-message"
+        }) }}
+
+        {% endif %}
+    </div>
+</div>

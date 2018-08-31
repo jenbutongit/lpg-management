@@ -1,7 +1,6 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "date-input/macro.njk" import govukDateInput %}
 {% from "select/macro.njk" import govukSelect %}
-{% from  "../../../../component/time-inputs/macro.njk" import timeInputs with context %}
 
 {% extends "../../../../component/Page.njk" %}
 
@@ -17,6 +16,9 @@
 {% endblock %}
 
 {% block content %}
+    {% set errors = sessionFlash.errors %}
+    
+    {{ errorSummary(errors.fields) }}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
