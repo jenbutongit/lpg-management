@@ -1,1 +1,32 @@
+{% from "button/macro.njk" import govukButton %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "select/macro.njk" import govukSelect %}
+{% from  "../../../../component/time-inputs/macro.njk" import timeInputs with context %}
+
 {% extends "../../../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['event_add'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("/content-management/courses/") }}
+  {% endblock%}
+{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Course modules</h2>
+            <p class="govuk-body">This event is for the {{ module.title }} on the {{ course.title }} course.</p>
+
+            {% if event > 0 %}
+                <a href="#">Continue</a>
+            {% endif %}
+            <a href="#">Cancel</a>
+        </div>
+    </div>
+{% endblock %}
