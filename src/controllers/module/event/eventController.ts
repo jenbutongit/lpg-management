@@ -56,29 +56,31 @@ export class EventController {
 				...request.body,
 			}
 
-			const courseId = 'BV6TMBPISsaobwqanrvK2Q'
-			const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
-			//const module = await this.learningCatalogue.getModule(courseId, moduleId)
+			// const courseId = 'BV6TMBPISsaobwqanrvK2Q'
+			// const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
 
 			//const module = response.locals.module
 
-			if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
-				data.startTime = this.parseDateTime(data, true)
-				data.endTime = this.parseDateTime(data, false)
-			}
-
 			const errors = await this.eventValidator.check(data, ['event.dateRanges'])
 
-			const event = await this.eventFactory.create(data.startTime)
+			const date: Date = this.parseDateTime(data, true)
 
-			if (errors.size) {
+			if (!this.minDate(date, new Date(Date.now()))) {
+				errors.fields.minDate = ['validation.module.event.dateRanges.past']
+				errors.size++
+			}
+
+			const event = await this.eventFactory.create(data)
+
+			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, event: event}
 				return response.redirect(`/content-management/courses/modules/events/date`)
 			}
 
-			const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
+			//const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
 
-			request.session!.sessionFlash = {event: savedEvent}
+			//request.session!.sessionFlash = {event: savedEvent}
+			request.session!.sessionFlash = {event: event}
 
 			return response.redirect('/content-management/course/modules/events/events-preview')
 		}
@@ -88,6 +90,13 @@ export class EventController {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events-preview')
 		}
+	}
+
+	private minDate(date: Date, minDate: Date): boolean {
+		if (date < minDate) {
+			return false
+		}
+		return true
 	}
 
 	private parseDateTime(data: any, start: boolean): Date {
