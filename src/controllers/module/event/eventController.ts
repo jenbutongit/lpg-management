@@ -31,11 +31,7 @@ export class EventController {
 			this.setDateTime()
 		)
 
-		this.router.get(
-			// '/content-management/courses/:courseId/modules/:moduleId/events/location',
-			'/content-management/courses/modules/events/location',
-			this.getLocation()
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/location', this.getLocation())
 		this.router.get(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location',
 			this.getLocation()
@@ -63,7 +59,9 @@ export class EventController {
 
 			if (errors.size) {
 				req.session!.sessionFlash = {errors: errors, event: event}
-				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`)
+				res.redirect(
+					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/location`
+				)
 			}
 
 			req.session!.sessionFlash = {event: event}

@@ -23,16 +23,28 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Event location and availability</h2>
             <p class="govuk-body">This event is for the {{ module.title }} module on the {{ course.title }}</p>
 
-            <form class="govuk-form">
+            <form class="govuk-form" action="/content-management/courses/{{ course.Id }}/module/{{ module.Id }}/events" method="post">
                 <fieldset class="govuk-fieldset">
-                    {{ govukInput({
-                        label: {
-                            text: "Town/city"
-                        },
-                        id: "location",
-                        name: "location"
-                    }) }}
-
+                    {% if error.fields.location %}
+                        {{ govukInput({
+                            label: {
+                                text: "Town/city"
+                            },
+                            id: "location",
+                            name: "location",
+                            errorMessage: {
+                                text: "Location is required"
+                            }
+                        }) }}
+                    {% else %}
+                        {{ govukInput({
+                            label: {
+                                text: "Town/city"
+                            },
+                            id: "location",
+                            name: "location"
+                        }) }}
+                    {% endif %}
                     {{ govukTextarea({
                         name: "address",
                         id: "address",
@@ -40,22 +52,51 @@
                             text: "Venue address (optional)"
                         }
                     }) }}
-                    {{ govukInput({
-                        label: {
-                            text: "Number of spaces"
-                        },
-                        id: "spaces",
-                        name: "spaces",
-                        classes: "small-input"
-                    }) }}
-                    {{ govukInput({
-                        label: {
-                            text: "Minimum capacity"
-                        },
-                        id: "capacity",
-                        name: "capacity",
-                        classes: "small-input"
-                    }) }}
+                    {% if errors.fields.spaces %}
+                        {{ govukInput({
+                            label: {
+                                text: "Number of spaces"
+                            },
+                            id: "spaces",
+                            name: "spaces",
+                            classes: "small-input",
+                            errorMessage: {
+                                text: "Number of spaces is required"
+                            }
+                        }) }}
+                    {% else %}
+                        {{ govukInput({
+                            label: {
+                                text: "Number of spaces"
+                            },
+                            id: "spaces",
+                            name: "spaces",
+                            classes: "small-input"
+                        }) }}
+                    {% endif %}
+
+                    {% if errors.fields.capicity %}   
+                        {{ govukInput({
+                            label: {
+                                text: "Minimum capacity"
+                            },
+                            id: "capacity",
+                            name: "capacity",
+                            classes: "small-input",
+                            errorMessage: {
+                                text: "Minimum capicity is required"
+                            }
+                        }) }}
+                    {% else %}
+                       {{ govukInput({
+                            label: {
+                                text: "Minimum capacity"
+                            },
+                            id: "capacity",
+                            name: "capacity",
+                            classes: "small-input"
+                        }) }}
+                    {% endif %}
 
                     <div class="button-container">
                         {{ govukButton({
