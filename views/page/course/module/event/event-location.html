@@ -37,11 +37,34 @@
                         name: "address",
                         id: "address",
                         label: {
-                            text: "CVenue address (optional)"
+                            text: "Venue address (optional)"
                         }
                     }) }}
+                    {{ govukInput({
+                        label: {
+                            text: "Number of spaces"
+                        },
+                        id: "spaces",
+                        name: "spaces",
+                        classes: "small-input"
+                    }) }}
+                    {{ govukInput({
+                        label: {
+                            text: "Minimum capacity"
+                        },
+                        id: "capacity",
+                        name: "capacity",
+                        classes: "small-input"
+                    }) }}
+
+                    <div class="button-container">
+                        {{ govukButton({
+                            text: "Continue"
+                        }) }}
+                    </div>
+                    <a href="#">Cancel</a>
                 </fieldset>
-            </form
+            </form>
         </div>
         <div class="govuk-column-width-one-third">
         </div>
