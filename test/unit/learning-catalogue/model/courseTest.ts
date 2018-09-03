@@ -71,6 +71,26 @@ describe('Course tests', () => {
 		expect(course.getCost()).to.equal(175.25)
 	})
 
+	it('should get null if no module costs', () => {
+		course.modules = []
+
+		expect(course.getCost()).to.equal(null)
+	})
+
+	it('should get 0 if no module costs are 0', () => {
+		const module1 = new VideoModule()
+		module1.price = 0
+
+		const module2 = new LinkModule()
+		module2.price = 0
+
+		const module3 = new FaceToFaceModule()
+		module3.price = 0
+
+		course.modules = [module1, module2, module3]
+		expect(course.getCost()).to.equal(0)
+	})
+
 	it('should get type to be null if no modules', () => {
 		course.modules = []
 
@@ -85,7 +105,7 @@ describe('Course tests', () => {
 
 	it('should get type to be type of module if only one module', () => {
 		const module1 = new Module()
-		module1.type = 'video'
+		module1.type = Module.Type.VIDEO
 
 		course.modules = [module1]
 

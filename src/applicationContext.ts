@@ -31,9 +31,10 @@ import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactor
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
 import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
-import {ModuleController} from './controllers/moduleController'
+import {ModuleController} from './controllers/module/moduleController'
 import {Module} from './learning-catalogue/model/module'
-import {LinkModuleController} from './controllers/linkModuleController'
+import {LinkModuleController} from './controllers/module/linkModuleController'
+import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 
 log4js.configure(config.LOGGING)
 
@@ -66,8 +67,10 @@ export class ApplicationContext {
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
+	faceToFaceController: FaceToFaceModuleController
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -156,6 +159,12 @@ export class ApplicationContext {
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
+
+		this.faceToFaceController = new FaceToFaceModuleController(
+			this.learningCatalogue,
+			this.moduleValidator,
+			this.moduleFactory
+		)
 	}
 
 	addToResponseLocals() {

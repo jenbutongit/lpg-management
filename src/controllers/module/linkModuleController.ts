@@ -1,7 +1,7 @@
 import {Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
-import {LearningCatalogue} from '../learning-catalogue'
-import {LinkFactory} from '../learning-catalogue/model/factory/linkFactory'
+import {LearningCatalogue} from '../../learning-catalogue'
+import {LinkFactory} from '../../learning-catalogue/model/factory/linkFactory'
 
 const logger = log4js.getLogger('controllers/linkModuleController')
 

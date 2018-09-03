@@ -50,6 +50,14 @@ describe('Learning Catalogue tests', () => {
 		return expect(courseService.create).to.have.been.calledOnceWith('/courses/', course)
 	})
 
+	it('should call courseService when updating a course', async () => {
+		const course: Course = <Course>{}
+		courseService.update = sinon.stub()
+
+		await learningCatalogue.updateCourse(course)
+		return expect(courseService.update).to.have.been.calledOnceWith(`/courses/${course.id}`, course)
+	})
+
 	it('should call courseService when getting a course', async () => {
 		const courseId: string = 'course-id'
 		courseService.get = sinon.stub()
@@ -124,6 +132,21 @@ describe('Learning Catalogue tests', () => {
 		)
 	})
 
+	it('should call cancellationPolicyService when updating a cancellation policy', async () => {
+		const learningProviderId: string = 'learning-provider-id'
+
+		const cancellationPolicy: CancellationPolicy = <CancellationPolicy>{}
+		cancellationPolicy.id = 'cancellation-policy-id'
+
+		cancellationPolicyService.update = sinon.stub()
+
+		await learningCatalogue.updateCancellationPolicy(learningProviderId, cancellationPolicy)
+		return expect(cancellationPolicyService.update).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicy.id}`,
+			cancellationPolicy
+		)
+	})
+
 	it('should call cancellationPolicyService when getting a cancellation policy', async () => {
 		const cancellationPolicyId: string = 'cancellation-policy-id'
 		const learningProviderId: string = 'learning-provider-id'
@@ -133,6 +156,20 @@ describe('Learning Catalogue tests', () => {
 		await learningCatalogue.getCancellationPolicy(learningProviderId, cancellationPolicyId)
 		return expect(cancellationPolicyService.get).to.have.been.calledOnceWith(
 			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicyId}`
+		)
+	})
+
+	it('should call cancellationPolicyService when deleting a cancellation policy', async () => {
+		const learningProviderId: string = 'learning-provider-id'
+
+		const cancellationPolicy: CancellationPolicy = <CancellationPolicy>{}
+		cancellationPolicy.id = 'cancellation-policy-id'
+
+		cancellationPolicyService.delete = sinon.stub()
+
+		await learningCatalogue.deleteCancellationPolicy(learningProviderId, cancellationPolicy.id)
+		return expect(cancellationPolicyService.delete).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicy.id}`
 		)
 	})
 
@@ -159,6 +196,35 @@ describe('Learning Catalogue tests', () => {
 		await learningCatalogue.getTermsAndConditions(learningProviderId, termsAndConditionsId)
 
 		return expect(termsAndConditionsService.get).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
+		)
+	})
+
+	it('should call termsAndConditionsService when updating a terms and conditions', async () => {
+		const termsAndConditionsId: string = 'terms-and-conditions-id'
+		const learningProviderId: string = 'learning-provider-id'
+
+		const termsAndConditions: TermsAndConditions = <TermsAndConditions>{}
+		termsAndConditions.id = 'terms-and-conditions-id'
+
+		termsAndConditionsService.update = sinon.stub()
+
+		await learningCatalogue.updateTermsAndConditions(learningProviderId, termsAndConditions)
+
+		return expect(termsAndConditionsService.update).to.have.been.calledOnceWith(
+			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
+		)
+	})
+
+	it('should call termsAndConditionsService when deleting a terms and conditions', async () => {
+		const termsAndConditionsId: string = 'terms-and-conditions-id'
+		const learningProviderId: string = 'learning-provider-id'
+
+		termsAndConditionsService.delete = sinon.stub()
+
+		await learningCatalogue.deleteTermsAndConditions(learningProviderId, termsAndConditionsId)
+
+		return expect(termsAndConditionsService.delete).to.have.been.calledOnceWith(
 			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
 		)
 	})

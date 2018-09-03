@@ -1,17 +1,17 @@
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
-import {YoutubeModuleController} from '../../../src/controllers/module/youtubeModuleController'
-import {ModuleFactory} from '../../../src/learning-catalogue/model/factory/moduleFactory'
-import {LearningCatalogue} from '../../../src/learning-catalogue'
+import {YoutubeModuleController} from '../../../../src/controllers/module/youtubeModuleController'
+import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
+import {LearningCatalogue} from '../../../../src/learning-catalogue'
 import {mockReq, mockRes} from 'sinon-express-mock'
-import {ContentRequest} from '../../../src/extended'
+import {ContentRequest} from '../../../../src/extended'
 import * as sinon from 'sinon'
-import {Course} from '../../../src/learning-catalogue/model/course'
+import {Course} from '../../../../src/learning-catalogue/model/course'
 import {Request, Response} from 'express'
 import {expect} from 'chai'
-import {Module} from '../../../src/learning-catalogue/model/module'
+import {Module} from '../../../../src/learning-catalogue/model/module'
 import {YoutubeService} from 'lib/youtubeService'
-import {Validator} from '../../../src/learning-catalogue/validator/validator'
+import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)
 
@@ -122,7 +122,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		expect(moduleFactory.create).to.have.been.calledOnce
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/youtube-module`)
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-video`)
 	})
 
 	it('should get video duration and redirect to course preview page', async function() {
@@ -160,6 +160,6 @@ describe('YoutubeService Module Controller Test', function() {
 		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
 		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
 		expect(youtubeService.getDuration).to.have.been.calledOnce
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/youtube-module`)
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-video`)
 	})
 })

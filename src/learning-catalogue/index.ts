@@ -100,6 +100,22 @@ export class LearningCatalogue {
 		)
 	}
 
+	async updateCancellationPolicy(
+		learningProviderId: string,
+		cancellationPolicy: CancellationPolicy
+	): Promise<CancellationPolicy> {
+		return this._cancellationPolicyService.update(
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicy.id}`,
+			cancellationPolicy
+		)
+	}
+
+	async deleteCancellationPolicy(learningProviderId: string, cancellationPolicyId: string): Promise<void> {
+		return this._cancellationPolicyService.delete(
+			`/learning-providers/${learningProviderId}/cancellation-policies/${cancellationPolicyId}`
+		)
+	}
+
 	async getTermsAndConditions(learningProviderId: string, termsAndConditionsId: string): Promise<TermsAndConditions> {
 		return this._termsAndConditionsService.get(
 			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
@@ -113,6 +129,22 @@ export class LearningCatalogue {
 		return this._termsAndConditionsService.create(
 			`/learning-providers/${learningProviderId}/terms-and-conditions`,
 			termsAndConditions
+		)
+	}
+
+	async updateTermsAndConditions(
+		learningProviderId: string,
+		termsAndConditions: TermsAndConditions
+	): Promise<TermsAndConditions> {
+		return this._termsAndConditionsService.update(
+			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditions.id}`,
+			termsAndConditions
+		)
+	}
+
+	async deleteTermsAndConditions(learningProviderId: string, termsAndConditionsId: string): Promise<void> {
+		return this._termsAndConditionsService.delete(
+			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
 		)
 	}
 
