@@ -4,24 +4,14 @@ export class Event {
 	id: string
 
 	// @MinDate(new Date(Date.now()), {
-	// 	groups: ['all', 'event.all', 'event.startTimes'],
-	// 	message: 'validation.module.event.startTimes.past',
+	// 	groups: ['all', 'event.all', 'event.dateRanges'],
+	// 	message: 'validation.module.event.dateRanges.past',
 	// })
 	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.startTimes'],
-		message: 'validation.module.event.startTimes.empty',
+		groups: ['all', 'event.all', 'event.dateRanges'],
+		message: 'validation.module.event.dateRanges.empty',
 	})
-	startTimes: Date[]
-
-	// @MinDate(new Date(Date.now()), {
-	// 	groups: ['all', 'event.all', 'event.endTimes'],
-	// 	message: 'validation.module.event.endTimes.past',
-	// })
-	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.endTimes'],
-		message: 'validation.module.event.endTimes.empty',
-	})
-	endTimes: Date[]
+	dateRanges: any
 
 	@IsNotEmpty({
 		groups: ['all', 'event.all', 'event.location'],

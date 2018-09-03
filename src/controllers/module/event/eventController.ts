@@ -56,30 +56,32 @@ export class EventController {
 				...request.body,
 			}
 
-			// const courseId = request.params.courseId
-			// const moduleId = request.params.moduleId
+			// const courseId = 'BV6TMBPISsaobwqanrvK2Q'
+			// const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
 
 			//const module = response.locals.module
 
-			if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
-				data.startTime = this.parseDateTime(data, true)
-				data.endTime = this.parseDateTime(data, false)
-			}
+			const errors = await this.eventValidator.check(data, ['event.dateRanges'])
 
-			const errors = await this.eventValidator.check(data, ['event.startTimes'])
+			const date: Date = this.parseDateTime(data, true)
+
+			if (!this.minDate(date, new Date(Date.now()))) {
+				errors.fields.minDate = ['validation.module.event.dateRanges.past']
+				errors.size++
+			}
 
 			const event = await this.eventFactory.create(data)
 
-			if (errors.size) {
+			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
 				return response.redirect(`/content-management/courses/modules/events/date`)
 			}
 
-			//module.events.push(event)
+			//const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
 
+			//request.session!.sessionFlash = {event: savedEvent}
 			request.session!.sessionFlash = {event: event}
-			//response.redirect(`/content-management/courses/${courseId}/module/${moduleId}/event`)
+
 			return response.redirect('/content-management/course/modules/events/events-preview')
 		}
 	}
@@ -88,6 +90,13 @@ export class EventController {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events-preview')
 		}
+	}
+
+	private minDate(date: Date, minDate: Date): boolean {
+		if (date < minDate) {
+			return false
+		}
+		return true
 	}
 
 	private parseDateTime(data: any, start: boolean): Date {
