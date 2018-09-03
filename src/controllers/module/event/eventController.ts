@@ -20,16 +20,32 @@ export class EventController {
 
 	private setRouterPaths() {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/date', this.getDateTime())
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/date', this.getDateTime())
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/date',
+			this.getDateTime()
+		)
 
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/date', this.setDateTime())
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/date', this.setDateTime())
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/date',
+			this.setDateTime()
+		)
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/location', this.getLocation())
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', this.getLocation())
+		this.router.get(
+			// '/content-management/courses/:courseId/modules/:moduleId/events/location',
+			'/content-management/courses/modules/events/location',
+			this.getLocation()
+		)
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location',
+			this.getLocation()
+		)
 
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location', this.setLocation())
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', this.setLocation())
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location',
+			this.setLocation()
+		)
 	}
 
 	public getDateTime() {
@@ -40,7 +56,7 @@ export class EventController {
 
 	public setDateTime() {
 		return async (req: Request, res: Response) => {
-			const data = { ...req.body }
+			const data = {...req.body}
 
 			const errors = await this.eventValidator.check(data, ['event.date'])
 			const event = await this.eventFactory.create(data)
@@ -57,13 +73,13 @@ export class EventController {
 
 	public getLocation() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/module/event/')
+			res.render('page/course/module/event/event-location')
 		}
 	}
 
 	public setLocation() {
 		return async (req: Request, res: Response) => {
-			const data = { ...req.body }
+			const data = {...req.body}
 
 			const errors = await this.eventValidator.check(data, ['event.location'])
 			const event = await this.eventFactory.create(data)
