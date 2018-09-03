@@ -53,7 +53,7 @@ describe('Module Controller Tests', function() {
 		)
 	})
 
-	it('should render add module blog page', async function() {
+	it('should render add module link page', async function() {
 		const setModule: (request: Request, response: Response) => void = moduleController.setModule()
 
 		const request: Request = mockReq()
@@ -67,7 +67,9 @@ describe('Module Controller Tests', function() {
 		await setModule(request, response)
 
 		//To be done - would expect to render form for specific module type
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-link`)
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/${course.id}/module/module-link`
+		)
 	})
 
 	it('should remain on add module page if no course is selected', async function() {
