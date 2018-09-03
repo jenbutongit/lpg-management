@@ -19,6 +19,9 @@
 {% block content %}
 
     {% set errors = sessionFlash.errors %}
+    {% set course = sessionFlash.course %}
+    {% set module = sessionFlash.module %}
+    {% set event = sessionFlash.event %}
     
     {{ errorSummary(errors.fields) }}
 
@@ -45,7 +48,7 @@
                 </div>
             {% endif %}
 
-            <form action="/content-management/courses/modules/events/date" method="post">
+            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}" method="post">
                 {% if errors %}
                     {{ govukDateInput({
                         id: "start-date",

@@ -19,6 +19,7 @@
 	"module_link_add_title": "Add a link",
 	"module_youtube_add_title": "Add a YouTube video",
 	"module_face_to_face_add": "Add a classroom module",
+	"link": "Link",
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
@@ -41,6 +42,7 @@
 	"validation.module.description.empty": "Description is required",
 	"validation_module_video_notFound": "There was a problem finding this video",
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
-	"validation.module.event.dateRanges.empty": "Start date is required",
-	"validation.module.event.dateRanges.past": "Start date is in the past"
+    "validation.module.event.dateRanges.empty": "Start date is required",
+    "validation.module.event.dateRanges.past": "Start date is in the past",
+    "video": "Video"
 }

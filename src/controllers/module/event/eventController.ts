@@ -19,8 +19,19 @@ export class EventController {
 	}
 
 	private setRouterPaths() {
-		this.router.param('moduleId', async (req, res, next, moduleId, courseId) => {
-			const module = await this.learningCatalogue.getModule(courseId, moduleId)
+		this.router.param('courseId', async (req, res, next, courseId) => {
+			const course = await this.learningCatalogue.getCourse(courseId)
+
+			if (course) {
+				res.locals.course = course
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
+		this.router.param('moduleId', async (req, res, next, moduleId) => {
+			const module = await this.learningCatalogue.getModule(res.locals.course.id, moduleId)
 
 			if (module) {
 				res.locals.module = module
@@ -30,18 +41,20 @@ export class EventController {
 			}
 		})
 
-		this.router.get(
-			// '/content-management/course/:courseId/module/:moduleId/events/:eventId?/date',
-			'/content-management/courses/modules/events/date',
-			this.getDateTime()
-		)
-		this.router.post(
-			//'/content-management/courses/:courseId/modules/:moduleId/event-date/:eventId?',
-			'/content-management/courses/modules/events/date',
-			this.setDateTime()
-		)
+		this.router.param('eventId', async (req, res, next, eventId) => {
+			const event = await this.learningCatalogue.getEvent(res.locals.course.id, res.locals.module.id, eventId)
 
-		this.router.get('/content-management/course/modules/events/events-preview', this.getDatePreview())
+			if (module) {
+				res.locals.event = event
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.getDateTime())
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.setDateTime())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview', this.getDatePreview())
 	}
 
 	public getDateTime() {
@@ -56,14 +69,14 @@ export class EventController {
 				...request.body,
 			}
 
-			const courseId = 'BV6TMBPISsaobwqanrvK2Q'
-			const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
+			const courseId = request.params.courseId
+			const moduleId = request.params.moduleId
+			const eventId = request.params.eventId
 
-			data = this.parseDate(data)
+			data.dateRanges = []
+			data.dateRanges[0] = this.parseDate(data)
 
 			const date: Date = this.getDate(data, true)
-
-			const event = await this.eventFactory.create(data)
 
 			let errors = await this.eventValidator.check(data, ['event.dateRanges'])
 			if (!this.minDate(date, new Date(Date.now()))) {
@@ -71,15 +84,31 @@ export class EventController {
 				errors.size++
 			}
 
-			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors, event: event}
-				return response.redirect(`/content-management/courses/modules/events/date`)
+			let event
+			if (eventId) {
+				event = response.locals.event
+
+				event.dateRanges.push(data.dateRanges[0])
+			} else {
+				event = await this.eventFactory.create(data)
+
+				response.locals.event = event
 			}
 
-			const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
-			request.session!.sessionFlash = {event: savedEvent}
+			if (errors.size) {
+				request.session!.sessionFlash = {errors: errors, event: event}
+				return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
+			}
 
-			return response.redirect('/content-management/course/modules/events/events-preview')
+			if (eventId) {
+				const savedEvent = await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
+				request.session!.sessionFlash = {event: savedEvent}
+			} else {
+				const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
+				request.session!.sessionFlash = {event: savedEvent}
+			}
+
+			return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events-preview`)
 		}
 	}
 
@@ -120,9 +149,9 @@ export class EventController {
 	private parseDate(data: any) {
 		let dateRanges
 		if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
-			dateRanges = [{date: '', startTime: '', endTime: ''}]
+			dateRanges = {date: '', startTime: '', endTime: ''}
 
-			dateRanges[0].date = (
+			dateRanges.date = (
 				data['start-date-Year'] +
 				'-' +
 				data['start-date-Month'] +
@@ -130,12 +159,10 @@ export class EventController {
 				data['start-date-Day']
 			).toString()
 
-			dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
-			dateRanges[0].endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
+			dateRanges.startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
+			dateRanges.endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
 		}
 
-		data.dateRanges = dateRanges
-
-		return data
+		return dateRanges
 	}
 }

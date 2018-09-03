@@ -85,6 +85,10 @@ export class LearningCatalogue {
 		return this._eventService.get(`/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
 	}
 
+	async updateEvent(courseId: string, moduleId: string, eventId: string, event: Event): Promise<Event> {
+		return this._eventService.update(`/courses/${courseId}/modules/${moduleId}/events/${eventId}`, event)
+	}
+
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
 		return await this._learningProviderService.listAll(`/learning-providers?page=${page}&size=${size}`)
 	}

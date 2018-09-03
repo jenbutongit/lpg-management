@@ -12,5 +12,7 @@ export class FaceToFaceModule extends Module {
 	@ValidateNested({
 		groups: ['all', 'events'],
 	})
-	events: Event[] = []
+	events: Event[]
+
+	type: Module.Type.FACE_TO_FACE
 }
