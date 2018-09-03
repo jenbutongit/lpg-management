@@ -14,6 +14,7 @@ import {CourseFactory} from './model/factory/courseFactory'
 import {ModuleFactory} from './model/factory/moduleFactory'
 import {AudienceFactory} from './model/factory/audienceFactory'
 import {EventFactory} from './model/factory/eventFactory'
+import {Event} from './model/event'
 
 export class LearningCatalogue {
 	private _eventService: EntityService<Event>

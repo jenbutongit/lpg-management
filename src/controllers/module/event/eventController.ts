@@ -52,35 +52,32 @@ export class EventController {
 
 	public setDateTime() {
 		return async (request: Request, response: Response) => {
-			const data = {
+			let data = {
 				...request.body,
 			}
 
-			// const courseId = 'BV6TMBPISsaobwqanrvK2Q'
-			// const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
+			const courseId = 'BV6TMBPISsaobwqanrvK2Q'
+			const moduleId = '-PxRtdQ1RwiFqDjz6lMnyg'
 
-			//const module = response.locals.module
+			data = this.parseDate(data)
 
-			const errors = await this.eventValidator.check(data, ['event.dateRanges'])
+			const date: Date = this.getDate(data, true)
 
-			const date: Date = this.parseDateTime(data, true)
+			const event = await this.eventFactory.create(data)
 
+			let errors = await this.eventValidator.check(data, ['event.dateRanges'])
 			if (!this.minDate(date, new Date(Date.now()))) {
 				errors.fields.minDate = ['validation.module.event.dateRanges.past']
 				errors.size++
 			}
 
-			const event = await this.eventFactory.create(data)
-
-			if (Object.keys(errors.fields).length != 0) {
+			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
 				return response.redirect(`/content-management/courses/modules/events/date`)
 			}
 
-			//const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
-
-			//request.session!.sessionFlash = {event: savedEvent}
-			request.session!.sessionFlash = {event: event}
+			const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
+			request.session!.sessionFlash = {event: savedEvent}
 
 			return response.redirect('/content-management/course/modules/events/events-preview')
 		}
@@ -99,7 +96,7 @@ export class EventController {
 		return true
 	}
 
-	private parseDateTime(data: any, start: boolean): Date {
+	private getDate(data: any, start: boolean) {
 		let date: Date = new Date()
 
 		date.setFullYear(data['start-date-Year'])
@@ -118,5 +115,27 @@ export class EventController {
 		date.setMilliseconds(0)
 
 		return date
+	}
+
+	private parseDate(data: any) {
+		let dateRanges
+		if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
+			dateRanges = [{date: '', startTime: '', endTime: ''}]
+
+			dateRanges[0].date = (
+				data['start-date-Year'] +
+				'-' +
+				data['start-date-Month'] +
+				'-' +
+				data['start-date-Day']
+			).toString()
+
+			dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
+			dateRanges[0].endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
+		}
+
+		data.dateRanges = dateRanges
+
+		return data
 	}
 }

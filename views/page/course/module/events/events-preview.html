@@ -17,6 +17,7 @@
 
 {% block content %}
     {% set errors = sessionFlash.errors %}
+    {% set event = sessionFlash.event %}
     
     {{ errorSummary(errors.fields) }}
     <div class="govuk-grid-row">
@@ -32,9 +33,9 @@
                     </li> 
                 </ul>
                 <ul class="event-list">
-                    {% for event in events %}
+                    {% for date in event.dateRanges %}
                         <li class="events u--border--bgrey">
-                            <p class="govuk-body event date">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event edit"><p class="govuk-body"><a href="#" class="govuk-link">Delete</a><a href="#" class="govuk-link">Edit</a>
+                            <p class="govuk-body event date">{{ event }}test</p><p class="govuk-body event time">{{ date }}test</p><p class="govuk-body event time">{{ date }}test</p><p class="govuk-body event edit"><p class="govuk-body"><a href="#" class="govuk-link">Delete</a><a href="#" class="govuk-link">Edit</a>
                         </li>
                     {% endfor %}
                 </ul>
