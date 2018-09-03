@@ -20,6 +20,14 @@
 	}
 }
 
+.govuk-error-summary {
+	.custom-error-message {
+		font-weight: 700;
+		color: $error-message;
+		margin: 0;
+	}
+}
+
 .govuk-checkboxes__label {
 	font-weight: 400;
 

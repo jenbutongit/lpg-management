@@ -29,4 +29,6 @@ export class FileModule extends Module {
 		message: 'validation_module_fileSize_positive',
 	})
 	fileSize: number
+
+	type: Module.Type.FILE
 }
