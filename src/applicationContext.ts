@@ -33,6 +33,7 @@ import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
 import {ModuleController} from './controllers/module/moduleController'
 import {Module} from './learning-catalogue/model/module'
+import {FileController} from './controllers/module/fileController'
 import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 
@@ -64,6 +65,7 @@ export class ApplicationContext {
 	moduleValidator: Validator<Module>
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
+	fileController: FileController
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
@@ -158,6 +160,7 @@ export class ApplicationContext {
 		)
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
+		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 
 		this.faceToFaceController = new FaceToFaceModuleController(
