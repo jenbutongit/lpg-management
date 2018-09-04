@@ -1,26 +1,14 @@
-.course-summary {
-	width: 100%;
+.module-list {
+	padding: 15px 0;
 }
 
-.item {
-	width: 50%;
-	font-size: $font-mobile;
-}
-
-.course-summary-item {
-	border-bottom: 1px solid $border;
-
-	.item-container {
-		display: flex;
-
-		.item-header {
-			font-weight: 700;
-		}
+.module-item {
+	padding: 15px 0 30px 0;
+	.govuk-link {
+		margin: 0;
 	}
 }
 
-@media screen and (min-width: $tablet-small) {
-	.item {
-		font-size: $font-normal;
-	}
+.pre-learning {
+	padding: 15px 5px 30px 5px;
 }

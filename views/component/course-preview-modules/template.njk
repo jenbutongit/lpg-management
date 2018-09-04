@@ -1,15 +1,16 @@
-<ul class="list">
+<ul class="list module-list">
     {% for module in modules %}
-        <li class="list-item">
+        <li class="module-item list-item u--border--bgrey ">
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-two-thirds">
-                    <h3 class="govuk-heading-s">{{ module.title }} test</p>
+                    <h3 class="govuk-heading-s">{{ module.title }} My test title</h3>
 
-                    <p class="govuk-body">{{ module.description }} data</p>
+                    <p class="govuk-body">{{ module.description }}This is a test description for my test course title</p>
+                    <a href="#" class="govuk-body govuk-link">Start</a>
                 </div>
                 <div class="govuk-grid-column-one-third">
-                    <p class="govuk-body">{{ module.type }} Video</p>
-                    <p class="govuk-body">{{ module.duration }}5 days</p>
+                    <p class="govuk-body">{{ module.type }}</p>
+                    <p class="govuk-body">{{ module.duration }}</p>
                 </div>
             </div>
         </li>

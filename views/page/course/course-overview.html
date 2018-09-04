@@ -24,11 +24,11 @@
         {% set courseAddedSuccessMessage = sessionFlash.courseAddedSuccessMessage%}
 
         {% if courseAddedSuccessMessage %}
-        <div class="panel govuk-panel govuk-panel--confirmation">
-            <div class="govuk-panel__body custom-panel">
-                <p class="govuk-body"><strong>{{ course.title }}</strong>{{ i18n[courseAddedSuccessMessage] }}</p>
+            <div class="panel govuk-panel govuk-panel--confirmation">
+                <div class="govuk-panel__body custom-panel">
+                    <p class="govuk-body"><strong>{{ course.title }}</strong>{{ i18n[courseAddedSuccessMessage] }}</p>
+                </div>
             </div>
-        </div>
         {% endif %}
         <h3 class="govuk-heading-m">Course Overview</h3>
         {% block courseDetails %}
