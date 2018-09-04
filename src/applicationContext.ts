@@ -36,6 +36,7 @@ import {Module} from './learning-catalogue/model/module'
 import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 import {EventController} from './controllers/module/event/eventController'
+import {Event} from './learning-catalogue/model/event'
 
 log4js.configure(config.LOGGING)
 

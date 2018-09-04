@@ -22,3 +22,51 @@ export function parseDuration(isoDuration: string): number | undefined {
 	}
 	return duration
 }
+
+export function minDate(date: Date, minDate: Date): boolean {
+	if (date < minDate) {
+		return false
+	}
+	return true
+}
+
+export function getDate(data: any, start: boolean) {
+	let date: Date = new Date()
+
+	date.setFullYear(data['start-date-Year'])
+	date.setMonth(data['start-date-Month'])
+	date.setDate(data['start-date-Day'])
+
+	if (start) {
+		date.setHours(data['start-time'][0])
+		date.setMinutes(data['start-time'][1])
+	} else {
+		date.setHours(data['end-time'][0])
+		date.setMinutes(data['end-time'][1])
+	}
+
+	date.setSeconds(0)
+	date.setMilliseconds(0)
+
+	return date
+}
+
+export function parseDate(data: any) {
+	let dateRanges
+	if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
+		dateRanges = [{date: '', startTime: '', endTime: ''}]
+
+		dateRanges[0].date = (
+			data['start-date-Year'] +
+			'-' +
+			data['start-date-Month'] +
+			'-' +
+			data['start-date-Day']
+		).toString()
+
+		dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
+		dateRanges[0].endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
+	}
+
+	return dateRanges
+}

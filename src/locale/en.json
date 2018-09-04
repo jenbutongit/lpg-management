@@ -44,5 +44,6 @@
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
     "validation.module.event.dateRanges.empty": "Start date is required",
     "validation.module.event.dateRanges.past": "Start date is in the past",
+    "validation.module.event.dateRanges.endBeforeStart": "Start time is after end time",
     "video": "Video"
 }

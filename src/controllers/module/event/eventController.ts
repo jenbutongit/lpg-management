@@ -2,6 +2,8 @@ import {LearningCatalogue} from '../../../learning-catalogue/index'
 import {Validator} from '../../../learning-catalogue/validator/validator'
 import {Request, Response, Router} from 'express'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
+import {Event} from '../../../learning-catalogue/model/event'
+import * as datetime from '../../../lib/datetime'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -73,27 +75,21 @@ export class EventController {
 			const moduleId = request.params.moduleId
 			const eventId = request.params.eventId
 
-			data.dateRanges = []
-			data.dateRanges[0] = this.parseDate(data)
-
-			const date: Date = this.getDate(data, true)
+			data.dateRanges = datetime.parseDate(data)
+			const startDate: Date = datetime.getDate(data, true)
+			const endDate: Date = datetime.getDate(data, false)
 
 			let errors = await this.eventValidator.check(data, ['event.dateRanges'])
-			if (!this.minDate(date, new Date(Date.now()))) {
+			if (!datetime.minDate(startDate, new Date(Date.now()))) {
 				errors.fields.minDate = ['validation.module.event.dateRanges.past']
 				errors.size++
 			}
-
-			let event
-			if (eventId) {
-				event = response.locals.event
-
-				event.dateRanges.push(data.dateRanges[0])
-			} else {
-				event = await this.eventFactory.create(data)
-
-				response.locals.event = event
+			if (!datetime.minDate(endDate, startDate)) {
+				errors.fields.minTime = ['validation.module.event.dateRanges.endBeforeStart']
+				errors.size++
 			}
+
+			let event = await this.eventFactory.create(data)
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
@@ -101,12 +97,19 @@ export class EventController {
 			}
 
 			if (eventId) {
-				const savedEvent = await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
-				request.session!.sessionFlash = {event: savedEvent}
-			} else {
-				const savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
-				request.session!.sessionFlash = {event: savedEvent}
+				event = response.locals.event
+
+				event.dateRanges.push(data.dateRanges[0])
 			}
+
+			let savedEvent
+			if (eventId) {
+				savedEvent = await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
+			} else {
+				savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
+			}
+
+			request.session!.sessionFlash = {event: savedEvent}
 
 			return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events-preview`)
 		}
@@ -116,53 +119,5 @@ export class EventController {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events-preview')
 		}
-	}
-
-	private minDate(date: Date, minDate: Date): boolean {
-		if (date < minDate) {
-			return false
-		}
-		return true
-	}
-
-	private getDate(data: any, start: boolean) {
-		let date: Date = new Date()
-
-		date.setFullYear(data['start-date-Year'])
-		date.setMonth(data['start-date-Month'])
-		date.setDate(data['start-date-Day'])
-
-		if (start) {
-			date.setHours(data['start-time'][0])
-			date.setMinutes(data['start-time'][1])
-		} else {
-			date.setHours(data['end-time'][0])
-			date.setMinutes(data['end-time'][1])
-		}
-
-		date.setSeconds(0)
-		date.setMilliseconds(0)
-
-		return date
-	}
-
-	private parseDate(data: any) {
-		let dateRanges
-		if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
-			dateRanges = {date: '', startTime: '', endTime: ''}
-
-			dateRanges.date = (
-				data['start-date-Year'] +
-				'-' +
-				data['start-date-Month'] +
-				'-' +
-				data['start-date-Day']
-			).toString()
-
-			dateRanges.startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
-			dateRanges.endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
-		}
-
-		return dateRanges
 	}
 }
