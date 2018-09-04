@@ -118,6 +118,45 @@ ul {
 	color: $white;
 }
 
+.btn {
+	display: none;
+}
+
+.js-enabled {
+	.add-file-form {
+		span {
+			font-size: $font-mobile;
+		}
+
+		.btn {
+			border: 2px solid $font-color;
+			color: $font-color;
+			background-color: white;
+			padding: 8px;
+			border-radius: 5px;
+			font-size: $font-mobile;
+			font-weight: bold;
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.custom-uploader {
+			width: 0.1px;
+			height: 0.1px;
+			opacity: 0;
+			overflow: hidden;
+			position: absolute;
+			z-index: -1;
+
+			&:focus {
+				& + label {
+					outline: 3px solid #ffbf47;
+				}
+			}
+		}
+	}
+}
+
 @media screen and (min-width: $tablet-small) {
 	.pager__controls {
 		font-size: $font-normal;
