@@ -13,7 +13,7 @@
         <h3 class="govuk-heading-s">Event details</h3>
         <ul class="list">
             {% for event in module.events %}
-                <li>
+                <li class="module-item list-item u--border--bgrey">
                     <div class="face-to-face-container">
                         {# TODO: not sure how to display events, so for now just showing the venue location #}
                         <p class="govuk-body">{{ event.location }}, {{ event.date }}</p>

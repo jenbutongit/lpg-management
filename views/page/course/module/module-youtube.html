@@ -102,28 +102,28 @@
 
             </fieldset>
             {{ govukCheckboxes({
-            idPrefix: "isOptional",
-            name: "isOptional",
-            classes: "font-light",
-            fieldset: {
-            legend: {
-            text: "Is this an optional module?",
-            isPageHeading: true,
-            classes: "font-bold"
+                idPrefix: "optional",
+                name: "optional",
+                classes: "font-light",
+                fieldset: {
+                legend: {
+                text: "Is this an optional module?",
+                isPageHeading: true,
+                classes: "font-bold"
             }
             },
             items: [
-            {
-            value: true,
-            text: "Yes, this is optional"
-            }
+                {
+                    value: true,
+                    text: "Yes, this is optional"
+                }
             ]
             })
             }}
 
             {{ govukButton({
-            text: "Continue",
-            type: "submit"
+                text: "Continue",
+                type: "submit"
             }) }}
         </form>
 
