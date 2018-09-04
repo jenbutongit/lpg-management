@@ -1,7 +1,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "table/macro.njk" import govukTable %}
 {% from "../../component/course-preview/macro.njk" import coursePreview with context %}
-{% from "../../component/course-preview-modules/macro.njk" import coursePreviewModules with context %}
+{% from "../../component/courseModules/macro.njk" import courseModules with context %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -33,8 +33,8 @@
             {% endblock %}
 
             {% if course.modules.length > 0 %}
-                {% block coursePreviewModules %}
-                    {{ coursePreviewModules(course.modules) }}
+                {% block courseModules %}
+                    {{ courseModules(course.modules) }}
                 {% endblock %}
             {% endif %}
 
