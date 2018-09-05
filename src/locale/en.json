@@ -45,5 +45,6 @@
     "validation.module.event.dateRanges.empty": "Start date is required",
     "validation.module.event.dateRanges.past": "Start date is in the past",
     "validation.module.event.dateRanges.endBeforeStart": "Start time is after end time",
+    "validation.module.event.date.invalidFormat": "Start date must be of format dd-mm-yyyy",
     "video": "Video"
 }

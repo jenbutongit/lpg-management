@@ -12,16 +12,17 @@
     {{ phaseBanner("beta") }}
   {% endblock%}
   {% block backLink %}
-    {{ backLink("/content-management/courses/") }}
+    {% if event %}
+        {{ backLink("/content-management/courses/" + course.id + "/modules/" + module.id + "/events-preview/" + event.id) }}
+    {% else %}}
+        {{ backLink("/content-management/courses/" + course.id + "/overview") }}
+    {% endif %}
   {% endblock%}
 {% endblock %}
 
 {% block content %}
 
     {% set errors = sessionFlash.errors %}
-    {% set course = sessionFlash.course %}
-    {% set module = sessionFlash.module %}
-    {% set event = sessionFlash.event %}
     
     {{ errorSummary(errors.fields) }}
 
@@ -49,10 +50,11 @@
             {% endif %}
 
             <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}" method="post">
-                {% if errors.fields.minDate or errors.fields.dateRanges %}
+                {% if errors.fields.minDate or errors.fields.dateRanges or errors.fields.invalidDate %}
                     {{ govukDateInput({
                         id: "start-date",
                         name: "start-date",
+                        attributes: {maxlength: "2"},
                         fieldset: {
                             legend: {
                             text: "Start date",
@@ -80,6 +82,7 @@
                      {{ govukDateInput({
                         id: "start-date",
                         name: "start-date",
+                        attributes: {maxlength: "2"},
                         fieldset: {
                             legend: {
                             text: "Start date",
@@ -90,13 +93,16 @@
                         },
                         items: [
                             {
-                            name: "Day"
+                            name: "Day",
+                            attributes: {maxlength: "2"}
                             },
                             {
-                            name: "Month"
+                            name: "Month",
+                            attributes: {maxlength: "2"}
                             },
                             {
-                            name: "Year"
+                            name: "Year",
+                            attributes: {maxlength: "2"}
                             }
                         ]
                         }) }}
@@ -118,7 +124,7 @@
                     <a class="govuk-button" href="#">Continue</a>
                 </div>
             {% endif %}
-            <a href="#">Cancel</a>
+            <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
         </div>
     </div>
 {% endblock %}

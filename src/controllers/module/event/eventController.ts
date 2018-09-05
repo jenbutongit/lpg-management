@@ -56,11 +56,16 @@ export class EventController {
 
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.getDateTime())
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.setDateTime())
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview', this.getDatePreview())
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?',
+			this.getDatePreview()
+		)
 	}
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
+			const course = response.locals.course
+			request.session!.sessionFlash = {course: course}
 			response.render('page/course/module/events/events')
 		}
 	}
@@ -76,34 +81,24 @@ export class EventController {
 			const eventId = request.params.eventId
 
 			data.dateRanges = datetime.parseDate(data)
-			const startDate: Date = datetime.getDate(data, true)
-			const endDate: Date = datetime.getDate(data, false)
 
 			let errors = await this.eventValidator.check(data, ['event.dateRanges'])
-			if (!datetime.minDate(startDate, new Date(Date.now()))) {
-				errors.fields.minDate = ['validation.module.event.dateRanges.past']
-				errors.size++
-			}
-			if (!datetime.minDate(endDate, startDate)) {
-				errors.fields.minTime = ['validation.module.event.dateRanges.endBeforeStart']
-				errors.size++
-			}
+			errors = datetime.validateDateTime(data, errors)
 
 			let event = await this.eventFactory.create(data)
+			if (eventId) {
+				event = response.locals.event
+			}
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
-			}
-
-			if (eventId) {
-				event = response.locals.event
-
-				event.dateRanges.push(data.dateRanges[0])
+				return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/`)
 			}
 
 			let savedEvent
 			if (eventId) {
+				event.dateRanges.push(data.dateRanges[0])
+
 				savedEvent = await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 			} else {
 				savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
