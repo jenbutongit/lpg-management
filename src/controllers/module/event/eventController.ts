@@ -64,8 +64,6 @@ export class EventController {
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			const course = response.locals.course
-			request.session!.sessionFlash = {course: course}
 			response.render('page/course/module/events/events')
 		}
 	}
@@ -84,6 +82,7 @@ export class EventController {
 
 			let errors = await this.eventValidator.check(data, ['event.dateRanges'])
 			errors = datetime.validateDateTime(data, errors)
+			errors.size = Object.keys(errors.fields).length
 
 			let event = await this.eventFactory.create(data)
 			if (eventId) {

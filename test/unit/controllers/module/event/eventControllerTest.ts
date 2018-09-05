@@ -50,7 +50,7 @@ describe('Event Controller Test', function() {
 
 		request.body = {
 			'start-date-Day': '20',
-			'start-date-Month': '20',
+			'start-date-Month': '12',
 			'start-date-Year': '2030',
 			'start-time': ['09', '00'],
 			'end-time': ['17', '00'],
@@ -81,7 +81,7 @@ describe('Event Controller Test', function() {
 
 		request.body = {
 			'start-date-Day': '20',
-			'start-date-Month': '20',
+			'start-date-Month': '12',
 			'start-date-Year': '2030',
 			'start-time': ['09', '00'],
 			'end-time': ['17', '00'],
@@ -135,7 +135,7 @@ describe('Event Controller Test', function() {
 
 		expect(eventValidator.check).to.have.been.calledOnce
 		expect(eventFactory.create).to.have.been.calledOnce
-		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events`)
+		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events/`)
 	})
 
 	it('should render event preview page', async function() {

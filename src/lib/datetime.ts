@@ -2,7 +2,7 @@ const isoRegex = new RegExp(
 	'^(-)?P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?' + '(T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$'
 )
 
-const dateRegex = new RegExp('([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))')
+const dateRegex = new RegExp('^([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))$')
 
 export function parseDuration(isoDuration: string): number | undefined {
 	const parts = isoDuration.match(isoRegex)
@@ -38,22 +38,17 @@ export function validateDateTime(data: any, errors: any) {
 
 	if (!minDate(startDate, new Date(Date.now()))) {
 		errors.fields.minDate = ['validation.module.event.dateRanges.past']
-		errors.size++
 	}
 	if (!minDate(endDate, startDate)) {
 		errors.fields.minTime = ['validation.module.event.dateRanges.endBeforeStart']
-		errors.size++
 	}
 
 	let parts = null
-
 	if (data.dateRanges) {
 		parts = data.dateRanges[0].date.match(dateRegex)
 	}
-
 	if (!parts) {
 		errors.fields.invalidDate = ['validation.module.event.date.invalidFormat']
-		errors.size++
 	}
 
 	return errors

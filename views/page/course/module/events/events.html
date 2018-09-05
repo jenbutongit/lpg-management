@@ -14,7 +14,7 @@
   {% block backLink %}
     {% if event %}
         {{ backLink("/content-management/courses/" + course.id + "/modules/" + module.id + "/events-preview/" + event.id) }}
-    {% else %}}
+    {% else %}
         {{ backLink("/content-management/courses/" + course.id + "/overview") }}
     {% endif %}
   {% endblock%}
