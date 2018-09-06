@@ -3,10 +3,6 @@ import {IsNotEmpty, IsPositive} from 'class-validator'
 export class Event {
 	id: string
 
-	// @MinDate(new Date(Date.now()), {
-	// 	groups: ['all', 'event.all', 'event.dateRanges'],
-	// 	message: 'validation.module.event.dateRanges.past',
-	// })
 	@IsNotEmpty({
 		groups: ['all', 'event.all', 'event.dateRanges'],
 		message: 'validation.module.event.dateRanges.empty',

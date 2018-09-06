@@ -54,6 +54,12 @@ export class EventController {
 			}
 		})
 
+		this.router.param('courseId', async (req, res, next, courseId) => {
+			const date = new Date(Date.now())
+			res.locals.exampleYear = date.getFullYear() + 1
+			next()
+		})
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.getDateTime())
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.setDateTime())
 		this.router.get(

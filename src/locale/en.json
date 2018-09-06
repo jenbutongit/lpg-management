@@ -43,9 +43,8 @@
 	"validation_module_video_notFound": "There was a problem finding this video",
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
     "validation.module.event.dateRanges.empty": "Start date is required",
-    "validation.module.event.dateRanges.past": "Start date is in the past",
-    "validation.module.event.dateRanges.endBeforeStart": "Start time is after end time",
-    "validation.module.event.date.invalidFormat": "Start date must be of format dd-mm-yyyy",
-    "validation.module.event.date.doesNotExist": "Start date is not valid",
+    "validation.module.event.dateRanges.past": "Start date must be in the future",
+    "validation.module.event.dateRanges.endBeforeStart": "Start time must be before end time",
+    "validation.module.event.date.invalid": "Start date is not valid",
     "video": "Video"
 }

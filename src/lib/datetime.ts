@@ -55,7 +55,7 @@ export function validateDateTime(data: any, errors: any) {
 					data.dateRanges[0].date.substr(0, 4)
 			)
 		) {
-			errors.fields.invalidDate = ['validation.module.event.date.doesNotExist']
+			errors.fields.invalidDate = ['validation.module.event.date.invalid']
 		}
 	}
 
@@ -64,7 +64,7 @@ export function validateDateTime(data: any, errors: any) {
 		parts = data.dateRanges[0].date.match(dateRegex)
 	}
 	if (!parts) {
-		errors.fields.invalidDate = ['validation.module.event.date.invalidFormat']
+		errors.fields.invalidDate = ['validation.module.event.date.invalid']
 	}
 	return errors
 }
@@ -94,6 +94,14 @@ export function parseDate(data: any) {
 	let dateRanges
 	if (data['start-date-year'] && data['start-date-month'] && data['start-date-day']) {
 		dateRanges = [{date: '', startTime: '', endTime: ''}]
+
+		if (data['start-date-month'].toString().length == 1) {
+			data['start-date-month'] = '0' + data['start-date-month']
+		}
+
+		if (data['start-date-day'].toString().length == 1) {
+			data['start-date-day'] = '0' + data['start-date-day']
+		}
 
 		dateRanges[0].date = (
 			data['start-date-year'] +
