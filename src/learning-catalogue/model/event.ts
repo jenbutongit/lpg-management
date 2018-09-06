@@ -1,5 +1,6 @@
-import {IsNotEmpty, IsPositive} from 'class-validator'
+import {IsNotEmpty} from 'class-validator'
 import {DateRange} from './DateRange'
+import {Venue} from "./venue";
 
 export class Event {
 	id: string
@@ -14,15 +15,5 @@ export class Event {
 		groups: ['all', 'event.all', 'event.location'],
 		message: 'validation_module_event_location_empty',
 	})
-	location: string
-
-	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.capacity'],
-		message: 'validation_module_event_capacity_empty',
-	})
-	@IsPositive({
-		groups: ['all', 'event.all', 'event.capacity'],
-		message: 'validation_module_event_capacity_positive',
-	})
-	capacity: number
+	venue: Venue
 }
