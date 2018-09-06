@@ -105,7 +105,9 @@ export class EventController {
 
 			request.session!.sessionFlash = {event: savedEvent}
 
-			return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events-preview`)
+			return response.redirect(
+				`/content-management/courses/${courseId}/modules/${moduleId}/events-preview/${savedEvent.id}`
+			)
 		}
 	}
 

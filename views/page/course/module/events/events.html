@@ -23,6 +23,7 @@
 {% block content %}
 
     {% set errors = sessionFlash.errors %}
+    {% set event = sessionFlash.event %}
     
     {{ errorSummary(errors.fields) }}
 
@@ -54,7 +55,6 @@
                     {{ govukDateInput({
                         id: "start-date",
                         name: "start-date",
-                        attributes: {maxlength: "2"},
                         fieldset: {
                             legend: {
                             text: "Start date",
@@ -68,13 +68,13 @@
                         },
                         items: [
                             {
-                            name: "Day"
+                            name: "day"
                             },
                             {
-                            name: "Month"
+                            name: "month"
                             },
                             {
-                            name: "Year"
+                            name: "year"
                             }
                         ]
                         }) }}
@@ -82,7 +82,6 @@
                      {{ govukDateInput({
                         id: "start-date",
                         name: "start-date",
-                        attributes: {maxlength: "2"},
                         fieldset: {
                             legend: {
                             text: "Start date",
@@ -93,16 +92,13 @@
                         },
                         items: [
                             {
-                            name: "Day",
-                            attributes: {maxlength: "2"}
+                            name: "day"
                             },
                             {
-                            name: "Month",
-                            attributes: {maxlength: "2"}
+                            name: "month"
                             },
                             {
-                            name: "Year",
-                            attributes: {maxlength: "2"}
+                            name: "year"
                             }
                         ]
                         }) }}

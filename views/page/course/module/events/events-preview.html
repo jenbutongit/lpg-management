@@ -18,8 +18,6 @@
 {% block content %}
     {% set errors = sessionFlash.errors %}
     {% set event = sessionFlash.event %}
-    {% set course = sessionFlash.course %}
-    {% set module = sessionFlash.module %}
     
     {{ errorSummary(errors.fields) }}
     <div class="govuk-grid-row">

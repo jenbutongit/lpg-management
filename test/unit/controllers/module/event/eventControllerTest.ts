@@ -42,6 +42,7 @@ describe('Event Controller Test', function() {
 
 	it('should check for errors, create event and and redirect to event preview page', async function() {
 		const event = new Event()
+		event.id = 'ghi'
 
 		const setDateTime: (request: Request, response: Response) => void = eventController.setDateTime()
 
@@ -49,9 +50,9 @@ describe('Event Controller Test', function() {
 		const response: Response = mockRes()
 
 		request.body = {
-			'start-date-Day': '20',
-			'start-date-Month': '12',
-			'start-date-Year': '2030',
+			'start-date-day': '20',
+			'start-date-month': '12',
+			'start-date-year': '2030',
 			'start-time': ['09', '00'],
 			'end-time': ['17', '00'],
 		}
@@ -68,11 +69,14 @@ describe('Event Controller Test', function() {
 		expect(eventValidator.check).to.have.been.calledOnce
 		expect(eventFactory.create).to.have.been.calledOnce
 		expect(learningCatalouge.createEvent).to.have.been.calledOnceWith('abc', 'def', event)
-		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events-preview`)
+		expect(response.redirect).to.have.been.calledWith(
+			`/content-management/courses/abc/modules/def/events-preview/ghi`
+		)
 	})
 
 	it('should check for errors, update event and and redirect to event preview page', async function() {
 		const event = new Event()
+		event.id = 'ghi'
 
 		const setDateTime: (request: Request, response: Response) => void = eventController.setDateTime()
 
@@ -80,9 +84,9 @@ describe('Event Controller Test', function() {
 		const response: Response = mockRes()
 
 		request.body = {
-			'start-date-Day': '20',
-			'start-date-Month': '12',
-			'start-date-Year': '2030',
+			'start-date-day': '20',
+			'start-date-month': '12',
+			'start-date-year': '2030',
 			'start-time': ['09', '00'],
 			'end-time': ['17', '00'],
 		}
@@ -104,7 +108,9 @@ describe('Event Controller Test', function() {
 		expect(eventValidator.check).to.have.been.calledOnce
 		expect(eventFactory.create).to.have.been.calledOnce
 		expect(learningCatalouge.updateEvent).to.have.been.calledOnceWith('abc', 'def', 'ghi', event)
-		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events-preview`)
+		expect(response.redirect).to.have.been.calledWith(
+			`/content-management/courses/abc/modules/def/events-preview/ghi`
+		)
 	})
 
 	it('should check for errors and redirect to events page', async function() {
@@ -117,9 +123,9 @@ describe('Event Controller Test', function() {
 		const response: Response = mockRes()
 
 		request.body = {
-			'start-date-Day': '',
-			'start-date-Month': '',
-			'start-date-Year': '',
+			'start-date-day': '',
+			'start-date-month': '',
+			'start-date-year': '',
 			'start-time': ['07', '00'],
 			'end-time': ['06', '00'],
 		}

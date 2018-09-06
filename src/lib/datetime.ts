@@ -1,3 +1,5 @@
+var isValidDate = require('is-valid-date')
+
 const isoRegex = new RegExp(
 	'^(-)?P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?' + '(T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$'
 )
@@ -43,6 +45,20 @@ export function validateDateTime(data: any, errors: any) {
 		errors.fields.minTime = ['validation.module.event.dateRanges.endBeforeStart']
 	}
 
+	if (data.dateRanges) {
+		if (
+			!isValidDate(
+				data.dateRanges[0].date.substr(8, 2) +
+					'-' +
+					data.dateRanges[0].date.substr(5, 2) +
+					'-' +
+					data.dateRanges[0].date.substr(0, 4)
+			)
+		) {
+			errors.fields.invalidDate = ['validation.module.event.date.doesNotExist']
+		}
+	}
+
 	let parts = null
 	if (data.dateRanges) {
 		parts = data.dateRanges[0].date.match(dateRegex)
@@ -50,16 +66,15 @@ export function validateDateTime(data: any, errors: any) {
 	if (!parts) {
 		errors.fields.invalidDate = ['validation.module.event.date.invalidFormat']
 	}
-
 	return errors
 }
 
 export function getDate(data: any, start: boolean) {
 	let date: Date = new Date()
 
-	date.setFullYear(data['start-date-Year'])
-	date.setMonth(data['start-date-Month'])
-	date.setDate(data['start-date-Day'])
+	date.setFullYear(data['start-date-year'])
+	date.setMonth(data['start-date-month'])
+	date.setDate(data['start-date-day'])
 
 	if (start) {
 		date.setHours(data['start-time'][0])
@@ -77,15 +92,15 @@ export function getDate(data: any, start: boolean) {
 
 export function parseDate(data: any) {
 	let dateRanges
-	if (data['start-date-Year'] && data['start-date-Month'] && data['start-date-Day']) {
+	if (data['start-date-year'] && data['start-date-month'] && data['start-date-day']) {
 		dateRanges = [{date: '', startTime: '', endTime: ''}]
 
 		dateRanges[0].date = (
-			data['start-date-Year'] +
+			data['start-date-year'] +
 			'-' +
-			data['start-date-Month'] +
+			data['start-date-month'] +
 			'-' +
-			data['start-date-Day']
+			data['start-date-day']
 		).toString()
 
 		dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
