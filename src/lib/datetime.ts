@@ -1,4 +1,6 @@
-var isValidDate = require('is-valid-date')
+import {DateRange} from '../learning-catalogue/model/DateRange'
+
+const isValidDate = require('is-valid-date')
 
 const isoRegex = new RegExp(
 	'^(-)?P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?' + '(T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$'
@@ -39,10 +41,10 @@ export function validateDateTime(data: any, errors: any) {
 	const endDate: Date = getDate(data, false)
 
 	if (!minDate(startDate, new Date(Date.now()))) {
-		errors.fields.minDate = ['validation.module.event.dateRanges.past']
+		errors.fields.minDate = ['validation_module_event_dateRanges_past']
 	}
 	if (!minDate(endDate, startDate)) {
-		errors.fields.minTime = ['validation.module.event.dateRanges.endBeforeStart']
+		errors.fields.minTime = ['validation_module_event_dateRanges_endBeforeStart']
 	}
 
 	if (data.dateRanges) {
@@ -55,7 +57,7 @@ export function validateDateTime(data: any, errors: any) {
 					data.dateRanges[0].date.substr(0, 4)
 			)
 		) {
-			errors.fields.invalidDate = ['validation.module.event.date.invalid']
+			errors.fields.invalidDate = ['validation_module_event_date_invalid']
 		}
 	}
 
@@ -64,7 +66,7 @@ export function validateDateTime(data: any, errors: any) {
 		parts = data.dateRanges[0].date.match(dateRegex)
 	}
 	if (!parts) {
-		errors.fields.invalidDate = ['validation.module.event.date.invalid']
+		errors.fields.invalidDate = ['validation_module_event_date_invalid']
 	}
 	return errors
 }
@@ -91,9 +93,9 @@ export function getDate(data: any, start: boolean) {
 }
 
 export function parseDate(data: any) {
-	let dateRanges
+	let dateRanges: Array<DateRange>
 	if (data['start-date-year'] && data['start-date-month'] && data['start-date-day']) {
-		dateRanges = [{date: '', startTime: '', endTime: ''}]
+		dateRanges = [new DateRange()]
 
 		if (data['start-date-month'].toString().length == 1) {
 			data['start-date-month'] = '0' + data['start-date-month']
@@ -113,7 +115,9 @@ export function parseDate(data: any) {
 
 		dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
 		dateRanges[0].endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
+
+		return dateRanges
 	}
 
-	return dateRanges
+	return
 }

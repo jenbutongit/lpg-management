@@ -64,7 +64,6 @@ describe('Module Controller Tests', function() {
 		response.locals.course = course
 		await setModule(request, response)
 
-		//To be done - would expect to render form for specific module type
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-link`)
 	})
 

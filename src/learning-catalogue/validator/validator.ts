@@ -34,14 +34,6 @@ export class Validator<T> {
 		this._factory = value
 	}
 
-	get eventFactory() {
-		return this._factory
-	}
-
-	set eventFactory(value: Factory<T>) {
-		this._factory = value
-	}
-
 	async check(params: any, groups: string[] = ['all']) {
 		const validationErrors: ValidationError[] = await validate(this._factory.create(params), {
 			groups: groups,
