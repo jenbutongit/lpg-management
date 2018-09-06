@@ -6,9 +6,9 @@
         {% set errorSummary = [] %}
 
             {% for field, message in errors %}
-                {% set myMessage =  i18n[message[0]] %}
+                {% set errorMessage =  i18n[message[0]] %}
                     {% set error = errorSummary.push({
-                        "text": myMessage
+                        "text": errorMessage
                     })
                 %}
             {% endfor %} 
