@@ -62,7 +62,6 @@ export class CourseController {
 			const faceToFaceModules = response.locals.course.modules.filter(
 				(module: Module) => module.type == Module.Type.FACE_TO_FACE
 			)
-			// console.log(Module.Type.FACE_TO_FACE)
 			response.render('page/course/course-overview', {faceToFaceModules})
 		}
 	}
