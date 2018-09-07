@@ -10,4 +10,9 @@
 {% endblock %}
 
 {% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">{{ event.date | default("Unset date", true) }}, {{ event.location | default("Location", true) }}</h1>
+    </div>
+  </div>
 {% endblock %}

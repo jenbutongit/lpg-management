@@ -68,7 +68,8 @@ export class EventController {
 			this.getDatePreview()
 		)
 		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId',
+			// '/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId',
+			'/content-management/courses/modules/events-overview',
 			this.getEventOverview()
 		)
 	}
