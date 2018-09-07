@@ -2,11 +2,11 @@ import {Request, Response, Router} from 'express'
 import {ContentRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import * as log4js from 'log4js'
-// import * as moment from 'moment'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Module} from '../learning-catalogue/model/module'
+import * as datetime from '../lib/datetime'
 
 const logger = log4js.getLogger('controllers/courseController')
 
@@ -69,6 +69,12 @@ export class CourseController {
 
 	public coursePreview() {
 		return async (request: Request, response: Response) => {
+			const modules: Module[] = response.locals.course.modules
+
+			for (let module of modules) {
+				module.formattedDuration = datetime.formatDuration(module.duration)
+			}
+
 			response.render('page/course/course-preview')
 		}
 	}
