@@ -134,7 +134,7 @@ export class EventController {
 
 			const formattedDate: string = datetime.convertDate(event.dateRanges[0].date)
 
-			request.session!.sessionFlah = {formattedDate: formattedDate}
+			request.session!.sessionFlash = {formattedDate: formattedDate}
 
 			response.render('page/course/module/events/events-overview')
 		}
