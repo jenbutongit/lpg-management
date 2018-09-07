@@ -126,8 +126,8 @@ export function parseDate(data: any) {
 export function formatDuration(seconds: number): string {
 	if (seconds) {
 		const duration = convert(seconds)
-		return duration.hours + 'h ' + duration.minutes + 'm ' + duration.seconds + 's'
+		return duration.hours + 'h ' + duration.minutes + 'm'
 	} else {
-		return '0s'
+		return '0m'
 	}
 }
