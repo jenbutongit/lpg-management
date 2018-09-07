@@ -5,7 +5,7 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['module_link_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n['module_blog_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}
@@ -17,18 +17,13 @@
 {% endblock %}
 
 {% block content %}
-
-    {% set errors = sessionFlash.errors %}
-
-    {{ errorSummary(errors.fields) }}
-
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
-            <p class="govuk-body">You are adding a <strong>link</strong> module</p>
-
-            <form action="/content-management/courses/{{ course.id }}/module-link" method="post">
+            <p class="govuk-body">You are adding a <strong>blog</strong> module</p>
+                  
+            <form action="/form-handler" method="post">
                 <fieldset class="govuk-fieldset">
                     {{ govukInput({
                     label: {
@@ -84,8 +79,8 @@
                     </div>
                 </fieldset>
                     {{ govukCheckboxes({
-                        idPrefix: "optional",
-                        name: "optional",
+                        idPrefix: "isOptional",
+                        name: "isOptional",
                         classes: "font-light",
                         fieldset: {
                             legend: {
@@ -103,8 +98,8 @@
                     }) }}
 
                 {{ govukButton({
-                text: "Add item",
-                classes: "button-blue"
+                    text: "Continue",
+                    type: "button"
                 }) }}
             </form>
 

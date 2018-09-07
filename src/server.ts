@@ -74,9 +74,11 @@ app.use(ctx.learningProviderController.router)
 app.use(ctx.cancellationPolicyController.router)
 app.use(ctx.termsAndConditionsController.router)
 app.use(ctx.moduleController.router)
+app.use(ctx.fileController.router)
 app.use(ctx.youtubeModuleController.router)
 app.use(ctx.linkModuleController.router)
 app.use(ctx.faceToFaceController.router)
+app.use(ctx.eventController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')

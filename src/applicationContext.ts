@@ -33,8 +33,11 @@ import {YoutubeService} from './lib/youtubeService'
 import {YoutubeConfig} from './lib/youtubeConfig'
 import {ModuleController} from './controllers/module/moduleController'
 import {Module} from './learning-catalogue/model/module'
+import {FileController} from './controllers/module/fileController'
 import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
+import {EventController} from './controllers/module/event/eventController'
+import {Event} from './learning-catalogue/model/event'
 
 log4js.configure(config.LOGGING)
 
@@ -62,12 +65,15 @@ export class ApplicationContext {
 	moduleFactory: ModuleFactory
 	youtubeModuleController: YoutubeModuleController
 	moduleValidator: Validator<Module>
+	eventValidator: Validator<Event>
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
+	fileController: FileController
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
+	eventController: EventController
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -158,6 +164,7 @@ export class ApplicationContext {
 		)
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
+		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 
 		this.faceToFaceController = new FaceToFaceModuleController(
@@ -165,6 +172,9 @@ export class ApplicationContext {
 			this.moduleValidator,
 			this.moduleFactory
 		)
+
+		this.eventValidator = new Validator<Event>(this.eventFactory)
+		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
 	}
 
 	addToResponseLocals() {

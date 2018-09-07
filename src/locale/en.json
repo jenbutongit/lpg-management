@@ -9,6 +9,7 @@
 	"course_title_add_title": "Add course title",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
+	"event_add_title": "Add event date & time",
 	"face-to-face": "Face to Face",
 	"learning_provider_add_title": "Add learning provider",
 	"learning_provider_add_to_course_title": "Add learning provider to course",
@@ -41,5 +42,9 @@
 	"validation.module.description.empty": "Description is required",
 	"validation_module_video_notFound": "There was a problem finding this video",
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
-	"video": "Video"
+    "validation_module_event_dateRanges_empty": "Start date is required",
+    "validation_module_event_dateRanges_past": "Start date must be in the future",
+    "validation_module_event_dateRanges_endBeforeStart": "Start time must be before end time",
+    "validation_module_event_date_invalid": "Start date is not valid",
+    "video": "Video"
 }
