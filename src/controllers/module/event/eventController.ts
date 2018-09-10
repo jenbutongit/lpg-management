@@ -70,6 +70,10 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?',
 			this.getDatePreview()
 		)
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId',
+			this.getEventOverview()
+		)
 	}
 
 	public getDateTime() {
@@ -169,6 +173,18 @@ export class EventController {
 					res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`)
 				}
 			}
+		}
+	}
+
+	public getEventOverview() {
+		return async (request: Request, response: Response) => {
+			const event = response.locals.event
+
+			const formattedDate: string = datetime.convertDate(event.dateRanges[0].date)
+
+			request.session!.sessionFlash = {formattedDate: formattedDate}
+
+			response.render('page/course/module/events/events-overview')
 		}
 	}
 }

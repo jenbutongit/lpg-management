@@ -20,38 +20,37 @@
 
 {% block head %}
     <meta name="theme-color" content="0b0c0c" />
-    <!--[if !IE 8]><!-->
+  <!--[if !IE 8]><!-->
     <link href="/styles/main.css?v=" rel="stylesheet" />
-    <!--<![endif]-->
+  <!--<![endif]-->
 
-    {# For Internet Explorer 8, you need to compile specific stylesheet #}
-    {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
-    <!--[if IE 8]>
+  {# For Internet Explorer 8, you need to compile specific stylesheet #}
+  {# see https://github.com/alphagov/govuk-frontend/blob/master/docs/installation/supporting-internet-explorer-8.md #}
+  <!--[if IE 8]>
     <link href="/govuk-frontend/all-ie8.css" rel="stylesheet" />
-    <![endif]-->
+  <![endif]-->
 
-    {# For older browsers to allow them to recognise HTML5 elements such as `<header>` #}
-    <!--[if lt IE 9]>
+  {# For older browsers to allow them to recognise HTML5 elements such as `<header>` #}
+  <!--[if lt IE 9]>
     <script src="/html5-shiv/html5shiv.js"></script>
-    <![endif]-->
+  <![endif]-->
 
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
-    <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
-    <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-{% endblock %}
+  <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+  {% endblock %}
 
 {% block bodyStart %}
 {% endblock %}
 
 {% block skipLink %}
-    {{ govukSkipLink({
-        href: "#main-content",
-        text: "Skip to main content"
-    }) }}
+  {{ govukSkipLink({
+    href: "#main-content",
+    text: "Skip to main content"
+  }) }}
 {% endblock %}
 
 {% block header %}
-    {{ govukHeader({
+  {{ govukHeader({
         homepageUrl: "#",
         containerClasses: "govuk-width-container",
         serviceName: "Civil Service Learning",
@@ -82,19 +81,19 @@
                 href: lpgUiUrl + "/sign-out",
                 text: "Sign out"
             }
-        ]
+            ]
     }) }}
 {% endblock %}
 
 {% set mainClasses = "app-main-class" %}
 
 {% block beforeContent %}
-    {% block phaseBanner %}
-        {{ phaseBanner("beta") }}
-    {% endblock%}
-    {% block backLink %}
-        {{ backLink("#") }}
-    {% endblock%}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("#") }}
+  {% endblock%}
 {% endblock %}
 
 {% block content %}
@@ -102,31 +101,33 @@
 {% endblock %}
 
 {% block footer %}
-    {{ govukFooter({
-        meta: {
-            items: [
-                {
-                    href: "#1",
-                    text: "Help"
-                },
-                {
-                    href: "#2",
-                    text: "Cookies"
-                },
-                {
-                    href: "#3",
-                    text: "Contact"
-                },
-                {
-                    href: "#4",
-                    text: "Terms and conditions"
-                }
-            ]
+  {{ govukFooter({
+    meta: {
+      items: [
+        {
+          href: "#1",
+          text: "Help"
+        },
+        {
+          href: "#2",
+          text: "Cookies"
+        },
+        {
+          href: "#3",
+          text: "Contact"
+        },
+        {
+          href: "#4",
+          text: "Terms and conditions"
         }
-    }) }}
+      ]
+    }
+  }) }}
 {% endblock %}
 
 {% block bodyEnd %}
-    <script src="/govuk-frontend/all.js"></script>
-    <script>window.GOVUKFrontend.initAll()</script>
+  <script src="/govuk-frontend/all.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+  <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+
 {% endblock %}

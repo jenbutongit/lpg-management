@@ -17,6 +17,10 @@
 	color: $white;
 }
 
+.govuk-heading-m {
+	padding-top: 0;
+}
+
 .govuk-header__container {
 	border-color: $theme;
 }
@@ -37,7 +41,7 @@ ul {
 
 .right-menu {
 	border: 1px solid $border;
-	border-top: 4px solid $theme;
+	border-top: 8px solid $theme;
 	margin-bottom: 50px;
 
 	.menu-header {
@@ -56,6 +60,7 @@ ul {
 	width: 100%;
 	justify-content: space-between;
 	flex-direction: row-reverse;
+	padding: 15px 0;
 }
 
 .font-bold {
@@ -155,6 +160,17 @@ ul {
 			}
 		}
 	}
+}
+
+.course-table {
+	.govuk-table__header {
+		width: 50%;
+		padding: 15px 20px 15px 0;
+	}
+}
+
+.no-margin {
+	margin-bottom: 0;
 }
 
 @media screen and (min-width: $tablet-small) {

@@ -2,6 +2,10 @@ import {DateRange} from '../learning-catalogue/model/DateRange'
 
 const isValidDate = require('is-valid-date')
 
+const ntdmn = require('number-to-date-month-name')
+
+const convert = require('convert-seconds')
+
 const isoRegex = new RegExp(
 	'^(-)?P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?' + '(T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$'
 )
@@ -120,4 +124,26 @@ export function parseDate(data: any) {
 	}
 
 	return
+}
+
+export function convertDate(date: string): string {
+	let formattedDate: string = date.substr(date.length - 2, 2)
+
+	if (formattedDate.charAt(0) == '0') {
+		formattedDate = formattedDate.substr(1)
+	}
+
+	formattedDate += ' ' + ntdmn.toMonth(date.substr(5, 2))
+	formattedDate += ' ' + date.substr(0, 4)
+
+	return formattedDate
+}
+
+export function formatDuration(seconds: number): string {
+	if (seconds) {
+		const duration = convert(seconds)
+		return duration.hours + 'h ' + duration.minutes + 'm'
+	} else {
+		return '0m'
+	}
 }
