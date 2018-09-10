@@ -157,6 +157,17 @@ ul {
 	}
 }
 
+.course-table {
+	.govuk-table__header {
+		width: 50%;
+		padding: 15px 20px 15px 0;
+	}
+}
+
+.no-margin {
+	margin-bottom: 0;
+}
+
 @media screen and (min-width: $tablet-small) {
 	.pager__controls {
 		font-size: $font-normal;
