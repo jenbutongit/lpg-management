@@ -6,6 +6,7 @@ import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Module} from '../learning-catalogue/model/module'
+import * as datetime from '../lib/datetime'
 
 const logger = log4js.getLogger('controllers/courseController')
 
@@ -67,6 +68,12 @@ export class CourseController {
 
 	public coursePreview() {
 		return async (request: Request, response: Response) => {
+			const modules: Module[] = response.locals.course.modules
+
+			for (let module of modules) {
+				module.formattedDuration = datetime.formatDuration(module.duration)
+			}
+
 			response.render('page/course/course-preview')
 		}
 	}
