@@ -23,8 +23,6 @@
 {% block content %}
 
     {% set errors = sessionFlash.errors %}
-    {% set event = sessionFlash.event %}
-    
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
@@ -33,7 +31,7 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Event date and time</h2>
             <p class="govuk-body">This event is for the <strong>{{ module.title }}</strong> module on the <strong>{{ course.title }}</strong> course.</p>
 
-            {% if events > 0 %}
+            {% if event.dateRanges and event.dateRanges.length > 0 %}
                 <div class="event-container">
                     <ul class="event-list headers">
                         <li class="events">
@@ -41,9 +39,9 @@
                         </li> 
                     </ul>
                     <ul class="event-list">
-                        {% for event in events %}
+                        {% for dateRange in event.dateRanges %}
                             <li class="events u--border--bgrey">
-                                <p class="govuk-body event date">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event time">{{ event.date }}test</p><p class="govuk-body event edit"><a href="#" class="govuk-link">Edit</a>
+                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit"><a href="#" class="govuk-link">Edit</a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -121,9 +119,9 @@
                 }) }}
             </form>
 
-            {% if event > 0 %}
+            {% if event.dateRanges and event.dateRanges.length > 0 %}
                 <div class="button-container">
-                    <a class="govuk-button" href="#">Continue</a>
+                    <a class="govuk-button" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location">Continue</a>
                 </div>
             {% endif %}
             <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>

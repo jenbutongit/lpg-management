@@ -11,147 +11,156 @@ import {Request, Response} from 'express'
 import {expect} from 'chai'
 import * as sinon from 'sinon'
 import {Module} from '../../../../../src/learning-catalogue/model/module'
-import * as datetime from '../../../../../src/lib/datetime'
 
 chai.use(sinonChai)
 
-describe('Event Controller Test', function() {
+describe('EventController', function() {
 	let eventController: EventController
-	let learningCatalouge: LearningCatalogue
+	let learningCatalogue: LearningCatalogue
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 
 	beforeEach(() => {
-		learningCatalouge = <LearningCatalogue>{}
+		learningCatalogue = <LearningCatalogue>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
 
-		eventController = new EventController(learningCatalouge, eventValidator, eventFactory)
+		eventController = new EventController(learningCatalogue, eventValidator, eventFactory)
 	})
 
-	it('shoulder render events page', async function() {
-		const getDateTime: (request: Request, response: Response) => void = eventController.getDateTime()
+	describe('date time paths', function() {
+		it('shoulder render events page', async function () {
+			const res: Response = mockRes()
 
-		const request: Request = mockReq()
-		const response: Response = mockRes()
+			await eventController.getDateTime()(mockReq(), res)
 
-		await getDateTime(request, response)
+			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events')
+		})
 
-		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/events')
+		it('should check for errors and redirect to event date time page', async function() {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.body = {
+				'start-date-day': '20',
+				'start-date-month': '12',
+				'start-date-year': '2030',
+				'start-time': ['09', '00'],
+				'end-time': ['17', '00'],
+			}
+
+			req.params.courseId = 'abc'
+			req.params.moduleId = 'def'
+
+			eventFactory.create = sinon.stub().returns(new Event())
+			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
+
+			req.session!.save = (callback) => { callback(undefined) }
+			await eventController.setDateTime()(req, res)
+
+			expect(eventValidator.check).to.have.been.calledOnce
+			expect(eventFactory.create).to.have.been.calledOnce
+			expect(res.redirect).to.have.been.calledWith(
+				'/content-management/courses/abc/modules/def/events'
+			)
+		})
+
+		it('should check for errors and redirect to events page', async function() {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.body = {
+				'start-date-day': '',
+				'start-date-month': '',
+				'start-date-year': '',
+				'start-time': ['07', '00'],
+				'end-time': ['06', '00'],
+			}
+
+			req.params.courseId = 'abc'
+			req.params.moduleId = 'def'
+
+			eventFactory.create = sinon.stub().returns(new Event())
+			eventValidator.check = sinon.stub().returns({fields: ['validation.module.event.dateRanges.empty'], size: 1})
+			learningCatalogue.createEvent = sinon.stub().returns(new Module())
+
+			req.session!.save = (callback) => { callback(undefined) }
+			await eventController.setDateTime()(req, res)
+
+			expect(eventValidator.check).to.have.been.calledOnce
+			expect(eventFactory.create).to.have.been.calledOnce
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events`)
+		})
+
+		it('should render event preview page', async function() {
+			const response: Response = mockRes()
+
+			await eventController.getDatePreview()(mockReq(), response)
+
+			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/events-preview')
+		})
 	})
 
-	it('should check for errors, create event and and redirect to event preview page', async function() {
-		const event = new Event()
-		event.id = 'ghi'
+	describe('location paths', function () {
+		it('should render location page', async function () {
+			const res: Response = mockRes()
 
-		const setDateTime: (request: Request, response: Response) => void = eventController.setDateTime()
+			await eventController.getLocation()(mockReq(), res)
+			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
+		})
 
-		const request: Request = mockReq()
-		const response: Response = mockRes()
+		it('should check for errors and redirect to events preview page if no errors', async function () {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
 
-		request.body = {
-			'start-date-day': '20',
-			'start-date-month': '12',
-			'start-date-year': '2030',
-			'start-time': ['09', '00'],
-			'end-time': ['17', '00'],
-		}
+			const event: Event = new Event()
+			event.id = 'eventId123'
 
-		request.params.courseId = 'abc'
-		request.params.moduleId = 'def'
+			req.params.courseId = 'courseId123'
+			req.params.moduleId = 'moduleId123'
+			req.body = {
+				'location': 'London'
+			}
+			req.session!.event = event
 
-		eventFactory.create = sinon.stub().returns(event)
-		eventValidator.check = sinon.stub().returns({fields: [], size: 0})
-		learningCatalouge.createEvent = sinon.stub().returns(event)
+			eventFactory.create = sinon.stub().returns(new Event())
+			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
+			learningCatalogue.createEvent = sinon.stub().returns(event)
 
-		await setDateTime(request, response)
+			req.session!.save = (callback) => { callback(undefined) }
+			await eventController.setLocation()(req, res)
 
-		expect(eventValidator.check).to.have.been.calledOnce
-		expect(eventFactory.create).to.have.been.calledOnce
-		expect(learningCatalouge.createEvent).to.have.been.calledOnceWith('abc', 'def', event)
-		expect(response.redirect).to.have.been.calledWith(
-			`/content-management/courses/abc/modules/def/events-preview/ghi`
-		)
-	})
+			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
+			expect(res.redirect).to.have.been.calledOnceWith(
+				'/content-management/courses/courseId123/modules/moduleId123/events-preview/eventId123'
+			)
+		})
 
-	it('should check for errors, update event and and redirect to event preview page', async function() {
-		const event = new Event()
-		event.id = 'ghi'
+		it('should check for errors and redirect back to location page if errors', async function () {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
 
-		const setDateTime: (request: Request, response: Response) => void = eventController.setDateTime()
+			const event: Event = new Event()
+			event.id = 'eventId123'
 
-		const request: Request = mockReq()
-		const response: Response = mockRes()
+			req.params.courseId = 'courseId123'
+			req.params.moduleId = 'moduleId123'
+			req.body = {
+				// required field 'location' missing to imitate error condition
+			}
+			req.session!.event = event
 
-		request.body = {
-			'start-date-day': '20',
-			'start-date-month': '12',
-			'start-date-year': '2030',
-			'start-time': ['09', '00'],
-			'end-time': ['17', '00'],
-		}
+			eventFactory.create = sinon.stub().returns(new Event())
+			eventValidator.check = sinon.stub().returns({fields: [{'location': ['validation.module.event.venue.location.empty']}], size: 1})
+			learningCatalogue.createEvent = sinon.stub().returns(event)
 
-		event.dateRanges = datetime.parseDate(request.body)
+			req.session!.save = (callback) => { callback(undefined) }
+			await eventController.setLocation()(req, res)
 
-		request.params.courseId = 'abc'
-		request.params.moduleId = 'def'
-		request.params.eventId = 'ghi'
-
-		response.locals.event = event
-
-		eventFactory.create = sinon.stub().returns(event)
-		eventValidator.check = sinon.stub().returns({fields: [], size: 0})
-		learningCatalouge.updateEvent = sinon.stub().returns(event)
-
-		await setDateTime(request, response)
-
-		expect(eventValidator.check).to.have.been.calledOnce
-		expect(eventFactory.create).to.have.been.calledOnce
-		expect(learningCatalouge.updateEvent).to.have.been.calledOnceWith('abc', 'def', 'ghi', event)
-		expect(response.redirect).to.have.been.calledWith(
-			`/content-management/courses/abc/modules/def/events-preview/ghi`
-		)
-	})
-
-	it('should check for errors and redirect to events page', async function() {
-		const module = new Module()
-		const event = new Event()
-
-		const setDateTime: (request: Request, response: Response) => void = eventController.setDateTime()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-
-		request.body = {
-			'start-date-day': '',
-			'start-date-month': '',
-			'start-date-year': '',
-			'start-time': ['07', '00'],
-			'end-time': ['06', '00'],
-		}
-
-		request.params.courseId = 'abc'
-		request.params.moduleId = 'def'
-
-		eventFactory.create = sinon.stub().returns(event)
-		eventValidator.check = sinon.stub().returns({fields: ['validation.module.event.dateRanges.empty'], size: 1})
-		learningCatalouge.createEvent = sinon.stub().returns(module)
-
-		await setDateTime(request, response)
-
-		expect(eventValidator.check).to.have.been.calledOnce
-		expect(eventFactory.create).to.have.been.calledOnce
-		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events/`)
-	})
-
-	it('should render event preview page', async function() {
-		const getDatePreview: (request: Request, response: Response) => void = eventController.getDatePreview()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-
-		await getDatePreview(request, response)
-
-		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/events-preview')
+			expect(learningCatalogue.createEvent).to.not.have.been.called
+			expect(res.redirect).to.have.been.calledOnceWith(
+				'/content-management/courses/courseId123/modules/moduleId123/events/location'
+			)
+		})
 	})
 })

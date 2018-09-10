@@ -17,21 +17,25 @@
 
 {% block content %}
 
+    {% set errors = sessionFlash.errors %}
+    {{ errorSummary(errors.fields) }}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Event location and availability</h2>
             <p class="govuk-body">This event is for the {{ module.title }} module on the {{ course.title }}</p>
 
-            <form class="govuk-form" action="/content-management/courses/{{ course.Id }}/module/{{ module.Id }}/events" method="post">
+            <form class="govuk-form" action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location/{{event.Id}}" method="post">
                 <fieldset class="govuk-fieldset">
-                    {% if error.fields.location %}
+                    {% if errors.fields.location %}
                         {{ govukInput({
                             label: {
                                 text: "Town/city"
                             },
                             id: "location",
                             name: "location",
+                            value: event.venue.location,
                             errorMessage: {
                                 text: "Location is required"
                             }
@@ -42,23 +46,27 @@
                                 text: "Town/city"
                             },
                             id: "location",
-                            name: "location"
+                            name: "location",
+                            value: event.venue.location
                         }) }}
                     {% endif %}
                     {{ govukTextarea({
-                        name: "address",
-                        id: "address",
                         label: {
                             text: "Venue address (optional)"
-                        }
+                        },
+                        id: "address",
+                        name: "address",
+                        value: event.venue.address
                     }) }}
-                    {% if errors.fields.spaces %}
+                    {% if errors.fields.capacity %}
                         {{ govukInput({
                             label: {
                                 text: "Number of spaces"
                             },
+                            type: "number",
                             id: "spaces",
-                            name: "spaces",
+                            name: "capacity",
+                            value: event.venue.capacity,
                             classes: "small-input",
                             errorMessage: {
                                 text: "Number of spaces is required"
@@ -69,22 +77,26 @@
                             label: {
                                 text: "Number of spaces"
                             },
+                            type: "number",
                             id: "spaces",
-                            name: "spaces",
+                            name: "capacity",
+                            value: event.venue.capacity,
                             classes: "small-input"
                         }) }}
                     {% endif %}
 
-                    {% if errors.fields.capicity %}   
+                    {% if errors.fields.minCapacity %}
                         {{ govukInput({
                             label: {
                                 text: "Minimum capacity"
                             },
+                            type: "number",
                             id: "capacity",
-                            name: "capacity",
+                            name: "minCapacity",
+                            value: event.venue.minCapacity,
                             classes: "small-input",
                             errorMessage: {
-                                text: "Minimum capicity is required"
+                                text: "Minimum capacity is required"
                             }
                         }) }}
                     {% else %}
@@ -92,8 +104,10 @@
                             label: {
                                 text: "Minimum capacity"
                             },
+                            type: "number",
                             id: "capacity",
-                            name: "capacity",
+                            name: "minCapacity",
+                            value: event.venue.minCapacity,
                             classes: "small-input"
                         }) }}
                     {% endif %}
