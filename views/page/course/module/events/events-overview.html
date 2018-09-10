@@ -17,7 +17,7 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l no-margin">{{ date.date | default("Date", true) }}, {{ event.location | default("Location", true) }}</h1>
+      <h1 class="govuk-heading-l no-margin">{{ eventDateWithMonthAsText }}, {{ event.venue.location }}</h1>
     </div>
   </div>
      <div class="govuk-grid-row">
@@ -35,7 +35,7 @@
                       text: "Added on"
                     },
                     {
-                      text: "13th August 2018",
+                      text: "11 September 2018",
                       format: "numeric"
                     }
                   ],
@@ -44,7 +44,7 @@
                       text: "Added by"
                     },
                     {
-                      text: "Jane Evans",
+                      text: "",
                       format: "numeric"
                     }
                   ],
@@ -53,17 +53,17 @@
                       text: "Number of spaces"
                     },
                     {
-                      text: "12 of 12 available",
+                      text: event.venue.capacity,
                       format: "numeric"
                     }
                   ],
                   [
                       {
-                      text: "Minimum capcity"
+                        text: "Minimum capacity"
                       },
                       {
-                      text: "10",
-                      format: "numeric"
+                        text: event.venue.minCapacity,
+                        format: "numeric"
                       }
                   ],
                   [
@@ -80,7 +80,7 @@
                       text: "Town/city"
                     },
                     {
-                      text: "Manchester",
+                      text: event.venue.location,
                       format: "numeric"
                     }
                   ],
@@ -89,7 +89,7 @@
                       text: "Venue address"
                     },
                     {
-                      text: "Manchester Business Park, 3000 Aviator Way, Manchester M22 5TG",
+                      text: event.venue.address,
                       format: "numeric"
                     }
                   ]

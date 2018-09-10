@@ -167,7 +167,7 @@ export class EventController {
 					req.session!.sessionFlash = {event: savedEvent}
 
 					req.session!.save(() => {
-						res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-preview/${savedEvent.id}`)
+						res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
 					})
 				} else {
 					res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`)
@@ -177,14 +177,10 @@ export class EventController {
 	}
 
 	public getEventOverview() {
-		return async (request: Request, response: Response) => {
-			const event = response.locals.event
-
-			const formattedDate: string = datetime.convertDate(event.dateRanges[0].date)
-
-			request.session!.sessionFlash = {formattedDate: formattedDate}
-
-			response.render('page/course/module/events/events-overview')
+		return async (req: Request, res: Response) => {
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = datetime.convertDate(event.dateRanges[0].date)
+			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
 		}
 	}
 }

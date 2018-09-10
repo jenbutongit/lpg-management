@@ -114,7 +114,7 @@ describe('EventController', function() {
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
 		})
 
-		it('should check for errors and redirect to events preview page if no errors', async function () {
+		it('should check for errors and redirect to events overview page if no errors', async function () {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -137,7 +137,7 @@ describe('EventController', function() {
 
 			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
 			expect(res.redirect).to.have.been.calledOnceWith(
-				'/content-management/courses/courseId123/modules/moduleId123/events-preview/eventId123'
+				'/content-management/courses/courseId123/modules/moduleId123/events-overview/eventId123'
 			)
 		})
 
