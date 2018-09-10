@@ -106,7 +106,7 @@ export class EventController {
 					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
 				})
 			} else {
-				let eventToMerge = eventId ? response.locals.event : request.session!.event
+				const eventToMerge = eventId ? response.locals.event : request.session!.event
 
 				if (eventToMerge) {
 					eventToMerge.dateRanges.push(event.dateRanges[0])

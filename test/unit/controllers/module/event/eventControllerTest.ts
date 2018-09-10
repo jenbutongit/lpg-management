@@ -11,6 +11,7 @@ import {Request, Response} from 'express'
 import {expect} from 'chai'
 import * as sinon from 'sinon'
 import {Module} from '../../../../../src/learning-catalogue/model/module'
+import {DateRange} from '../../../../../src/learning-catalogue/model/DateRange'
 
 chai.use(sinonChai)
 
@@ -52,7 +53,11 @@ describe('EventController', function() {
 			req.params.courseId = 'abc'
 			req.params.moduleId = 'def'
 
-			eventFactory.create = sinon.stub().returns(new Event())
+			const event: Event = new Event()
+			event.dateRanges = [new DateRange()]
+			req.session!.event = event
+
+			eventFactory.create = sinon.stub().returns(event)
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
 
 			req.session!.save = (callback) => { callback(undefined) }
@@ -136,6 +141,32 @@ describe('EventController', function() {
 			)
 		})
 
+		it('should redirect to events page if event object not found on session', async function () {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			const event: Event = new Event()
+			event.id = 'eventId123'
+
+			req.params.courseId = 'courseId123'
+			req.params.moduleId = 'moduleId123'
+			req.body = {
+				'location': 'London'
+			}
+
+			eventFactory.create = sinon.stub().returns(new Event())
+			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
+			learningCatalogue.createEvent = sinon.stub().returns(event)
+
+			req.session!.save = (callback) => { callback(undefined) }
+			await eventController.setLocation()(req, res)
+
+			expect(learningCatalogue.createEvent).to.not.have.been.called
+			expect(res.redirect).to.have.been.calledOnceWith(
+				'/content-management/courses/courseId123/modules/moduleId123/events'
+			)
+		})
+
 		it('should check for errors and redirect back to location page if errors', async function () {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
@@ -163,6 +194,8 @@ describe('EventController', function() {
 			)
 		})
 	})
+
+
 
 	it('should render event overview page', async function() {
 		let event: Event = new Event()

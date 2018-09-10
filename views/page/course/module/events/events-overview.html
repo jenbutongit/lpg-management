@@ -5,7 +5,6 @@
 
 {% block pageTitle %}{{ i18n['event_overview'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
-
 {% block beforeContent %}
   {% block phaseBanner %}
     {{ phaseBanner("beta") }}
@@ -19,7 +18,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-l no-margin">{{ date.date | default("Date", true) }}, {{ event.location | default("Location", true) }}</h1>
-     </div>
+    </div>
   </div>
      <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
