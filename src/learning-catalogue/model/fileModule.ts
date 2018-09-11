@@ -9,6 +9,12 @@ export class FileModule extends Module {
 	url: string
 
 	@IsNotEmpty({
+		groups: ['all', 'mediaId'],
+		message: 'validation_module_mediaId_empty',
+	})
+	mediaId: string
+
+	@IsNotEmpty({
 		groups: ['all', 'title'],
 		message: 'validation_module_title_empty',
 	})

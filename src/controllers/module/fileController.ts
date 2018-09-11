@@ -69,8 +69,6 @@ export class FileController {
 				...req.body,
 			}
 
-			console.log(request.params.mediaId)
-
 			const course = response.locals.course
 			let module = await this.moduleFactory.create(data)
 			let errors = await this.moduleValidator.check(data, ['title', 'description', 'file'])
@@ -80,6 +78,9 @@ export class FileController {
 				return response.redirect(`/content-management/courses/${course.id}/module/module-file`)
 			}
 
+			const mediaId = request.params.mediaId
+			const file = await this.restService.get(`${mediaId}`)
+
 			const newData = {
 				id: data.id,
 				type: data.type,
@@ -87,10 +88,15 @@ export class FileController {
 				description: data.description,
 				file: data.file,
 				optional: data.isOptional || false,
+				duration: file.metadata.duration,
+				fileSize: file.fileSizeKB,
+				mediaId: file.id,
 			}
 			module = await this.moduleFactory.create(newData)
+
+			console.log(module)
 			// To be implemented at a later stage
-			// await this.learningCatalogue.createModule(course.id, module)
+			await this.learningCatalogue.createModule(course.id, module)
 			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}
 	}

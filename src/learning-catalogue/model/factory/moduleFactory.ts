@@ -61,6 +61,7 @@ export class ModuleFactory {
 		file: (data: any) => {
 			const module = this.defaultCreate(new FileModule(), data)
 			module.url = data.url
+			module.mediaId = data.mediaId
 			module.fileSize = data.fileSize
 			return module
 		},
