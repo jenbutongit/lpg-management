@@ -28,27 +28,26 @@ export class AudienceController {
 			}
 		})
 		this.router.get('/content-management/courses/:courseId/audience', this.addAudience())
-		// this.router.post('/content-management/courses/:courseId/audience', this.setAudience())
+		this.router.post('/content-management/courses/:courseId/audience', this.setAudience())
 	}
 
 	public addAudience() {
 		logger.debug('Add audience page')
 
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/add-module')
+			response.render('page/course/audience/audience-name')
 		}
 	}
 
-	// public setAudience() {
-	// 	return async (request: Request, response: Response) => {
-	// 		const moduleType = request.body.module
-	// 		const courseId = response.locals.course.id
+	public setAudience() {
+		return async (request: Request, response: Response) => {
+			const courseId = response.locals.course.id
 
-	// 		if (moduleType === '') {
-	// 			return response.redirect(`/content-management/courses/${courseId}/audience`)
-	// 		}
-
-	// 		return response.redirect(`/content-management/courses/${courseId}/audience/${audienceId}`)
-	// 	}
-	// }
+			if (name === '') {
+				return response.redirect(`/content-management/courses/${courseId}/audience`)
+			}
+			//To be completed
+			return response.redirect(`/content-management/courses/${courseId}/audience/`)
+		}
+	}
 }

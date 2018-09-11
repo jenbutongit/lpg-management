@@ -2,7 +2,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
 
-{% extends "../../component/Page.njk" %}
+{% extends "../../../component/Page.njk" %}
 
 {% block pageTitle %}
     {% if course %}
@@ -13,12 +13,12 @@
 {% endblock %}
 
 {% block beforeContent %}
-  {% block phaseBanner %}
-    {{ phaseBanner("beta") }}
-  {% endblock%}
-  {% block backLink %}
-    {{ backLink("/content-management/courses/{{ course.id }}/overview") }}
-  {% endblock%}
+    {% block phaseBanner %}
+        {{ phaseBanner("beta") }}
+    {% endblock%}
+    {% block backLink %}
+        {{ backLink("/content-management/courses/{{ course.id }}/overview") }}
+    {% endblock%}
 {% endblock %}
 
 {% block content %}
@@ -34,8 +34,8 @@
                 <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
             {% endif %}
             <h2 class="govuk-heading-m govuk-!-font-size-36">Audience name</h2>
-            <form action="/content-management/courses/title/{{ course.id }}" method="post">
-                <p class="govuk-body">You need to give your audience a short, descriptive name</p>
+            <form action="/content-management/courses/{{ course.id }}/audience" method="post">
+                <p class="govuk-body no-margin">You need to give your audience a short, descriptive name</p>
                 <p class="govuk-body">This name is for your own use</p>
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.name %}
