@@ -30,15 +30,30 @@
                 </div>
             </div>
         {% endif %}
-        <h3 class="govuk-heading-m">Course Overview</h3>
-        {% block courseDetails %}
-            {{ courseDetails(course) }}
-        {% endblock %}
-
-        <h3 class="govuk-heading-m no-margin">Course Events</h3>
-        {% block courseEvents %}
-            {{ courseEvents(course, faceToFaceModules) }}
-        {% endblock %}
+        <div class="course-container">
+            <h3 class="govuk-heading-m">Course overview</h3>
+            {% block courseDetails %}
+                {{ courseDetails(course) }}
+            {% endblock %}
+        </div>
+        <div class="section">
+            <div class="title-container">
+                <h3 class="govuk-heading-m no-margin">Course events</h3>
+                <a class="govuk-body govuk-link" href="/content-management/courses/{{  course.id }}/modules/{{ module.id }}/events/">Add new event</a>
+            </div>
+            {% block courseEvents %}
+                {{ courseEvents(course, faceToFaceModules) }}
+            {% endblock %}
+        </div>
+        <div class="section">
+            <div class="title-container"> 
+                <h3 class="govuk-heading-m no-margin">Course audiences</h3>
+                <a class="govuk-body govuk-link" href="/content-management/courses/{{  course.id }}/modules/{{ module.id }}/events/">Add new event</a>
+            </div>
+            {# {% block courseEvents %}
+                {{ courseEvents(course, faceToFaceModules) }}
+            {% endblock %} #}
+        </div> 
     </div>
 
     <div class="govuk-grid-column-one-third">
