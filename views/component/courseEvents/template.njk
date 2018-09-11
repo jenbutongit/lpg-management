@@ -5,24 +5,23 @@
 {% endif %}
 
 {% for module in faceToFaceModules %}
-    <div class="face-to-face-container">
-        <p class="govuk-body"><strong>{{ module.title | default(course.title, true) }}</strong></p>
-        <a class="govuk-body govuk-link" href="/content-management/courses/{{  course.id }}/modules/{{ module.id }}/events/">Add new event</a>
+    <div class="module-container-small">
+        <p class="govuk-body no-margin"><strong>{{ module.title | default(course.title, true) }}</strong></p>
+        {% if module.events.length > 0 %}
+            <h3 class="govuk-heading-s">Event details</h3>
+            <ul class="list">
+                {% for event in module.events %}
+                    <li class="module-item list-item u--border--bgrey">
+                        <div class="title-container">
+                            {# TODO: not sure how to display events, so for now just showing the venue location #}
+                            <p class="govuk-body no-margin">{{ event.location | default("title not set") }}, {{ event.date |  default("date not set")}}</p>
+                            <a href="#" class="govuk-body govuk-link">View</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="govuk-body">This module does not yet have any associated events.</p>
+        {% endif %}
     </div>
-    {% if module.events.length > 0 %}
-        <h3 class="govuk-heading-s">Event details</h3>
-        <ul class="list">
-            {% for event in module.events %}
-                <li class="module-item list-item u--border--bgrey">
-                    <div class="face-to-face-container">
-                        {# TODO: not sure how to display events, so for now just showing the venue location #}
-                        <p class="govuk-body">{{ event.location }}, {{ event.date }}</p>
-                        <a href="#" class="govuk-body govuk-link">View</a>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p class="govuk-body">This module does not yet have any associated events.</p>
-    {% endif %}
 {% endfor %}
