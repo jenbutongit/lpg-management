@@ -38,6 +38,7 @@ import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
+import {CourseService} from './lib/courseService'
 
 log4js.configure(config.LOGGING)
 
@@ -74,9 +75,9 @@ export class ApplicationContext {
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
 	eventController: EventController
+	courseService: CourseService
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -115,7 +116,13 @@ export class ApplicationContext {
 		this.pagination = new Pagination()
 
 		this.courseValidator = new Validator<Course>(this.courseFactory)
-		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
+		this.courseService = new CourseService(this.learningCatalogue)
+		this.courseController = new CourseController(
+			this.learningCatalogue,
+			this.courseValidator,
+			this.courseFactory,
+			this.courseService
+		)
 
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()
