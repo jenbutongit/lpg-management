@@ -13,11 +13,7 @@ export class LearningCatalogueConfig {
 	private _url: string
 	private _timeout: number
 
-	constructor(
-		auth: {username: string; password: string},
-		url: string,
-		timeout: number = 15000
-	) {
+	constructor(auth: {username: string; password: string}, url: string, timeout: number = 15000) {
 		this._auth = auth
 		this._url = url
 		this._timeout = timeout

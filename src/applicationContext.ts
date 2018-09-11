@@ -74,6 +74,7 @@ export class ApplicationContext {
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
 	eventController: EventController
+	mediaConfig: LearningCatalogueConfig
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -163,8 +164,21 @@ export class ApplicationContext {
 			this.termsAndConditionsValidator
 		)
 
+		this.mediaConfig = new LearningCatalogueConfig(
+			{
+				username: config.COURSE_CATALOGUE.auth.username,
+				password: config.COURSE_CATALOGUE.auth.password,
+			},
+			'http://localhost:9001/media'
+		)
+
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
-		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.fileController = new FileController(
+			this.learningCatalogue,
+			this.moduleValidator,
+			this.moduleFactory,
+			this.mediaConfig
+		)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 
 		this.faceToFaceController = new FaceToFaceModuleController(

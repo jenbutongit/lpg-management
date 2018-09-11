@@ -165,6 +165,10 @@ export class LearningCatalogue {
 		)
 	}
 
+	async uploadFile(path: string, resource: any) {
+		return this._restService.post(path, resource)
+	}
+
 	set courseService(value: EntityService<Course>) {
 		this._courseService = value
 	}
