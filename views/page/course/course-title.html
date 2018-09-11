@@ -5,20 +5,20 @@
 {% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}
-{% if course %}
-{{ i18n['course_title_edit_title'] }} - {{ i18n['proposition_name'] }}
-{% else %}
-{{ i18n['course_title_add_title'] }} - {{ i18n['proposition_name'] }}
-{% endif %}
+    {% if course %}
+        {{ i18n['course_title_edit_title'] }} - {{ i18n['proposition_name'] }}
+    {% else %}
+        {{ i18n['course_title_add_title'] }} - {{ i18n['proposition_name'] }}
+    {% endif %}
 {% endblock %}
 
 {% block beforeContent %}
-  {% block phaseBanner %}
-    {{ phaseBanner("beta") }}
-  {% endblock%}
-  {% block backLink %}
-    {{ backLink("/content-management") }}
-  {% endblock%}
+    {% block phaseBanner %}
+        {{ phaseBanner("beta") }}
+    {% endblock%}
+    {% block backLink %}
+        {{ backLink("/content-management") }}
+    {% endblock%}
 {% endblock %}
 
 {% block content %}

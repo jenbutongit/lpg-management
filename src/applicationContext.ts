@@ -38,6 +38,7 @@ import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
+import {AudienceController} from './controllers/audience/audienceController'
 
 log4js.configure(config.LOGGING)
 
@@ -67,6 +68,7 @@ export class ApplicationContext {
 	moduleValidator: Validator<Module>
 	eventValidator: Validator<Event>
 	audienceFactory: AudienceFactory
+	audienceController: AudienceController
 	eventFactory: EventFactory
 	fileController: FileController
 	pagination: Pagination
@@ -175,6 +177,8 @@ export class ApplicationContext {
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
+
+		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceFactory)
 	}
 
 	addToResponseLocals() {
