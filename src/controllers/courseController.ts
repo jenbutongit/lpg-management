@@ -58,7 +58,7 @@ export class CourseController {
 		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 
-		this.router.post('/content-management/courses/:courseId/sort-modules?', this.sortModules())
+		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
 	}
 
 	public courseOverview() {
@@ -150,7 +150,7 @@ export class CourseController {
 
 	public sortModules() {
 		return async (request: Request, response: Response) => {
-			await this.courseService.sortModules(request.params.courseId, request.params.moduleIds)
+			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
 			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
 		}
 	}
