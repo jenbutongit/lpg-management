@@ -2,6 +2,7 @@
 {% from "../../component/menu/macro.njk" import menu %}
 {% from "../../component/courseDetails/macro.njk" import courseDetails with context %}
 {% from "../../component/courseEvents/macro.njk" import courseEvents with context %}
+{% from "../../component/audiences/macro.njk" import audiences with context %}
 {% from "back-link/macro.njk" import govukBackLink %}
 
 {% extends "../../component/Page.njk" %}
@@ -48,11 +49,11 @@
         <div class="section">
             <div class="title-container"> 
                 <h3 class="govuk-heading-m no-margin">Course audiences</h3>
-                <a class="govuk-body govuk-link" href="/content-management/courses/{{  course.id }}/modules/{{ module.id }}/events/">Add new event</a>
+                <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audience">Add an audience</a>
             </div>
-            {# {% block courseEvents %}
-                {{ courseEvents(course, faceToFaceModules) }}
-            {% endblock %} #}
+            {% block audiences %}
+                {{ audiences(course, audiences) }}
+            {% endblock %}
         </div> 
     </div>
 
