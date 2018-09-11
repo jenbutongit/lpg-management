@@ -91,6 +91,7 @@ export class FileController {
 				duration: file.metadata.duration,
 				fileSize: file.fileSizeKB,
 				mediaId: file.id,
+				url: file.path,
 			}
 			module = await this.moduleFactory.create(newData)
 
