@@ -89,19 +89,22 @@ export class CourseController {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors}
-				return response.redirect('/content-management/courses/title')
+				request.session!.save( () => {
+					response.redirect('/content-management/courses/title')
+				})
+			} else {
+				if (request.params.courseId) {
+					await this.editCourse(request, response)
+
+					return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
+				}
+
+				const course = this.courseFactory.create(request.body)
+				request.session!.sessionFlash = {course: course}
+				request.session!.save( () => {
+					response.redirect('/content-management/courses/details')
+				})
 			}
-
-			if (request.params.courseId) {
-				await this.editCourse(request, response)
-
-				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
-			}
-
-			const course = this.courseFactory.create(request.body)
-			request.session!.sessionFlash = {course: course}
-
-			return response.redirect('/content-management/courses/details')
 		}
 	}
 
