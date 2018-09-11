@@ -150,7 +150,7 @@ export class CourseController {
 
 	public sortModules() {
 		return async (request: Request, response: Response) => {
-			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
+			await this.courseService.sortModules(request.params.courseId, request.params.moduleIds)
 			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
 		}
 	}
