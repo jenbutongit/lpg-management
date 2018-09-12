@@ -11,6 +11,7 @@ import {CourseController} from '../../../src/controllers/courseController'
 import {CourseFactory} from '../../../src/learning-catalogue/model/factory/courseFactory'
 import {ContentRequest} from '../../../src/extended'
 import {Validator} from '../../../src/learning-catalogue/validator/validator'
+import {Module} from '../../../src/learning-catalogue/model/module'
 
 chai.use(sinonChai)
 
@@ -45,6 +46,10 @@ describe('Course Controller Tests', function() {
 
 	it('should call course preview page', async function() {
 		const course: Course = new Course()
+		const module: Module = new Module()
+
+		module.duration = 3600
+		course.modules = [module]
 
 		const coursePreview: (request: Request, response: Response) => void = courseController.coursePreview()
 
@@ -53,6 +58,8 @@ describe('Course Controller Tests', function() {
 
 		const req = request as ContentRequest
 		req.course = course
+
+		response.locals.course = course
 
 		await coursePreview(request, response)
 
@@ -85,6 +92,9 @@ describe('Course Controller Tests', function() {
 
 		courseFactory.create = sinon.stub().returns(course)
 
+		request.session!.save = callback => {
+			callback(undefined)
+		}
 		await setCourseTitle(request, response)
 
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])
@@ -104,6 +114,9 @@ describe('Course Controller Tests', function() {
 		const errors = {fields: ['validation.course.title.empty'], size: 1}
 		courseValidator.check = sinon.stub().returns(errors)
 
+		request.session!.save = callback => {
+			callback(undefined)
+		}
 		await setCourseTitle(request, response)
 
 		expect(courseValidator.check).to.have.been.calledWith(request.body, ['title'])

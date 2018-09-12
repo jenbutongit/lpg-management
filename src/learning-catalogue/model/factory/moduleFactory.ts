@@ -5,7 +5,7 @@ import {VideoModule} from '../videoModule'
 import {LinkModule} from '../linkModule'
 import {FileModule} from '../fileModule'
 import {ELearningModule} from '../eLearningModule'
-import {Module} from "../module";
+import {Module} from '../module'
 
 export class ModuleFactory {
 	private audienceFactory: AudienceFactory
@@ -50,7 +50,7 @@ export class ModuleFactory {
 		link: (data: any) => {
 			const module = this.defaultCreate(new LinkModule(), data)
 			module.id = data.id
-			module.title = data.moduleTitle
+			module.title = data.title
 			module.description = data.description
 			module.url = data.url
 			module.duration = data.duration

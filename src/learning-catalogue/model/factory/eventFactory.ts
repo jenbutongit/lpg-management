@@ -1,21 +1,22 @@
 import {Event} from '../event'
-import * as moment from 'moment'
+import {VenueFactory} from './venueFactory'
 
 export class EventFactory {
-	constructor() {
+	venueFactory: VenueFactory
+
+	constructor(venueFactory: VenueFactory = new VenueFactory()) {
+		this.venueFactory = venueFactory
 		this.create = this.create.bind(this)
 	}
 
-	create(data: any) {
+	public create(data: any): any {
 		const event: Event = new Event()
 
 		event.id = data.id
 
-		if (data.date) {
-			event.date = moment.utc(data.date).toDate()
-		}
-		event.location = data.location
-		event.capacity = data.capacity
+		event.dateRanges = data.dateRanges
+
+		event.venue = this.venueFactory.create(data.venue)
 
 		return event
 	}

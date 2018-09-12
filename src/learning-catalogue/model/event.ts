@@ -1,31 +1,18 @@
-import {IsNotEmpty, IsPositive, MinDate} from 'class-validator'
+import {IsNotEmpty, ValidateNested} from 'class-validator'
+import {DateRange} from './DateRange'
+import {Venue} from './venue'
 
 export class Event {
 	id: string
 
 	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.date'],
-		message: 'validation.module.event.date.empty',
+		groups: ['all', 'event.all', 'event.dateRanges'],
+		message: 'validation_module_event_dateRanges_empty',
 	})
-	@MinDate(new Date(Date.now()), {
-		groups: ['all', 'event.all', 'event.date'],
-		message: 'validation.module.event.date.past',
-	})
-	date: Date
+	dateRanges: Array<DateRange> | undefined
 
-	@IsNotEmpty({
+	@ValidateNested({
 		groups: ['all', 'event.all', 'event.location'],
-		message: 'validation.module.event.location.empty',
 	})
-	location: string
-
-	@IsNotEmpty({
-		groups: ['all', 'event.all', 'event.capacity'],
-		message: 'validation.module.event.capacity.empty',
-	})
-	@IsPositive({
-		groups: ['all', 'event.all', 'event.capacity'],
-		message: 'validation.module.event.capacity.positive',
-	})
-	capacity: number
+	venue: Venue
 }
