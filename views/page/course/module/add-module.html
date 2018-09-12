@@ -31,7 +31,8 @@
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
 
                 {% if modules.length > 0 %}
-                    <ul class="list modules">
+                 
+                    <ul class="list modules" id="{{course.id}}">
                         <li class="module-headers">
                             <p class="govuk-body header title"><strong>Module title</strong></p>
                             <p class="govuk-body header type"><strong>Type</strong></p>
@@ -42,7 +43,8 @@
                     </ul>
                     <ul class="list modules" id="modules">
                         {% for module in modules %}
-                        <li class="list-details u--border--bgrey">
+                        {% set counter = ( counter | default(0) ) + 1 %}
+                        <li class="list-details u--border--bgrey draggable" id="{{ module.id }}" data-id={{counter}}>
                             <p class="govuk-body title">{{ module.title | default("Module", true) }}</p>
                             <p class="govuk-body type">{{ i18n[module.type] | default("Unknown Type", true) }}</p>
                             <p class="govuk-body added-on">{{ module.addedOn | default("23rd August 2018", true) }}</p>
@@ -120,8 +122,27 @@
     <script>
         var el = document.getElementById('modules');
         var sortable = Sortable.create(el, {
-            handle: '.handle'
-        });
+            handle: '.handle',
+            dataIdAttr: 'data-id',
+            onSort: function (evt) {
+                var order = ''
+                var numItems = document.getElementsByClassName('draggable').length
+                for (i=0; i < numItems; i++) {
+                     var itemId = document.getElementsByClassName('draggable')[i].id
+                     if (i === 0 ){ 
+                        order += 'moduleIds=' + itemId
+                     } else {
+                          order += '&moduleIds=' + itemId
+                     }
+                }
+                var courseId = "{{course.id}}"
+                var queryString = "http://lpg.local.cshr.digital:3005/content-management/courses/"+courseId+"/sort-modules?"+order
+                console.log(queryString);
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("POST", queryString, true);
+                xhttp.send();
+            }
+	});
     </script>
 {% endblock %}
 
