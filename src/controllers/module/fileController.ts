@@ -5,7 +5,6 @@ import {ContentRequest} from '../../extended'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {Module} from '../../learning-catalogue/model/module'
 import * as multer from 'multer'
-import {LearningCatalogueConfig} from '../../learning-catalogue/learningCatalogueConfig'
 import {RestService} from '../../learning-catalogue/service/restService'
 
 export class FileController {
@@ -14,24 +13,24 @@ export class FileController {
 	moduleFactory: ModuleFactory
 	router: Router
 	storage: multer.StorageEngine = multer.memoryStorage()
-	mediaConfig: LearningCatalogueConfig
 	restService: RestService
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		moduleValidator: Validator<Module>,
 		moduleFactory: ModuleFactory,
-		mediaConfig: LearningCatalogueConfig
+		restService: RestService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleFactory = moduleFactory
 		this.moduleValidator = moduleValidator
-		this.mediaConfig = mediaConfig
 		this.router = Router()
 		this.setRouterPaths()
 
-		this.restService = new RestService(mediaConfig)
+		this.restService = restService
 	}
+
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
@@ -95,8 +94,6 @@ export class FileController {
 			}
 			module = await this.moduleFactory.create(newData)
 
-			console.log(module)
-			// To be implemented at a later stage
 			await this.learningCatalogue.createModule(course.id, module)
 			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}

@@ -38,6 +38,7 @@ import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
+import {RestService} from './learning-catalogue/service/restService'
 
 log4js.configure(config.LOGGING)
 
@@ -75,6 +76,7 @@ export class ApplicationContext {
 	faceToFaceController: FaceToFaceModuleController
 	eventController: EventController
 	mediaConfig: LearningCatalogueConfig
+	mediaRestService: RestService
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -172,12 +174,14 @@ export class ApplicationContext {
 			'http://localhost:9001/media'
 		)
 
+		this.mediaRestService = new RestService(this.mediaConfig)
+
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 		this.fileController = new FileController(
 			this.learningCatalogue,
 			this.moduleValidator,
 			this.moduleFactory,
-			this.mediaConfig
+			this.mediaRestService
 		)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 
