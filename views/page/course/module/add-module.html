@@ -32,7 +32,7 @@
 
                 {% if modules.length > 0 %}
                  
-                    <ul class="list modules" id="{{course.id}}">
+                    <ul class="list modules">
                         <li class="module-headers">
                             <p class="govuk-body header title"><strong>Module title</strong></p>
                             <p class="govuk-body header type"><strong>Type</strong></p>
@@ -119,30 +119,6 @@
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="/sortablejs/Sortable.js"></script>
-    <script>
-        var el = document.getElementById('modules');
-        var sortable = Sortable.create(el, {
-            handle: '.handle',
-            dataIdAttr: 'data-id',
-            onSort: function (evt) {
-                var order = ''
-                var numItems = document.getElementsByClassName('draggable').length
-                for (i=0; i < numItems; i++) {
-                     var itemId = document.getElementsByClassName('draggable')[i].id
-                     if (i === 0 ){ 
-                        order += 'moduleIds=' + itemId
-                     } else {
-                          order += '&moduleIds=' + itemId
-                     }
-                }
-                var courseId = "{{course.id}}"
-                var queryString = "/content-management/courses/"+courseId+"/sort-modules?"+order
-                console.log(queryString);
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("GET", queryString, true);
-                xhttp.send();
-            }
-	});
-    </script>
+    <script src="/js/reorderModules.js" courseid="{{course.id}}"></script>
 {% endblock %}
 
