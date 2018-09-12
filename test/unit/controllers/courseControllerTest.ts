@@ -269,7 +269,7 @@ describe('Course Controller Tests', function() {
 		const moduleIds = ['1', '2', '3']
 
 		request.params.courseId = courseId
-		request.params.moduleIds = moduleIds
+		request.query.moduleIds = moduleIds
 		const course = new Course()
 		response.locals.course = course
 
