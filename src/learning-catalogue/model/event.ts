@@ -1,6 +1,6 @@
 import {IsNotEmpty, ValidateNested} from 'class-validator'
 import {DateRange} from './DateRange'
-import {Venue} from "./venue";
+import {Venue} from './venue'
 
 export class Event {
 	id: string

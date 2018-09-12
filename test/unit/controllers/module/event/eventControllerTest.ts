@@ -30,7 +30,7 @@ describe('EventController', function() {
 	})
 
 	describe('date time paths', function() {
-		it('shoulder render events page', async function () {
+		it('shoulder render events page', async function() {
 			const res: Response = mockRes()
 
 			await eventController.getDateTime()(mockReq(), res)
@@ -60,14 +60,14 @@ describe('EventController', function() {
 			eventFactory.create = sinon.stub().returns(event)
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
 
-			req.session!.save = (callback) => { callback(undefined) }
+			req.session!.save = callback => {
+				callback(undefined)
+			}
 			await eventController.setDateTime()(req, res)
 
 			expect(eventValidator.check).to.have.been.calledOnce
 			expect(eventFactory.create).to.have.been.calledOnce
-			expect(res.redirect).to.have.been.calledWith(
-				'/content-management/courses/abc/modules/def/events'
-			)
+			expect(res.redirect).to.have.been.calledWith('/content-management/courses/abc/modules/def/events')
 		})
 
 		it('should check for errors and redirect to events page', async function() {
@@ -89,7 +89,9 @@ describe('EventController', function() {
 			eventValidator.check = sinon.stub().returns({fields: ['validation.module.event.dateRanges.empty'], size: 1})
 			learningCatalogue.createEvent = sinon.stub().returns(new Module())
 
-			req.session!.save = (callback) => { callback(undefined) }
+			req.session!.save = callback => {
+				callback(undefined)
+			}
 			await eventController.setDateTime()(req, res)
 
 			expect(eventValidator.check).to.have.been.calledOnce
@@ -106,15 +108,15 @@ describe('EventController', function() {
 		})
 	})
 
-	describe('location paths', function () {
-		it('should render location page', async function () {
+	describe('location paths', function() {
+		it('should render location page', async function() {
 			const res: Response = mockRes()
 
 			await eventController.getLocation()(mockReq(), res)
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
 		})
 
-		it('should check for errors and redirect to events overview page if no errors', async function () {
+		it('should check for errors and redirect to events overview page if no errors', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -124,7 +126,7 @@ describe('EventController', function() {
 			req.params.courseId = 'courseId123'
 			req.params.moduleId = 'moduleId123'
 			req.body = {
-				'location': 'London'
+				location: 'London',
 			}
 			req.session!.event = event
 
@@ -132,16 +134,22 @@ describe('EventController', function() {
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
 			learningCatalogue.createEvent = sinon.stub().returns(event)
 
-			req.session!.save = (callback) => { callback(undefined) }
+			req.session!.save = callback => {
+				callback(undefined)
+			}
 			await eventController.setLocation()(req, res)
 
-			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
+			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(
+				req.params.courseId,
+				req.params.moduleId,
+				event
+			)
 			expect(res.redirect).to.have.been.calledOnceWith(
 				'/content-management/courses/courseId123/modules/moduleId123/events-overview/eventId123'
 			)
 		})
 
-		it('should redirect to events page if event object not found on session', async function () {
+		it('should redirect to events page if event object not found on session', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -151,14 +159,16 @@ describe('EventController', function() {
 			req.params.courseId = 'courseId123'
 			req.params.moduleId = 'moduleId123'
 			req.body = {
-				'location': 'London'
+				location: 'London',
 			}
 
 			eventFactory.create = sinon.stub().returns(new Event())
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
 			learningCatalogue.createEvent = sinon.stub().returns(event)
 
-			req.session!.save = (callback) => { callback(undefined) }
+			req.session!.save = callback => {
+				callback(undefined)
+			}
 			await eventController.setLocation()(req, res)
 
 			expect(learningCatalogue.createEvent).to.not.have.been.called
@@ -167,7 +177,7 @@ describe('EventController', function() {
 			)
 		})
 
-		it('should check for errors and redirect back to location page if errors', async function () {
+		it('should check for errors and redirect back to location page if errors', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -182,10 +192,14 @@ describe('EventController', function() {
 			req.session!.event = event
 
 			eventFactory.create = sinon.stub().returns(new Event())
-			eventValidator.check = sinon.stub().returns({fields: [{'location': ['validation.module.event.venue.location.empty']}], size: 1})
+			eventValidator.check = sinon
+				.stub()
+				.returns({fields: [{location: ['validation.module.event.venue.location.empty']}], size: 1})
 			learningCatalogue.createEvent = sinon.stub().returns(event)
 
-			req.session!.save = (callback) => { callback(undefined) }
+			req.session!.save = callback => {
+				callback(undefined)
+			}
 			await eventController.setLocation()(req, res)
 
 			expect(learningCatalogue.createEvent).to.not.have.been.called
@@ -194,8 +208,6 @@ describe('EventController', function() {
 			)
 		})
 	})
-
-
 
 	it('should render event overview page', async function() {
 		let event: Event = new Event()

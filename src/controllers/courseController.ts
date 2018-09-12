@@ -89,7 +89,7 @@ export class CourseController {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors}
-				request.session!.save( () => {
+				request.session!.save(() => {
 					response.redirect('/content-management/courses/title')
 				})
 			} else {
@@ -101,7 +101,7 @@ export class CourseController {
 
 				const course = this.courseFactory.create(request.body)
 				request.session!.sessionFlash = {course: course}
-				request.session!.save( () => {
+				request.session!.save(() => {
 					response.redirect('/content-management/courses/details')
 				})
 			}

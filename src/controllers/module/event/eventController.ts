@@ -61,8 +61,14 @@ export class EventController {
 			next()
 		})
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?', this.getLocation())
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?', this.setLocation())
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?',
+			this.getLocation()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?',
+			this.setLocation()
+		)
 
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.getDateTime())
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.setDateTime())
@@ -135,42 +141,60 @@ export class EventController {
 
 	public setLocation() {
 		return async (req: Request, res: Response) => {
-			const data = {venue: {
+			const data = {
+				venue: {
 					location: req.body.location,
 					address: req.body.address,
 					capacity: parseInt(req.body.capacity, 10),
 					minCapacity: parseInt(req.body.minCapacity, 10),
-				}}
+				},
+			}
 
- 			const errors = await this.eventValidator.check(data, ['event.location'])
+			const errors = await this.eventValidator.check(data, ['event.location'])
 			const event = await this.eventFactory.create(data)
 
 			if (errors.size) {
 				req.session!.sessionFlash = {errors: errors}
-				req.session!.event = req.session!.event ? function() {
-					const mergedEvent = req.session!.event
-					mergedEvent.venue = event.venue
-					return mergedEvent
-				}() : event
+				req.session!.event = req.session!.event
+					? (function() {
+							const mergedEvent = req.session!.event
+							mergedEvent.venue = event.venue
+							return mergedEvent
+					  })()
+					: event
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/location`)
+					res.redirect(
+						`/content-management/courses/${req.params.courseId}/modules/${
+							req.params.moduleId
+						}/events/location`
+					)
 				})
 			} else {
 				if (req.session!.event) {
 					const mergedEvent = req.session!.event
 					mergedEvent.venue = event.venue
 
-					const savedEvent = await this.learningCatalogue.createEvent(req.params.courseId, req.params.moduleId, mergedEvent)
+					const savedEvent = await this.learningCatalogue.createEvent(
+						req.params.courseId,
+						req.params.moduleId,
+						mergedEvent
+					)
 
 					delete req.session!.event
 
 					req.session!.sessionFlash = {event: savedEvent}
 
 					req.session!.save(() => {
-						res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
+						res.redirect(
+							`/content-management/courses/${req.params.courseId}/modules/${
+								req.params.moduleId
+							}/events-overview/${savedEvent.id}`
+						)
 					})
 				} else {
-					res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`)
+					res.redirect(
+						`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`
+					)
 				}
 			}
 		}

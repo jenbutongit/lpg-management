@@ -1,8 +1,8 @@
 import {Event} from '../event'
-import {VenueFactory} from "./venueFactory";
+import {VenueFactory} from './venueFactory'
 
 export class EventFactory {
-	venueFactory: VenueFactory;
+	venueFactory: VenueFactory
 
 	constructor(venueFactory: VenueFactory = new VenueFactory()) {
 		this.venueFactory = venueFactory
@@ -16,7 +16,7 @@ export class EventFactory {
 
 		event.dateRanges = data.dateRanges
 
-		event.venue = this.venueFactory.create(data.venue);
+		event.venue = this.venueFactory.create(data.venue)
 
 		return event
 	}

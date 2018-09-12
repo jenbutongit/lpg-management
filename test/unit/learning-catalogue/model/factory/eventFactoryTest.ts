@@ -22,7 +22,7 @@ describe('EventFactory tests', () => {
 				address: address,
 				capacity: capacity,
 				minCapacity: minCapacity,
-			}
+			},
 		}
 		const result: Event = eventFactory.create(data)
 
@@ -31,7 +31,7 @@ describe('EventFactory tests', () => {
 		expect(result.venue.location).to.equal(location)
 		expect(result.venue.address).to.equal(address)
 		expect(result.venue.capacity).to.equal(capacity)
- 		expect(result.venue.minCapacity).to.equal(minCapacity)
+		expect(result.venue.minCapacity).to.equal(minCapacity)
 	})
 
 	it('should ignore missing date', () => {
@@ -49,7 +49,7 @@ describe('EventFactory tests', () => {
 				address: address,
 				capacity: capacity,
 				minCapacity: minCapacity,
-			}
+			},
 		}
 
 		const result: Event = eventFactory.create(data)
