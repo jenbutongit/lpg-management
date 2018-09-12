@@ -136,10 +136,10 @@
                      }
                 }
                 var courseId = "{{course.id}}"
-                var queryString = "http://lpg.local.cshr.digital:3005/content-management/courses/"+courseId+"/sort-modules?"+order
+                var queryString = "/content-management/courses/"+courseId+"/sort-modules?"+order
                 console.log(queryString);
                 var xhttp = new XMLHttpRequest();
-                xhttp.open("POST", queryString, true);
+                xhttp.open("GET", queryString, true);
                 xhttp.send();
             }
 	});
