@@ -1,0 +1,11 @@
+{% if audiences.length > 0 %}
+    <ul class="list">
+        {% for audience in audiences %}
+            <li class="module-item list-item u--border--bgrey">{{ audience.title | default("Default title", true) }}
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="govuk-body">This course has no audiences yet.</p>
+{% endif %}
+
+

@@ -5,7 +5,7 @@ export class LinkFactory {
 		const linkModule = new LinkModule()
 
 		linkModule.id = data.id
-		linkModule.title = data.moduleTitle
+		linkModule.title = data.title
 		linkModule.description = data.description
 		linkModule.url = data.url
 		linkModule.duration = data.duration

@@ -50,7 +50,7 @@ export class ModuleFactory {
 		link: (data: any) => {
 			const module = this.defaultCreate(new LinkModule(), data)
 			module.id = data.id
-			module.title = data.moduleTitle
+			module.title = data.title
 			module.description = data.description
 			module.url = data.url
 			module.duration = data.duration
