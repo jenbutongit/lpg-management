@@ -1,6 +1,6 @@
 {
-	"audience_add_name": "Add audience name",
-	"audience_edit_name": "Edit audience name",
+	"audience_add_name_title": "Add audience name",
+	"audience_edit_name_title": "Edit audience name",
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
