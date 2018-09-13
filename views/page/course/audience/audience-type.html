@@ -23,9 +23,6 @@
 {% endblock %}
 
 {% block content %}
-    {% set errors = sessionFlash.errors %}
-    
-    {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -37,7 +34,16 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Type of audience</h2>
             <form action="/content-management/courses/{{ course.id }}/audience" method="post">
                 <p class="govuk-body">You can limit who this course is shown to</p>
-                <fieldset class="govuk-fieldset">
+                <input type="hidden" name="name" value="{{audience.name}}" />
+                {% if errors.fields %}
+                    {% set classNames = "govuk-fieldset audience-fieldset govuk-form-group--error" %}
+                    {% set message = "govuk-error-message" %}
+                {% else %}
+                    {% set classNames = "govuk-fieldset audience-fieldset" %}
+                    {% set message = "no-errors" %}
+                {% endif %}
+                <div class="{{classNames}}">
+                    <p class="{{message}}">Select the type of course you are creating</p>
                     {{ govukRadios({
                         idPrefix: "audience-type",
                         name: "audience-type",
@@ -45,13 +51,13 @@
                             legend: {
                                 text: "Who can view this course?",
                                 isPageHeading: true,
-                                classes: "govuk-fieldset__legend--s"
+                                classes: "govuk-fieldset__legend--s "
                             }
                         },
                         items: [
                             {
                             value: "open",
-                            text: "Open",
+                            text: "Open"
                             },
                             {
                             value: "closed",
@@ -79,7 +85,7 @@
                             }
                         ]
                         }) }}
-                </fieldset>
+                </div>
                 <div class="button-container">
                     {{ govukButton({
                         text: "Continue"
