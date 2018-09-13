@@ -68,13 +68,13 @@ export class ApplicationContext {
 	moduleValidator: Validator<Module>
 	eventValidator: Validator<Event>
 	audienceFactory: AudienceFactory
+	eventController: EventController
 	eventFactory: EventFactory
 	fileController: FileController
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
-	eventController: EventController
 	courseService: CourseService
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
