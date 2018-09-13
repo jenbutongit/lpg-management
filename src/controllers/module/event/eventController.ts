@@ -61,6 +61,15 @@ export class EventController {
 			next()
 		})
 
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?',
+			this.getLocation()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?',
+			this.setLocation()
+		)
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.getDateTime())
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.setDateTime())
 		this.router.get(
@@ -75,7 +84,7 @@ export class EventController {
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events')
+			response.render('page/course/module/events/events', {event: request.session!.event})
 		}
 	}
 
@@ -96,29 +105,25 @@ export class EventController {
 			errors.size = Object.keys(errors.fields).length
 
 			let event = await this.eventFactory.create(data)
-			if (eventId) {
-				event = response.locals.event
-			}
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, event: event}
-				return response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/`)
-			}
-
-			let savedEvent
-			if (eventId) {
-				event.dateRanges.push(data.dateRanges[0])
-
-				savedEvent = await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
+				request.session!.save(() => {
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
+				})
 			} else {
-				savedEvent = await this.learningCatalogue.createEvent(courseId, moduleId, event)
+				const eventToMerge = eventId ? response.locals.event : request.session!.event
+
+				if (eventToMerge) {
+					eventToMerge.dateRanges.push(event.dateRanges[0])
+					event = eventToMerge
+				}
+
+				request.session!.event = event
+				request.session!.save(() => {
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
+				})
 			}
-
-			request.session!.sessionFlash = {event: savedEvent}
-
-			return response.redirect(
-				`/content-management/courses/${courseId}/modules/${moduleId}/events-preview/${savedEvent.id}`
-			)
 		}
 	}
 
@@ -128,15 +133,78 @@ export class EventController {
 		}
 	}
 
+	public getLocation() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/module/events/event-location', {event: req.session!.event})
+		}
+	}
+
+	public setLocation() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				venue: {
+					location: req.body.location,
+					address: req.body.address,
+					capacity: parseInt(req.body.capacity, 10),
+					minCapacity: parseInt(req.body.minCapacity, 10),
+				},
+			}
+
+			const errors = await this.eventValidator.check(data, ['event.location'])
+			const event = await this.eventFactory.create(data)
+
+			if (errors.size) {
+				req.session!.sessionFlash = {errors: errors}
+				req.session!.event = req.session!.event
+					? (function() {
+							const mergedEvent = req.session!.event
+							mergedEvent.venue = event.venue
+							return mergedEvent
+					  })()
+					: event
+				req.session!.save(() => {
+					res.redirect(
+						`/content-management/courses/${req.params.courseId}/modules/${
+							req.params.moduleId
+						}/events/location`
+					)
+				})
+			} else {
+				if (req.session!.event) {
+					const mergedEvent = req.session!.event
+					mergedEvent.venue = event.venue
+
+					const savedEvent = await this.learningCatalogue.createEvent(
+						req.params.courseId,
+						req.params.moduleId,
+						mergedEvent
+					)
+
+					delete req.session!.event
+
+					req.session!.sessionFlash = {event: savedEvent}
+
+					req.session!.save(() => {
+						res.redirect(
+							`/content-management/courses/${req.params.courseId}/modules/${
+								req.params.moduleId
+							}/events-overview/${savedEvent.id}`
+						)
+					})
+				} else {
+					res.redirect(
+						`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`
+					)
+				}
+			}
+		}
+	}
+
 	public getEventOverview() {
-		return async (request: Request, response: Response) => {
-			const event = response.locals.event
-
-			const formattedDate: string = datetime.convertDate(event.dateRanges[0].date)
-
-			request.session!.sessionFlash = {formattedDate: formattedDate}
-
-			response.render('page/course/module/events/events-overview')
+		return async (req: Request, res: Response) => {
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = datetime.convertDate(event.dateRanges[0].date)
+			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
 		}
 	}
 }

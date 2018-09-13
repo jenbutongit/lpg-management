@@ -2,7 +2,7 @@ import {DateRange} from '../learning-catalogue/model/DateRange'
 
 const isValidDate = require('is-valid-date')
 
-const ntdmn = require('number-to-date-month-name')
+const numberToMonthName = require('number-to-date-month-name')
 
 const convert = require('convert-seconds')
 
@@ -133,7 +133,7 @@ export function convertDate(date: string): string {
 		formattedDate = formattedDate.substr(1)
 	}
 
-	formattedDate += ' ' + ntdmn.toMonth(date.substr(5, 2))
+	formattedDate += ' ' + numberToMonthName.toMonth(date.substr(5, 2))
 	formattedDate += ' ' + date.substr(0, 4)
 
 	return formattedDate

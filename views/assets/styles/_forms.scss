@@ -112,7 +112,22 @@
 }
 
 @media screen and (min-width: $tablet-small) {
+	.select-with-button {
+		.govuk-form-group {
+			width: 66%;
+			margin: 0 10px 30px 0;
+		}
+
+		.govuk-button {
+			margin: 30px 0 0 0;
+		}
+	}
+
 	button.button-blue {
 		margin-left: 10px;
+	}
+
+	.small-input {
+		width: 130px;
 	}
 }
