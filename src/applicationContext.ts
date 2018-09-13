@@ -39,6 +39,7 @@ import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleC
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
 import {AudienceController} from './controllers/audience/audienceController'
+import {CourseService} from './lib/courseService'
 
 log4js.configure(config.LOGGING)
 
@@ -76,6 +77,7 @@ export class ApplicationContext {
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
+	courseService: CourseService
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -117,7 +119,13 @@ export class ApplicationContext {
 		this.pagination = new Pagination()
 
 		this.courseValidator = new Validator<Course>(this.courseFactory)
-		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
+		this.courseService = new CourseService(this.learningCatalogue)
+		this.courseController = new CourseController(
+			this.learningCatalogue,
+			this.courseValidator,
+			this.courseFactory,
+			this.courseService
+		)
 
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()

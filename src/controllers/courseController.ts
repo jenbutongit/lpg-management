@@ -7,6 +7,7 @@ import {Course} from '../learning-catalogue/model/course'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Module} from '../learning-catalogue/model/module'
 import * as datetime from '../lib/datetime'
+import {CourseService} from '../lib/courseService'
 
 const logger = log4js.getLogger('controllers/courseController')
 
@@ -15,15 +16,18 @@ export class CourseController {
 	courseValidator: Validator<Course>
 	courseFactory: CourseFactory
 	router: Router
+	courseService: CourseService
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		courseValidator: Validator<Course>,
-		courseFactory: CourseFactory
+		courseFactory: CourseFactory,
+		courseService: CourseService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.courseValidator = courseValidator
 		this.courseFactory = courseFactory
+		this.courseService = courseService
 		this.router = Router()
 
 		this.getCourseFromRouterParamAndSetOnLocals()
@@ -53,6 +57,8 @@ export class CourseController {
 
 		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
+
+		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
 	}
 
 	public courseOverview() {
@@ -142,6 +148,13 @@ export class CourseController {
 			const savedCourse = await this.learningCatalogue.createCourse(course)
 
 			return response.redirect(`/content-management/courses/${savedCourse.id}/overview`)
+		}
+	}
+
+	public sortModules() {
+		return async (request: Request, response: Response) => {
+			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
+			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
 		}
 	}
 
