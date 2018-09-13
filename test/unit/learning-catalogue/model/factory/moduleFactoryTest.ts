@@ -48,7 +48,7 @@ describe('ModuleFactory tests', () => {
 			}
 
 			if (module.hasOwnProperty(property)) {
-				expect(module[property]).to.equal(data[property])
+				expect(module[property]).to.deep.equal(data[property])
 			}
 		}
 	}
@@ -86,8 +86,12 @@ describe('ModuleFactory tests', () => {
 		data.events = [
 			{
 				id: 'XEbjXzmVQwSQ_7qIvr7Kew',
-				capacity: 99,
-				location: 'London',
+				venue: {
+					location: 'London',
+					address: 'SE1',
+					capacity: 99,
+					minCapacity: 10,
+				},
 				dateRanges: [{date: '2019-01-01', startTime: '09:00:00', endTime: '17:00:00'}],
 			},
 		]

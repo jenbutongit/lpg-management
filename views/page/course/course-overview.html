@@ -38,10 +38,7 @@
             {% endblock %}
         </div>
         <div class="section">
-            <div class="title-container">
-                <h3 class="govuk-heading-m no-margin">Course events</h3>
-                <a class="govuk-body govuk-link" href="/content-management/courses/{{  course.id }}/modules/{{ module.id }}/events/">Add a new event</a>
-            </div>
+            <h3 class="govuk-heading-m no-margin">Course events</h3>
             {% block courseEvents %}
                 {{ courseEvents(course, faceToFaceModules) }}
             {% endblock %}
