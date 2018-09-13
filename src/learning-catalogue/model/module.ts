@@ -22,7 +22,7 @@ export class Module {
 
 	@IsNotEmpty({
 		groups: ['all', 'description'],
-		message: 'validation.module.description.empty',
+		message: 'validation_module_description_empty',
 	})
 	description: string
 

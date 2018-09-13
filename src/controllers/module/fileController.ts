@@ -4,7 +4,6 @@ import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactor
 import {ContentRequest} from '../../extended'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {Module} from '../../learning-catalogue/model/module'
-import * as multer from 'multer'
 import {RestService} from '../../learning-catalogue/service/restService'
 
 export class FileController {
@@ -12,7 +11,6 @@ export class FileController {
 	moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	router: Router
-	storage: multer.StorageEngine = multer.memoryStorage()
 	restService: RestService
 
 	constructor(
@@ -42,22 +40,20 @@ export class FileController {
 			}
 		})
 		this.router.get('/content-management/courses/:courseId/module-file/:mediaId?', this.getFile())
-		this.router.post('/content-management/courses/:courseId/module-file/:mediaId', this.setFile())
+		this.router.post('/content-management/courses/:courseId/module-file/:mediaId?', this.setFile())
 	}
 
 	public getFile() {
 		return async (request: Request, response: Response) => {
-			if (request.params.mediaId) {
+			if (request.params.mediaId && request.params.mediaId != 'undefined') {
 				const mediaId = request.params.mediaId
 
-				const media = await this.restService.get(`${mediaId}`)
+				const media = await this.restService.get(`/${mediaId}`)
 
-				request.session!.sessionFlash = {mediaId: mediaId, media: media}
+				return response.render('page/course/module/module-file', {mediaId, media})
 			}
 
-			request.session!.save(() => {
-				response.render('page/course/module/module-file')
-			})
+			return response.render('page/course/module/module-file')
 		}
 	}
 
@@ -68,17 +64,29 @@ export class FileController {
 				...req.body,
 			}
 
+			const mediaId = request.params.mediaId
+
+			let file
+			if (mediaId) {
+				file = await this.restService.get(`/${mediaId}`)
+			}
+
 			const course = response.locals.course
 			let module = await this.moduleFactory.create(data)
 			let errors = await this.moduleValidator.check(data, ['title', 'description', 'file'])
 
 			if (Object.keys(errors.fields).length != 0) {
-				request.session!.sessionFlash = {errors: errors, module: module}
-				return response.redirect(`/content-management/courses/${course.id}/module/module-file`)
-			}
+				request.session!.sessionFlash = {
+					errors: errors,
+					module: module,
+					mediaId: mediaId,
+					media: file,
+				}
 
-			const mediaId = request.params.mediaId
-			const file = await this.restService.get(`${mediaId}`)
+				return request.session!.save(() => {
+					response.redirect(`/content-management/courses/${course.id}/module-file/${request.params.mediaId}`)
+				})
+			}
 
 			const newData = {
 				id: data.id,

@@ -14,17 +14,17 @@ export class FileModule extends Module {
 	})
 	mediaId: string
 
-	@IsNotEmpty({
-		groups: ['all', 'title'],
-		message: 'validation_module_title_empty',
-	})
-	title: string
-
-	@IsNotEmpty({
-		groups: ['all', 'description'],
-		message: 'validation_module_description_empty',
-	})
-	description: string
+	// @IsNotEmpty({
+	// 	groups: ['all', 'title'],
+	// 	message: 'validation_module_title_empty',
+	// })
+	// title: string
+	//
+	// @IsNotEmpty({
+	// 	groups: ['all', 'description'],
+	// 	message: 'validation_module_description_empty',
+	// })
+	// description: string
 
 	@IsNotEmpty({
 		groups: ['all', 'fileSize'],
