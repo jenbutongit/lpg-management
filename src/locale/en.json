@@ -1,8 +1,12 @@
 {
-	"audience_add_name_title": "Add audience name",
-	"audience_edit_name_title": "Edit audience name",
-	"audience_add_type": "Add audience type",
-	"audience_edit_type": "Edit audience type",
+	"audience": {
+		"page_title": {
+			"add_name": "Add audience name",
+			"edit_name": "Edit audience name",
+			"add_type": "Add audience type",
+			"edit_type": "Edit audience type"
+		}
+	},
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",

@@ -5,10 +5,10 @@
 {% extends "../../../component/Page.njk" %}
 
 {% block pageTitle %}
-    {% if course %}
-        {{ i18n['audience_edit_name_title'] }} - {{ i18n['proposition_name'] }}
+    {% if audience %}
+        {{ i18n.audience.page_title.edit_name }} - {{ i18n.proposition_name }}
     {% else %}
-        {{ i18n['audience_add_name_title'] }} - {{ i18n['proposition_name'] }}
+        {{ i18n.audience.page_title.add_name }} - {{ i18n.proposition_name }}
     {% endif %}
 {% endblock %}
 
@@ -17,13 +17,13 @@
         {{ phaseBanner("beta") }}
     {% endblock%}
     {% block backLink %}
-        {{ backLink("/content-management/courses/{{ course.id }}/overview") }}
+        {{ backLink("/content-management/courses/" + course.id + "/overview") }}
     {% endblock%}
 {% endblock %}
 
 {% block content %}
     {% set errors = sessionFlash.errors %}
-    
+
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
@@ -40,8 +40,8 @@
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.name %}
                         {{ govukInput({
-                        label: {
-                            text: "Name"
+                            label: {
+                                text: "Name"
                             },
                             id: "name",
                             name: "name",
@@ -51,9 +51,9 @@
                             }
                         }) }}
                     {% else %}
-                    {{ govukInput({
-                        label: {
-                            text: "Name"
+                        {{ govukInput({
+                            label: {
+                                text: "Name"
                             },
                             id: "name",
                             name: "name",

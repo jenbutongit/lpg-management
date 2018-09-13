@@ -6,10 +6,10 @@
 {% extends "../../../component/Page.njk" %}
 
 {% block pageTitle %}
-    {% if course %}
-        {{ i18n['audience_edit_type'] }} - {{ i18n['proposition_name'] }}
+     {% if audience %}
+        {{ i18n.audience.page_title.edit_type }} - {{ i18n.proposition_name }}
     {% else %}
-        {{ i18n['audience_add_type'] }} - {{ i18n['proposition_name'] }}
+        {{ i18n.audience.page_title.add_type }} - {{ i18n.proposition_name }}
     {% endif %}
 {% endblock %}
 
