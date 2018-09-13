@@ -1,6 +1,10 @@
 {
-	"audience_add_name": "Add audience name",
-	"audience_edit_name": "Edit audience name",
+	"audience": {
+		"page_title": {
+			"add_name": "Add audience name",
+			"edit_name": "Edit audience name"
+		}
+	},
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",

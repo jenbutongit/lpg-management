@@ -1,9 +1,6 @@
 import {Request, Response, Router} from 'express'
 import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFactory'
-import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
-
-const logger = log4js.getLogger('controllers/audienceController')
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -14,10 +11,11 @@ export class AudienceController {
 		this.learningCatalogue = learningCatalogue
 		this.audienceFactory = audienceFactory
 		this.router = Router()
+		this.setPathParametersMapping()
 		this.setRouterPaths()
 	}
 
-	private setRouterPaths() {
+	private setPathParametersMapping() {
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
 			if (course) {
@@ -27,27 +25,26 @@ export class AudienceController {
 				res.sendStatus(404)
 			}
 		})
-		this.router.get('/content-management/courses/:courseId/audience', this.addAudience())
-		this.router.post('/content-management/courses/:courseId/audience', this.setAudience())
 	}
 
-	public addAudience() {
-		logger.debug('Add audience page')
+	private setRouterPaths() {
+		this.router.get('/content-management/courses/:courseId/audience', this.getAudienceName())
+		this.router.post('/content-management/courses/:courseId/audience', this.setAudienceName())
+	}
 
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/audience-name')
+	public getAudienceName() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/audience-name')
 		}
 	}
 
-	public setAudience() {
-		return async (request: Request, response: Response) => {
-			const courseId = response.locals.course.id
-
+	public setAudienceName() {
+		return async (req: Request, res: Response) => {
 			if (name === '') {
-				return response.redirect(`/content-management/courses/${courseId}/audience`)
+				return res.redirect(`/content-management/courses/${req.params.courseId}/audience`)
 			}
 			//To be completed
-			return response.redirect(`/content-management/courses/${courseId}/audience/`)
+			return res.redirect(`/content-management/courses/${req.params.courseId}/audience/`)
 		}
 	}
 }
