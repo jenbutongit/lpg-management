@@ -75,8 +75,7 @@ export class ApplicationContext {
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({

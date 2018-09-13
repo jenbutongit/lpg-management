@@ -16,8 +16,8 @@
                 {% for event in module.events %}
                     <li class="module-item list-item u--border--bgrey">
                         <div class="title-container">
-                            <p class="govuk-body no-margin">{{ event.location | default("title not set") }}, {{ event.date |  default("date not set")}}</p>
-                            <a href="#" class="govuk-body govuk-link">View</a>
+                            <p class="govuk-body no-margin">{{ event.venue.location | default("title not set") }}, {{ event.dateRanges[0].date |  default("date not set")}}</p>
+                            <a href="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events-overview/{{ event.id }}" class="govuk-body govuk-link">View</a>
                         </div>
                     </li>
                 {% endfor %}
