@@ -4,13 +4,7 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}
-    {% if audience %}
-        {{ i18n.audience.page_title.edit_name }} - {{ i18n.proposition_name }}
-    {% else %}
-        {{ i18n.audience.page_title.add_name }} - {{ i18n.proposition_name }}
-    {% endif %}
-{% endblock %}
+{% block pageTitle %}{{ i18n.audience.page_title.configure_audience }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% block beforeContent %}
     {% block phaseBanner %}
@@ -66,7 +60,7 @@
                             {% if audience.interests %}
                                 <p class="audience-type">{{ audience.interests | default("Interests unset", true) }}</p>
                             {% else %}
-                                <p class="unset">No interests have been added</p>
+                                <p class="unset">No interests have been added {{event.id}}</p>
                             {% endif %}
                         </div>
                         <a href="/content-management/courses/{{course.id}}/audience/interests" class="govuk-link audience-link">Add</a>
@@ -83,7 +77,7 @@
                         <a href="/content-management/courses/{{course.id}}/audience/interests" class="govuk-link audience-link">Add</a>
                     </div>
                 {% endif %} 
-                {% if audience.type !== 'required' %}
+                {% if audience.type === 'required' %}
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Deadline date</p>
@@ -107,18 +101,29 @@
                         <a href="/content-management/courses/{{course.id}}/audience/interests" class="govuk-link audience-link">Add</a>
                     </div>
                 {% endif %} 
+                {% if audience.type === 'private' %}
+                    <div class="flex-container u--border--bgrey">
+                        <div class="audience-content">
+                            <p class="govuk-body">Associated event</p>
+                            {% if audience.event %}
+                                <p class="audience-type">{{ audience.event | default("Event unset", true) }}</p>
+                            {% else %}
+                                <p class="unset">No event has been added</p>
+                            {% endif %}
+                        </div>
+                        <a href="/content-management/courses/{{course.id}}/audience/event" class="govuk-link audience-link">Add</a>
+                    </div>
+                {% endif %}
                 </div>
             </div>
         </div>
         <div class="button-container">
-        <a class="govuk-body govuk-link return-link" href="/content-management/courses/{{ course.id }}/overview">Return to event overview page</a>
-            {{ govukButton({
-                text: "Delete this audience",
-                classes: "button-red"
-            }) }}
-        </div>
-
-        
+            <a class="govuk-body govuk-link return-link" href="/content-management/courses/{{ course.id }}/overview">Return to event overview page</a>
+                {{ govukButton({
+                    text: "Delete this audience",
+                    classes: "button-red"
+                }) }}
+            </div>
         </div>
     </div>
 {% endblock %}
