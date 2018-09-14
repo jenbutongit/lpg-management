@@ -63,51 +63,9 @@
                 }) }}
             </form>
 
-            <script>
-                window.onload = function () {
-                    var uploadForm
-
-                    uploadForm = document.getElementById('upload')
-
-                    uploadForm.onsubmit = function upload() {
-                        var formData = new FormData(uploadForm)
-
-                        var fileInput = document.getElementById('file-upload')
-                        var file = fileInput.files[0]
-
-                        formData.append('file', file)
-
-                        var xhttp = new XMLHttpRequest();
-
-                        // xhttp.upload.onprogress = function(event) {
-                        //     console.log("Uploading: " + (event.loaded / event.total))
-                        // }
-
-                        xhttp.upload.addEventListener("progress", function(e){
-                            if(e.lengthComputable){
-                                var percentage = Math.round((e.loaded * 100) / e.total)
-                                console.log(percentage)
-                            }
-                        }, false)
-
-                        xhttp.onreadystatechange = function() {
-                            if(this.readyState == this.HEADERS_RECEIVED){
-                                console.log(xhttp.response.toString())
-                                console.log(xhttp.getResponseHeader("Location"))
-                                console.log(this)
-                            }
-                        }
-
-                        xhttp.open("POST", "http://localhost:9001/media", true, 'user', 'password')
-                        xhttp.withCredentials = true
-                        xhttp.send(formData)
-                        return false
-                    }
-                }
-            </script>
-
             <form action="/content-management/courses/{{course.id}}/module-file/{{media.id}}" method="post">
                 <input name="type" type="hidden" value="file">
+                <input id="mediaId" name="mediaId" type="hidden" value="">
                 <fieldset class="govuk-fieldset">
                     {% if errors %}
                     {{ govukInput({
@@ -175,6 +133,6 @@
 {% block bodyEnd %}
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
-
+    <script src="/js/upload-file.js"></script>
     <script src="/js/file-uploader.js"></script>
 {% endblock %}

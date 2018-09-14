@@ -64,7 +64,7 @@ export class FileController {
 				...req.body,
 			}
 
-			const mediaId = request.params.mediaId
+			const mediaId = data.mediaId
 
 			let file
 			if (mediaId) {
