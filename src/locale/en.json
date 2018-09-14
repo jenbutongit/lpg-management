@@ -42,11 +42,13 @@
 	"validation_module_title_empty": "Title is required",
 	"validation.module.duration.empty": "Duration is required",
 	"validation.module.duration.positive": "Duration must be positive",
-	"validation_module_description_empty": "Description is required",
+	"validation.module.description.empty": "Description is required",
 	"validation_module_video_notFound": "There was a problem finding this video",
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
 	"validation_module_event_dateRanges_empty": "Start date is required",
 	"validation_module_event_dateRanges_past": "Start date must be in the future",
 	"validation_module_event_dateRanges_endBeforeStart": "Start time must be before end time",
-    "validation_module_mediaId_empty": "File is required"
+    "validation_module_mediaId_empty": "File is required",
+	"validation_module_event_date_invalid": "Start date is not valid",
+	"video": "Video"
 }
