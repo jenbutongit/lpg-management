@@ -22,6 +22,8 @@ window.onload = function () {
                 const mediaLocation = xhttp.getResponseHeader("Location")
                 const mediaId = mediaLocation.substr(mediaLocation.lastIndexOf("/") + 1)
                 document.getElementById("mediaId").value = mediaId;
+
+                document.getElementById("uploadButton").style.visibility = "hidden"
             }
         }
 
