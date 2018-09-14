@@ -175,6 +175,22 @@ ul {
 	margin-bottom: 0;
 }
 
+.button-red {
+	background-color: $theme;
+	color: $white;
+	padding: 5px 10px;
+	border: none;
+	text-decoration: none;
+
+	&:focus {
+		background-color: $theme;
+	}
+
+	&:hover {
+		background-color: $theme;
+	}
+}
+
 @media screen and (min-width: $tablet-small) {
 	.govuk-input,
 	.govuk-textarea {
