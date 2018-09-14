@@ -64,9 +64,9 @@
                 }) }}
             </form>
 
-            <form action="/content-management/courses/{{course.id}}/module-file/{{media.id}}" method="post">
+            <form action="/content-management/courses/{{course.id}}/module-file" method="post">
                 <input name="type" type="hidden" value="file">
-                <input id="mediaId" name="mediaId" type="hidden" value="">
+                <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
                 <fieldset class="govuk-fieldset">
                     {% if errors %}
                     {{ govukInput({

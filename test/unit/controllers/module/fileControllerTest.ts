@@ -47,13 +47,13 @@ describe('File Controller Test', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		request.params.mediaId = 'mediaId'
+		request.session!.sessionFlash = {mediaId: 'mediaId'}
 
 		mediaRestService.get = sinon.stub()
 
 		await getFile(request, response)
 
-		expect(mediaRestService.get).to.have.been.calledOnceWith('mediaId')
+		expect(mediaRestService.get).to.have.been.calledOnceWith('/mediaId')
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/module-file')
 	})
 
@@ -73,7 +73,7 @@ describe('File Controller Test', function() {
 		moduleFactory.create = sinon.stub().returns(module)
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 
-		request.params.mediaId = 'mediaId'
+		request.body.mediaId = 'mediaId'
 		mediaRestService.get = sinon
 			.stub()
 			.returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
@@ -84,7 +84,7 @@ describe('File Controller Test', function() {
 
 		expect(moduleFactory.create).to.have.been.calledTwice
 		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'file'])
-		expect(mediaRestService.get).to.have.been.calledOnceWith('mediaId')
+		expect(mediaRestService.get).to.have.been.calledOnceWith('/mediaId')
 		expect(learningCatalogue.createModule).to.have.been.calledOnceWith(course.id, module)
 	})
 

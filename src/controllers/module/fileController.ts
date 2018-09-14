@@ -39,14 +39,18 @@ export class FileController {
 				res.sendStatus(404)
 			}
 		})
-		this.router.get('/content-management/courses/:courseId/module-file/:mediaId?', this.getFile())
-		this.router.post('/content-management/courses/:courseId/module-file/:mediaId?', this.setFile())
+		this.router.get('/content-management/courses/:courseId/module-file', this.getFile())
+		this.router.post('/content-management/courses/:courseId/module-file', this.setFile())
 	}
 
 	public getFile() {
 		return async (request: Request, response: Response) => {
-			if (request.params.mediaId && request.params.mediaId != 'undefined') {
-				const mediaId = request.params.mediaId
+			if (
+				request.session!.sessionFlash &&
+				request.session!.sessionFlash.mediaId &&
+				request.session!.sessionFlash.mediaId != 'undefined'
+			) {
+				const mediaId = request.session!.sessionFlash.mediaId
 
 				const media = await this.restService.get(`/${mediaId}`)
 
@@ -84,7 +88,7 @@ export class FileController {
 				}
 
 				return request.session!.save(() => {
-					response.redirect(`/content-management/courses/${course.id}/module-file/${request.params.mediaId}`)
+					response.redirect(`/content-management/courses/${course.id}/module-file`)
 				})
 			}
 

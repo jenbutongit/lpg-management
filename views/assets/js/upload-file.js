@@ -13,8 +13,8 @@ window.onload = function () {
 
         xhttp.upload.onprogress = function(event) {
             const loaded = Math.round((event.loaded / event.total) * 100)
-            document.getElementById("progressBar").value = loaded
-            document.getElementById("fileSize").value = Math.round(event.total / 2000000)
+            // document.getElementById("progressBar").value = loaded
+            // document.getElementById("fileSize").value = Math.round(event.total / 2000000)
         }
 
         xhttp.onreadystatechange = function() {
