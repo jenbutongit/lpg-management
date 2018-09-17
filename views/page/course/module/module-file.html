@@ -22,6 +22,13 @@
     {% set errors = sessionFlash.errors%}
     {% set media = sessionFlash.media %}
 
+    {% if errors.fields.file %}
+        {% set chooseFileButtonClass = "govuk-form-group govuk-form-group--error" %}
+        {% set chooseFileButtonMessage = "File is required" %}
+    {% else %}
+        {% set chooseFileButtonClass = "govuk-form-group" %}
+    {% endif %}
+
     {% if errors.fields %}
         <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -43,39 +50,20 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
             <p class="govuk-body">You are adding a <strong>file</strong> module</p>
                   
-            <form id="upload" action="http://localhost:9001/media" method="post" enctype="multipart/form-data">
-                <fieldset class="govuk-fieldset">
-                    <div class="add-file-form govuk-form-group">         
-                        <label class="govuk-label">File</label>
-                        <span id="file-upload-hint" class="govuk-hint">You can upload the following file types: PDF, Powerpoint, Excel, Word, video(MP4)</span> 
-                        <input class="govuk-file-upload custom-uploader" id="file-upload" name="file" type="file" aria-describedby="file-upload-hint">
-                        {% if media %}
-                            <label class="btn" for="file-upload"><span>{{media.name}}</span></label>
-                        {% else %}
-                            <label class="btn" for="file-upload"><span>Choose file</span></label>
-                        {% endif %}
-                    </div>
-                </fieldset>
 
-                {{ govukButton({
-                    attributes: {id: "uploadButton"},
-                    text: "Upload File",
-                    type: "submit"
-                }) }}
-            </form>
-
-            <form action="/content-management/courses/{{course.id}}/module-file" method="post">
+            <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post">
                 <input name="type" type="hidden" value="file">
+                <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">
                 <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
                 <fieldset class="govuk-fieldset">
-                    {% if errors %}
+                    {% if errors.fields.title %}
                     {{ govukInput({
                     label: {
                     text: "Module title"
                     },
                     id: "title",
                     name: "title",
-                    errorMerssage: {
+                    errorMessage: {
                     text: "Module title is required"
                     }
                     }) }}
@@ -96,7 +84,75 @@
                     text: "Description"
                     }
                     }) }}
+
+                    <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
+                    <div class="time-inputs">
+                        {{ govukInput({
+                        type: "number",
+                        label: {
+                        text: "Days"
+                        },
+                        attributes: {
+                        maxlength: "3"
+                        },
+                        id: "days",
+                        name: "days",
+                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
+                        }) }}
+                        {{ govukInput({
+                        type: "number",
+                        label: {
+                        text: "Hours"
+                        },
+                        attributes: {
+                        maxlength: "3"
+                        },
+                        id: "hours",
+                        name: "hours",
+                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
+                        }) }}
+                        {{ govukInput({
+                        type: "number",
+                        label: {
+                        text: "Minutes"
+                        },
+                        attributes: {
+                        maxlength: "2"
+                        },
+                        id: "minutes",
+                        name: "minutes",
+                        classes: "govuk-date-input__input govuk-input--width-3"
+                        }) }}
+                    </div>
                 </fieldset>
+
+                <div class="{{chooseFileButtonClass}}">
+                    <fieldset class="govuk-fieldset">
+                        <div class="add-file-form govuk-form-group">
+                            <label class="govuk-label">File</label>
+                            <span id="file-upload-hint" class="govuk-hint">You can upload the following file types: PDF, Powerpoint, Excel, Word, video(MP4)</span>
+                            <span id="file-upload-error" class="govuk-error-message">{{chooseFileButtonMessage}}</span>
+                            <input class="govuk-file-upload custom-uploader" id="file-upload" name="file" type="file" aria-describedby="file-upload-hint">
+                            {% if media %}
+                            <label class="btn" for="file-upload"><span>{{media.name}}</span></label>
+                            {% else %}
+                            <label class="btn" for="file-upload"><span>Choose file</span></label>
+                            {% endif %}
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div id="progressBar">
+                    <div id="progress"></div>
+                </div>
+
+                {{ govukButton({
+                attributes: {id: "uploadButton"},
+                text: "Upload File",
+                type: "input",
+                classes: "button-blue left-aligned"
+                }) }}
+
                 {{ govukCheckboxes({
                 idPrefix: "isOptional",
                 name: "isOptional",
@@ -118,7 +174,8 @@
 
                 {{ govukButton({
                 text: "Continue",
-                type: "submit"
+                type: "submit",
+                attributes: {id: "submitButton"}
                 }) }}
             </form>
 

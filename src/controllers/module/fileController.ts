@@ -5,6 +5,7 @@ import {ContentRequest} from '../../extended'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {Module} from '../../learning-catalogue/model/module'
 import {RestService} from '../../learning-catalogue/service/restService'
+import * as config from '../../config'
 
 export class FileController {
 	learningCatalogue: LearningCatalogue
@@ -68,16 +69,17 @@ export class FileController {
 				...req.body,
 			}
 
-			const mediaId = data.mediaId
-
-			let file
-			if (mediaId) {
-				file = await this.restService.get(`/${mediaId}`)
-			}
-
 			const course = response.locals.course
 			let module = await this.moduleFactory.create(data)
 			let errors = await this.moduleValidator.check(data, ['title', 'description', 'file'])
+
+			const mediaId = data.mediaId
+			let file
+			if (mediaId) {
+				file = await this.restService.get(`/${mediaId}`)
+			} else {
+				errors.fields.file = ['validation_module_mediaId_empty']
+			}
 
 			if (Object.keys(errors.fields).length != 0) {
 				request.session!.sessionFlash = {
@@ -99,10 +101,10 @@ export class FileController {
 				description: data.description,
 				file: data.file,
 				optional: data.isOptional || false,
-				duration: file.metadata.duration,
+				duration: data.days * 86400 + data.hours * 3600 + data.minutes * 60,
 				fileSize: file.fileSizeKB,
 				mediaId: file.id,
-				url: file.path,
+				url: config.CONTENT_URL + '/' + file.path,
 			}
 			module = await this.moduleFactory.create(newData)
 

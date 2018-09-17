@@ -2,14 +2,16 @@ window.onload = function () {
     let uploadForm
     uploadForm = document.getElementById('upload')
 
-    uploadForm.onsubmit = function upload() {
+    document.getElementById('uploadButton').onclick = function upload() {
         let formData = new FormData(uploadForm)
         let fileInput = document.getElementById('file-upload')
         let file = fileInput.files[0]
+        let courseId = document.getElementById('courseId').value
 
         formData.append('file', file)
+        formData.append('container', courseId)
 
-        let xhttp = new XMLHttpRequest();
+        let xhttp = new XMLHttpRequest()
 
         xhttp.upload.onprogress = function(event) {
             const loaded = Math.round((event.loaded / event.total) * 100)
