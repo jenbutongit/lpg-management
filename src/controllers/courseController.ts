@@ -1,14 +1,12 @@
 import {Request, Response, Router} from 'express'
 import {ContentRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
-import * as log4js from 'log4js'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Module} from '../learning-catalogue/model/module'
 import * as datetime from '../lib/datetime'
-
-const logger = log4js.getLogger('controllers/courseController')
+import * as util from 'util'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -56,9 +54,9 @@ export class CourseController {
 	}
 
 	public courseOverview() {
-		logger.debug('Course Overview page')
-
 		return async (request: Request, response: Response) => {
+			console.log('course overview page')
+			console.log(util.inspect(response.locals.course))
 			const faceToFaceModules = response.locals.course.modules.filter(
 				(module: Module) => module.type == Module.Type.FACE_TO_FACE
 			)
@@ -88,7 +86,7 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors}
+				request.session!.sessionFlash = {errors}
 				request.session!.save(() => {
 					response.redirect('/content-management/courses/title')
 				})
@@ -100,7 +98,7 @@ export class CourseController {
 				}
 
 				const course = this.courseFactory.create(request.body)
-				request.session!.sessionFlash = {course: course}
+				request.session!.sessionFlash = {course}
 				request.session!.save(() => {
 					response.redirect('/content-management/courses/details')
 				})
@@ -154,6 +152,7 @@ export class CourseController {
 			shortDescription: request.body.shortDescription || response.locals.course.shortDescription,
 			learningOutcomes: request.body.learningOutcomes || response.locals.course.learningOutcomes,
 			modules: request.body.modules || response.locals.course.modules,
+			audiences: request.body.audiences || response.locals.course.audiences,
 		}
 
 		const course = this.courseFactory.create(data)

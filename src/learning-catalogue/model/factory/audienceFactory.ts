@@ -8,6 +8,7 @@ export class AudienceFactory {
 
 	create(data: any) {
 		const audience: Audience = new Audience()
+		audience.name = data.name
 		audience.areasOfWork = data.areasOfWork
 		audience.departments = data.departments
 		audience.grades = data.grades

@@ -3,6 +3,9 @@
 		"page_title": {
 			"add_name": "Add audience name",
 			"edit_name": "Edit audience name"
+		},
+		"validation": {
+			"name": {"empty": "Audience name is required"}
 		}
 	},
 	"blended": "Blended",

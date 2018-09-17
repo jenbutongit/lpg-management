@@ -1,6 +1,12 @@
 import {ArrayNotEmpty, IsNotEmpty} from 'class-validator'
 
 export class Audience {
+	@IsNotEmpty({
+		groups: ['all', 'audience.all', 'audience.name'],
+		message: 'audience.validation.name.empty',
+	})
+	name: string
+
 	@ArrayNotEmpty({
 		groups: ['all', 'audience.all', 'audience.areasOfWork'],
 		message: 'validation.module.areasOfWork.empty',
