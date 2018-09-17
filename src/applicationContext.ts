@@ -39,6 +39,7 @@ import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleC
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
 import {CourseService} from './lib/courseService'
+import {AudienceController} from './controllers/audience/audienceController'
 
 log4js.configure(config.LOGGING)
 
@@ -68,6 +69,7 @@ export class ApplicationContext {
 	moduleValidator: Validator<Module>
 	eventValidator: Validator<Event>
 	audienceFactory: AudienceFactory
+	audienceController: AudienceController
 	eventController: EventController
 	eventFactory: EventFactory
 	fileController: FileController
@@ -77,7 +79,8 @@ export class ApplicationContext {
 	faceToFaceController: FaceToFaceModuleController
 	courseService: CourseService
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -182,6 +185,8 @@ export class ApplicationContext {
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
+
+		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceFactory)
 	}
 
 	addToResponseLocals() {

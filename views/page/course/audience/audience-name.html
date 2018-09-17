@@ -1,0 +1,75 @@
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "../../../component/Page.njk" %}
+
+{% block pageTitle %}
+    {% if audience %}
+        {{ i18n.audience.page_title.edit_name }} - {{ i18n.proposition_name }}
+    {% else %}
+        {{ i18n.audience.page_title.add_name }} - {{ i18n.proposition_name }}
+    {% endif %}
+{% endblock %}
+
+{% block beforeContent %}
+    {% block phaseBanner %}
+        {{ phaseBanner("beta") }}
+    {% endblock%}
+    {% block backLink %}
+        {{ backLink("/content-management/courses/" + course.id + "/overview") }}
+    {% endblock%}
+{% endblock %}
+
+{% block content %}
+    {% set errors = sessionFlash.errors %}
+
+    {{ errorSummary(errors.fields) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% if audience %}
+                <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Edit audience</p>
+            {% else %}
+                <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
+            {% endif %}
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Audience name</h2>
+            <form action="/content-management/courses/{{ course.id }}/audience" method="post">
+                <p class="govuk-body no-margin">You need to give your audience a short, descriptive name</p>
+                <p class="govuk-body">This name is for your own use</p>
+                <fieldset class="govuk-fieldset">
+                    {% if errors.fields.name %}
+                        {{ govukInput({
+                            label: {
+                                text: "Name"
+                            },
+                            id: "name",
+                            name: "name",
+                            value: audience.name,
+                            errorMessage: {
+                                text: "Name is required"
+                            }
+                        }) }}
+                    {% else %}
+                        {{ govukInput({
+                            label: {
+                                text: "Name"
+                            },
+                            id: "name",
+                            name: "name",
+                            value: audience.name
+                        }) }}
+                    {% endif %}
+                </fieldset>
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
+            </form>
+            <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/overview">Cancel</a>
+        </div>
+        <div class="govuk-grid-column-one-third">  
+        </div>
+    </div>
+{% endblock %}

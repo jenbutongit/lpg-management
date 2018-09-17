@@ -17,8 +17,10 @@
 	color: $white;
 }
 
-.govuk-heading-m {
-	padding-top: 0;
+.govuk-grid-column-two-thirds {
+	.govuk-heading-m {
+		padding-top: 0;
+	}
 }
 
 .govuk-header__container {
