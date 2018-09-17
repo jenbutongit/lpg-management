@@ -40,7 +40,6 @@ import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
 import {AudienceController} from './controllers/audience/audienceController'
 import {CourseService} from './lib/courseService'
-import {AudienceController} from './controllers/audience/audienceController'
 
 log4js.configure(config.LOGGING)
 
