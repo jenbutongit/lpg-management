@@ -41,6 +41,8 @@ import {Event} from './learning-catalogue/model/event'
 import {AudienceController} from './controllers/audience/audienceController'
 import {CourseService} from './lib/courseService'
 import {Audience} from './learning-catalogue/model/audience'
+import {CsrsConfig} from './csrs/csrsConfig'
+import {CsrsService} from './csrs/service/csrsService'
 
 log4js.configure(config.LOGGING)
 
@@ -77,12 +79,13 @@ export class ApplicationContext {
 	fileController: FileController
 	pagination: Pagination
 	youtubeService: YoutubeService
+	csrsService: CsrsService
 	youtubeConfig: YoutubeConfig
+	csrsConfig: CsrsConfig
 	faceToFaceController: FaceToFaceModuleController
 	courseService: CourseService
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -188,11 +191,14 @@ export class ApplicationContext {
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
 
+		this.csrsService = new CsrsService()
+
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.audienceController = new AudienceController(
 			this.learningCatalogue,
 			this.audienceValidator,
-			this.audienceFactory
+			this.audienceFactory,
+			this.csrsService
 		)
 	}
 

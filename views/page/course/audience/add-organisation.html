@@ -21,6 +21,11 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Organisation</h2>
+
+            {% for organisation in organisations %}
+            <li>{{ organisation}}</li>
+            {% endfor %}
+
             <form action="/content-management/courses/{{ course.id }}/add-organisation" method="post">
                 {% if errors.fields %}
                     {% set classNames = "govuk-fieldset audience-fieldset govuk-form-group--error" %}

@@ -3,21 +3,25 @@ import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFa
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
+import {CsrsService} from '../../csrs/service/csrsService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
 	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
+	csrsService: CsrsService
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		audienceValidator: Validator<Audience>,
-		audienceFactory: AudienceFactory
+		audienceFactory: AudienceFactory,
+		csrsService: CsrsService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
 		this.audienceFactory = audienceFactory
+		this.csrsService = csrsService
 		this.router = Router()
 		this.setPathParametersMapping()
 		this.setRouterPaths()
@@ -94,7 +98,11 @@ export class AudienceController {
 
 	public getOrganisation() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/add-organisation')
+			const data = await this.csrsService.getNode('organisations')
+
+			const organisations = await this.csrsService.getNameFromNodeData(data)
+
+			response.render('page/course/audience/add-organisation', {organisations})
 		}
 	}
 
@@ -103,4 +111,11 @@ export class AudienceController {
 			response.render('page/course/audience/configure-audience')
 		}
 	}
+
+	// Mick - these should give you the rest of the data you need from csrs
+	// You will still need to parse the data to grab the names using the getNameFromNodeData() function on line 103
+	// const areasOfWork = await this.csrsService.getNode('professions')
+	// const grades = await this.csrsService.getNode('grades')
+	// const jobRoles = await this.csrsService.getNode('jobRoles')
+	// const interests = await this.csrsService.getNode('interests')
 }
