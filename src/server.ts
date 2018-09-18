@@ -40,8 +40,8 @@ nunjucks.configure(
 		autoescape: true,
 		express: app,
 	}
-).addFilter('jsonpath', function(obt: any, path: string) {
-	return jsonpath.value(obt, path)
+).addFilter('jsonpath', function(object: any, path: string) {
+	return jsonpath.value(object, path)
 })
 
 app.set('view engine', 'html')
