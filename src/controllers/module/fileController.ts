@@ -55,7 +55,7 @@ export class FileController {
 
 				const media = await this.restService.get(`/${mediaId}`)
 
-				return response.render('page/course/module/module-file', {mediaId, media})
+				return response.render('page/course/module/module-file', {media})
 			}
 
 			return response.render('page/course/module/module-file')
@@ -69,9 +69,15 @@ export class FileController {
 				...req.body,
 			}
 
+			if (data.file.endsWith('.mp4')) {
+				data.type = 'video'
+			} else if (data.file.endsWith('.zip')) {
+				data.type = 'elearning'
+			}
+
 			const course = response.locals.course
 			let module = await this.moduleFactory.create(data)
-			let errors = await this.moduleValidator.check(data, ['title', 'description', 'file'])
+			let errors = await this.moduleValidator.check(data, ['title', 'description'])
 
 			const mediaId = data.mediaId
 			let file
@@ -85,7 +91,6 @@ export class FileController {
 				request.session!.sessionFlash = {
 					errors: errors,
 					module: module,
-					mediaId: mediaId,
 					media: file,
 				}
 

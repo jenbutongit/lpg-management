@@ -13,7 +13,7 @@
     {{ phaseBanner("beta") }}
   {% endblock%}
   {% block backLink %}
-    {{ backLink("/content-management") }}
+    {{ backLink("/content-management/courses/" + course.id + "/preview") }}
   {% endblock%}
 {% endblock %}
 
@@ -21,6 +21,7 @@
 
     {% set errors = sessionFlash.errors%}
     {% set media = sessionFlash.media %}
+    {% set module = sessionFlash.module %}
 
     {% if errors.fields.file %}
         {% set chooseFileButtonClass = "govuk-form-group govuk-form-group--error" %}
@@ -73,17 +74,32 @@
                     text: "Module title"
                     },
                     id: "title",
-                    name: "title"
+                    name: "title",
+                    value: module.title
                     }) }}
                     {% endif %}
 
+                    {% if errors.fields.description %}
                     {{ govukTextarea({
                     name: "description",
                     id: "description",
                     label: {
                     text: "Description"
+                    },
+                    errorMessage: {
+                    text: "Module title is required"
                     }
                     }) }}
+                    {% else %}
+                    {{ govukTextarea({
+                    name: "description",
+                    id: "description",
+                    value: module.description,
+                    label: {
+                    text: "Description"
+                    }
+                    }) }}
+                    {% endif %}
 
                     <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
                     <div class="time-inputs">
@@ -142,16 +158,17 @@
                     </fieldset>
                 </div>
 
-                <div id="progressBar">
-                    <div id="progress"></div>
-                </div>
+                <p id="file-size"></p>
+                <p id="progress"></p>
 
-                {{ govukButton({
-                attributes: {id: "uploadButton"},
-                text: "Upload File",
-                type: "input",
-                classes: "button-blue left-aligned"
-                }) }}
+                {% if media is undefined %}
+                    {{ govukButton({
+                    attributes: {id: "uploadButton"},
+                    text: "Upload File",
+                    type: "input",
+                    classes: "button-blue left-aligned"
+                    }) }}
+                {% endif %}
 
                 {{ govukCheckboxes({
                 idPrefix: "isOptional",
@@ -179,7 +196,7 @@
                 }) }}
             </form>
 
-            <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/:courseId/preview">Cancel</a>        
+            <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/preview">Cancel</a>
         </div>
 
         <div class="govuk-grid-column-one-third">

@@ -74,6 +74,7 @@ describe('File Controller Test', function() {
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 
 		request.body.mediaId = 'mediaId'
+		request.body.file = 'file.pdf'
 		mediaRestService.get = sinon
 			.stub()
 			.returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
@@ -83,7 +84,7 @@ describe('File Controller Test', function() {
 		await setFile(request, response)
 
 		expect(moduleFactory.create).to.have.been.calledTwice
-		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'file'])
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description'])
 		expect(mediaRestService.get).to.have.been.calledOnceWith('/mediaId')
 		expect(learningCatalogue.createModule).to.have.been.calledOnceWith(course.id, module)
 	})
@@ -104,6 +105,7 @@ describe('File Controller Test', function() {
 		moduleFactory.create = sinon.stub().returns(module)
 		moduleValidator.check = sinon.stub().returns({fields: ['validation_module_title_empty'], size: 1})
 		request.params.mediaId = 'mediaId'
+		request.body.file = 'file.pdf'
 		mediaRestService.get = sinon
 			.stub()
 			.returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
@@ -114,7 +116,7 @@ describe('File Controller Test', function() {
 		await setFile(request, response)
 
 		expect(moduleFactory.create).to.have.been.calledOnceWith(request.body)
-		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'file'])
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description'])
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-file`)
 	})
 })
