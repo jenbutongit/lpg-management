@@ -45,20 +45,49 @@
                         items: [
                             {
                             value: "all",
-                            text: "All"
+                            text: "All",
+                            id: "all"
                             },
                             {
                             value: "selected",
-                            text: "Selected organisations only"
+                            text: "Selected organisations only",
+                            id: "selected"
                             }
                         ]
                     }) }}
-                {{ govukButton({
-                    text: "Continue"
-                }) }}
+                </div>
+                <div class="typeahead-container">
+                    <label class="govuk-body no-margin" for="autocomplete">Name of organisation</label>
+                    <p class="gouk-hint">Start typing the name of the organisation</p>
+                    <div id="autocomplete-container"></div>
+                </div>
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
             </form>
         </div>
         <div class="govuk-grid-column-one-third">
         </div>
     </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk-frontend/all.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+    <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
+    <script>
+    const countries = [
+            'France',
+            'Germany',
+            'United Kingdom'
+        ]
+    accessibleAutocomplete({
+        
+        element: document.querySelector('#autocomplete-container'),
+        id: 'autocomplete', // To match it to the existing <label>.
+        source: countries
+})
+    </script>
 {% endblock %}

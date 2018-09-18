@@ -66,7 +66,7 @@ export class AudienceController {
 				const savedAudience = this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience-type`)
 				})
 			}
 		}
@@ -82,7 +82,7 @@ export class AudienceController {
 		return async (request: Request, response: Response) => {
 			const courseId = response.locals.course.id
 
-			return response.redirect(`/content-management/courses/${courseId}/add-organisation/`)
+			return response.redirect(`/content-management/courses/${courseId}/configure-audience/`)
 		}
 	}
 

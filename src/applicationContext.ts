@@ -39,11 +39,8 @@ import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleC
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
 import {AudienceController} from './controllers/audience/audienceController'
-<<<<<<< HEAD
 import {CourseService} from './lib/courseService'
-=======
 import {Audience} from './learning-catalogue/model/audience'
->>>>>>> 5918fa95692f4cef90cf79ce7ec4c373f24f0cdc
 
 log4js.configure(config.LOGGING)
 
