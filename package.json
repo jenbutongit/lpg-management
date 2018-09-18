@@ -29,7 +29,6 @@
 	},
 	"homepage": "https://github.com/Civil-Service-Human-Resources/lpg-admin#readme",
 	"dependencies": {
-		"accessible-autocomplete": "^1.6.1",
 		"app-root-path": "2.1.0",
 		"axios": "0.18.0",
 		"class-validator": "0.9.1",
