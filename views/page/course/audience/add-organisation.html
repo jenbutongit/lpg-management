@@ -32,6 +32,13 @@
                 
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
+                    
+                    {% set typeaheadHtml %}
+                        <div class="typeahead-container">
+                            <label class="govuk-body no-margin" for="autocomplete">Name of organisation</label>
+                            <p class="govuk-hint">Start typing the name of the organisation</p>
+                        <div id="autocomplete-container"></div>
+                    {% endset -%}
                     {{ govukRadios({
                         idPrefix: "audience-type",
                         name: "audience-type",
@@ -51,15 +58,13 @@
                             {
                             value: "selected",
                             text: "Selected organisations only",
-                            id: "selected"
+                            id: "selected",
+                                conditional: {
+                                    html: typeaheadHtml
+                                }
                             }
                         ]
-                    }) }}
-                </div>
-                <div class="typeahead-container">
-                    <label class="govuk-body no-margin" for="autocomplete">Name of organisation</label>
-                    <p class="gouk-hint">Start typing the name of the organisation</p>
-                    <div id="autocomplete-container"></div>
+                        }) }}
                 </div>
                 <div class="button-container">
                     {{ govukButton({
@@ -77,17 +82,6 @@
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-    <script>
-    const countries = [
-            'France',
-            'Germany',
-            'United Kingdom'
-        ]
-    accessibleAutocomplete({
-        
-        element: document.querySelector('#autocomplete-container'),
-        id: 'autocomplete', // To match it to the existing <label>.
-        source: countries
-})
-    </script>
+    <script type="text/javascript" src="/js/add-organisation.js"></script>
 {% endblock %}
+
