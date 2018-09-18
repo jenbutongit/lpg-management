@@ -3,36 +3,32 @@ import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFa
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
+import {CourseService} from '../../learning-catalogue/service/courseService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
 	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
+	courseService: CourseService
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		audienceValidator: Validator<Audience>,
-		audienceFactory: AudienceFactory
+		audienceFactory: AudienceFactory,
+		courseService: CourseService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
 		this.audienceFactory = audienceFactory
+		this.courseService = courseService
 		this.router = Router()
-		this.setPathParametersMapping()
+		this.configurePathParametersProcessing()
 		this.setRouterPaths()
 	}
 
-	private setPathParametersMapping() {
-		this.router.param('courseId', async (req, res, next, courseId) => {
-			const course = await this.learningCatalogue.getCourse(courseId)
-			if (course) {
-				res.locals.course = course
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
+	private configurePathParametersProcessing() {
+		this.router.param('courseId', this.courseService.findCourseByCourseIdAndAssignToResponseLocalsOrReturn404())
 	}
 
 	private setRouterPaths() {
