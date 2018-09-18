@@ -15,11 +15,13 @@ import {ModuleFactory} from './model/factory/moduleFactory'
 import {AudienceFactory} from './model/factory/audienceFactory'
 import {EventFactory} from './model/factory/eventFactory'
 import {Event} from './model/event'
+import {Audience} from './model/audience'
 
 export class LearningCatalogue {
 	private _eventService: EntityService<Event>
 	private _moduleService: EntityService<Module>
 	private _courseService: EntityService<Course>
+	private _audienceService: EntityService<Audience>
 	private _learningProviderService: EntityService<LearningProvider>
 	private _cancellationPolicyService: EntityService<CancellationPolicy>
 	private _termsAndConditionsService: EntityService<TermsAndConditions>
@@ -30,12 +32,11 @@ export class LearningCatalogue {
 
 		this._eventService = new EntityService<Event>(this._restService, new EventFactory())
 
-		this._moduleService = new EntityService<Module>(
-			this._restService,
-			new ModuleFactory(new AudienceFactory(), new EventFactory())
-		)
+		this._moduleService = new EntityService<Module>(this._restService, new ModuleFactory())
 
 		this._courseService = new EntityService<Course>(this._restService, new CourseFactory())
+
+		this._audienceService = new EntityService<Audience>(this._restService, new AudienceFactory())
 
 		this._learningProviderService = new EntityService<LearningProvider>(
 			this._restService,
@@ -87,6 +88,10 @@ export class LearningCatalogue {
 
 	async updateEvent(courseId: string, moduleId: string, eventId: string, event: Event): Promise<Event> {
 		return this._eventService.update(`/courses/${courseId}/modules/${moduleId}/events/${eventId}`, event)
+	}
+
+	async createAudience(courseId: string, audience: Audience) {
+		return this._audienceService.create(`courses/${courseId}/audiences`, audience)
 	}
 
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {

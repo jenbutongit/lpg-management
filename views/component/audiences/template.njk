@@ -1,7 +1,7 @@
-{% if audiences.length > 0 %}
+{% if course.audiences.length > 0 %}
     <ul class="list">
-        {% for audience in audiences %}
-            <li class="module-item list-item u--border--bgrey">{{ audience.title | default("Audience", true) }}
+        {% for audience in course.audiences %}
+            <li class="module-item list-item u--border--bgrey">{{ audience.name | default("Audience", true) }}
         {% endfor %}
     </ul>
 {% else %}
