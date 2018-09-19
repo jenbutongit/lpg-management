@@ -1,14 +1,14 @@
 import {beforeEach, describe} from 'mocha'
 import * as sinonChai from 'sinon-chai'
 import * as chai from 'chai'
+import {expect} from 'chai'
 import {ModuleFactory} from '../../../../../src/learning-catalogue/model/factory/moduleFactory'
 import {CourseFactory} from '../../../../../src/learning-catalogue/model/factory/courseFactory'
 import {Module} from '../../../../../src/learning-catalogue/model/module'
 import {Course} from '../../../../../src/learning-catalogue/model/course'
-import {expect} from 'chai'
 import * as sinon from 'sinon'
+import {Audience} from '../../../../../src/learning-catalogue/model/audience'
 import {AudienceFactory} from '../../../../../src/learning-catalogue/model/factory/audienceFactory'
-import {EventFactory} from '../../../../../src/learning-catalogue/model/factory/eventFactory'
 
 chai.use(sinonChai)
 
@@ -17,7 +17,7 @@ describe('CourseFactory tests', () => {
 	let courseFactory: CourseFactory
 
 	beforeEach(() => {
-		moduleFactory = new ModuleFactory(new AudienceFactory(), new EventFactory())
+		moduleFactory = new ModuleFactory()
 		courseFactory = new CourseFactory()
 		courseFactory.moduleFactory = moduleFactory
 	})
@@ -28,8 +28,21 @@ describe('CourseFactory tests', () => {
 		const shortDescription = 'This topic introduces yo… governance processes.'
 		const description: string = 'You learn about creating…in government’ topic.'
 		const learningOutcomes: string = 'After completing this to…h the financial cycle'
-		const moduleId1: string = 'jksdhskdjhsdfk'
-		const courseModule1: Module = <Module>{}
+		const moduleData = {
+			id: 'jksdhskdjhsdfk',
+			type: 'link',
+		}
+		const courseModule: Module = new ModuleFactory().create(moduleData)
+		const audienceData = {
+			areasOfWork: ['digital'],
+			departments: ['co', 'hmrc'],
+			grades: ['AA', 'G7'],
+			interests: ['project management'],
+			requiredBy: '2019-01-01T00:00:00',
+			frequency: 'YEARLY',
+			mandatory: true,
+		}
+		const courseAudience: Audience = new AudienceFactory().create(audienceData)
 
 		const data: object = {
 			id: id,
@@ -37,20 +50,9 @@ describe('CourseFactory tests', () => {
 			shortDescription: shortDescription,
 			description: description,
 			learningOutcomes: learningOutcomes,
-			modules: [
-				{
-					id: moduleId1,
-					type: 'link',
-				},
-			],
+			modules: [moduleData],
+			audiences: [audienceData]
 		}
-
-		moduleFactory.defaultCreate = sinon
-			.stub()
-			.returns(courseModule1)
-			.withArgs({
-				id: moduleId1,
-			})
 
 		const result: Course = courseFactory.create(data)
 
@@ -59,7 +61,8 @@ describe('CourseFactory tests', () => {
 		expect(result.shortDescription).to.equal(shortDescription)
 		expect(result.description).to.equal(description)
 		expect(result.learningOutcomes).to.equal(learningOutcomes)
-		expect(result.modules[0]).to.equal(courseModule1)
+		expect(result.modules[0]).to.deep.equal(courseModule)
+		expect(result.audiences[0]).to.deep.equal(courseAudience)
 	})
 
 	it('should add empty list if modules is null', () => {

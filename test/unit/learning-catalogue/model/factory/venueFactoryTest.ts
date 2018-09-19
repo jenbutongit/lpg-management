@@ -8,5 +8,10 @@ describe('VenueFactory', function() {
 			const venue = new VenueFactory().create(undefined)
 			expect(venue).to.deep.equal({})
 		})
+
+		it('should return empty object if invoked with null data', function() {
+			const venue = new VenueFactory().create(null)
+			expect(venue).to.deep.equal({})
+		})
 	})
 })

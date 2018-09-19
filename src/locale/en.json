@@ -5,6 +5,9 @@
 			"edit_name": "Edit audience name",
 			"add_type": "Add audience type",
 			"edit_type": "Edit audience type"
+		},
+		"validation": {
+			"name": {"empty": "Audience name is required"}
 		}
 	},
 	"blended": "Blended",

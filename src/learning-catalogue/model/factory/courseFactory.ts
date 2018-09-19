@@ -1,14 +1,14 @@
 import {Course} from '../course'
 import {ModuleFactory} from './moduleFactory'
-import {EventFactory} from './eventFactory'
 import {AudienceFactory} from './audienceFactory'
 
 export class CourseFactory {
 	private _moduleFactory: ModuleFactory
+	private audienceFactory: AudienceFactory
 
 	constructor() {
-		this._moduleFactory = new ModuleFactory(new AudienceFactory(), new EventFactory())
-
+		this.audienceFactory = new AudienceFactory()
+		this._moduleFactory = new ModuleFactory()
 		this.create = this.create.bind(this)
 	}
 
@@ -21,6 +21,7 @@ export class CourseFactory {
 		course.shortDescription = data.shortDescription
 		course.title = data.title
 		course.modules = (data.modules || []).map(this._moduleFactory.create)
+		course.audiences = (data.audiences || []).map(this.audienceFactory.create)
 		return course
 	}
 
