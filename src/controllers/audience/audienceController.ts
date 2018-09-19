@@ -3,7 +3,7 @@ import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFa
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
-import {CourseService} from '../../learning-catalogue/service/courseService'
+import {CourseService} from 'lib/courseService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
