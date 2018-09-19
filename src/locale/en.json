@@ -7,7 +7,7 @@
 		"validation": {
 			"name": {
 				"empty": "Audience name is required",
-				"maxLength": "Audience name is maximum 40 characters long"
+				"maxLength": "Audience name must be 40 characters or less"
 			}
 		}
 	},
