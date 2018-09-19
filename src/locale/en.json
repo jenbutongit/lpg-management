@@ -5,7 +5,10 @@
 			"edit_name": "Edit audience name"
 		},
 		"validation": {
-			"name": {"empty": "Audience name is required"}
+			"name": {
+				"empty": "Audience name is required",
+				"maxLength": "Audience name is maximum 40 characters long"
+			}
 		}
 	},
 	"blended": "Blended",
