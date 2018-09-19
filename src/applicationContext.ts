@@ -40,6 +40,7 @@ import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
 import {CourseService} from './lib/courseService'
 import {AudienceController} from './controllers/audience/audienceController'
+import {Audience} from './learning-catalogue/model/audience'
 
 log4js.configure(config.LOGGING)
 
@@ -68,8 +69,9 @@ export class ApplicationContext {
 	youtubeModuleController: YoutubeModuleController
 	moduleValidator: Validator<Module>
 	eventValidator: Validator<Event>
-	audienceFactory: AudienceFactory
 	audienceController: AudienceController
+	audienceValidator: Validator<Audience>
+	audienceFactory: AudienceFactory
 	eventController: EventController
 	eventFactory: EventFactory
 	fileController: FileController
@@ -135,7 +137,7 @@ export class ApplicationContext {
 		this.youtubeService = new YoutubeService(this.youtubeConfig)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
-		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
+		this.moduleFactory = new ModuleFactory()
 		this.moduleValidator = new Validator<Module>(this.moduleFactory)
 		this.youtubeModuleController = new YoutubeModuleController(
 			this.learningCatalogue,
@@ -186,7 +188,13 @@ export class ApplicationContext {
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
 
-		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceFactory)
+		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
+		this.audienceController = new AudienceController(
+			this.learningCatalogue,
+			this.audienceValidator,
+			this.audienceFactory,
+			this.courseService
+		)
 	}
 
 	addToResponseLocals() {

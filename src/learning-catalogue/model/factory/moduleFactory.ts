@@ -1,4 +1,3 @@
-import {AudienceFactory} from './audienceFactory'
 import {EventFactory} from './eventFactory'
 import {FaceToFaceModule} from '../faceToFaceModule'
 import {VideoModule} from '../videoModule'
@@ -8,11 +7,9 @@ import {ELearningModule} from '../eLearningModule'
 import {Module} from '../module'
 
 export class ModuleFactory {
-	private audienceFactory: AudienceFactory
 	private eventFactory: EventFactory
 
-	constructor(audienceFactory: AudienceFactory, eventFactory: EventFactory) {
-		this.audienceFactory = audienceFactory
+	constructor(eventFactory: EventFactory = new EventFactory()) {
 		this.eventFactory = eventFactory
 
 		this.defaultCreate = this.defaultCreate.bind(this)
@@ -27,7 +24,6 @@ export class ModuleFactory {
 		module.duration = data.duration
 		module.price = data.price
 		module.optional = data.optional
-		module.audiences = (data.audiences || []).map(this.audienceFactory.create)
 
 		return module
 	}
