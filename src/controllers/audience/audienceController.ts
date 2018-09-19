@@ -54,7 +54,7 @@ export class AudienceController {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audience`)
 				})
 			} else {
-				const savedAudience = this.learningCatalogue.createAudience(req.params.courseId, audience)
+				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
 					res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
