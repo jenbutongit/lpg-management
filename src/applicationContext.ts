@@ -38,6 +38,7 @@ import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
+import {CourseService} from './lib/courseService'
 import {AudienceController} from './controllers/audience/audienceController'
 import {Audience} from './learning-catalogue/model/audience'
 import {CourseService} from './learning-catalogue/service/courseService'
@@ -121,7 +122,13 @@ export class ApplicationContext {
 		this.pagination = new Pagination()
 
 		this.courseValidator = new Validator<Course>(this.courseFactory)
-		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
+		this.courseService = new CourseService(this.learningCatalogue)
+		this.courseController = new CourseController(
+			this.learningCatalogue,
+			this.courseValidator,
+			this.courseFactory,
+			this.courseService
+		)
 
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()

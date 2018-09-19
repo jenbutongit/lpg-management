@@ -31,6 +31,7 @@
                 <h3 class="govuk-heading-s govuk-!-margin-bottom-1">Added modules</h3>
 
                 {% if modules.length > 0 %}
+                 
                     <ul class="list modules">
                         <li class="module-headers">
                             <p class="govuk-body header title"><strong>Module title</strong></p>
@@ -42,7 +43,8 @@
                     </ul>
                     <ul class="list modules" id="modules">
                         {% for module in modules %}
-                        <li class="list-details u--border--bgrey">
+                        {% set counter = ( counter | default(0) ) + 1 %}
+                        <li class="list-details u--border--bgrey draggable" id="{{ module.id }}" data-id={{counter}}>
                             <p class="govuk-body title">{{ module.title | default("Module", true) }}</p>
                             <p class="govuk-body type">{{ i18n[module.type] | default("Unknown Type", true) }}</p>
                             <p class="govuk-body added-on">{{ module.addedOn | default("23rd August 2018", true) }}</p>
@@ -117,11 +119,6 @@
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="/sortablejs/Sortable.js"></script>
-    <script>
-        var el = document.getElementById('modules');
-        var sortable = Sortable.create(el, {
-            handle: '.handle'
-        });
-    </script>
+    <script src="/js/reorderModules.js" courseid="{{course.id}}"></script>
 {% endblock %}
 
