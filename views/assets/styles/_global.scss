@@ -173,6 +173,10 @@ ul {
 	margin-bottom: 0;
 }
 
+.hidden {
+    display: none;
+}
+
 @media screen and (min-width: $tablet-small) {
 	.pager__controls {
 		font-size: $font-normal;

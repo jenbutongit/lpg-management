@@ -3,6 +3,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "checkboxes/macro.njk" import govukCheckboxes %}
 {% from "file-upload/macro.njk" import govukFileUpload %}
+{% from "warning-text/macro.njk" import govukWarningText %}
 
 {% extends "../../../component/Page.njk" %}
 
@@ -53,7 +54,6 @@
                   
 
             <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post">
-                <input name="type" type="hidden" value="file">
                 <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">
                 <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
                 <fieldset class="govuk-fieldset">
@@ -87,7 +87,7 @@
                     text: "Description"
                     },
                     errorMessage: {
-                    text: "Module title is required"
+                    text: "Module description is required"
                     }
                     }) }}
                     {% else %}
@@ -160,6 +160,14 @@
 
                 <p id="file-size"></p>
                 <p id="progress"></p>
+
+                <div id="file-size-warning" class="govuk-warning-text hidden">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This is a large file and may take some time to upload
+                    </strong>
+                </div>
 
                 {% if media is undefined %}
                     {{ govukButton({

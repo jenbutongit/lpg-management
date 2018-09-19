@@ -6,6 +6,7 @@ import {Validator} from '../../learning-catalogue/validator/validator'
 import {Module} from '../../learning-catalogue/model/module'
 import {RestService} from '../../learning-catalogue/service/restService'
 import * as config from '../../config'
+import * as fileType from '../../lib/fileType'
 
 export class FileController {
 	learningCatalogue: LearningCatalogue
@@ -69,11 +70,7 @@ export class FileController {
 				...req.body,
 			}
 
-			if (data.file.endsWith('.mp4')) {
-				data.type = 'video'
-			} else if (data.file.endsWith('.zip')) {
-				data.type = 'elearning'
-			}
+			data.type = fileType.getFileModuleType(data.file)
 
 			const course = response.locals.course
 			let module = await this.moduleFactory.create(data)
@@ -85,6 +82,7 @@ export class FileController {
 				file = await this.restService.get(`/${mediaId}`)
 			} else {
 				errors.fields.file = ['validation_module_mediaId_empty']
+				errors.size++
 			}
 
 			if (Object.keys(errors.fields).length != 0) {
@@ -104,9 +102,8 @@ export class FileController {
 				type: data.type,
 				title: data.title,
 				description: data.description,
-				file: data.file,
 				optional: data.isOptional || false,
-				duration: data.days * 86400 + data.hours * 3600 + data.minutes * 60,
+				duration: Math.abs(data.days * 86400) + Math.abs(data.hours * 3600) + Math.abs(data.minutes * 60),
 				fileSize: file.fileSizeKB,
 				mediaId: file.id,
 				url: config.CONTENT_URL + '/' + file.path,
