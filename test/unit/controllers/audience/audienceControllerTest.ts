@@ -1,5 +1,5 @@
-import * as chai from "chai"
-import {expect} from "chai"
+import * as chai from 'chai'
+import {expect} from 'chai'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import {beforeEach, describe} from 'mocha'
@@ -27,7 +27,12 @@ describe('AudienceController', function() {
 		audienceValidator = <Validator<Audience>>{}
 		audienceFactory = <AudienceFactory>{}
 
-		audienceController = new AudienceController(learningCatalogue, audienceValidator, audienceFactory, new CourseService(learningCatalogue))
+		audienceController = new AudienceController(
+			learningCatalogue,
+			audienceValidator,
+			audienceFactory,
+			new CourseService(learningCatalogue)
+		)
 
 		req = mockReq()
 		req.session!.save = callback => {

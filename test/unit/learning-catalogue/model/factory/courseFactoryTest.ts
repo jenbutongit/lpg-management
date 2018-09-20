@@ -51,7 +51,7 @@ describe('CourseFactory tests', () => {
 			description: description,
 			learningOutcomes: learningOutcomes,
 			modules: [moduleData],
-			audiences: [audienceData]
+			audiences: [audienceData],
 		}
 
 		const result: Course = courseFactory.create(data)
