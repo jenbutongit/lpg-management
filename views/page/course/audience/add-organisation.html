@@ -31,13 +31,13 @@
                 {% endif %}
                 
                 <div class="{{classNames}}">
-                    <p class="{{message}}">Select which organisations are included?</p>
+                    <p class="{{message}}">Select which organisations are included</p>
                     {{ govukRadios({
                         idPrefix: "audience-type",
                         name: "audience-type",
                         fieldset: {
                             legend: {
-                                text: "Which organisations are included in this audience",
+                                text: "Which organisations are included in this audience?",
                                 isPageHeading: true,
                                 classes: "govuk-fieldset__legend--s "
                             }
