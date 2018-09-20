@@ -14,6 +14,7 @@ export class Auth {
 	config: AuthConfig
 	passportStatic: PassportStatic
 	identityService: IdentityService
+	currentUser: Identity
 
 	constructor(
 		config: AuthConfig,
@@ -37,7 +38,7 @@ export class Auth {
 			this.redirect()
 		)
 
-		app.use(this.checkAuthenticated())
+		app.use(this.checkAuthenticatedAndAssignCurrentUser())
 		app.use(this.addToResponseLocals())
 	}
 
@@ -65,7 +66,7 @@ export class Auth {
 		)
 		this.passportStatic.use(strategy)
 
-		this.passportStatic.serializeUser((user, done) => {
+		this.passportStatic.serializeUser((user: any, done: any) => {
 			done(null, JSON.stringify(user))
 		})
 
@@ -94,9 +95,10 @@ export class Auth {
 		}
 	}
 
-	checkAuthenticated() {
+	checkAuthenticatedAndAssignCurrentUser() {
 		return (req: Request, res: Response, next: NextFunction) => {
 			if (req.isAuthenticated()) {
+				this.currentUser = req.user
 				return next()
 			}
 

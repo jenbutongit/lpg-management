@@ -8,20 +8,29 @@ import {expect} from 'chai'
 import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learningCatalogueConfig'
 import {RestService} from '../../../../src/learning-catalogue/service/restService'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import { Auth } from 'src/identity/auth';
 
 chai.use(chaiAsPromised)
 
 describe('RestService tests', () => {
 	let http: AxiosInstance
 	let config = new LearningCatalogueConfig({username: 'test-user', password: 'test-pass'}, 'http://example.org')
+	let auth = sinon.???
 	let restService: RestService
 
 	beforeEach(() => {
 		http = <AxiosInstance>{
 			defaults: {},
 		}
-		restService = new RestService(config)
+		restService = new RestService(config, auth)
 		restService.http = http
+	})
+
+	it('should inject access token to request', async () => {
+		
+		???
+
+		return expect(data).to.eql(response.data)
 	})
 
 	it('should return data from GET request', async () => {

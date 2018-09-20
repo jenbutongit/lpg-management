@@ -1,23 +1,23 @@
 import * as url from 'url'
 import axios, {AxiosInstance, AxiosResponse} from 'axios'
 import {LearningCatalogueConfig} from '../learningCatalogueConfig'
+import { Auth } from '../../identity/auth';
 
 export class RestService {
 	private _http: AxiosInstance
 	config: LearningCatalogueConfig
 
-	constructor(config: any) {
+	constructor(config: any, auth: Auth) {
 		this._http = axios.create({
 			baseURL: config.url,
-			auth: config.auth,
 			headers: {
 				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${auth.currentUser.accessToken}`
 			},
 			timeout: config.timeout,
 		})
 
 		this.config = config
-
 		this.post = this.post.bind(this)
 		this.get = this.get.bind(this)
 	}

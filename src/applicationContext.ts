@@ -192,7 +192,7 @@ export class ApplicationContext {
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
 
 		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
-		this.csrsService = new CsrsService(new RestService(this.csrsConfig))
+		this.csrsService = new CsrsService(new RestService(this.csrsConfig, this.auth))
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.audienceController = new AudienceController(
