@@ -42,6 +42,8 @@ export class Module {
 
 	optional: boolean
 
+	url: string
+
 	@ValidateNested({
 		groups: ['all', 'audiences'],
 	})

@@ -75,6 +75,7 @@ export class ModuleFactory {
 		elearning: (data: any) => {
 			const module = this.defaultCreate(new ELearningModule(), data)
 			module.startPage = data.startPage
+			module.url = data.url
 			return module
 		},
 	}
