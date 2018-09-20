@@ -12,8 +12,11 @@
         "name": {
           "empty": "Audience name is required",
           "maxLength": "Audience name must be 40 characters or less"
-        }
-      }
+        },
+			"type": {
+				"empty": "Audience type is required"
+			}
+		}
 	},
 	"blended": "Blended",
 	"content_management_title": "Content management",
