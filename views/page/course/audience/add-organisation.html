@@ -32,6 +32,13 @@
                 
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
+
+                    {% set typeaheadHtml %}
+                        <div class="typeahead-container">
+                            <label class="govuk-body no-margin" for="autocomplete">Name of organisation</label>
+                            <p class="govuk-hint">Start typing the name of the organisation</p>
+                        <div id="autocomplete-container"></div>
+                    {% endset -%}
                     {{ govukRadios({
                         idPrefix: "audience-type",
                         name: "audience-type",
@@ -45,19 +52,25 @@
                         items: [
                             {
                             value: "all",
-                            text: "All"
+                            text: "All",
+                            id: "all"
                             },
                             {
                             value: "selected",
-                            text: "Selected organisations only"
+                            text: "Selected organisations only",
+                            id: "selected",
+                                conditional: {
+                                    html: typeaheadHtml
+                                }
                             }
                         ]
-                    }) }}
-                    <div class="button-container">
-                        {{ govukButton({
-                            text: "Continue"
                         }) }}
-                    </div>
+                </div>
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
             </form>
             <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/configure-audience">Cancel</a>
         </div>
@@ -65,3 +78,11 @@
         </div>
     </div>
 {% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk-frontend/all.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+    <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" src="/js/add-organisation.js"></script>
+{% endblock %}
+
