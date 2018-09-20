@@ -1,5 +1,5 @@
-import * as chai from "chai"
-import {expect} from "chai"
+import * as chai from 'chai'
+import {expect} from 'chai'
 import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import {beforeEach, describe} from 'mocha'
@@ -27,7 +27,12 @@ describe('AudienceController', function() {
 		audienceValidator = <Validator<Audience>>{}
 		audienceFactory = <AudienceFactory>{}
 
-		audienceController = new AudienceController(learningCatalogue, audienceValidator, audienceFactory, new CourseService(learningCatalogue))
+		audienceController = new AudienceController(
+			learningCatalogue,
+			audienceValidator,
+			audienceFactory,
+			new CourseService(learningCatalogue)
+		)
 
 		req = mockReq()
 		req.session!.save = callback => {
@@ -76,7 +81,9 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.name'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			Object.is(req.session!.sessionFlash.errors, undefined)
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/audiences/type`)
+			expect(res.redirect).to.have.been.calledWith(
+				`/content-management/courses/${req.params.courseId}/audiences/type`
+			)
 		})
 	})
 
@@ -102,7 +109,9 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/audiences/type`)
+			expect(res.redirect).to.have.been.calledWith(
+				`/content-management/courses/${req.params.courseId}/audiences/type`
+			)
 		})
 
 		it('should redirect to course overview page if audience created successfully', async function() {

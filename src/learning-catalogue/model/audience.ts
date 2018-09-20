@@ -35,6 +35,6 @@ export namespace Audience {
 		OPEN,
 		CLOSED_COURSE,
 		PRIVATE_COURSE,
-		REQUIRED_LEARNING
+		REQUIRED_LEARNING,
 	}
 }
