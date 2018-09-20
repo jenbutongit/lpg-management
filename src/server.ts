@@ -30,19 +30,21 @@ app.use(
 	})
 )
 
-nunjucks.configure(
-	[
-		appRoot + '/views',
-		appRoot + '/node_modules/govuk-frontend/',
-		appRoot + '/node_modules/govuk-frontend/components',
-	],
-	{
-		autoescape: true,
-		express: app,
-	}
-).addFilter('jsonpath', function(object: any, path: string) {
-	return jsonpath.value(object, path)
-})
+nunjucks
+	.configure(
+		[
+			appRoot + '/views',
+			appRoot + '/node_modules/govuk-frontend/',
+			appRoot + '/node_modules/govuk-frontend/components',
+		],
+		{
+			autoescape: true,
+			express: app,
+		}
+	)
+	.addFilter('jsonpath', function(object: any, path: string) {
+		return jsonpath.value(object, path)
+	})
 
 app.set('view engine', 'html')
 
