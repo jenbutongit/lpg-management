@@ -10,6 +10,9 @@
 			"name": {
 				"empty": "Audience name is required",
 				"maxLength": "Audience name must be 40 characters or less"
+			},
+			"type": {
+				"empty": "Audience type is required"
 			}
 		}
 	},
