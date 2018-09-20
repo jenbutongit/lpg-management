@@ -36,6 +36,7 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audiences', this.setAudienceName())
 		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
 		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
+		this.router.get('/content-management/courses/:courseId/configure-audience', this.getConfigureAudience())
 	}
 
 	public getAudienceName() {
@@ -88,6 +89,12 @@ export class AudienceController {
 					res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
 				})
 			}
+		}
+	}
+
+	public getConfigureAudience() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
 		}
 	}
 }
