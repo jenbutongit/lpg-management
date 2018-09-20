@@ -2,7 +2,9 @@
 	"audience": {
 		"page_title": {
 			"add_name": "Add audience name",
-			"edit_name": "Edit audience name"
+			"edit_name": "Edit audience name",
+			"add_type": "Add audience type",
+			"edit_type": "Edit audience type"
 		},
 		"validation": {
 			"name": {
