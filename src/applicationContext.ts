@@ -45,6 +45,7 @@ import {CsrsService} from './csrs/service/csrsService'
 import {RestService} from './learning-catalogue/service/restService'
 import {CsrsConfig} from './csrs/csrsConfig'
 
+
 log4js.configure(config.LOGGING)
 
 export class ApplicationContext {

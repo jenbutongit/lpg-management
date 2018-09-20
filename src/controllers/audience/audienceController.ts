@@ -37,6 +37,8 @@ export class AudienceController {
 		this.router.get('/content-management/courses/:courseId/audience-type', this.getAudienceType())
 		this.router.post('/content-management/courses/:courseId/audience-type', this.setAudienceType())
 		this.router.get('/content-management/courses/:courseId/configure-audience', this.getConfigureAudience())
+		this.router.get('/content-management/courses/:courseId/add-organisation', this.getOrganisation())
+		this.router.post('/content-management/courses/:courseId/add-organisation', this.setOrganisation())
 	}
 
 	public getAudienceName() {
@@ -76,11 +78,23 @@ export class AudienceController {
 		return async (request: Request, response: Response) => {
 			const courseId = response.locals.course.id
 
-			return response.redirect(`/content-management/courses/${courseId}/audience-type/`)
+			return response.redirect(`/content-management/courses/${courseId}/add-organisation/`)
 		}
 	}
 
 	public getConfigureAudience() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
+
+	public getOrganisation() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/add-organisation')
+		}
+	}
+
+	public setOrganisation() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/audience/configure-audience')
 		}

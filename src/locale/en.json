@@ -5,7 +5,8 @@
 			"edit_name": "Edit audience name",
 			"add_type": "Add audience type",
 			"edit_type": "Edit audience type",
-			"configure_audience": "Configure audience"
+			"configure_audience": "Configure audience",
+			"add_organisation": "Add organisation"
 		},
 		"validation": {
 			"name": {
