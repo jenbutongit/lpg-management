@@ -85,7 +85,9 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.returned(errors)
 			Object.is(req.session!.sessionFlash.errors, undefined)
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(req.params.courseId, audience)
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/overview`)
+			expect(res.redirect).to.have.been.calledWith(
+				`/content-management/courses/${req.params.courseId}/audience-type`
+			)
 		})
 	})
 })
