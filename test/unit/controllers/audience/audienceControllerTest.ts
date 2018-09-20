@@ -11,6 +11,7 @@ import {Audience} from '../../../../src/learning-catalogue/model/audience'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
+import {AudienceService} from '../../../../src/lib/audienceService'
 
 chai.use(sinonChai)
 
@@ -31,7 +32,8 @@ describe('AudienceController', function() {
 			learningCatalogue,
 			audienceValidator,
 			audienceFactory,
-			new CourseService(learningCatalogue)
+			new CourseService(learningCatalogue),
+			new AudienceService(learningCatalogue)
 		)
 
 		req = mockReq()

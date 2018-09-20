@@ -4,24 +4,28 @@ import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {CourseService} from 'lib/courseService'
+import {AudienceService} from 'lib/audienceService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
 	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
 	courseService: CourseService
+	audienceService: AudienceService
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		audienceValidator: Validator<Audience>,
 		audienceFactory: AudienceFactory,
-		courseService: CourseService
+		courseService: CourseService,
+		audienceService: AudienceService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
 		this.audienceFactory = audienceFactory
 		this.courseService = courseService
+		this.audienceService = audienceService
 		this.router = Router()
 		this.configurePathParametersProcessing()
 		this.setRouterPaths()
@@ -29,6 +33,10 @@ export class AudienceController {
 
 	private configurePathParametersProcessing() {
 		this.router.param('courseId', this.courseService.findCourseByCourseIdAndAssignToResponseLocalsOrReturn404())
+		this.router.param(
+			'audienceId',
+			this.audienceService.findAudienceByAudienceIdAndAssignToResponseLocalsOrReturn404()
+		)
 	}
 
 	private setRouterPaths() {
@@ -36,9 +44,12 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audiences', this.setAudienceName())
 		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
 		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
-		this.router.get('/content-management/courses/:courseId/configure-audience', this.getConfigureAudience())
 		this.router.get('/content-management/courses/:courseId/add-organisation', this.getOrganisation())
 		this.router.post('/content-management/courses/:courseId/add-organisation', this.setOrganisation())
+		this.router.get(
+			'/content-management/courses/:courseId/audiences/:audienceId/configure',
+			this.getConfigureAudience()
+		)
 	}
 
 	public getAudienceName() {

@@ -40,11 +40,11 @@ import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
 import {AudienceController} from './controllers/audience/audienceController'
 import {CourseService} from './lib/courseService'
+import {AudienceService} from './lib/audienceService'
 import {Audience} from './learning-catalogue/model/audience'
 import {CsrsService} from './csrs/service/csrsService'
 import {RestService} from './learning-catalogue/service/restService'
 import {CsrsConfig} from './csrs/csrsConfig'
-
 
 log4js.configure(config.LOGGING)
 
@@ -84,10 +84,12 @@ export class ApplicationContext {
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
 	courseService: CourseService
+	audienceService: AudienceService
 	csrsConfig: CsrsConfig
 	csrsService: CsrsService
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -196,12 +198,14 @@ export class ApplicationContext {
 		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
 		this.csrsService = new CsrsService(new RestService(this.csrsConfig))
 
+		this.audienceService = new AudienceService(this.learningCatalogue)
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.audienceController = new AudienceController(
 			this.learningCatalogue,
 			this.audienceValidator,
 			this.audienceFactory,
-			this.courseService
+			this.courseService,
+			this.audienceService
 		)
 	}
 

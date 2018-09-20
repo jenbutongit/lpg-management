@@ -16,6 +16,12 @@
 			"type": {
 				"empty": "Audience type is required"
 			}
+		},
+		"type": {
+			"OPEN": "Open",
+			"CLOSED_COURSE": "Closed course",
+			"PRIVATE_COURSE": "Private course",
+			"REQUIRED_LEARNING": "Required learning"
 		}
 	},
 	"blended": "Blended",
