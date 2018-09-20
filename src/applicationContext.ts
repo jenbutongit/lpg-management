@@ -41,9 +41,9 @@ import {Event} from './learning-catalogue/model/event'
 import {CourseService} from './lib/courseService'
 import {AudienceController} from './controllers/audience/audienceController'
 import {Audience} from './learning-catalogue/model/audience'
-import {CsrsConfig} from '../test/unit/csrs/csrsConfig'
 import {CsrsService} from './csrs/service/csrsService'
 import {RestService} from './learning-catalogue/service/restService'
+import {CsrsConfig} from './csrs/csrsConfig'
 
 log4js.configure(config.LOGGING)
 
