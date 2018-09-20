@@ -5,6 +5,7 @@ import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {CourseService} from 'lib/courseService'
 import {AudienceService} from 'lib/audienceService'
+import {CsrsService} from '../../csrs/service/csrsService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -12,6 +13,7 @@ export class AudienceController {
 	audienceFactory: AudienceFactory
 	courseService: CourseService
 	audienceService: AudienceService
+	csrsService: CsrsService
 	router: Router
 
 	constructor(
@@ -19,13 +21,15 @@ export class AudienceController {
 		audienceValidator: Validator<Audience>,
 		audienceFactory: AudienceFactory,
 		courseService: CourseService,
-		audienceService: AudienceService
+		audienceService: AudienceService,
+		csrsService: CsrsService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
 		this.audienceFactory = audienceFactory
 		this.courseService = courseService
 		this.audienceService = audienceService
+		this.csrsService = csrsService
 		this.router = Router()
 		this.configurePathParametersProcessing()
 		this.setRouterPaths()
@@ -99,7 +103,7 @@ export class AudienceController {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience-type`)
 				})
 			}
 		}
@@ -113,7 +117,10 @@ export class AudienceController {
 
 	public getOrganisation() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/add-organisation')
+			const data = await this.csrsService.getOrganisations()
+			console.log(data)
+			const organisations = ['Matt', 'Mick', 'Peter']
+			response.render('page/course/audience/add-organisation', {organisations})
 		}
 	}
 
