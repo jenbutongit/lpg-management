@@ -26,16 +26,6 @@
 	}
 }
 
-.button-red {
-	background-color: $theme;
-	color: $white;
-	padding: 5px 10px;
-	border: none;
-
-	transition: background-color, 0.3s;
-	text-decoration: none;
-}
-
 .right-menu {
 	border: 1px solid $border;
 	border-top: 8px solid $theme;

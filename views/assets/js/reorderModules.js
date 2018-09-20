@@ -15,7 +15,6 @@ var sortable = Sortable.create(el, {
 			}
 		}
 
-		console.log(courseId)
 		var queryString = '/content-management/courses/' + courseId + '/sort-modules?' + order
 		var xhttp = new XMLHttpRequest()
 		xhttp.open('GET', queryString, true)
