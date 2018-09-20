@@ -12,7 +12,7 @@
         {{ phaseBanner("beta") }}
     {% endblock%}
     {% block backLink %}
-        {{ backLink("/content-management/courses/" + course.id + "/overview") }}
+        {{ backLink("/content-management/courses/" + course.id + "/configure-audience") }}
     {% endblock%}
 {% endblock %}
 
@@ -21,11 +21,6 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Organisation</h2>
-
-            {% for organisation in organisations %}
-            <li>{{ organisation}}</li>
-            {% endfor %}
-
             <form action="/content-management/courses/{{ course.id }}/add-organisation" method="post">
                 {% if errors.fields %}
                     {% set classNames = "govuk-fieldset audience-fieldset govuk-form-group--error" %}
@@ -37,7 +32,7 @@
                 
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
-                    
+
                     {% set typeaheadHtml %}
                         <div class="typeahead-container">
                             <label class="govuk-body no-margin" for="autocomplete">Name of organisation</label>
@@ -49,7 +44,7 @@
                         name: "audience-type",
                         fieldset: {
                             legend: {
-                                text: "Which organisations are included in this audience",
+                                text: "Which organisations are included in this audience?",
                                 isPageHeading: true,
                                 classes: "govuk-fieldset__legend--s "
                             }
@@ -77,6 +72,7 @@
                     }) }}
                 </div>
             </form>
+            <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/configure-audience">Cancel</a>
         </div>
         <div class="govuk-grid-column-one-third">
         </div>

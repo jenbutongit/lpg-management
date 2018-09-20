@@ -7,7 +7,6 @@ import {Validator} from '../learning-catalogue/validator/validator'
 import {Module} from '../learning-catalogue/model/module'
 import * as datetime from '../lib/datetime'
 import {CourseService} from '../lib/courseService'
-import * as util from 'util'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -61,8 +60,6 @@ export class CourseController {
 
 	public courseOverview() {
 		return async (request: Request, response: Response) => {
-			console.log('course overview page')
-			console.log(util.inspect(response.locals.course))
 			const faceToFaceModules = response.locals.course.modules.filter(
 				(module: Module) => module.type == Module.Type.FACE_TO_FACE
 			)
