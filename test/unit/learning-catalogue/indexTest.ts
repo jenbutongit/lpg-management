@@ -24,7 +24,7 @@ describe('Learning Catalogue tests', () => {
 	let cancellationPolicyService: EntityService<CancellationPolicy>
 	let termsAndConditionsService: EntityService<TermsAndConditions>
 
-	const config = new LearningCatalogueConfig({username: 'test-user', password: 'test-pass'}, 'http://example.org')
+	const config = new LearningCatalogueConfig('http://example.org')
 
 	let learningCatalogue: LearningCatalogue
 

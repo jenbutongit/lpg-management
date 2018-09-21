@@ -15,7 +15,7 @@ chai.use(chaiAsPromised)
 
 describe('RestService tests', () => {
 	let http: AxiosInstance
-	let config = new LearningCatalogueConfig({username: 'test-user', password: 'test-pass'}, 'http://example.org')
+	let config = new LearningCatalogueConfig('http://example.org')
 	let auth: Auth
 	let restService: RestService
 
@@ -170,4 +170,5 @@ describe('RestService tests', () => {
 
 		return expect(restService.delete(path)).to.be.rejectedWith(errorMessage)
 	})
+
 })

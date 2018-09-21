@@ -110,10 +110,6 @@ export class ApplicationContext {
 		)
 
 		this.learningCatalogueConfig = new LearningCatalogueConfig(
-			{
-				username: config.COURSE_CATALOGUE.auth.username,
-				password: config.COURSE_CATALOGUE.auth.password,
-			},
 			config.COURSE_CATALOGUE.url
 		)
 

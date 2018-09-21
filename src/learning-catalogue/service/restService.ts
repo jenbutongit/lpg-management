@@ -5,7 +5,7 @@ import { Auth } from '../../identity/auth';
 
 export class RestService {
 	private _http: AxiosInstance
-	config: LearningCatalogueConfig
+	config: any
 	auth: Auth
 
 	constructor(config: any, auth: Auth) {
@@ -25,7 +25,7 @@ export class RestService {
 
 	async post(path: string, resource: any) {
 		try {
-			const response: AxiosResponse = await this._http.post(path, resource)
+			const response: AxiosResponse = await this._http.post(path, resource, this.setAuthHeaders())
 
 			return this.get(url.parse(response.headers.location).path!)
 		} catch (e) {
@@ -66,6 +66,7 @@ export class RestService {
 	}
 
 	private setAuthHeaders() {
+	if (this.config instanceof LearningCatalogueConfig)
 		return {
 			headers: {
 				Authorization: `Bearer ${this.auth.currentUser.accessToken}`,
