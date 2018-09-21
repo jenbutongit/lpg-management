@@ -45,7 +45,6 @@ import {AudienceService} from './lib/audienceService'
 import {CsrsConfig} from './csrs/csrsConfig'
 import {CsrsService} from './csrs/service/csrsService'
 import {RestService} from './learning-catalogue/service/restService'
-import {CsrsConfig} from './csrs/csrsConfig'
 
 log4js.configure(config.LOGGING)
 
