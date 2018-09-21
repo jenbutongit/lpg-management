@@ -6,13 +6,14 @@ import { Auth } from '../../identity/auth';
 export class RestService {
 	private _http: AxiosInstance
 	config: LearningCatalogueConfig
+	auth: Auth
 
 	constructor(config: any, auth: Auth) {
+		this.auth = auth
 		this._http = axios.create({
 			baseURL: config.url,
 			headers: {
 				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${auth.currentUser.accessToken}`
 			},
 			timeout: config.timeout,
 		})
@@ -36,7 +37,7 @@ export class RestService {
 
 	async get(path: string) {
 		try {
-			return (await this._http.get(path)).data
+			return (await this._http.get(path, this.setAuthHeaders())).data
 		} catch (e) {
 			throw new Error(`Error with GET request: ${e} when getting ${this.config.url}${path}`)
 		}
@@ -44,7 +45,7 @@ export class RestService {
 
 	async put(path: string, resource: any) {
 		try {
-			return (await this._http.put(path, resource)).data
+			return (await this._http.put(path, resource, this.setAuthHeaders())).data
 		} catch (e) {
 			throw new Error(
 				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`
@@ -54,7 +55,7 @@ export class RestService {
 
 	async delete(path: string) {
 		try {
-			return await this._http.delete(path)
+			return await this._http.delete(path, this.setAuthHeaders())
 		} catch (e) {
 			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${path}`)
 		}
@@ -62,5 +63,13 @@ export class RestService {
 
 	set http(value: AxiosInstance) {
 		this._http = value
+	}
+
+	private setAuthHeaders() {
+		return {
+			headers: {
+				Authorization: `Bearer ${this.auth.currentUser.accessToken}`,
+			},
+		}
 	}
 }

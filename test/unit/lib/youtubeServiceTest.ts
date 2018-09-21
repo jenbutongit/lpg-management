@@ -6,6 +6,7 @@ import {RestService} from '../../../src/learning-catalogue/service/restService'
 import * as sinon from 'sinon'
 import * as config from '../../../src/config'
 import {expect} from 'chai'
+import {Auth} from "../../../src/identity/auth"
 
 chai.use(sinonChai)
 
@@ -13,14 +14,15 @@ describe('Youtube Service Test', function() {
 	let youtubeService: YoutubeService
 	let youtubeConfig: YoutubeConfig
 	let _restService: RestService
-
+	let auth: Auth
 	let youtubeResponse: any
 
 	beforeEach(() => {
 		youtubeConfig = <YoutubeConfig>{}
 		_restService = <RestService>{}
+		auth = <Auth>{}
 
-		youtubeService = new YoutubeService(youtubeConfig)
+		youtubeService = new YoutubeService(youtubeConfig, auth)
 		youtubeService._restService = _restService
 
 		youtubeResponse = {

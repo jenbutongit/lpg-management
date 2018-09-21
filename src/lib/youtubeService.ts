@@ -3,17 +3,20 @@ import * as datetime from './datetime'
 import {YoutubeConfig} from 'lib/youtubeConfig'
 import {RestService} from '../learning-catalogue/service/restService'
 import * as log4js from 'log4js'
+import {Auth} from "../identity/auth"
 
 const logger = log4js.getLogger('learning-catalogue/service/restService')
 
 export class YoutubeService {
 	youtubeConfig: YoutubeConfig
 	_restService: RestService
+	auth: Auth
 
-	constructor(youtubeConfig: YoutubeConfig) {
+	constructor(youtubeConfig: YoutubeConfig, auth: Auth) {
 		this.youtubeConfig = youtubeConfig
+		this.auth = auth
 
-		this._restService = new RestService(youtubeConfig)
+		this._restService = new RestService(youtubeConfig, this.auth)
 	}
 
 	async getYoutubeResponse(url: string) {

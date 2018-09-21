@@ -16,6 +16,7 @@ import {AudienceFactory} from './model/factory/audienceFactory'
 import {EventFactory} from './model/factory/eventFactory'
 import {Event} from './model/event'
 import {Audience} from './model/audience'
+import {Auth} from "../identity/auth"
 
 export class LearningCatalogue {
 	private _eventService: EntityService<Event>
@@ -27,8 +28,8 @@ export class LearningCatalogue {
 	private _termsAndConditionsService: EntityService<TermsAndConditions>
 	private _restService: RestService
 
-	constructor(config: LearningCatalogueConfig) {
-		this._restService = new RestService(config)
+	constructor(config: LearningCatalogueConfig, auth: Auth) {
+		this._restService = new RestService(config, auth)
 
 		this._eventService = new EntityService<Event>(this._restService, new EventFactory())
 

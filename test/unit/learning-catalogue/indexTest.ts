@@ -12,6 +12,7 @@ import {LearningProvider} from '../../../src/learning-catalogue/model/learningPr
 import {CancellationPolicy} from '../../../src/learning-catalogue/model/cancellationPolicy'
 import {TermsAndConditions} from '../../../src/learning-catalogue/model/termsAndConditions'
 import {EntityService} from '../../../src/learning-catalogue/service/entityService'
+import {Auth} from "../../../src/identity/auth"
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -34,7 +35,7 @@ describe('Learning Catalogue tests', () => {
 		cancellationPolicyService = <EntityService<CancellationPolicy>>{}
 		termsAndConditionsService = <EntityService<TermsAndConditions>>{}
 
-		learningCatalogue = new LearningCatalogue(config)
+		learningCatalogue = new LearningCatalogue(config, {} as Auth)
 		learningCatalogue.courseService = courseService
 		learningCatalogue.moduleService = moduleService
 		learningCatalogue.learningProviderService = learningProviderService

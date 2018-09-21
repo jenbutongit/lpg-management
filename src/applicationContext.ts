@@ -117,7 +117,7 @@ export class ApplicationContext {
 			config.COURSE_CATALOGUE.url
 		)
 
-		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
+		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
 
@@ -136,8 +136,8 @@ export class ApplicationContext {
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
-		this.youtubeConfig = new YoutubeConfig('', 15000)
-		this.youtubeService = new YoutubeService(this.youtubeConfig)
+		this.youtubeConfig = new YoutubeConfig(15000)
+		this.youtubeService = new YoutubeService(this.youtubeConfig, this.auth)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory()

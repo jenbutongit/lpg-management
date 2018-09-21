@@ -98,7 +98,7 @@ export class Auth {
 	checkAuthenticatedAndAssignCurrentUser() {
 		return (req: Request, res: Response, next: NextFunction) => {
 			if (req.isAuthenticated()) {
-				this.currentUser = req.user
+				this.currentUser = req.user as Identity
 				return next()
 			}
 
