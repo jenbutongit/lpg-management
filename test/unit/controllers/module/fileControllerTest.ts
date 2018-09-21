@@ -74,11 +74,14 @@ describe('File Controller Test', function() {
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 
 		request.body.mediaId = 'mediaId'
-		request.body.file = 'file.pdf'
-		request.body.type = 'file'
-		mediaRestService.get = sinon
-			.stub()
-			.returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
+		request.body.file = 'file.mp4'
+		request.body.type = 'video'
+		mediaRestService.get = sinon.stub().returns({
+			id: 'mediaId',
+			fileSizeKB: 1000,
+			path: '/location',
+			metadata: {duration: 5.0},
+		})
 
 		learningCatalogue.createModule = sinon.stub()
 
