@@ -1,0 +1,29 @@
+{% if faceToFaceModules.length > 0 %}
+    <p class="govuk-body">Only modules which allow events are shown below.</p>
+{% else %}
+    <p class="govuk-body">No modules which allow events are part of the course.</p>
+{% endif %}
+
+{% for module in faceToFaceModules %}
+    <div class="module-container-small">
+        <div class="title-container">
+            <p class="govuk-body no-margin"><strong>{{ module.title | default(course.title, true) }}</strong></p>
+             <a class="govuk-body govuk-link" href="/content-management/courses/{{  course.id }}/modules/{{ module.id }}/events/">Add new event</a>               
+        </div>
+        {% if module.events.length > 0 %}
+            <h3 class="govuk-heading-s">Event details</h3>
+            <ul class="list">
+                {% for event in module.events %}
+                    <li class="module-item list-item u--border--bgrey">
+                        <div class="title-container">
+                            <p class="govuk-body no-margin">{{ event.venue.location | default("title not set") }}, {{ event.dateRanges[0].date |  default("date not set")}}</p>
+                            <a href="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events-overview/{{ event.id }}" class="govuk-body govuk-link">View</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="govuk-body">This module does not yet have any associated events.</p>
+        {% endif %}
+    </div>
+{% endfor %}

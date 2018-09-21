@@ -17,6 +17,12 @@
 	color: $white;
 }
 
+.govuk-grid-column-two-thirds {
+	.govuk-heading-m {
+		padding-top: 0;
+	}
+}
+
 .govuk-header__container {
 	border-color: $theme;
 }
@@ -37,7 +43,7 @@ ul {
 
 .right-menu {
 	border: 1px solid $border;
-	border-top: 4px solid $theme;
+	border-top: 8px solid $theme;
 	margin-bottom: 50px;
 
 	.menu-header {
@@ -56,6 +62,7 @@ ul {
 	width: 100%;
 	justify-content: space-between;
 	flex-direction: row-reverse;
+	padding: 15px 0;
 }
 
 .font-bold {
@@ -93,7 +100,7 @@ ul {
 	.panel-links {
 		font-weight: bold;
 		color: $white;
-		margin: 0 2px;
+		margin: 0 10px;
 	}
 }
 
@@ -118,7 +125,78 @@ ul {
 	color: $white;
 }
 
+.btn {
+	display: none;
+}
+
+.js-enabled {
+	.add-file-form {
+		span {
+			font-size: $font-mobile;
+		}
+
+		.btn {
+			border: 2px solid $font-color;
+			color: $font-color;
+			background-color: white;
+			padding: 8px;
+			border-radius: 5px;
+			font-size: $font-mobile;
+			font-weight: bold;
+			display: inline-block;
+			cursor: pointer;
+		}
+
+		.custom-uploader {
+			width: 0.1px;
+			height: 0.1px;
+			opacity: 0;
+			overflow: hidden;
+			position: absolute;
+			z-index: -1;
+
+			&:focus {
+				& + label {
+					outline: 3px solid #ffbf47;
+				}
+			}
+		}
+	}
+}
+
+.course-table {
+	.govuk-table__header {
+		width: 50%;
+		padding: 15px 20px 15px 0;
+	}
+}
+
+.no-margin {
+	margin-bottom: 0;
+}
+
+.button-red {
+	background-color: $theme;
+	color: $white;
+	padding: 5px 10px;
+	border: none;
+	text-decoration: none;
+
+	&:focus {
+		background-color: $theme;
+	}
+
+	&:hover {
+		background-color: $theme;
+	}
+}
+
 @media screen and (min-width: $tablet-small) {
+	.govuk-input,
+	.govuk-textarea {
+		width: 75%;
+	}
+
 	.pager__controls {
 		font-size: $font-normal;
 	}

@@ -1,18 +1,15 @@
-import {AudienceFactory} from './audienceFactory'
 import {EventFactory} from './eventFactory'
 import {FaceToFaceModule} from '../faceToFaceModule'
 import {VideoModule} from '../videoModule'
 import {LinkModule} from '../linkModule'
 import {FileModule} from '../fileModule'
 import {ELearningModule} from '../eLearningModule'
-import {Module} from "../module";
+import {Module} from '../module'
 
 export class ModuleFactory {
-	private audienceFactory: AudienceFactory
 	private eventFactory: EventFactory
 
-	constructor(audienceFactory: AudienceFactory, eventFactory: EventFactory) {
-		this.audienceFactory = audienceFactory
+	constructor(eventFactory: EventFactory = new EventFactory()) {
 		this.eventFactory = eventFactory
 
 		this.defaultCreate = this.defaultCreate.bind(this)
@@ -27,7 +24,6 @@ export class ModuleFactory {
 		module.duration = data.duration
 		module.price = data.price
 		module.optional = data.optional
-		module.audiences = (data.audiences || []).map(this.audienceFactory.create)
 
 		return module
 	}
@@ -50,7 +46,7 @@ export class ModuleFactory {
 		link: (data: any) => {
 			const module = this.defaultCreate(new LinkModule(), data)
 			module.id = data.id
-			module.title = data.moduleTitle
+			module.title = data.title
 			module.description = data.description
 			module.url = data.url
 			module.duration = data.duration

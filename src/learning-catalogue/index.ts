@@ -14,10 +14,14 @@ import {CourseFactory} from './model/factory/courseFactory'
 import {ModuleFactory} from './model/factory/moduleFactory'
 import {AudienceFactory} from './model/factory/audienceFactory'
 import {EventFactory} from './model/factory/eventFactory'
+import {Event} from './model/event'
+import {Audience} from './model/audience'
 
 export class LearningCatalogue {
+	private _eventService: EntityService<Event>
 	private _moduleService: EntityService<Module>
 	private _courseService: EntityService<Course>
+	private _audienceService: EntityService<Audience>
 	private _learningProviderService: EntityService<LearningProvider>
 	private _cancellationPolicyService: EntityService<CancellationPolicy>
 	private _termsAndConditionsService: EntityService<TermsAndConditions>
@@ -25,12 +29,14 @@ export class LearningCatalogue {
 
 	constructor(config: LearningCatalogueConfig) {
 		this._restService = new RestService(config)
-		this._moduleService = new EntityService<Module>(
-			this._restService,
-			new ModuleFactory(new AudienceFactory(), new EventFactory())
-		)
+
+		this._eventService = new EntityService<Event>(this._restService, new EventFactory())
+
+		this._moduleService = new EntityService<Module>(this._restService, new ModuleFactory())
 
 		this._courseService = new EntityService<Course>(this._restService, new CourseFactory())
+
+		this._audienceService = new EntityService<Audience>(this._restService, new AudienceFactory())
 
 		this._learningProviderService = new EntityService<LearningProvider>(
 			this._restService,
@@ -70,6 +76,22 @@ export class LearningCatalogue {
 
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
 		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
+	}
+
+	async createEvent(courseId: string, moduleId: string, event: Event): Promise<Event> {
+		return this._eventService.create(`/courses/${courseId}/modules/${moduleId}/events`, event)
+	}
+
+	async getEvent(courseId: string, moduleId: string, eventId: string): Promise<Event> {
+		return this._eventService.get(`/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+	}
+
+	async updateEvent(courseId: string, moduleId: string, eventId: string, event: Event): Promise<Event> {
+		return this._eventService.update(`/courses/${courseId}/modules/${moduleId}/events/${eventId}`, event)
+	}
+
+	async createAudience(courseId: string, audience: Audience) {
+		return this._audienceService.create(`courses/${courseId}/audiences`, audience)
 	}
 
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
