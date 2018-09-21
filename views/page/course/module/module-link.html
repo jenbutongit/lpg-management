@@ -17,6 +17,11 @@
 {% endblock %}
 
 {% block content %}
+
+    {% set errors = sessionFlash.errors %}
+
+    {{ errorSummary(errors.fields) }}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
@@ -29,8 +34,8 @@
                     label: {
                         text: "Module title"
                     },
-                    id: "moduleTitle",
-                    name: "moduleTitle"
+                    id: "title",
+                    name: "title"
                     }) }}
 
                     {{ govukTextarea({
@@ -79,8 +84,8 @@
                     </div>
                 </fieldset>
                     {{ govukCheckboxes({
-                        idPrefix: "isOptional",
-                        name: "isOptional",
+                        idPrefix: "optional",
+                        name: "optional",
                         classes: "font-light",
                         fieldset: {
                             legend: {
@@ -99,7 +104,7 @@
 
                 {{ govukButton({
                 text: "Add item",
-                classes: "button-blue"
+                classes: "button-blue left-aligned"
                 }) }}
             </form>
 

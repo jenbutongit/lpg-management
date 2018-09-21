@@ -1,28 +1,30 @@
 import {Request, Response, Router} from 'express'
 import {ContentRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
-import * as log4js from 'log4js'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {Validator} from '../learning-catalogue/validator/validator'
-import {Module} from "../learning-catalogue/model/module";
-
-const logger = log4js.getLogger('controllers/courseController')
+import {Module} from '../learning-catalogue/model/module'
+import * as datetime from '../lib/datetime'
+import {CourseService} from '../lib/courseService'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
 	courseValidator: Validator<Course>
 	courseFactory: CourseFactory
 	router: Router
+	courseService: CourseService
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		courseValidator: Validator<Course>,
-		courseFactory: CourseFactory
+		courseFactory: CourseFactory,
+		courseService: CourseService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.courseValidator = courseValidator
 		this.courseFactory = courseFactory
+		this.courseService = courseService
 		this.router = Router()
 
 		this.getCourseFromRouterParamAndSetOnLocals()
@@ -52,19 +54,27 @@ export class CourseController {
 
 		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
+
+		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
 	}
 
 	public courseOverview() {
-		logger.debug('Course Overview page')
-
 		return async (request: Request, response: Response) => {
-			const faceToFaceModules = response.locals.course.modules.filter((module: Module) => module.type == Module.Type.FACE_TO_FACE);
+			const faceToFaceModules = response.locals.course.modules.filter(
+				(module: Module) => module.type == Module.Type.FACE_TO_FACE
+			)
 			response.render('page/course/course-overview', {faceToFaceModules})
 		}
 	}
 
 	public coursePreview() {
 		return async (request: Request, response: Response) => {
+			const modules: Module[] = response.locals.course.modules
+
+			for (let module of modules) {
+				module.formattedDuration = datetime.formatDuration(module.duration)
+			}
+
 			response.render('page/course/course-preview')
 		}
 	}
@@ -79,20 +89,23 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors}
-				return response.redirect('/content-management/courses/title')
+				request.session!.sessionFlash = {errors}
+				request.session!.save(() => {
+					response.redirect('/content-management/courses/title')
+				})
+			} else {
+				if (request.params.courseId) {
+					await this.editCourse(request, response)
+
+					return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
+				}
+
+				const course = this.courseFactory.create(request.body)
+				request.session!.sessionFlash = {course}
+				request.session!.save(() => {
+					response.redirect('/content-management/courses/details')
+				})
 			}
-
-			if (request.params.courseId) {
-				await this.editCourse(request, response)
-
-				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
-			}
-
-			const course = this.courseFactory.create(request.body)
-			request.session!.sessionFlash = {course: course}
-
-			return response.redirect('/content-management/courses/details')
 		}
 	}
 
@@ -133,6 +146,13 @@ export class CourseController {
 		}
 	}
 
+	public sortModules() {
+		return async (request: Request, response: Response) => {
+			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
+			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
+		}
+	}
+
 	private async editCourse(request: Request, response: Response) {
 		const data = {
 			...request.body,
@@ -142,6 +162,7 @@ export class CourseController {
 			shortDescription: request.body.shortDescription || response.locals.course.shortDescription,
 			learningOutcomes: request.body.learningOutcomes || response.locals.course.learningOutcomes,
 			modules: request.body.modules || response.locals.course.modules,
+			audiences: request.body.audiences || response.locals.course.audiences,
 		}
 
 		const course = this.courseFactory.create(data)

@@ -1,4 +1,23 @@
 {
+	"audience": {
+		"page_title": {
+          "add_name": "Add audience name",
+          "edit_name": "Edit audience name",
+          "add_type": "Add audience type",
+          "edit_type": "Edit audience type",
+          "configure_audience": "Configure audience",
+          "add_organisation": "Add organisation"
+        },
+      "validation": {
+        "name": {
+          "empty": "Audience name is required",
+          "maxLength": "Audience name must be 40 characters or less"
+        },
+			"type": {
+				"empty": "Audience type is required"
+			}
+		}
+	},
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
@@ -7,17 +26,24 @@
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_details_add_title": "Add course details",
 	"course_title_add_title": "Add course title",
+	"course_title_edit_title": "Edit course title",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
+	"event_add_title": "Add event date & time",
+	"event_add_location": "Event location and availability",
+	"event_overview": "Event overview",
 	"face-to-face": "Face to Face",
+	"link": "Link",
+	"elearning": "e-learning",
+	"file": "File",
 	"learning_provider_add_title": "Add learning provider",
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",
 	"learning_providers_title": "Learning providers",
-	"link": "Link",
 	"module_add_title": "Add a module",
 	"module_link_add_title": "Add a link",
 	"module_youtube_add_title": "Add a YouTube video",
+	"module_face_to_face_add": "Add a classroom module",
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
@@ -35,7 +61,14 @@
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
 	"validation_module_title_empty": "Title is required",
+	"validation.module.duration.empty": "Duration is required",
+	"validation.module.duration.positive": "Duration must be positive",
+	"validation.module.description.empty": "Description is required",
 	"validation_module_video_notFound": "There was a problem finding this video",
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
+	"validation_module_event_dateRanges_empty": "Start date is required",
+	"validation_module_event_dateRanges_past": "Start date must be in the future",
+	"validation_module_event_dateRanges_endBeforeStart": "Start time must be before end time",
+	"validation_module_event_date_invalid": "Start date is not valid",
 	"video": "Video"
 }

@@ -51,4 +51,10 @@ export class ModuleController {
 			return response.redirect(`/content-management/courses/${courseId}/module-${moduleType}`)
 		}
 	}
+
+	public addFile() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/module-file')
+		}
+	}
 }
