@@ -119,15 +119,17 @@ describe('AudienceController', function() {
 			)
 		})
 
-		it('should redirect to course overview page if audience created successfully', async function() {
-			req.params.courseId = 'course-id'
+		it('should redirect to audience configuration page if audience created successfully', async function() {
+			const courseId = 'course-id'
+			req.params.courseId = courseId
 			req.body = {name: 'audience name', type: 'OPEN'}
 
 			const errors = {size: 0}
 			audienceValidator.check = sinon.stub().returns(errors)
 			const audience = <Audience>{}
 			audienceFactory.create = sinon.stub().returns(audience)
-			learningCatalogue.createAudience = sinon.stub()
+			const newAudienceId = 'audience-id'
+			learningCatalogue.createAudience = sinon.stub().returns({id: newAudienceId})
 
 			await audienceController.setAudienceType()(req, res)
 
@@ -135,7 +137,9 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.returned(errors)
 			Object.is(req.session!.sessionFlash.errors, undefined)
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(req.params.courseId, audience)
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/overview`)
+			expect(res.redirect).to.have.been.calledWith(
+				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
+			)
 		})
 	})
 })
