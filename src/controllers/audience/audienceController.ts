@@ -36,13 +36,18 @@ export class AudienceController {
 	}
 
 	private setRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/audiences', this.getAudienceName())
-		this.router.post('/content-management/courses/:courseId/audiences', this.setAudienceName())
-		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
-		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
-		this.router.get('/content-management/courses/:courseId/configure-audience', this.getConfigureAudience())
-		this.router.get('/content-management/courses/:courseId/add-organisation', this.getOrganisation())
-		this.router.post('/content-management/courses/:courseId/add-organisation', this.setOrganisation())
+		this.router.get('/content-management/courses/:courseId/audience/audience-name', this.getAudienceName())
+		this.router.post('/content-management/courses/:courseId/audience/audience-name', this.setAudienceName())
+		this.router.get('/content-management/courses/:courseId/audience/audience-type', this.getAudienceType())
+		this.router.post('/content-management/courses/:courseId/audience/audience-type', this.setAudienceType())
+		this.router.get(
+			'/content-management/courses/:courseId/audience/configure-audience',
+			this.getConfigureAudience()
+		)
+		this.router.get('/content-management/courses/:courseId/audience/add-organisation', this.getOrganisation())
+		this.router.post('/content-management/courses/:courseId/audience/add-organisation', this.setOrganisation())
+		this.router.get('/content-management/courses/:courseId/audience/add-area-of-work', this.getAreasOfWork())
+		this.router.post('/content-management/courses/:courseId/audience/add-area-of-work', this.setAreasOfWork())
 	}
 
 	public getAudienceName() {
@@ -60,20 +65,21 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-name`)
 				})
 			} else {
-				req.session!.sessionFlash = {audienceName: audience.name}
+				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
+				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
 				})
 			}
 		}
 	}
 
 	public getAudienceType() {
-		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/audience-type')
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/audience-type')
 		}
 	}
 
@@ -86,13 +92,13 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audienceName: audience.name}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audience-type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
 				})
 			}
 		}
@@ -106,9 +112,7 @@ export class AudienceController {
 
 	public getOrganisation() {
 		return async (request: Request, response: Response) => {
-			const data = await this.csrsService.getOrganisations()
-			console.log(data)
-			const organisations = ['Matt', 'Mick', 'Peter']
+			const organisations = await this.csrsService.getOrganisations()
 			response.render('page/course/audience/add-organisation', {organisations})
 		}
 	}
@@ -118,4 +122,24 @@ export class AudienceController {
 			response.render('page/course/audience/configure-audience')
 		}
 	}
+
+	public getAreasOfWork() {
+		return async (request: Request, response: Response) => {
+			const areasOfWork = await this.csrsService.getAreasOfWork()
+
+			response.render('page/course/audience/add-area-of-work', {areasOfWork})
+		}
+	}
+
+	public setAreasOfWork() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
+
+	// Mick - these should give you the rest of the data you need from csrs
+	// You will still need to parse the data to grab the names using the getNameFromNodeData() function on line 103
+	// const grades = await this.csrsService.getNode('grades')
+	// const jobRoles = await this.csrsService.getNode('jobRoles')
+	// const interests = await this.csrsService.getNode('interests')
 }

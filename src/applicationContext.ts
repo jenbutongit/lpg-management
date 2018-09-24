@@ -44,6 +44,7 @@ import {CourseService} from './lib/courseService'
 import {CsrsConfig} from './csrs/csrsConfig'
 import {CsrsService} from './csrs/service/csrsService'
 import {RestService} from './learning-catalogue/service/restService'
+
 log4js.configure(config.LOGGING)
 
 export class ApplicationContext {
@@ -85,7 +86,8 @@ export class ApplicationContext {
 	csrsConfig: CsrsConfig
 	csrsService: CsrsService
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
