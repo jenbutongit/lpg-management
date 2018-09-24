@@ -4,6 +4,7 @@ import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {CourseService} from 'lib/courseService'
+import {AudienceService} from 'lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
 
 export class AudienceController {
@@ -11,6 +12,7 @@ export class AudienceController {
 	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
 	courseService: CourseService
+	audienceService: AudienceService
 	csrsService: CsrsService
 	router: Router
 
@@ -19,12 +21,14 @@ export class AudienceController {
 		audienceValidator: Validator<Audience>,
 		audienceFactory: AudienceFactory,
 		courseService: CourseService,
+		audienceService: AudienceService,
 		csrsService: CsrsService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
 		this.audienceFactory = audienceFactory
 		this.courseService = courseService
+		this.audienceService = audienceService
 		this.csrsService = csrsService
 		this.router = Router()
 		this.configurePathParametersProcessing()
@@ -33,15 +37,21 @@ export class AudienceController {
 
 	private configurePathParametersProcessing() {
 		this.router.param('courseId', this.courseService.findCourseByCourseIdAndAssignToResponseLocalsOrReturn404())
+		this.router.param(
+			'audienceId',
+			this.audienceService.findAudienceByAudienceIdAndAssignToResponseLocalsOrReturn404()
+		)
 	}
 
 	private setRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/audience/audience-name', this.getAudienceName())
-		this.router.post('/content-management/courses/:courseId/audience/audience-name', this.setAudienceName())
-		this.router.get('/content-management/courses/:courseId/audience/audience-type', this.getAudienceType())
-		this.router.post('/content-management/courses/:courseId/audience/audience-type', this.setAudienceType())
+		this.router.get('/content-management/courses/:courseId/audiences', this.getAudienceName())
+		this.router.post('/content-management/courses/:courseId/audiences', this.setAudienceName())
+		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
+		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
+		this.router.get('/content-management/courses/:courseId/add-organisation', this.getOrganisation())
+		this.router.post('/content-management/courses/:courseId/add-organisation', this.setOrganisation())
 		this.router.get(
-			'/content-management/courses/:courseId/audience/configure-audience',
+			'/content-management/courses/:courseId/audiences/:audienceId/configure',
 			this.getConfigureAudience()
 		)
 		this.router.get('/content-management/courses/:courseId/audience/add-organisation', this.getOrganisation())
@@ -65,13 +75,13 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-name`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
 				})
 			}
 		}
@@ -92,13 +102,15 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audienceName: audience.name}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
+					res.redirect(
+						`/content-management/courses/${req.params.courseId}/audiences/${savedAudience.id}/configure`
+					)
 				})
 			}
 		}

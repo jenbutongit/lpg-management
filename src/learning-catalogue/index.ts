@@ -91,7 +91,11 @@ export class LearningCatalogue {
 	}
 
 	async createAudience(courseId: string, audience: Audience) {
-		return this._audienceService.create(`courses/${courseId}/audiences`, audience)
+		return this._audienceService.create(`/courses/${courseId}/audiences`, audience)
+	}
+
+	async getAudience(courseId: string, audienceId: string): Promise<Audience> {
+		return this._audienceService.get(`/courses/${courseId}/audiences/${audienceId}`)
 	}
 
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
