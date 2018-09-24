@@ -115,8 +115,7 @@
                     </div>
                 {% endif %}
             </div>
-        </div>
-        <div class="button-container">
+             <div class="button-container">
             <a class="govuk-body govuk-link return-link" href="/content-management/courses/{{ course.id }}/overview">Return to event overview page</a>
             {{ govukButton({
                 href: "/content-management/courses/" + course.id + "/audiences/" + audience.id + "/delete",
@@ -124,5 +123,7 @@
                 classes: "button-red"
             }) }}
         </div>
+        </div>
+       
     </div>
 {% endblock %}
