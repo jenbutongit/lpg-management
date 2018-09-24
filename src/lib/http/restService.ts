@@ -1,7 +1,6 @@
 import * as url from 'url'
 import axios, {AxiosInstance, AxiosResponse} from 'axios'
-import {LearningCatalogueConfig} from '../learningCatalogueConfig'
-import { Auth } from '../../identity/auth';
+import {Auth} from '../../identity/auth'
 
 export class RestService {
 	private _http: AxiosInstance
@@ -12,9 +11,6 @@ export class RestService {
 		this.auth = auth
 		this._http = axios.create({
 			baseURL: config.url,
-			headers: {
-				'Content-Type': 'application/json',
-			},
 			timeout: config.timeout,
 		})
 
@@ -23,9 +19,13 @@ export class RestService {
 		this.get = this.get.bind(this)
 	}
 
+	protected setHeaders() {
+		return {}
+	}
+
 	async post(path: string, resource: any) {
 		try {
-			const response: AxiosResponse = await this._http.post(path, resource, this.setAuthHeaders())
+			const response: AxiosResponse = await this._http.post(path, resource, this.setHeaders())
 
 			return this.get(url.parse(response.headers.location).path!)
 		} catch (e) {
@@ -37,7 +37,7 @@ export class RestService {
 
 	async get(path: string) {
 		try {
-			return (await this._http.get(path, this.setAuthHeaders())).data
+			return (await this._http.get(path, this.setHeaders())).data
 		} catch (e) {
 			throw new Error(`Error with GET request: ${e} when getting ${this.config.url}${path}`)
 		}
@@ -45,7 +45,7 @@ export class RestService {
 
 	async put(path: string, resource: any) {
 		try {
-			return (await this._http.put(path, resource, this.setAuthHeaders())).data
+			return (await this._http.put(path, resource, this.setHeaders())).data
 		} catch (e) {
 			throw new Error(
 				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`
@@ -55,7 +55,7 @@ export class RestService {
 
 	async delete(path: string) {
 		try {
-			return await this._http.delete(path, this.setAuthHeaders())
+			return await this._http.delete(path, this.setHeaders())
 		} catch (e) {
 			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${path}`)
 		}
@@ -63,14 +63,5 @@ export class RestService {
 
 	set http(value: AxiosInstance) {
 		this._http = value
-	}
-
-	private setAuthHeaders() {
-	if (this.config instanceof LearningCatalogueConfig)
-		return {
-			headers: {
-				Authorization: `Bearer ${this.auth.currentUser.accessToken}`,
-			},
-		}
 	}
 }

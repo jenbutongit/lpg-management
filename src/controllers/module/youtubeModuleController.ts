@@ -2,9 +2,9 @@ import {Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {ContentRequest} from '../../extended'
-import {YoutubeService} from '../../lib/youtubeService'
 import {Module} from '../../learning-catalogue/model/module'
 import {Validator} from '../../learning-catalogue/validator/validator'
+import {YoutubeService} from '../../youtube/youtubeService'
 
 export class YoutubeModuleController {
 	learningCatalogue: LearningCatalogue

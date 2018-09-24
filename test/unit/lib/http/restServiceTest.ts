@@ -6,14 +6,14 @@ import * as chai from 'chai'
 
 import {expect} from 'chai'
 import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learningCatalogueConfig'
-import {RestService} from '../../../../src/learning-catalogue/service/restService'
 import {Course} from '../../../../src/learning-catalogue/model/course'
-import { Auth } from 'src/identity/auth';
-import {Identity} from "../../../../src/identity/identity"
+import {Auth} from 'src/identity/auth'
+import {Identity} from '../../../../src/identity/identity'
+import {RestService} from '../../../../src/lib/http/restService'
 
 chai.use(chaiAsPromised)
 
-describe('RestService tests', () => {
+describe('YoutubeRestService tests', () => {
 	let http: AxiosInstance
 	let config = new LearningCatalogueConfig('http://example.org')
 	let auth: Auth
@@ -170,5 +170,4 @@ describe('RestService tests', () => {
 
 		return expect(restService.delete(path)).to.be.rejectedWith(errorMessage)
 	})
-
 })
