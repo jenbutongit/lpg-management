@@ -21,7 +21,7 @@
         <div class="govuk-grid-column-full">
             <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Configure your audience</h2>
-            <p class="govuk-body">Your audience is called: <strong>{{ audience.name }}</strong>
+            <p class="govuk-body">Your audience is called: <strong>{{ audience.name }}</strong></p>
 
             <div class="audience-container">
                 <div class="flex-container u--border--bgrey">
@@ -114,16 +114,16 @@
                         <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event" class="govuk-link audience-link">Add</a>
                     </div>
                 {% endif %}
-                </div>
             </div>
-        </div>
-        <div class="button-container">
+             <div class="button-container">
             <a class="govuk-body govuk-link return-link" href="/content-management/courses/{{ course.id }}/overview">Return to event overview page</a>
             {{ govukButton({
+                href: "/content-management/courses/" + course.id + "/audiences/" + audience.id + "/delete",
                 text: "Delete this audience",
                 classes: "button-red"
             }) }}
-            </div>
         </div>
+        </div>
+       
     </div>
 {% endblock %}

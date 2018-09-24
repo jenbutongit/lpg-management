@@ -54,6 +54,11 @@ export class AudienceController {
 			'/content-management/courses/:courseId/audiences/:audienceId/configure',
 			this.getConfigureAudience()
 		)
+		this.router.get(
+			'/content-management/courses/:courseId/audiences/:audienceId/delete',
+			this.deleteAudienceConfirmation()
+		)
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudience())
 		this.router.get('/content-management/courses/:courseId/audience/add-organisation', this.getOrganisation())
 		this.router.post('/content-management/courses/:courseId/audience/add-organisation', this.setOrganisation())
 		this.router.get('/content-management/courses/:courseId/audience/add-area-of-work', this.getAreasOfWork())
@@ -117,21 +122,34 @@ export class AudienceController {
 	}
 
 	public getConfigureAudience() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/configure-audience')
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/configure-audience')
 		}
 	}
 
 	public getOrganisation() {
-		return async (request: Request, response: Response) => {
+		return async (req: Request, res: Response) => {
 			const organisations = await this.csrsService.getOrganisations()
-			response.render('page/course/audience/add-organisation', {organisations})
+			res.render('page/course/audience/add-organisation', {organisations})
 		}
 	}
 
 	public setOrganisation() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/configure-audience')
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/configure-audience')
+		}
+	}
+
+	public deleteAudienceConfirmation() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/delete-audience-confirmation')
+		}
+	}
+
+	public deleteAudience() {
+		return async (req: Request, res: Response) => {
+			await this.learningCatalogue.deleteAudience(req.params.courseId, req.params.audienceId)
+			res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
 		}
 	}
 

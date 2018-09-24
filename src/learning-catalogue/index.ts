@@ -98,6 +98,10 @@ export class LearningCatalogue {
 		return this._audienceService.get(`/courses/${courseId}/audiences/${audienceId}`)
 	}
 
+	async deleteAudience(courseId: string, audienceId: string) {
+		return this._audienceService.delete(`/courses/${courseId}/audiences/${audienceId}`)
+	}
+
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
 		return await this._learningProviderService.listAll(`/learning-providers?page=${page}&size=${size}`)
 	}

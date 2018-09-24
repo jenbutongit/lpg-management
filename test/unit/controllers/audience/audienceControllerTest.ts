@@ -102,7 +102,8 @@ describe('AudienceController', function() {
 
 	describe('#setAudienceType', function() {
 		it('should redirect back to audience type page if validation error', async function() {
-			req.params.courseId = 'course-id'
+			const courseId = 'course-id'
+			req.params.courseId = courseId
 			req.body = {type: ''}
 
 			const errors = {size: 1}
@@ -114,9 +115,7 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${req.params.courseId}/audiences/type`
-			)
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
 		})
 
 		it('should redirect to audience configuration page if audience created successfully', async function() {
@@ -128,7 +127,7 @@ describe('AudienceController', function() {
 			audienceValidator.check = sinon.stub().returns(errors)
 			const audience = <Audience>{}
 			audienceFactory.create = sinon.stub().returns(audience)
-			const newAudienceId = 'audience-id'
+			const newAudienceId = 'new-audience-id'
 			learningCatalogue.createAudience = sinon.stub().returns({id: newAudienceId})
 
 			await audienceController.setAudienceType()(req, res)
@@ -136,10 +135,47 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			Object.is(req.session!.sessionFlash.errors, undefined)
-			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(req.params.courseId, audience)
+			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(res.redirect).to.have.been.calledWith(
 				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
 			)
+		})
+	})
+
+	describe('#getConfigureAudience', function() {
+		it('should render audience configuration page', async function() {
+			const courseId = 'course-id'
+			const audienceId = 'audience-id'
+			req.params.courseId = courseId
+			req.params.audienceId = audienceId
+
+			await audienceController.getConfigureAudience()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/configure-audience')
+		})
+	})
+
+	describe('#deleteAudienceConfirmation', function() {
+		it('should render delete audience confirmation page', async function() {
+			await audienceController.deleteAudienceConfirmation()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/delete-audience-confirmation')
+		})
+	})
+
+	describe('#deleteAudience', function() {
+		it('should redirect to course overview page after deleting the audience', async function() {
+			const courseId = 'course-id'
+			const audienceId = 'audience-id'
+			req.params.courseId = courseId
+			req.params.audienceId = audienceId
+
+			learningCatalogue.deleteAudience = sinon.stub()
+
+			await audienceController.deleteAudience()(req, res)
+
+			expect(learningCatalogue.deleteAudience).to.have.been.calledOnceWith(courseId, audienceId)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/overview`)
 		})
 	})
 })
