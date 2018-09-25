@@ -7,6 +7,8 @@ import {CourseService} from 'lib/courseService'
 import {AudienceService} from 'lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
 
+const jsonpath = require('jsonpath')
+
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
 	audienceValidator: Validator<Audience>
@@ -48,8 +50,6 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audiences', this.setAudienceName())
 		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
 		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
-		this.router.get('/content-management/courses/:courseId/add-organisation', this.getOrganisation())
-		this.router.post('/content-management/courses/:courseId/add-organisation', this.setOrganisation())
 		this.router.get(
 			'/content-management/courses/:courseId/audiences/:audienceId/configure',
 			this.getConfigureAudience()
@@ -59,8 +59,14 @@ export class AudienceController {
 			this.deleteAudienceConfirmation()
 		)
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudience())
-		this.router.get('/content-management/courses/:courseId/audience/add-organisation', this.getOrganisation())
-		this.router.post('/content-management/courses/:courseId/audience/add-organisation', this.setOrganisation())
+		this.router.get(
+			'/content-management/courses/:courseId/audiences/:audienceId/organisation',
+			this.getOrganisation()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/organisation',
+			this.setOrganisation()
+		)
 		this.router.get('/content-management/courses/:courseId/audience/add-area-of-work', this.getAreasOfWork())
 		this.router.post('/content-management/courses/:courseId/audience/add-area-of-work', this.setAreasOfWork())
 	}
@@ -123,7 +129,12 @@ export class AudienceController {
 
 	public getConfigureAudience() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/configure-audience')
+			const organisations = await this.csrsService.getOrganisations()
+			const departmentsAsString = res.locals.audience.departments.map(
+				(departmentCode: string) =>
+					jsonpath.value(organisations, `$..organisations[?(@.code=='${departmentCode}')]`).name
+			)
+			res.render('page/course/audience/configure-audience', {departmentsAsString})
 		}
 	}
 
@@ -136,8 +147,38 @@ export class AudienceController {
 
 	public setOrganisation() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/configure-audience')
+			const organisations = await this.csrsService.getOrganisations()
+			const selectedOrganisations = this.mapSelectedOrganisationToCodes(
+				req.body.organisation,
+				req.body['input-autocomplete'],
+				organisations
+			)
+			if (selectedOrganisations.length > 0) {
+				jsonpath.value(
+					res.locals.course,
+					`$..audiences[?(@.id=='${req.params.audienceId}')].departments`,
+					selectedOrganisations
+				)
+				await this.learningCatalogue.updateCourse(res.locals.course)
+			}
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
 		}
+	}
+
+	private mapSelectedOrganisationToCodes(
+		organisation: string,
+		organisationName: string,
+		organisations: any
+	): string[] {
+		return organisations._embedded.organisations
+			.filter((org: any) => {
+				return organisation === 'all' || org.name === organisationName
+			})
+			.map((org: any) => {
+				return org.code
+			})
 	}
 
 	public deleteAudienceConfirmation() {
@@ -166,10 +207,4 @@ export class AudienceController {
 			response.render('page/course/audience/configure-audience')
 		}
 	}
-
-	// Mick - these should give you the rest of the data you need from csrs
-	// You will still need to parse the data to grab the names using the getNameFromNodeData() function on line 103
-	// const grades = await this.csrsService.getNode('grades')
-	// const jobRoles = await this.csrsService.getNode('jobRoles')
-	// const interests = await this.csrsService.getNode('interests')
 }

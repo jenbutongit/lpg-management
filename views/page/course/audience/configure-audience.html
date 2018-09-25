@@ -35,13 +35,13 @@
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Organisation</p>
-                            {% if audience.organisation %}
-                                <p class="audience-type">{{ audience.organisation | default("Organisation unset", true) }}</p>
+                            {% if audience.departments.length > 0 %}
+                                <p class="audience-type">{{ departmentsAsString | join(', ') }}</p>
                             {% else %}
                                 <p class="unset">No organisations have been added</p>
                             {% endif %}
                         </div>
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/add-organisation" class="govuk-link audience-link">Add</a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" class="govuk-link audience-link">Add</a>
                     </div>
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
