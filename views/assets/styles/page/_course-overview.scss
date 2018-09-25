@@ -8,11 +8,29 @@
 	}
 }
 
+.audience-list {
+	.audience-header {
+		font-weight: bold;
+	}
+
+	.list-item {
+		padding: 0;
+	}
+}
+
+.govuk-details__text {
+	padding: 0 0 0 20px;
+}
+
 .title-container {
 	display: flex;
 	justify-content: space-between;
 }
 
 .section {
-	margin-bottom: 30px;
+	margin-bottom: 50px;
+}
+
+.audience-details {
+	margin: 0;
 }
