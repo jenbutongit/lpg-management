@@ -1,0 +1,36 @@
+.flex-container {
+	display: flex;
+	justify-content: space-between;
+	padding: 15px 0;
+
+	.unset {
+		margin: 0;
+	}
+
+	.govuk-body {
+		margin-bottom: 15px;
+
+		&.audience-link {
+			margin-bottom: 0;
+		}
+	}
+
+	.audience-type {
+		font-weight: 700;
+	}
+
+	.audience-link {
+		align-self: center;
+	}
+}
+
+.return-link {
+	margin-bottom: 30px;
+	float: left;
+}
+
+.button-red {
+	display: block;
+	clear: left;
+	float: left;
+}

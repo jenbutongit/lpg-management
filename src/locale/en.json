@@ -1,4 +1,30 @@
 {
+	"audience": {
+		"page_title": {
+			"add_name": "Add audience name",
+			"edit_name": "Edit audience name",
+			"add_type": "Add audience type",
+			"edit_type": "Edit audience type",
+			"configure_audience": "Configure audience",
+			"add_organisation": "Add organisation",
+			"delete_audience": "Delete audience",
+    		"add_area_of_work": "Add area of work"},
+		"validation": {
+			"name": {
+				"empty": "Audience name is required",
+				"maxLength": "Audience name must be 40 characters or less"
+			},
+			"type": {
+				"empty": "Audience type is required"
+			}
+		},
+		"type": {
+			"OPEN": "Open",
+			"CLOSED_COURSE": "Closed course",
+			"PRIVATE_COURSE": "Private course",
+			"REQUIRED_LEARNING": "Required learning"
+		}
+	},
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
@@ -7,10 +33,13 @@
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_details_add_title": "Add course details",
 	"course_title_add_title": "Add course title",
+	"course_title_edit_title": "Edit course title",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
 	"event_add_title": "Add event date & time",
     "event_overview": "Event overview",
+	"event_add_location": "Event location and availability",
+	"event_overview": "Event overview",
 	"face-to-face": "Face to Face",
 	"link": "Link",
 	"elearning": "e-learning",
