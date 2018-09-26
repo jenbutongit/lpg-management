@@ -2,7 +2,7 @@ import * as url from 'url'
 import axios, {AxiosInstance, AxiosResponse} from 'axios'
 import {Auth} from '../../identity/auth'
 
-export class RestService {
+export class JsonRestService {
 	private _http: AxiosInstance
 	config: any
 	auth: Auth
@@ -19,13 +19,13 @@ export class RestService {
 		this.get = this.get.bind(this)
 	}
 
-	protected setHeaders() {
+	protected getHeaders() {
 		return {}
 	}
 
 	async post(path: string, resource: any) {
 		try {
-			const response: AxiosResponse = await this._http.post(path, resource, this.setHeaders())
+			const response: AxiosResponse = await this._http.post(path, resource, this.getHeaders())
 
 			return this.get(url.parse(response.headers.location).path!)
 		} catch (e) {
@@ -37,7 +37,7 @@ export class RestService {
 
 	async get(path: string) {
 		try {
-			return (await this._http.get(path, this.setHeaders())).data
+			return (await this._http.get(path, this.getHeaders())).data
 		} catch (e) {
 			throw new Error(`Error with GET request: ${e} when getting ${this.config.url}${path}`)
 		}
@@ -45,7 +45,7 @@ export class RestService {
 
 	async put(path: string, resource: any) {
 		try {
-			return (await this._http.put(path, resource, this.setHeaders())).data
+			return (await this._http.put(path, resource, this.getHeaders())).data
 		} catch (e) {
 			throw new Error(
 				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`
@@ -55,7 +55,7 @@ export class RestService {
 
 	async delete(path: string) {
 		try {
-			return await this._http.delete(path, this.setHeaders())
+			return await this._http.delete(path, this.getHeaders())
 		} catch (e) {
 			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${path}`)
 		}

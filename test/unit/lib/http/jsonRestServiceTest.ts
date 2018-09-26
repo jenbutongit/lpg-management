@@ -10,15 +10,17 @@ import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learni
 import {Course} from '../../../../src/learning-catalogue/model/course'
 import {Auth} from 'src/identity/auth'
 import {Identity} from '../../../../src/identity/identity'
-import {RestService} from '../../../../src/lib/http/restService'
+import {JsonRestService} from '../../../../src/lib/http/jsonRestService'
+import * as sinonChai from 'sinon-chai'
 
 chai.use(chaiAsPromised)
+chai.use(sinonChai)
 
-describe('RestService tests', () => {
+describe('JsonRestService tests', () => {
 	let http: AxiosInstance
 	let config = new LearningCatalogueConfig('http://example.org')
 	let auth: Auth
-	let restService: RestService
+	let restService: JsonRestService
 
 	beforeEach(() => {
 		http = <AxiosInstance>{
@@ -27,7 +29,7 @@ describe('RestService tests', () => {
 		auth = <Auth>{}
 		auth.currentUser = new Identity('user123', [], 'access123')
 
-		restService = new RestService(config, auth)
+		restService = new JsonRestService(config, auth)
 		restService.http = http
 	})
 
