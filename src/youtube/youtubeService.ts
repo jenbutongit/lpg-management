@@ -1,8 +1,8 @@
 import * as config from '../config'
 import * as log4js from 'log4js'
-import {Auth} from "../identity/auth"
-import {YoutubeRestService} from "./youtubeRestService"
-import {YoutubeConfig} from "./youtubeConfig"
+import {Auth} from '../identity/auth'
+import {YoutubeRestService} from './youtubeRestService'
+import {YoutubeConfig} from './youtubeConfig'
 import * as datetime from '../lib/datetime'
 
 const logger = log4js.getLogger('learning-catalogue/service/restService')

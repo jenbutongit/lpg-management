@@ -1,8 +1,7 @@
-import {RestService} from "./restService"
+import {RestService} from './restService'
 
-export class OauthRestService extends RestService{
-
-	protected setHeaders(){
+export class OauthRestService extends RestService {
+	protected setHeaders() {
 		return {
 			headers: {
 				'Content-Type': 'application/json',

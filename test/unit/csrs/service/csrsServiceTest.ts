@@ -41,4 +41,36 @@ describe('CsrsService tests', () => {
 		expect(restService.get).to.have.been.calledOnceWith('organisations')
 		expect(result).to.eql(data)
 	})
+
+	it('should get areas of work data', async () => {
+		const data = [{id: '123'}]
+
+		restService.get = sinon
+			.stub()
+			.withArgs('professions')
+			.returns(data)
+
+		const result = await csrsService.getAreasOfWork()
+
+		expect(restService.get).to.have.been.calledOnceWith('professions')
+		expect(result).to.eql(data)
+	})
+
+	it('should get interest data', async () => {
+		const data = [
+			{
+				name: 'Contract management',
+			},
+		]
+
+		restService.get = sinon
+			.stub()
+			.withArgs('interests')
+			.returns(data)
+
+		const result = await csrsService.getInterests()
+
+		expect(restService.get).to.have.been.calledOnceWith('interests')
+		expect(result).to.eql(data)
+	})
 })
