@@ -8,7 +8,9 @@
 			"configure_audience": "Configure audience",
 			"add_organisation": "Add organisation",
 			"delete_audience": "Delete audience",
-    		"add_area_of_work": "Add area of work"},
+			"add_area_of_work": "Add area of work",
+			"add_grades": "Add grades"
+		},
 		"validation": {
 			"name": {
 				"empty": "Audience name is required",

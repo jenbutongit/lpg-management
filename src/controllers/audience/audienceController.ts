@@ -63,6 +63,8 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audience/add-organisation', this.setOrganisation())
 		this.router.get('/content-management/courses/:courseId/audience/add-area-of-work', this.getAreasOfWork())
 		this.router.post('/content-management/courses/:courseId/audience/add-area-of-work', this.setAreasOfWork())
+		this.router.get('/content-management/courses/:courseId/audience/add-grades', this.getGrades())
+		this.router.post('/content-management/courses/:courseId/audience/add-grades', this.setGrades())
 	}
 
 	public getAudienceName() {
@@ -80,13 +82,13 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-name`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
 				})
 			}
 		}
@@ -107,7 +109,7 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audienceName: audience.name}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audience/audience-type`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
@@ -167,9 +169,17 @@ export class AudienceController {
 		}
 	}
 
-	// Mick - these should give you the rest of the data you need from csrs
-	// You will still need to parse the data to grab the names using the getNameFromNodeData() function on line 103
-	// const grades = await this.csrsService.getNode('grades')
-	// const jobRoles = await this.csrsService.getNode('jobRoles')
-	// const interests = await this.csrsService.getNode('interests')
+	public getGrades() {
+		return async (request: Request, response: Response) => {
+			const grades = await this.csrsService.getGrades()
+
+			response.render('page/course/audience/add-grades', {grades})
+		}
+	}
+
+	public setGrades() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
 }
