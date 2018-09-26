@@ -3,6 +3,7 @@ import {beforeEach, describe, it} from 'mocha'
 import * as sinon from 'sinon'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as chai from 'chai'
+import * as url from 'url'
 
 import {expect} from 'chai'
 import {LearningCatalogueConfig} from '../../../../src/learning-catalogue/learningCatalogueConfig'
@@ -13,7 +14,7 @@ import {RestService} from '../../../../src/lib/http/restService'
 
 chai.use(chaiAsPromised)
 
-describe('YoutubeRestService tests', () => {
+describe('RestService tests', () => {
 	let http: AxiosInstance
 	let config = new LearningCatalogueConfig('http://example.org')
 	let auth: Auth
@@ -45,7 +46,6 @@ describe('YoutubeRestService tests', () => {
 			.returns(response)
 
 		const data = await restService.get(path)
-
 		return expect(data).to.eql(response.data)
 	})
 
@@ -67,6 +67,9 @@ describe('YoutubeRestService tests', () => {
 			data: {
 				id: 'course-id',
 			},
+			headers: {
+				location: '/test',
+			},
 		}
 
 		http.get = sinon
@@ -77,6 +80,7 @@ describe('YoutubeRestService tests', () => {
 		const data = await restService.get(path)
 
 		return expect(data).to.eql(getResponse.data)
+		return expect(restService.get(path)).to.be.calledWith(url.parse(`${config.url}${path}`).path!)
 	})
 
 	it('should throw error if problem with GET request', async () => {

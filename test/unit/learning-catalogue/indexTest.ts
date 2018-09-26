@@ -12,7 +12,7 @@ import {LearningProvider} from '../../../src/learning-catalogue/model/learningPr
 import {CancellationPolicy} from '../../../src/learning-catalogue/model/cancellationPolicy'
 import {TermsAndConditions} from '../../../src/learning-catalogue/model/termsAndConditions'
 import {EntityService} from '../../../src/learning-catalogue/service/entityService'
-import {Auth} from "../../../src/identity/auth"
+import {Auth} from '../../../src/identity/auth'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
