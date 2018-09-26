@@ -24,7 +24,7 @@
     {% set media = sessionFlash.media %}
     {% set module = sessionFlash.module %}
 
-    {% if errors.fields.file %}
+    {% if errors.fields.mediaId %}
         {% set chooseFileButtonClass = "govuk-form-group govuk-form-group--error" %}
         {% set chooseFileButtonMessage = "File is required" %}
     {% else %}

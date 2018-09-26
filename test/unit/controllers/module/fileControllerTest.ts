@@ -88,7 +88,7 @@ describe('File Controller Test', function() {
 		await setFile(request, response)
 
 		expect(moduleFactory.create).to.have.been.calledTwice
-		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description'])
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
 		expect(mediaRestService.get).to.have.been.calledOnceWith('/mediaId')
 		expect(learningCatalogue.createModule).to.have.been.calledOnceWith(course.id, module)
 	})
@@ -121,7 +121,7 @@ describe('File Controller Test', function() {
 		await setFile(request, response)
 
 		expect(moduleFactory.create).to.have.been.calledOnceWith(request.body)
-		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description'])
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-file`)
 	})
 })

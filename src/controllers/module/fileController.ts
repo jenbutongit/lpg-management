@@ -47,11 +47,7 @@ export class FileController {
 
 	public getFile() {
 		return async (request: Request, response: Response) => {
-			if (
-				request.session!.sessionFlash &&
-				request.session!.sessionFlash.mediaId &&
-				request.session!.sessionFlash.mediaId != 'undefined'
-			) {
+			if (request.session!.sessionFlash && request.session!.sessionFlash.mediaId) {
 				const mediaId = request.session!.sessionFlash.mediaId
 
 				const media = await this.restService.get(`/${mediaId}`)
