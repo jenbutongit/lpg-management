@@ -74,18 +74,14 @@ export class FileController {
 
 			const course = response.locals.course
 			let module = await this.moduleFactory.create(data)
-			let errors = await this.moduleValidator.check(data, ['title', 'description'])
+			let errors = await this.moduleValidator.check(data, ['title', 'description', 'mediaId'])
 
-			const mediaId = data.mediaId
 			let file
-			if (mediaId) {
-				file = await this.restService.get(`/${mediaId}`)
-			} else {
-				errors.fields.file = ['validation_module_mediaId_empty']
-				errors.size++
+			if (data.mediaId) {
+				file = await this.restService.get(`/${data.mediaId}`)
 			}
 
-			if (Object.keys(errors.fields).length != 0) {
+			if (errors.size) {
 				request.session!.sessionFlash = {
 					errors: errors,
 					module: module,
