@@ -69,7 +69,7 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
 			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${req.params.courseId}/audiences/audience-name`
+				`/content-management/courses/${req.params.courseId}/audiences/`
 			)
 		})
 
@@ -89,7 +89,7 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.returned(errors)
 			Object.is(req.session!.sessionFlash.errors, undefined)
 			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${req.params.courseId}/audiences/audience-type`
+				`/content-management/courses/${req.params.courseId}/audiences/type`
 			)
 		})
 	})
@@ -117,9 +117,7 @@ describe('AudienceController', function() {
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${courseId}/audiences/audience-type`
-			)
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
 		})
 
 		it('should redirect to audience configuration page if audience created successfully', async function() {
@@ -141,7 +139,7 @@ describe('AudienceController', function() {
 			Object.is(req.session!.sessionFlash.errors, undefined)
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure-audience`
+				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
 			)
 		})
 	})
