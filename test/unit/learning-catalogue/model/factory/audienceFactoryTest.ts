@@ -7,60 +7,66 @@ describe('AudienceFactory tests', () => {
 	const audienceFactory: AudienceFactory = new AudienceFactory()
 
 	it('Should create Audience from data', () => {
+		const id = 'audience-id'
 		const areasOfWork: string[] = ['digital', 'project-delivery']
 		const departments: string[] = ['dh', 'co']
 		const grades: string[] = ['AA', 'G7', 'SCS']
 		const interests: string[] = ['basket weaving', 'fly fishing']
 		const requiredBy = '2001-03-31T00:00:00'
-		const mandatory = true
+		const type = 'OPEN'
 		const frequency = 'YEARLY'
 
 		const data: object = {
+			id: id,
 			areasOfWork: areasOfWork,
 			departments: departments,
 			grades: grades,
 			interests: interests,
 			requiredBy: requiredBy,
-			mandatory: mandatory,
+			type: type,
 			frequency: frequency,
 		}
 
 		const result: Audience = audienceFactory.create(data)
 
+		expect(result.id).to.eql(id)
 		expect(result.areasOfWork).to.eql(areasOfWork)
 		expect(result.departments).to.eql(departments)
 		expect(result.grades).to.eql(grades)
 		expect(result.interests).to.eql(interests)
 		expect(result.requiredBy!.toISOString().substr(0, 19)).to.equal(requiredBy)
-		expect(result.mandatory).to.equal(mandatory)
+		expect(result.type).to.equal(Audience.Type.OPEN)
 		expect(result.frequency).to.equal(frequency)
 	})
 
 	it('Should ignore requiredBy if missing', () => {
+		const id = 'audience-id'
 		const areasOfWork: string[] = ['digital', 'project-delivery']
 		const departments: string[] = ['dh', 'co']
 		const grades: string[] = ['AA', 'G7', 'SCS']
 		const interests: string[] = ['basket weaving', 'fly fishing']
-		const mandatory = true
+		const type = 'OPEN'
 		const frequency = 'YEARLY'
 
 		const data: object = {
+			id: id,
 			areasOfWork: areasOfWork,
 			departments: departments,
 			grades: grades,
 			interests: interests,
-			mandatory: mandatory,
+			type: type,
 			frequency: frequency,
 		}
 
 		const result: Audience = audienceFactory.create(data)
 
+		expect(result.id).to.eql(id)
 		expect(result.areasOfWork).to.eql(areasOfWork)
 		expect(result.departments).to.eql(departments)
 		expect(result.grades).to.eql(grades)
 		expect(result.interests).to.eql(interests)
 		expect(result.requiredBy).to.be.undefined
-		expect(result.mandatory).to.equal(mandatory)
+		expect(result.type).to.equal(Audience.Type.OPEN)
 		expect(result.frequency).to.equal(frequency)
 	})
 })

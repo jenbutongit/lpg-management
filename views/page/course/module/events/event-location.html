@@ -1,0 +1,127 @@
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% extends "../../../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['event_add_location'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% block beforeContent %}
+  {% block phaseBanner %}
+    {{ phaseBanner("beta") }}
+  {% endblock%}
+  {% block backLink %}
+    {{ backLink("/content-management") }}
+  {% endblock%}
+{% endblock %}
+
+{% block content %}
+
+    {% set errors = sessionFlash.errors %}
+    {{ errorSummary(errors.fields) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Event location and availability</h2>
+            <p class="govuk-body">This event is for the {{ module.title }} module on the {{ course.title }} course</p>
+
+            <form class="govuk-form" action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location/{{event.Id}}" method="post">
+                <fieldset class="govuk-fieldset">
+                    {% if errors.fields.location %}
+                        {{ govukInput({
+                            label: {
+                                text: "Town/city"
+                            },
+                            id: "location",
+                            name: "location",
+                            value: event.venue.location,
+                            errorMessage: {
+                                text: "Location is required"
+                            }
+                        }) }}
+                    {% else %}
+                        {{ govukInput({
+                            label: {
+                                text: "Town/city"
+                            },
+                            id: "location",
+                            name: "location",
+                            value: event.venue.location
+                        }) }}
+                    {% endif %}
+                    {{ govukTextarea({
+                        label: {
+                            text: "Venue address (optional)"
+                        },
+                        id: "address",
+                        name: "address",
+                        value: event.venue.address
+                    }) }}
+                    {% if errors.fields.capacity %}
+                        {{ govukInput({
+                            label: {
+                                text: "Number of spaces"
+                            },
+                            type: "number",
+                            id: "spaces",
+                            name: "capacity",
+                            value: event.venue.capacity,
+                            classes: "small-input",
+                            errorMessage: {
+                                text: "Number of spaces is required"
+                            }
+                        }) }}
+                    {% else %}
+                        {{ govukInput({
+                            label: {
+                                text: "Number of spaces"
+                            },
+                            type: "number",
+                            id: "spaces",
+                            name: "capacity",
+                            value: event.venue.capacity,
+                            classes: "small-input"
+                        }) }}
+                    {% endif %}
+
+                    {% if errors.fields.minCapacity %}
+                        {{ govukInput({
+                            label: {
+                                text: "Minimum capacity"
+                            },
+                            type: "number",
+                            id: "capacity",
+                            name: "minCapacity",
+                            value: event.venue.minCapacity,
+                            classes: "small-input",
+                            errorMessage: {
+                                text: "Minimum capacity is required"
+                            }
+                        }) }}
+                    {% else %}
+                       {{ govukInput({
+                            label: {
+                                text: "Minimum capacity"
+                            },
+                            type: "number",
+                            id: "capacity",
+                            name: "minCapacity",
+                            value: event.venue.minCapacity,
+                            classes: "small-input"
+                        }) }}
+                    {% endif %}
+
+                    <div class="button-container">
+                        {{ govukButton({
+                            text: "Continue"
+                        }) }}
+                    </div>
+                    <a href="#">Cancel</a>
+                </fieldset>
+            </form>
+        </div>
+        <div class="govuk-column-width-one-third">
+        </div>
+    </div>
+{% endblock %}

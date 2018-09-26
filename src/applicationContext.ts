@@ -38,6 +38,12 @@ import {LinkModuleController} from './controllers/module/linkModuleController'
 import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
 import {EventController} from './controllers/module/event/eventController'
 import {Event} from './learning-catalogue/model/event'
+import {AudienceController} from './controllers/audience/audienceController'
+import {Audience} from './learning-catalogue/model/audience'
+import {CourseService} from './lib/courseService'
+import {AudienceService} from './lib/audienceService'
+import {CsrsConfig} from './csrs/csrsConfig'
+import {CsrsService} from './csrs/service/csrsService'
 import {RestService} from './learning-catalogue/service/restService'
 
 log4js.configure(config.LOGGING)
@@ -67,6 +73,8 @@ export class ApplicationContext {
 	youtubeModuleController: YoutubeModuleController
 	moduleValidator: Validator<Module>
 	eventValidator: Validator<Event>
+	audienceController: AudienceController
+	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
 	eventFactory: EventFactory
 	fileController: FileController
@@ -77,6 +85,10 @@ export class ApplicationContext {
 	eventController: EventController
 	mediaConfig: LearningCatalogueConfig
 	mediaRestService: RestService
+	courseService: CourseService
+	audienceService: AudienceService
+	csrsConfig: CsrsConfig
+	csrsService: CsrsService
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -118,7 +130,13 @@ export class ApplicationContext {
 		this.pagination = new Pagination()
 
 		this.courseValidator = new Validator<Course>(this.courseFactory)
-		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory)
+		this.courseService = new CourseService(this.learningCatalogue)
+		this.courseController = new CourseController(
+			this.learningCatalogue,
+			this.courseValidator,
+			this.courseFactory,
+			this.courseService
+		)
 
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()
@@ -128,7 +146,7 @@ export class ApplicationContext {
 		this.youtubeService = new YoutubeService(this.youtubeConfig)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
-		this.moduleFactory = new ModuleFactory(this.audienceFactory, this.eventFactory)
+		this.moduleFactory = new ModuleFactory()
 		this.moduleValidator = new Validator<Module>(this.moduleFactory)
 		this.youtubeModuleController = new YoutubeModuleController(
 			this.learningCatalogue,
@@ -193,6 +211,20 @@ export class ApplicationContext {
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
+
+		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
+		this.csrsService = new CsrsService(new RestService(this.csrsConfig))
+
+		this.audienceService = new AudienceService(this.learningCatalogue)
+		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
+		this.audienceController = new AudienceController(
+			this.learningCatalogue,
+			this.audienceValidator,
+			this.audienceFactory,
+			this.courseService,
+			this.audienceService,
+			this.csrsService
+		)
 	}
 
 	addToResponseLocals() {

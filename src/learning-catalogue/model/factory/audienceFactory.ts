@@ -8,6 +8,8 @@ export class AudienceFactory {
 
 	create(data: any) {
 		const audience: Audience = new Audience()
+		audience.id = data.id
+		audience.name = data.name
 		audience.areasOfWork = data.areasOfWork
 		audience.departments = data.departments
 		audience.grades = data.grades
@@ -15,7 +17,7 @@ export class AudienceFactory {
 		if (data.requiredBy) {
 			audience.requiredBy = moment.utc(data.requiredBy).toDate()
 		}
-		audience.mandatory = data.mandatory
+		audience.type = Audience.Type[data.type as keyof typeof Audience.Type]
 		audience.frequency = data.frequency
 
 		return audience
