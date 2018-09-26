@@ -18,4 +18,8 @@ export class CsrsService {
 	async getGrades() {
 		return await this.restService.get('grades')
 	}
+
+	async getInterests() {
+		return await this.restService.get('interests')
+	}
 }

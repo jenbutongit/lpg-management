@@ -182,4 +182,17 @@ export class AudienceController {
 			response.render('page/course/audience/configure-audience')
 		}
 	}
+
+	public getInterests() {
+		return async (request: Request, response: Response) => {
+			const interests = await this.csrsService.getInterests()
+			response.render('page/course/audience/add-interests', {interests})
+		}
+	}
+
+	public setInterests() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
 }
