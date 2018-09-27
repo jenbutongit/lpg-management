@@ -10,8 +10,8 @@ import {Course} from '../../../../src/learning-catalogue/model/course'
 import {Request, Response} from 'express'
 import {expect} from 'chai'
 import {Module} from '../../../../src/learning-catalogue/model/module'
-import {YoutubeService} from 'lib/youtubeService'
 import {Validator} from '../../../../src/learning-catalogue/validator/validator'
+import {YoutubeService} from '../../../../src/youtube/youtubeService'
 
 chai.use(sinonChai)
 

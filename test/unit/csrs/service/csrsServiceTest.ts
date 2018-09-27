@@ -4,18 +4,18 @@ import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {RestService} from '../../../../src/learning-catalogue/service/restService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
+import {OauthRestService} from 'lib/http/oauthRestService'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
 describe('CsrsService tests', () => {
 	let csrsService: CsrsService
-	let restService: RestService
+	let restService: OauthRestService
 
 	beforeEach(() => {
-		restService = <RestService>{}
+		restService = <OauthRestService>{}
 		csrsService = new CsrsService(restService)
 	})
 
@@ -53,6 +53,24 @@ describe('CsrsService tests', () => {
 		const result = await csrsService.getAreasOfWork()
 
 		expect(restService.get).to.have.been.calledOnceWith('professions')
+		expect(result).to.eql(data)
+	})
+
+	it('should get interest data', async () => {
+		const data = [
+			{
+				name: 'Contract management',
+			},
+		]
+
+		restService.get = sinon
+			.stub()
+			.withArgs('interests')
+			.returns(data)
+
+		const result = await csrsService.getInterests()
+
+		expect(restService.get).to.have.been.calledOnceWith('interests')
 		expect(result).to.eql(data)
 	})
 })

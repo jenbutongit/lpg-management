@@ -44,14 +44,22 @@ export class AudienceController {
 	}
 
 	private setRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/audiences', this.getAudienceName())
-		this.router.post('/content-management/courses/:courseId/audiences', this.setAudienceName())
-		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
-		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
-		this.router.get('/content-management/courses/:courseId/add-organisation', this.getOrganisation())
-		this.router.post('/content-management/courses/:courseId/add-organisation', this.setOrganisation())
+		this.router.get('/content-management/courses/:courseId/audiences/audience-name', this.getAudienceName())
+		this.router.post('/content-management/courses/:courseId/audiences/audience-name', this.setAudienceName())
+		this.router.get('/content-management/courses/:courseId/audiences/audience-type', this.getAudienceType())
+		this.router.post('/content-management/courses/:courseId/audiences/audience-type', this.setAudienceType())
 		this.router.get(
-			'/content-management/courses/:courseId/audiences/:audienceId/configure',
+			'/content-management/courses/:courseId/audience/configure-audience',
+			this.getConfigureAudience()
+		)
+		this.router.get('/content-management/courses/:courseId/audiences/add-organisation', this.getOrganisation())
+		this.router.post('/content-management/courses/:courseId/audiences/add-organisation', this.setOrganisation())
+		this.router.get('/content-management/courses/:courseId/audiences/add-deadline', this.getDeadline())
+		this.router.post('/content-management/courses/:courseId/audiences/add-deadline', this.setDeadline())
+		this.router.get('/content-management/courses/:courseId/audiences/add-organisation', this.getOrganisation())
+		this.router.post('/content-management/courses/:courseId/audiences/add-organisation', this.setOrganisation())
+		this.router.get(
+			'/content-management/courses/:courseId/audiences/:audienceId/audiences/configure-audience',
 			this.getConfigureAudience()
 		)
 		this.router.get(
@@ -59,10 +67,12 @@ export class AudienceController {
 			this.deleteAudienceConfirmation()
 		)
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudience())
-		this.router.get('/content-management/courses/:courseId/audience/add-organisation', this.getOrganisation())
-		this.router.post('/content-management/courses/:courseId/audience/add-organisation', this.setOrganisation())
-		this.router.get('/content-management/courses/:courseId/audience/add-area-of-work', this.getAreasOfWork())
-		this.router.post('/content-management/courses/:courseId/audience/add-area-of-work', this.setAreasOfWork())
+		this.router.get('/content-management/courses/:courseId/audiences/add-organisation', this.getOrganisation())
+		this.router.post('/content-management/courses/:courseId/audiences/add-organisation', this.setOrganisation())
+		this.router.get('/content-management/courses/:courseId/audiences/add-area-of-work', this.getAreasOfWork())
+		this.router.post('/content-management/courses/:courseId/audiences/add-area-of-work', this.setAreasOfWork())
+		this.router.get('/content-management/courses/:courseId/audience/add-grades', this.getGrades())
+		this.router.post('/content-management/courses/:courseId/audience/add-grades', this.setGrades())
 	}
 
 	public getAudienceName() {
@@ -80,13 +90,13 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/audience-name`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/audience-type`)
 				})
 			}
 		}
@@ -107,14 +117,16 @@ export class AudienceController {
 			if (errors.size > 0) {
 				req.session!.sessionFlash = {errors, audienceName: audience.name}
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/audience-type`)
 				})
 			} else {
 				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
 				req.session!.sessionFlash = {audience: savedAudience}
 				req.session!.save(() => {
 					res.redirect(
-						`/content-management/courses/${req.params.courseId}/audiences/${savedAudience.id}/configure`
+						`/content-management/courses/${req.params.courseId}/audiences/${
+							savedAudience.id
+						}/configure-audience`
 					)
 				})
 			}
@@ -167,9 +179,41 @@ export class AudienceController {
 		}
 	}
 
-	// Mick - these should give you the rest of the data you need from csrs
-	// You will still need to parse the data to grab the names using the getNameFromNodeData() function on line 103
-	// const grades = await this.csrsService.getNode('grades')
-	// const jobRoles = await this.csrsService.getNode('jobRoles')
-	// const interests = await this.csrsService.getNode('interests')
+	public getDeadline() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/add-deadline')
+		}
+	}
+
+	public setDeadline() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
+	public getGrades() {
+		return async (request: Request, response: Response) => {
+			const grades = await this.csrsService.getGrades()
+
+			response.render('page/course/audience/add-grades', {grades})
+		}
+	}
+
+	public setGrades() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
+
+	public getInterests() {
+		return async (request: Request, response: Response) => {
+			const interests = await this.csrsService.getInterests()
+			response.render('page/course/audience/add-interests', {interests})
+		}
+	}
+
+	public setInterests() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/audience/configure-audience')
+		}
+	}
 }
