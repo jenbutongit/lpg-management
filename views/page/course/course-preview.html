@@ -21,7 +21,8 @@
         <div class="govuk-grid-column-full govuk-!-margin-bottom-6">
             <div class="panel panel-blue">
                 <h5 class="govuk-heading-s">This page is in preview and has not been published yet.</h5>
-                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="/content-management/courses/title/{{ course.id }}" class="govuk-link panel-links">Title</a> <a href="/content-management/courses/details/{{ course.id }}" class="govuk-link panel-links">Details</a> <a href="#" class="govuk-link panel-links">Content</a> <a href="#" class="govuk-link panel-links">Files</a> <a href="/content-management/courses/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="/content-management/courses/{{course.id}}/audiences/audience-name" class="govuk-link panel-links">Audiences</a></p>
+                <p class="govuk-body govuk-!-margin-bottom-0">Edit: 
+                    <a href="/content-management/courses/title/{{ course.id }}" class="govuk-link panel-links">Title</a> <a href="/content-management/courses/details/{{ course.id }}" class="govuk-link panel-links">Details</a> <a href="/content-management/courses/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="/content-management/courses/{{course.id}}/audiences/audience-name" class="govuk-link panel-links">Audiences</a></p>
             </div>
         </div>
     </div>
@@ -49,35 +50,27 @@
                             <span class="item item-value">{{ course.getType() }}</span>
                         </div>
                     </li>
-                    <li class="course-summary-item">
+                    {# <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Duration</span>
                             <span class="item item-value">1 day</span>
                         </div>
-                    </li>
-                    <li class="course-summary-item">
-                        <div class="item-container">
-                            <span class="item item-header">Dates and Location</span>
-                            <span class="item item-value"></span>
-                        </div>
-                    </li>
-                    <li class="course-summary-item">
+                    </li> #}
+                    {# <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Level</span>
                             <span class="item item-value">EO to HEO/SEO</span>
                         </div>
-                    </li>
+                    </li> #}
                     <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Cost</span>
                             <span class="item item-value">£{{ course.getCost() }} (ex VAT)</span>
                         </div>  
-                        <a href="#" class="govuk-link">See cost for group bookings</a>
                     </li>
                 </ul>
                 <div class="pre-learning">
                     <p class="govuk-!-font-weight-bold govuk-body govuk-!-margin-bottom-1">Pre-learning required</p>
-                    <a href="#" class="govuk-link">See all pre-learning</a>
                 </div>
             </div> 
         </div>
