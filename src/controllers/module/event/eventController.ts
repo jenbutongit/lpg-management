@@ -4,6 +4,7 @@ import {Request, Response, Router} from 'express'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
 import {Event} from '../../../learning-catalogue/model/event'
 import * as datetime from '../../../lib/datetime'
+import * as moment from 'moment'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -80,11 +81,41 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId',
 			this.getEventOverview()
 		)
+
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
+			this.editDateRange()
+		)
 	}
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events', {event: request.session!.event})
+		}
+	}
+
+
+	public editDateRange() {
+		return async (request: Request, response: Response) => {
+			const courseId = request.params.courseId
+			const moduleId = request.params.moduleId
+			const eventId = request.params.eventId
+			const dateRangeIndex = request.params.dateRangeIndex
+
+			const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
+
+			const dateRange = event!.dateRanges![dateRangeIndex]
+
+			const date: any = moment(dateRange.date)
+
+			const startTime = moment(dateRange.startTime, 'HH:mm')
+
+			response.render('page/course/module/events/event-dateRange-edit', {
+				day: date.date(),
+				month : date.month() + 1,
+				year: date.year(),
+				startHours: startTime.format('HH'),
+				startMinutes: startTime.format('mm')
+			})
 		}
 	}
 

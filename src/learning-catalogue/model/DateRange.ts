@@ -1,5 +1,5 @@
 export class DateRange {
-	date: String
-	startTime: String
-	endTime: String
+	date: string
+	startTime: string
+	endTime: string
 }
