@@ -58,8 +58,8 @@
                             text: "Start date",
                             isPageHeading: false,
                             classes: "govuk-fieldset__legend--s"
-                            },
-                        classes: "event-date"
+                            }
+                     
                         },
                         hint: {
                             text: "For example, 31 3 " + exampleYear
@@ -69,13 +69,16 @@
                         },
                         items: [
                             {
-                            name: "day"
+                            name: "day",
+                            classes: "govuk-input--width-3"
                             },
                             {
-                            name: "month"
+                            name: "month",
+                            classes: "govuk-input--width-3"
                             },
                             {
-                            name: "year"
+                            name: "year",
+                            classes: "govuk-input--width-5"
                             }
                         ]
                         }) }}
@@ -88,21 +91,23 @@
                             text: "Start date",
                             isPageHeading: true,
                             classes: "govuk-fieldset__legend--s"
-                            },
-                        classes: "event-date"
+                            }
                         },
                         hint: {
                             text: "For example, 31 3 " + exampleYear
                         },
                         items: [
                             {
-                            name: "day"
+                            name: "day",
+                            classes: "govuk-input--width-3"
                             },
                             {
-                            name: "month"
+                            name: "month",
+                            classes: "govuk-input--width-3"
                             },
                             {
-                            name: "year"
+                            name: "year",
+                            classes: "govuk-input--width-5"
                             }
                         ]
                         }) }}
