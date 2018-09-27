@@ -1,9 +1,9 @@
-import {RestService} from '../../learning-catalogue/service/restService'
+import {OauthRestService} from '../../lib/http/oauthRestService'
 
 export class CsrsService {
-	restService: RestService
+	restService: OauthRestService
 
-	constructor(restService: RestService) {
+	constructor(restService: OauthRestService) {
 		this.restService = restService
 	}
 
