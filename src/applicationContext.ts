@@ -45,6 +45,7 @@ import {CsrsService} from './csrs/service/csrsService'
 import {YoutubeService} from './youtube/youtubeService'
 import {YoutubeConfig} from './youtube/youtubeConfig'
 import {OauthRestService} from './lib/http/oauthRestService'
+import {MediaRestService} from './controllers/module/mediaRestService'
 
 log4js.configure(config.LOGGING)
 
@@ -84,13 +85,14 @@ export class ApplicationContext {
 	faceToFaceController: FaceToFaceModuleController
 	eventController: EventController
 	mediaConfig: LearningCatalogueConfig
-	mediaRestService: RestService
+	mediaRestService: MediaRestService
 	courseService: CourseService
 	audienceService: AudienceService
 	csrsConfig: CsrsConfig
 	csrsService: CsrsService
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -177,15 +179,9 @@ export class ApplicationContext {
 			this.termsAndConditionsValidator
 		)
 
-		this.mediaConfig = new LearningCatalogueConfig(
-			{
-				username: config.COURSE_CATALOGUE.auth.username,
-				password: config.COURSE_CATALOGUE.auth.password,
-			},
-			'http://localhost:9001/media'
-		)
+		this.mediaConfig = new LearningCatalogueConfig('http://localhost:9001/media')
 
-		this.mediaRestService = new RestService(this.mediaConfig)
+		this.mediaRestService = new MediaRestService(this.mediaConfig, this.auth)
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 		this.fileController = new FileController(

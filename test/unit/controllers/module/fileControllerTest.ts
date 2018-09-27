@@ -7,10 +7,10 @@ import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import {Request, Response} from 'express'
-import {RestService} from '../../../../src/learning-catalogue/service/restService'
 import * as sinon from 'sinon'
 import {expect} from 'chai'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import {MediaRestService} from '../../../../src/controllers/module/mediaRestService'
 
 chai.use(sinonChai)
 
@@ -19,13 +19,13 @@ describe('File Controller Test', function() {
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
-	let mediaRestService: RestService
+	let mediaRestService: MediaRestService
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
 		moduleValidator = <Validator<Module>>{}
 		moduleFactory = <ModuleFactory>{}
-		mediaRestService = <RestService>{}
+		mediaRestService = <MediaRestService>{}
 
 		fileController = new FileController(learningCatalogue, moduleValidator, moduleFactory, mediaRestService)
 	})

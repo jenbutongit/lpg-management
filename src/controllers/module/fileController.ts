@@ -4,7 +4,7 @@ import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactor
 import {ContentRequest} from '../../extended'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {Module} from '../../learning-catalogue/model/module'
-import {RestService} from '../../learning-catalogue/service/restService'
+import {MediaRestService} from './mediaRestService'
 import * as config from '../../config'
 import * as fileType from '../../lib/fileType'
 
@@ -13,13 +13,13 @@ export class FileController {
 	moduleValidator: Validator<Module>
 	moduleFactory: ModuleFactory
 	router: Router
-	restService: RestService
+	restService: MediaRestService
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		moduleValidator: Validator<Module>,
 		moduleFactory: ModuleFactory,
-		restService: RestService
+		restService: MediaRestService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleFactory = moduleFactory
