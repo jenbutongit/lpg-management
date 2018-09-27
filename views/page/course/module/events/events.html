@@ -115,8 +115,8 @@
 
                 {% set setHours = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
                 {% set setMinutes = ["00", "15", "30", "45"] %}
-                {{ timeInputs("Start time", setHours, setMinutes , "start-time", "Hours", "Minutes") }}
-                {{ timeInputs("End time", setHours, setMinutes , "end-time", "Hours", "Minutes") }}
+                {{ timeInputs("Start time", setHours, setMinutes , "startTime", "Hours", "Minutes") }}
+                {{ timeInputs("End time", setHours, setMinutes , "endTime", "Hours", "Minutes") }}
                     
                 {{ govukButton({
                     text: "Add this date",
