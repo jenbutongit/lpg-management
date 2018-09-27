@@ -74,23 +74,21 @@ describe('AudienceController', function() {
 		})
 
 		it('should redirect to audience type page if audience name validated successfully', async function() {
-			req.params.courseId = 'course-id'
+			const courseId = 'course-id'
+			req.params.courseId = courseId
 			req.body = {name: 'audience name'}
 
 			const errors = {size: 0}
 			audienceValidator.check = sinon.stub().returns(errors)
 			const audience = <Audience>{}
 			audienceFactory.create = sinon.stub().returns(audience)
-			learningCatalogue.createAudience = sinon.stub()
 
 			await audienceController.setAudienceName()(req, res)
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.name'])
 			expect(audienceValidator.check).to.have.returned(errors)
-			Object.is(req.session!.sessionFlash.errors, undefined)
-			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${req.params.courseId}/audiences/type`
-			)
+			expect(req.session!.sessionFlash.errors).to.be.undefined
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
 		})
 	})
 
@@ -136,7 +134,7 @@ describe('AudienceController', function() {
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
-			Object.is(req.session!.sessionFlash.errors, undefined)
+			expect(req.session!.sessionFlash.errors).to.be.undefined
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(res.redirect).to.have.been.calledWith(
 				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
@@ -153,6 +151,7 @@ describe('AudienceController', function() {
 			res.locals.audience = {departments: []}
 
 			csrsService.getOrganisations = sinon.stub()
+			csrsService.getDepartmentCodeToNameMapping = sinon.stub()
 
 			await audienceController.getConfigureAudience()(req, res)
 

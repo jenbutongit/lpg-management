@@ -103,8 +103,7 @@ export class AudienceController {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/`)
 				})
 			} else {
-				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
-				req.session!.sessionFlash = {audience: savedAudience}
+				req.session!.sessionFlash = {audienceName: audience.name}
 				req.session!.save(() => {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
 				})
@@ -113,8 +112,8 @@ export class AudienceController {
 	}
 
 	public getAudienceType() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/audience-type')
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/audience-type')
 		}
 	}
 
@@ -144,12 +143,8 @@ export class AudienceController {
 
 	public getConfigureAudience() {
 		return async (req: Request, res: Response) => {
-			const organisations = await this.csrsService.getOrganisations()
-			const departmentsAsString = res.locals.audience.departments.map(
-				(departmentCode: string) =>
-					jsonpath.value(organisations, `$..organisations[?(@.code=='${departmentCode}')]`).name
-			)
-			res.render('page/course/audience/configure-audience', {departmentsAsString})
+			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
+			res.render('page/course/audience/configure-audience', {departmentCodeToName})
 		}
 	}
 
