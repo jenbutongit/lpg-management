@@ -85,6 +85,10 @@ export class EventController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.editDateRange()
 		)
+
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
+			this.updateDateRange()
+		)
 	}
 
 	public getDateTime() {
@@ -118,6 +122,36 @@ export class EventController {
 				endHours: endTime.format('HH'),
 				endMinutes: endTime.format('mm')
 			})
+		}
+	}
+
+	public updateDateRange() {
+		return async (request: Request, response: Response) => {
+			let data = {
+				...request.body,
+			}
+
+			const courseId = request.params.courseId
+			const moduleId = request.params.moduleId
+			const eventId = request.params.eventId
+			const dateRangeIndex = request.params.dateRangeIndex
+
+			const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
+
+			const date = moment([data.year, data.month -1, data.day]).format('YYYY-MM-DD')
+
+			const startTime = moment([data.startTime[0], data.startTime[1]], 'HH:mm').format('HH:mm')
+			const endTime = moment([data.endTime[0], data.endTime[1]], 'HH:mm').format('HH:mm')
+
+			event!.dateRanges![dateRangeIndex].date = date
+			event!.dateRanges![dateRangeIndex].startTime = startTime
+			event!.dateRanges![dateRangeIndex].endTime = endTime
+
+
+			// validate
+
+			this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
+			response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
 		}
 	}
 

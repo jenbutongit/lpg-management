@@ -232,10 +232,12 @@ describe('EventController', function() {
 			const eventId = 'event-id'
 
 			const requestConfig = {
-				courseId: courseId,
-				moduleId: moduleId,
-				eventId: eventId,
-				dateRangeIndex: 0
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId,
+					dateRangeIndex: 0
+				}
 			}
 
 			const dateRange = new DateRange()
@@ -259,8 +261,62 @@ describe('EventController', function() {
 				month : 3,
 				year: 2019,
 				startHours: '09',
-				startMinutes: '30'
+				startMinutes: '15',
+				endHours: '17',
+				endMinutes: '30'
 			})
 		})
+
+		it('should update event successfully', async () => {
+			const courseId = 'course-id'
+			const moduleId= 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId,
+					dateRangeIndex: 0
+				},
+				body: {
+					day: '01',
+					month: '12',
+					year: '2019',
+					startTime: [ '11', '30'],
+					endTime: ['12', '30'],
+				}
+			}
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			const event = <Event>{}
+			const dateRange = new DateRange()
+			dateRange.date = '2019-03-31'
+			dateRange.startTime = '09:00'
+			dateRange.endTime = '17:00'
+
+			event.dateRanges = [dateRange]
+
+			learningCatalogue.getEvent = sinon.stub().returns(event)
+			learningCatalogue.updateEvent = sinon.stub()
+
+			await eventController.updateDateRange()(request, response)
+
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
+			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId, {
+				dateRanges: [
+					{
+						date: '2019-12-01',
+						startTime: '11:30',
+						endTime: '12:30'
+					}
+				]
+			})
+			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+
+		})
+
 	})
 })
