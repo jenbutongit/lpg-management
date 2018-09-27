@@ -8,7 +8,7 @@
         {% set hour = hours.push({
                 "text": i,
                 "value": i,
-                "selected": firstSelected === i
+                "selected": true if firstSelected === i
             }) %}
         {% endfor %}
 
@@ -29,7 +29,7 @@
             {% set minute = minutes.push({
                 "text": j,
                 "value": j,
-                "selected": secondSelected === j
+                "selected":  true if secondSelected === j
             }) %}
         {% endfor %}
 
