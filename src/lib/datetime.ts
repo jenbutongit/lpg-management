@@ -78,9 +78,9 @@ export function validateDateTime(data: any, errors: any) {
 export function getDate(data: any, start: boolean) {
 	let date: Date = new Date()
 
-	date.setFullYear(data['start-date-year'])
-	date.setMonth(data['start-date-month'])
-	date.setDate(data['start-date-day'])
+	date.setFullYear(data['year'])
+	date.setMonth(data['month'] - 1)
+	date.setDate(data['day'])
 
 	if (start) {
 		date.setHours(data['start-time'][0])
@@ -98,23 +98,23 @@ export function getDate(data: any, start: boolean) {
 
 export function parseDate(data: any) {
 	let dateRanges: Array<DateRange>
-	if (data['start-date-year'] && data['start-date-month'] && data['start-date-day']) {
+	if (data['year'] && data['month'] && data['day']) {
 		dateRanges = [new DateRange()]
 
-		if (data['start-date-month'].toString().length == 1) {
-			data['start-date-month'] = '0' + data['start-date-month']
+		if (data['month'].toString().length == 1) {
+			data['month'] = '0' + data['month']
 		}
 
-		if (data['start-date-day'].toString().length == 1) {
-			data['start-date-day'] = '0' + data['start-date-day']
+		if (data['day'].toString().length == 1) {
+			data['day'] = '0' + data['day']
 		}
 
 		dateRanges[0].date = (
-			data['start-date-year'] +
+			data['year'] +
 			'-' +
-			data['start-date-month'] +
+			data['month'] +
 			'-' +
-			data['start-date-day']
+			data['day']
 		).toString()
 
 		dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()

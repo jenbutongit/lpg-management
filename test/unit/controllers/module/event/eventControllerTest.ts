@@ -224,4 +224,43 @@ describe('EventController', function() {
 
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
 	})
+
+	describe('Edit and update DateRange', () => {
+		it('should retrieve DateRange for edit', async () => {
+			const courseId = 'course-id'
+			const moduleId= 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				courseId: courseId,
+				moduleId: moduleId,
+				eventId: eventId,
+				dateRangeIndex: 0
+			}
+
+			const dateRange = new DateRange()
+			dateRange.date = '2019-03-31'
+			dateRange.startTime = '09:15'
+			dateRange.endTime = '17:30'
+
+			const event = <Event>{}
+			event.dateRanges = [dateRange]
+			learningCatalogue.getEvent = sinon.stub().returns(event)
+
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			await eventController.editDateRange()(request, response)
+
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
+			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				day: 31,
+				month : 3,
+				year: 2019,
+				startHours: '09',
+				startMinutes: '30'
+			})
+		})
+	})
 })

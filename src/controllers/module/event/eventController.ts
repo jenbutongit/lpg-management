@@ -93,7 +93,6 @@ export class EventController {
 		}
 	}
 
-
 	public editDateRange() {
 		return async (request: Request, response: Response) => {
 			const courseId = request.params.courseId
@@ -108,13 +107,16 @@ export class EventController {
 			const date: any = moment(dateRange.date)
 
 			const startTime = moment(dateRange.startTime, 'HH:mm')
+			const endTime = moment(dateRange.endTime, 'HH:mm')
 
 			response.render('page/course/module/events/event-dateRange-edit', {
 				day: date.date(),
 				month : date.month() + 1,
 				year: date.year(),
 				startHours: startTime.format('HH'),
-				startMinutes: startTime.format('mm')
+				startMinutes: startTime.format('mm'),
+				endHours: endTime.format('HH'),
+				endMinutes: endTime.format('mm')
 			})
 		}
 	}
