@@ -67,18 +67,18 @@
                         errorMessage: {
                             text: "A valid start date is required"
                         },
-                        items: [
+                         items: [
                             {
                             name: "day",
-                            value: day
+                            classes: "govuk-input--width-3"
                             },
                             {
                             name: "month",
-                            value: month
+                            classes: "govuk-input--width-3"
                             },
                             {
                             name: "year",
-                            value: year
+                            classes: "govuk-input--width-5"
                             }
                         ]
                         }) }}
@@ -97,18 +97,18 @@
                         hint: {
                             text: "For example, 31 3 " + exampleYear
                         },
-                        items: [
+                         items: [
                             {
                             name: "day",
-                            value: day
+                            classes: "govuk-input--width-3"
                             },
                             {
                             name: "month",
-                            value: month
+                            classes: "govuk-input--width-3"
                             },
                             {
                             name: "year",
-                            value: year
+                            classes: "govuk-input--width-5"
                             }
                         ]
                         }) }}
@@ -116,8 +116,8 @@
 
                 {% set setHours = ["06","07","08","09","10","11","12","13","14","15","16","17","18","19","20"] %}
                 {% set setMinutes = ["00", "15", "30", "45"] %}
-                {{ timeInputs("Start time", setHours, setMinutes , "start-time", "Hours", "Minutes", startHours, startMinutes) }}
-                {{ timeInputs("End time", setHours, setMinutes , "end-time", "Hours", "Minutes", endHours, endMinutes) }}
+                {{ timeInputs("Start time", setHours, setMinutes , "startTime", "Hours", "Minutes", startHours, startMinutes) }}
+                {{ timeInputs("End time", setHours, setMinutes , "endTime", "Hours", "Minutes", endHours, endMinutes) }}
 
                 {{ govukButton({
                     text: "Add this date",
