@@ -60,7 +60,7 @@
             <p class="govuk-body">You are adding a <strong>{{type}}</strong> module</p>
             <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
 
-            <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post">
+            <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post" class="module-form">
                 <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">
                 <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
                 <input id="fileType" name="fileType" type="hidden" value="{{type}}">
