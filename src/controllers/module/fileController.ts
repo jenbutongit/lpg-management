@@ -43,6 +43,8 @@ export class FileController {
 		})
 		this.router.get('/content-management/courses/:courseId/module-file', this.getFile())
 		this.router.post('/content-management/courses/:courseId/module-file', this.setFile())
+		this.router.get('/content-management/courses/:courseId/module-e-learning', this.getScorm())
+		this.router.post('/content-management/courses/:courseId/module-e-learning', this.setFile())
 	}
 
 	public getFile() {
@@ -55,7 +57,7 @@ export class FileController {
 				return response.render('page/course/module/module-file', {media})
 			}
 
-			return response.render('page/course/module/module-file')
+			return response.render('page/course/module/module-file', {type: 'file'})
 		}
 	}
 
@@ -105,6 +107,20 @@ export class FileController {
 
 			await this.learningCatalogue.createModule(course.id, module)
 			response.redirect(`/content-management/courses/${course.id}/preview`)
+		}
+	}
+
+	public getScorm() {
+		return async (request: Request, response: Response) => {
+			if (request.session!.sessionFlash && request.session!.sessionFlash.mediaId) {
+				const mediaId = request.session!.sessionFlash.mediaId
+
+				const media = await this.restService.get(`/${mediaId}`)
+
+				return response.render('page/course/module/module-file', {type: 'e-learning', media})
+			}
+
+			return response.render('page/course/module/module-file', {type: 'e-learing'})
 		}
 	}
 }

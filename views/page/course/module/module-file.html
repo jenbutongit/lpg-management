@@ -7,7 +7,14 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['module_file_add'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}
+{% if type === 'file' %}
+    {{ i18n['module_add_file'] }}
+{% else %}
+ {{ i18n['module_add_scorm'] }}
+ {% endif %}
+     - {{ i18n['proposition_name'] }}
+{% endblock %}
 
 {% block beforeContent %}
   {% block phaseBanner %}
@@ -50,8 +57,7 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
-            <p class="govuk-body">You are adding a <strong>file</strong> module</p>
-
+            <p class="govuk-body">You are adding a <strong>{{type}}</strong> module</p>
             <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
 
             <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post">
@@ -146,8 +152,13 @@
                 <div class="{{chooseFileButtonClass}}">
                     <fieldset class="govuk-fieldset">
                         <div class="add-file-form govuk-form-group">
+                            {% if type === 'file' %}
+                                {% set fileTypes = 'PDF, Powerpoint, Excel, Word, video (MP4)' %}
+                            {% else %}
+                                {% set fileTypes = 'SCORM' %}
+                            {% endif %}
                             <label class="govuk-label">File</label>
-                            <span id="file-upload-hint" class="govuk-hint">You can upload the following file types: PDF, Powerpoint, Excel, Word, video(MP4)</span>
+                            <span id="file-upload-hint" class="govuk-hint">You can upload the following file types: {{fileTypes}}</span>
                             <span id="file-upload-error" class="govuk-error-message">{{chooseFileButtonMessage}}</span>
                             <input class="govuk-file-upload custom-uploader" id="file-upload" name="file" type="file" aria-describedby="file-upload-hint">
                             {% if media %}
@@ -197,19 +208,17 @@
                 }
                 ]
                 }) }}
-
-                {{ govukButton({
-                text: "Continue",
-                type: "submit",
-                attributes: {id: "submitButton"}
-                }) }}
+                <div class="button-container">
+                    {{ govukButton({
+                    text: "Continue",
+                    type: "submit",
+                    attributes: {id: "submitButton"}
+                    }) }}
+                </div>
             </form>
-
             <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/preview">Cancel</a>
         </div>
-
         <div class="govuk-grid-column-one-third">
-       
         </div>
     </div>
 {% endblock %}
