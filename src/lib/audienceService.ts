@@ -26,6 +26,10 @@ export class AudienceService {
 	}
 
 	setDepartmentsOnAudience(course: Course, audienceId: string, departments: any) {
-		JsonpathService.jsonpath().value(course, `$..audiences[?(@.id=='${audienceId}')].departments`, departments)
+		JsonpathService.jsonpath().value(
+			course,
+			`$..audiences[?(@.id==${JSON.stringify(audienceId)})].departments`,
+			departments
+		)
 	}
 }
