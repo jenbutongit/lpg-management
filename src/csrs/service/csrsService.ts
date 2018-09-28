@@ -1,6 +1,5 @@
 import {OauthRestService} from '../../lib/http/oauthRestService'
-
-const jsonpath = require('jsonpath')
+import {JsonpathService} from '../../lib/jsonpathService'
 
 export class CsrsService {
 	restService: OauthRestService
@@ -26,7 +25,10 @@ export class CsrsService {
 	}
 
 	async getDepartmentCodeToNameMapping() {
-		const organisations = jsonpath.query(await this.getOrganisations(), '$._embedded.organisations.*')
+		const organisations = JsonpathService.jsonpath().query(
+			await this.getOrganisations(),
+			'$._embedded.organisations.*'
+		)
 		const codeToName: any = {}
 
 		for (let organisation of organisations) {
