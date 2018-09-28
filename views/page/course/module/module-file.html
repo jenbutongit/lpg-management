@@ -51,7 +51,8 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
             <p class="govuk-body">You are adding a <strong>file</strong> module</p>
-                  
+
+            <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
 
             <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post">
                 <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">

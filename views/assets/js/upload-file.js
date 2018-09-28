@@ -45,8 +45,7 @@ window.onload = function () {
             }
 
             xhttp.open("POST", "http://localhost:9001/media", true)
-            xhttp.setRequestHeader("Authorization", "Basic " + btoa("user:password"))
-            xhttp.withCredentials = true
+            xhttp.setRequestHeader("Authorization", 'BEARER ' + document.getElementById("accessToken").value)
             xhttp.send(formData)
             return false
         }
