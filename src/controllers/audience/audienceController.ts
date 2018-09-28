@@ -3,10 +3,10 @@ import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFa
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
 import {Validator} from '../../learning-catalogue/validator/validator'
-import {CourseService} from 'lib/courseService'
-import {AudienceService} from 'lib/audienceService'
+import {CourseService} from '../../lib/courseService'
+import {AudienceService} from '../../lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
-import {JsonpathService} from 'lib/jsonpathService'
+import {JsonpathService} from '../../lib/jsonpathService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
