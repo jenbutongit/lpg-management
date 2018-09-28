@@ -45,7 +45,6 @@ import {CsrsService} from './csrs/service/csrsService'
 import {YoutubeService} from './youtube/youtubeService'
 import {YoutubeConfig} from './youtube/youtubeConfig'
 import {OauthRestService} from './lib/http/oauthRestService'
-import {MediaRestService} from './controllers/module/mediaRestService'
 
 log4js.configure(config.LOGGING)
 
@@ -85,7 +84,6 @@ export class ApplicationContext {
 	faceToFaceController: FaceToFaceModuleController
 	eventController: EventController
 	mediaConfig: LearningCatalogueConfig
-	mediaRestService: MediaRestService
 	courseService: CourseService
 	audienceService: AudienceService
 	csrsConfig: CsrsConfig
@@ -181,14 +179,12 @@ export class ApplicationContext {
 
 		this.mediaConfig = new LearningCatalogueConfig('http://localhost:9001/media')
 
-		this.mediaRestService = new MediaRestService(this.mediaConfig, this.auth)
-
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 		this.fileController = new FileController(
 			this.learningCatalogue,
 			this.moduleValidator,
 			this.moduleFactory,
-			this.mediaRestService
+			new OauthRestService(this.mediaConfig, this.auth)
 		)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 

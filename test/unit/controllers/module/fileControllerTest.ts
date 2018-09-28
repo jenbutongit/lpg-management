@@ -10,7 +10,7 @@ import {Request, Response} from 'express'
 import * as sinon from 'sinon'
 import {expect} from 'chai'
 import {Course} from '../../../../src/learning-catalogue/model/course'
-import {MediaRestService} from '../../../../src/controllers/module/mediaRestService'
+import {OauthRestService} from 'lib/http/oauthRestService'
 
 chai.use(sinonChai)
 
@@ -19,13 +19,13 @@ describe('File Controller Test', function() {
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
-	let mediaRestService: MediaRestService
+	let mediaRestService: OauthRestService
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
 		moduleValidator = <Validator<Module>>{}
 		moduleFactory = <ModuleFactory>{}
-		mediaRestService = <MediaRestService>{}
+		mediaRestService = <OauthRestService>{}
 
 		fileController = new FileController(learningCatalogue, moduleValidator, moduleFactory, mediaRestService)
 	})
