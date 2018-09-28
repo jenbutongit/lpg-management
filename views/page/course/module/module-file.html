@@ -57,7 +57,15 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
-            <p class="govuk-body">You are adding a <strong>{{type}}</strong> module</p>
+            <p class="govuk-body">You are adding 
+            
+            {% if type === "file" %}
+                a
+            {% else %}
+                an  
+            {% endif %}
+            
+            <strong>{{type}}</strong> module</p>
             <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
 
             <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post" class="module-form">
