@@ -6,8 +6,7 @@ import {Validator} from '../../learning-catalogue/validator/validator'
 import {CourseService} from 'lib/courseService'
 import {AudienceService} from 'lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
-
-const jsonpath = require('jsonpath')
+import {JsonpathService} from 'lib/jsonpathService'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -164,7 +163,7 @@ export class AudienceController {
 				organisations
 			)
 			if (selectedOrganisations.length > 0) {
-				jsonpath.value(
+				JsonpathService.jsonpath().value(
 					res.locals.course,
 					`$..audiences[?(@.id=='${req.params.audienceId}')].departments`,
 					selectedOrganisations
