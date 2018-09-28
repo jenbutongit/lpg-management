@@ -11,7 +11,9 @@ import {Request, Response} from 'express'
 import {expect} from 'chai'
 import * as sinon from 'sinon'
 import {Module} from '../../../../../src/learning-catalogue/model/module'
-import {DateRange} from '../../../../../src/learning-catalogue/model/DateRange'
+import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
+import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
+import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 
 chai.use(sinonChai)
 
@@ -20,13 +22,19 @@ describe('EventController', function() {
 	let learningCatalogue: LearningCatalogue
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
+	let dateRangeCommandValidator: Validator<DateRangeCommand>
+	let dateRangeValidator: Validator<DateRange>
+	let dateRangeCommandFactory: DateRangeCommandFactory
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
+		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
+		dateRangeValidator = <Validator<DateRange>>{}
+		dateRangeCommandFactory = <DateRangeCommandFactory>{}
 
-		eventController = new EventController(learningCatalogue, eventValidator, eventFactory)
+		eventController = new EventController(learningCatalogue, eventValidator, eventFactory, dateRangeCommandValidator, dateRangeValidator, dateRangeCommandFactory)
 	})
 
 	describe('date time paths', function() {

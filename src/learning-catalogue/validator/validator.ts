@@ -18,19 +18,11 @@ export class Validator<T> {
 		this._validationErrorMapper = value
 	}
 
-	get learningProviderFactory(): Factory<T> {
+	get factory(): Factory<T> {
 		return this._factory
 	}
 
-	set learningProviderFactory(value: Factory<T>) {
-		this._factory = value
-	}
-
-	get moduleFactory(): Factory<T> {
-		return this._factory
-	}
-
-	set moduleFactory(value: Factory<T>) {
+	set factory(value: Factory<T>) {
 		this._factory = value
 	}
 

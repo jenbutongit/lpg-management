@@ -48,7 +48,7 @@
                 </div>
             {% endif %}
 
-            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}" method="post">
+            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/dateRanges/{{dateRangeIndex}}" method="post">
                 {% if errors.fields.minDate or errors.fields.dateRanges or errors.fields.invalidDate %}
                     {{ govukDateInput({
                         id: "start-date",

@@ -1,4 +1,4 @@
-import {DateRange} from '../learning-catalogue/model/DateRange'
+import {DateRange} from '../learning-catalogue/model/dateRange'
 
 const isValidDate = require('is-valid-date')
 
@@ -83,11 +83,11 @@ export function getDate(data: any, start: boolean) {
 	date.setDate(data['day'])
 
 	if (start) {
-		date.setHours(data['start-time'][0])
-		date.setMinutes(data['start-time'][1])
+		date.setHours(data['startTime'][0])
+		date.setMinutes(data['startTime'][1])
 	} else {
-		date.setHours(data['end-time'][0])
-		date.setMinutes(data['end-time'][1])
+		date.setHours(data['endTime'][0])
+		date.setMinutes(data['endTime'][1])
 	}
 
 	date.setSeconds(0)
@@ -117,8 +117,8 @@ export function parseDate(data: any) {
 			data['day']
 		).toString()
 
-		dateRanges[0].startTime = (data['start-time'][0] + ':' + data['start-time'][1] + ':00').toString()
-		dateRanges[0].endTime = (data['end-time'][0] + ':' + data['end-time'][1] + ':00').toString()
+		dateRanges[0].startTime = (data['startTime'][0] + ':' + data['startTime'][1] + ':00').toString()
+		dateRanges[0].endTime = (data['endTime'][0] + ':' + data['endTime'][1] + ':00').toString()
 
 		return dateRanges
 	}

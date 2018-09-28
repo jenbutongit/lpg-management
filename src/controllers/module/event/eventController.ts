@@ -5,17 +5,28 @@ import {EventFactory} from '../../../learning-catalogue/model/factory/eventFacto
 import {Event} from '../../../learning-catalogue/model/event'
 import * as datetime from '../../../lib/datetime'
 import * as moment from 'moment'
+import {DateRangeCommand} from '../../command/dateRangeCommand'
+import {DateRange} from '../../../learning-catalogue/model/dateRange'
+import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
+	dateRangeCommandValidator: Validator<DateRangeCommand>
+	dateRangeValidator: Validator<DateRange>
+	dateRangeCommandFactory: DateRangeCommandFactory
 	router: Router
 
-	constructor(learningCatalogue: LearningCatalogue, eventValidator: Validator<Event>, eventFactory: EventFactory) {
+	constructor(learningCatalogue: LearningCatalogue, eventValidator: Validator<Event>, eventFactory: EventFactory,
+	            dateRangeCommandValidator: Validator<DateRangeCommand>, dateRangeValidator: Validator<DateRange>,
+	            dateRangeCommandFactory: DateRangeCommandFactory) {
 		this.learningCatalogue = learningCatalogue
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
+		this.dateRangeCommandValidator = dateRangeCommandValidator
+		this.dateRangeValidator = dateRangeValidator
+		this.dateRangeCommandFactory = dateRangeCommandFactory
 		this.router = Router()
 
 		this.setRouterPaths()
@@ -48,7 +59,7 @@ export class EventController {
 		this.router.param('eventId', async (req, res, next, eventId) => {
 			const event = await this.learningCatalogue.getEvent(res.locals.course.id, res.locals.module.id, eventId)
 
-			if (module) {
+			if (event) {
 				res.locals.event = event
 				next()
 			} else {
@@ -62,8 +73,8 @@ export class EventController {
 			next()
 		})
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId?',
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/location/create',
 			this.getLocation()
 		)
 		this.router.post(
@@ -93,18 +104,60 @@ export class EventController {
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events', {event: request.session!.event})
+			response.render('page/course/module/events/events')
+		}
+	}
+
+	public setDateTime() {
+		return async (request: Request, response: Response) => {
+			let data = {
+				...request.body,
+			}
+			const event = (data.eventJson) ? JSON.parse(data.eventJson) : new Event()
+			let errors = await this.dateRangeCommandValidator.check(data)
+
+			if (errors.size) {
+				response.render('page/course/module/events/events', {
+					event: event,
+					eventJson: JSON.stringify(event),
+					errors: errors
+				})
+			} else {
+				const dateRangeCommand: DateRangeCommand = this.dateRangeCommandFactory.create(data)
+				const dateRange: DateRange = dateRangeCommand.asDateRange()
+
+				errors = await this.dateRangeValidator.check(dateRange)
+
+				if (errors.size) {
+					const event = (data.eventJson) ? JSON.parse(data.eventJson) : new Event()
+					response.render('page/course/module/events/events', {
+						event: event,
+						eventJson: JSON.stringify(event),
+						errors: errors,
+					})
+
+				} else {
+					const event = (data.eventJson) ? JSON.parse(data.eventJson) : new Event()
+					event.dateRanges.push(dateRange)
+
+					response.render('page/course/module/events/events', {
+						event: event,
+						eventJson: JSON.stringify(event),
+					})
+				}
+			}
 		}
 	}
 
 	public editDateRange() {
 		return async (request: Request, response: Response) => {
-			const courseId = request.params.courseId
-			const moduleId = request.params.moduleId
-			const eventId = request.params.eventId
+			// const courseId = request.params.courseId
+			// const moduleId = request.params.moduleId
+			// const eventId = request.params.eventId
 			const dateRangeIndex = request.params.dateRangeIndex
 
-			const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
+			// const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
+			const event = response.locals.event
 
 			const dateRange = event!.dateRanges![dateRangeIndex]
 
@@ -120,7 +173,8 @@ export class EventController {
 				startHours: startTime.format('HH'),
 				startMinutes: startTime.format('mm'),
 				endHours: endTime.format('HH'),
-				endMinutes: endTime.format('mm')
+				endMinutes: endTime.format('mm'),
+				dateRangeIndex: dateRangeIndex
 			})
 		}
 	}
@@ -131,10 +185,13 @@ export class EventController {
 				...request.body,
 			}
 
+
 			const courseId = request.params.courseId
 			const moduleId = request.params.moduleId
 			const eventId = request.params.eventId
 			const dateRangeIndex = request.params.dateRangeIndex
+
+			// validate form
 
 			const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
 
@@ -147,52 +204,18 @@ export class EventController {
 			event!.dateRanges![dateRangeIndex].startTime = startTime
 			event!.dateRanges![dateRangeIndex].endTime = endTime
 
-
-			// validate
+			// validate dateRange
 
 			this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
-			response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+
+			request.session!.event = event
+			request.session!.save(() => {
+				response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+			})
 		}
 	}
 
-	public setDateTime() {
-		return async (request: Request, response: Response) => {
-			let data = {
-				...request.body,
-			}
 
-			const courseId = request.params.courseId
-			const moduleId = request.params.moduleId
-			const eventId = request.params.eventId
-
-			data.dateRanges = datetime.parseDate(data)
-
-			let errors = await this.eventValidator.check(data, ['event.dateRanges'])
-			errors = datetime.validateDateTime(data, errors)
-			errors.size = Object.keys(errors.fields).length
-
-			let event = await this.eventFactory.create(data)
-
-			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors, event: event}
-				request.session!.save(() => {
-					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
-				})
-			} else {
-				const eventToMerge = eventId ? response.locals.event : request.session!.event
-
-				if (eventToMerge) {
-					eventToMerge.dateRanges.push(event.dateRanges[0])
-					event = eventToMerge
-				}
-
-				request.session!.event = event
-				request.session!.save(() => {
-					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events`)
-				})
-			}
-		}
-	}
 
 	public getDatePreview() {
 		return async (request: Request, response: Response) => {
@@ -202,7 +225,10 @@ export class EventController {
 
 	public getLocation() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/module/events/event-location', {event: req.session!.event})
+			res.render('page/course/module/events/event-location', {
+				event: JSON.parse(req.body.eventJson),
+				eventJson: req.body.eventJson
+			})
 		}
 	}
 
@@ -218,51 +244,24 @@ export class EventController {
 			}
 
 			const errors = await this.eventValidator.check(data, ['event.location'])
-			const event = await this.eventFactory.create(data)
 
 			if (errors.size) {
-				req.session!.sessionFlash = {errors: errors}
-				req.session!.event = req.session!.event
-					? (function() {
-							const mergedEvent = req.session!.event
-							mergedEvent.venue = event.venue
-							return mergedEvent
-					  })()
-					: event
-				req.session!.save(() => {
-					res.redirect(
-						`/content-management/courses/${req.params.courseId}/modules/${
-							req.params.moduleId
-						}/events/location`
-					)
+				res.render('page/course/module/events/event-location', {
+					eventJson: req.body.eventJson,
+					errors: errors
 				})
 			} else {
-				if (req.session!.event) {
-					const mergedEvent = req.session!.event
-					mergedEvent.venue = event.venue
+				let event = JSON.parse(req.body.eventJson)
+				event.venue = data.venue
 
-					const savedEvent = await this.learningCatalogue.createEvent(
-						req.params.courseId,
-						req.params.moduleId,
-						mergedEvent
-					)
-
-					delete req.session!.event
-
-					req.session!.sessionFlash = {event: savedEvent}
-
-					req.session!.save(() => {
-						res.redirect(
-							`/content-management/courses/${req.params.courseId}/modules/${
-								req.params.moduleId
-							}/events-overview/${savedEvent.id}`
-						)
-					})
-				} else {
-					res.redirect(
-						`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events`
-					)
-				}
+				const savedEvent = await this.learningCatalogue.createEvent(
+					req.params.courseId,
+					req.params.moduleId,
+					event
+				)
+				res.redirect(
+					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`
+				)
 			}
 		}
 	}

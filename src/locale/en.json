@@ -78,7 +78,7 @@
 	"validation_module_video_noDuration": "There was a problem finding the length of this video",
 	"validation_module_event_dateRanges_empty": "Start date is required",
 	"validation_module_event_dateRanges_past": "Start date must be in the future",
-	"validation_module_event_dateRanges_endBeforeStart": "Start time must be before end time",
+	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
 	"video": "Video"
 }

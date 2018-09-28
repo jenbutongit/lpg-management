@@ -35,13 +35,13 @@
                 <div class="event-container">
                     <ul class="event-list headers">
                         <li class="events">
-                            <p class="govuk-body event-header date">Date</p><p class="govuk-body event-header time">Start time</p><p class="govuk-body event-header time">End time</p><span class="spacer"></span> 
-                        </li> 
+                            <p class="govuk-body event-header date">Date</p><p class="govuk-body event-header time">Start time</p><p class="govuk-body event-header time">End time</p><span class="spacer"></span>
+                        </li>
                     </ul>
                     <ul class="event-list">
                         {% for dateRange in event.dateRanges %}
                             <li class="events u--border--bgrey">
-                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit"><a href="#" class="govuk-link">Edit</a>
+                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit"><a href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/dateRanges/{{loop.index0}}" class="govuk-link">Edit</a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -49,6 +49,7 @@
             {% endif %}
 
             <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}" method="post">
+                <input type="hidden" name="eventJson" value="{{eventJson}}" />
                 {% if errors.fields.minDate or errors.fields.dateRanges or errors.fields.invalidDate %}
                     {{ govukDateInput({
                         id: "start-date",
@@ -59,7 +60,7 @@
                             isPageHeading: false,
                             classes: "govuk-fieldset__legend--s"
                             }
-                     
+
                         },
                         hint: {
                             text: "For example, 31 3 " + exampleYear
@@ -117,7 +118,7 @@
                 {% set setMinutes = ["00", "15", "30", "45"] %}
                 {{ timeInputs("Start time", setHours, setMinutes , "startTime", "Hours", "Minutes") }}
                 {{ timeInputs("End time", setHours, setMinutes , "endTime", "Hours", "Minutes") }}
-                    
+
                 {{ govukButton({
                     text: "Add this date",
                     classes: "button-blue left-aligned"
@@ -125,9 +126,16 @@
             </form>
 
             {% if event.dateRanges and event.dateRanges.length > 0 %}
-                <div class="button-container">
-                    <a class="govuk-button" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location">Continue</a>
-                </div>
+            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location/create" method="post">
+            <input type="hidden" name="eventJson" value="{{eventJson}}" />
+
+            <div class="button-container">
+                {{ govukButton({
+                text: "Continue",
+                classes: "govuk-button"
+                }) }}
+            </div>
+            </form>
             {% endif %}
             <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
         </div>
