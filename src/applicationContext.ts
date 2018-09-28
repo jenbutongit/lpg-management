@@ -29,8 +29,6 @@ import {Course} from './learning-catalogue/model/course'
 import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
 import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
 import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
-import {YoutubeService} from './lib/youtubeService'
-import {YoutubeConfig} from './lib/youtubeConfig'
 import {ModuleController} from './controllers/module/moduleController'
 import {Module} from './learning-catalogue/model/module'
 import {FileController} from './controllers/module/fileController'
@@ -44,7 +42,9 @@ import {CourseService} from './lib/courseService'
 import {AudienceService} from './lib/audienceService'
 import {CsrsConfig} from './csrs/csrsConfig'
 import {CsrsService} from './csrs/service/csrsService'
-import {RestService} from './learning-catalogue/service/restService'
+import {YoutubeService} from './youtube/youtubeService'
+import {YoutubeConfig} from './youtube/youtubeConfig'
+import {OauthRestService} from './lib/http/oauthRestService'
 
 log4js.configure(config.LOGGING)
 
@@ -76,13 +76,14 @@ export class ApplicationContext {
 	audienceController: AudienceController
 	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
-	eventController: EventController
 	eventFactory: EventFactory
 	fileController: FileController
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
+	eventController: EventController
+	mediaConfig: LearningCatalogueConfig
 	courseService: CourseService
 	audienceService: AudienceService
 	csrsConfig: CsrsConfig
@@ -113,15 +114,9 @@ export class ApplicationContext {
 			this.identityService
 		)
 
-		this.learningCatalogueConfig = new LearningCatalogueConfig(
-			{
-				username: config.COURSE_CATALOGUE.auth.username,
-				password: config.COURSE_CATALOGUE.auth.password,
-			},
-			config.COURSE_CATALOGUE.url
-		)
+		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url)
 
-		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig)
+		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
 
@@ -144,8 +139,8 @@ export class ApplicationContext {
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
-		this.youtubeConfig = new YoutubeConfig('', 15000)
-		this.youtubeService = new YoutubeService(this.youtubeConfig)
+		this.youtubeConfig = new YoutubeConfig(15000)
+		this.youtubeService = new YoutubeService(this.youtubeConfig, this.auth)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory()
@@ -186,8 +181,15 @@ export class ApplicationContext {
 			this.termsAndConditionsValidator
 		)
 
+		this.mediaConfig = new LearningCatalogueConfig('http://localhost:9001/media')
+
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
-		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.fileController = new FileController(
+			this.learningCatalogue,
+			this.moduleValidator,
+			this.moduleFactory,
+			new OauthRestService(this.mediaConfig, this.auth)
+		)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 
 		this.faceToFaceController = new FaceToFaceModuleController(
@@ -198,6 +200,9 @@ export class ApplicationContext {
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
+
+		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
+		this.csrsService = new CsrsService(new OauthRestService(this.csrsConfig, this.auth))
 
 		this.audienceService = new AudienceService(this.learningCatalogue)
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
