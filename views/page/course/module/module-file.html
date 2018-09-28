@@ -63,6 +63,7 @@
             <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post">
                 <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">
                 <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
+                <input id="fileType" name="fileType" type="hidden" value="{{type}}">
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}
                     {{ govukInput({
