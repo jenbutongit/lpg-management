@@ -2,7 +2,7 @@ import {DateRange} from '../../../../src/learning-catalogue/model/dateRange'
 import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {DateRangeFactory} from '../../../../src/learning-catalogue/model/factory/dateRangeFactory'
 import {Factory} from '../../../../src/learning-catalogue/model/factory/factory'
-import moment = require('moment')
+import * as moment from 'moment'
 import {expect} from 'chai'
 
 describe('DateRange validation tests', () => {
@@ -15,18 +15,10 @@ describe('DateRange validation tests', () => {
 	})
 
 	it('should pass validation if valid', async () => {
-		const date = moment().add(1, 'days')
-
 		const data: any = {
-			day: `${date.date()}`,
-			month: `${date.month() + 1}`,
-			year: `${date.year()}`,
-			'start-time': [
-				'9','0'
-			],
-			'end-time': [
-				'17','00'
-			]
+			date: moment().add(1, 'day').format('YYYY-MM-DD'),
+			startTime: moment([9,30], 'HH:mm').format('HH:mm'),
+			endTime: moment([17,30], 'HH:mm').format('HH:mm'),
 		}
 
 		const result = await validator.check(data, ['event.dateRanges.date'])
@@ -35,18 +27,10 @@ describe('DateRange validation tests', () => {
 	})
 
 	it('should fail validation if date is in the past', async () => {
-		const date = moment().subtract(1, 'days')
-
 		const data: any = {
-			day: `${date.date()}`,
-			month: `${date.month() + 1}`,
-			year: `${date.year()}`,
-			'start-time': [
-				'9','0'
-			],
-			'end-time': [
-				'17','00'
-			]
+			date: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+			startTime: moment([9,30], 'HH:mm').format('HH:mm'),
+			endTime: moment([17,30], 'HH:mm').format('HH:mm'),
 		}
 
 		const result = await validator.check(data, ['event.dateRanges.date'])
@@ -58,15 +42,9 @@ describe('DateRange validation tests', () => {
 	})
 
 	it('should fail validation if startTime is missing', async () => {
-		const date = moment().add(1, 'days')
-
 		const data: any = {
-			day: `${date.date()}`,
-			month: `${date.month() + 1}`,
-			year: `${date.year()}`,
-			'end-time': [
-				'17','00'
-			]
+			date: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+			endTime: moment([17,30], 'HH:mm').format('HH:mm'),
 		}
 
 		const result = await validator.check(data, ['event.dateRanges.startTime'])
@@ -78,15 +56,9 @@ describe('DateRange validation tests', () => {
 	})
 
 	it('should fail validation if endTime is missing', async () => {
-		const date = moment().add(1, 'days')
-
 		const data: any = {
-			day: `${date.date()}`,
-			month: `${date.month() + 1}`,
-			year: `${date.year()}`,
-			'start-time': [
-				'09','00'
-			]
+			date: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+			startTime: moment([9,30], 'HH:mm').format('HH:mm'),
 		}
 
 		const result = await validator.check(data, ['event.dateRanges.endTime'])
@@ -98,18 +70,10 @@ describe('DateRange validation tests', () => {
 	})
 
 	it('should fail validation if endTime is before startTime', async () => {
-		const date = moment().add(1, 'days')
-
 		const data: any = {
-			day: `${date.date()}`,
-			month: `${date.month() + 1}`,
-			year: `${date.year()}`,
-			'start-time': [
-				'09','00'
-			],
-			'end-time': [
-				'08','00'
-			]
+			date: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+			startTime: moment([17,30], 'HH:mm').format('HH:mm'),
+			endTime: moment([9,30], 'HH:mm').format('HH:mm'),
 		}
 
 		const result = await validator.check(data, ['event.dateRanges.endTime'])

@@ -113,7 +113,7 @@ export class EventController {
 			let data = {
 				...request.body,
 			}
-			const event = (data.eventJson) ? JSON.parse(data.eventJson) : new Event()
+			const event = (data.eventJson) ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 			let errors = await this.dateRangeCommandValidator.check(data)
 
 			if (errors.size) {
@@ -129,7 +129,7 @@ export class EventController {
 				errors = await this.dateRangeValidator.check(dateRange)
 
 				if (errors.size) {
-					const event = (data.eventJson) ? JSON.parse(data.eventJson) : new Event()
+					const event = (data.eventJson) ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 					response.render('page/course/module/events/events', {
 						event: event,
 						eventJson: JSON.stringify(event),
@@ -137,7 +137,7 @@ export class EventController {
 					})
 
 				} else {
-					const event = (data.eventJson) ? JSON.parse(data.eventJson) : new Event()
+					const event = (data.eventJson) ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 					event.dateRanges.push(dateRange)
 
 					response.render('page/course/module/events/events', {
@@ -215,8 +215,6 @@ export class EventController {
 		}
 	}
 
-
-
 	public getDatePreview() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events-preview')
@@ -226,7 +224,7 @@ export class EventController {
 	public getLocation() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/module/events/event-location', {
-				event: JSON.parse(req.body.eventJson),
+				event: JSON.parse(req.body.eventJson || '{}'),
 				eventJson: req.body.eventJson
 			})
 		}
@@ -251,7 +249,7 @@ export class EventController {
 					errors: errors
 				})
 			} else {
-				let event = JSON.parse(req.body.eventJson)
+				let event = JSON.parse(req.body.eventJson || '{}')
 				event.venue = data.venue
 
 				const savedEvent = await this.learningCatalogue.createEvent(

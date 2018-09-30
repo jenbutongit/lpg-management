@@ -1,4 +1,5 @@
 import * as chai from 'chai'
+import {expect} from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {beforeEach} from 'mocha'
 import {EventController} from '../../../../../src/controllers/module/event/eventController'
@@ -8,12 +9,11 @@ import {Event} from '../../../../../src/learning-catalogue/model/event'
 import {EventFactory} from '../../../../../src/learning-catalogue/model/factory/eventFactory'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import {Request, Response} from 'express'
-import {expect} from 'chai'
 import * as sinon from 'sinon'
-import {Module} from '../../../../../src/learning-catalogue/model/module'
 import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
+import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 
 chai.use(sinonChai)
 
@@ -51,60 +51,63 @@ describe('EventController', function() {
 			const res: Response = mockRes()
 
 			req.body = {
-				'start-date-day': '20',
-				'start-date-month': '12',
-				'start-date-year': '2030',
-				'start-time': ['09', '00'],
-				'end-time': ['17', '00'],
+				day: '20',
+				month: '12',
+				year: '2030',
+				startTime: ['09', '00'],
+				endTime: ['17', '00'],
 			}
 
 			req.params.courseId = 'abc'
 			req.params.moduleId = 'def'
 
-			const event: Event = new Event()
-			event.dateRanges = [new DateRange()]
-			req.session!.event = event
+			// const event: Event = new Event()
+			// event.dateRanges = [new DateRange()]
 
+			const dateRange = <DateRange>{}
+			const dateRangeCommand = <DateRangeCommand>{}
+			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+			dateRangeCommandValidator.check = sinon.stub().returns({fields: [], size: 0})
+			dateRangeValidator.check = sinon.stub().returns({fields:[], size: 0})
+
+			const event = new Event()
 			eventFactory.create = sinon.stub().returns(event)
-			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
 
-			req.session!.save = callback => {
-				callback(undefined)
-			}
 			await eventController.setDateTime()(req, res)
 
-			expect(eventValidator.check).to.have.been.calledOnce
-			expect(eventFactory.create).to.have.been.calledOnce
-			expect(res.redirect).to.have.been.calledWith('/content-management/courses/abc/modules/def/events')
+			expect(dateRangeCommandValidator.check).to.have.been.calledOnceWith(req.body)
+			expect(res.render).to.have.been.calledWith('page/course/module/events/events',{
+				event: event,
+				eventJson: JSON.stringify(event)
+			})
 		})
 
-		it('should check for errors and redirect to events page', async function() {
+		it('should render errors in DateRangeCommand', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
 			req.body = {
-				'start-date-day': '',
-				'start-date-month': '',
-				'start-date-year': '',
-				'start-time': ['07', '00'],
-				'end-time': ['06', '00'],
+				'day': '',
+				'month': '1',
+				'year': '2019',
+				'startTime': ['07', '00'],
+				'endTime': ['06', '00'],
 			}
 
-			req.params.courseId = 'abc'
-			req.params.moduleId = 'def'
+			const errors = {fields: {day:['error']}, size: 1}
+			dateRangeCommandValidator.check = sinon.stub().returns(errors)
 
-			eventFactory.create = sinon.stub().returns(new Event())
-			eventValidator.check = sinon.stub().returns({fields: ['validation.module.event.dateRanges.empty'], size: 1})
-			learningCatalogue.createEvent = sinon.stub().returns(new Module())
+			const event = new Event()
+			eventFactory.create = sinon.stub().returns(event)
 
-			req.session!.save = callback => {
-				callback(undefined)
-			}
 			await eventController.setDateTime()(req, res)
 
-			expect(eventValidator.check).to.have.been.calledOnce
-			expect(eventFactory.create).to.have.been.calledOnce
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/abc/modules/def/events`)
+			expect(res.render).to.have.been.calledWith('page/course/module/events/events', {
+				errors: errors,
+				event: event,
+				eventJson: JSON.stringify(event)
+			})
 		})
 
 		it('should render event preview page', async function() {
@@ -121,30 +124,45 @@ describe('EventController', function() {
 			const res: Response = mockRes()
 
 			await eventController.getLocation()(mockReq(), res)
-			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
+			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location', {
+				event: {},
+				eventJson: undefined
+			})
 		})
 
 		it('should check for errors and redirect to events overview page if no errors', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
-			const event: Event = new Event()
-			event.id = 'eventId123'
+			req.params.courseId = 'course-id'
+			req.params.moduleId = 'module-id'
 
-			req.params.courseId = 'courseId123'
-			req.params.moduleId = 'moduleId123'
-			req.body = {
+			const venue = <Venue>{
 				location: 'London',
+				address: 'Victoria Street',
+				capacity: 10,
+				minCapacity: 5,
 			}
-			req.session!.event = event
 
-			eventFactory.create = sinon.stub().returns(new Event())
+			const event = new Event()
+
+			req.body = {
+				location: venue.location,
+				address: venue.address,
+				capacity: venue.capacity,
+				minCapacity: venue.minCapacity,
+				eventJson: JSON.stringify(event)
+			}
+
+			event.venue = venue
+
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
-			learningCatalogue.createEvent = sinon.stub().returns(event)
+			learningCatalogue.createEvent = sinon.stub().returns(<Event>{
+				id: 'event-id',
+				venue: venue,
+				dateRanges: []
+			})
 
-			req.session!.save = callback => {
-				callback(undefined)
-			}
 			await eventController.setLocation()(req, res)
 
 			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(
@@ -153,37 +171,10 @@ describe('EventController', function() {
 				event
 			)
 			expect(res.redirect).to.have.been.calledOnceWith(
-				'/content-management/courses/courseId123/modules/moduleId123/events-overview/eventId123'
+				`/content-management/courses/course-id/modules/module-id/events-overview/event-id`
 			)
 		})
 
-		it('should redirect to events page if event object not found on session', async function() {
-			const req: Request = mockReq()
-			const res: Response = mockRes()
-
-			const event: Event = new Event()
-			event.id = 'eventId123'
-
-			req.params.courseId = 'courseId123'
-			req.params.moduleId = 'moduleId123'
-			req.body = {
-				location: 'London',
-			}
-
-			eventFactory.create = sinon.stub().returns(new Event())
-			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
-			learningCatalogue.createEvent = sinon.stub().returns(event)
-
-			req.session!.save = callback => {
-				callback(undefined)
-			}
-			await eventController.setLocation()(req, res)
-
-			expect(learningCatalogue.createEvent).to.not.have.been.called
-			expect(res.redirect).to.have.been.calledOnceWith(
-				'/content-management/courses/courseId123/modules/moduleId123/events'
-			)
-		})
 
 		it('should check for errors and redirect back to location page if errors', async function() {
 			const req: Request = mockReq()
@@ -196,23 +187,25 @@ describe('EventController', function() {
 			req.params.moduleId = 'moduleId123'
 			req.body = {
 				// required field 'location' missing to imitate error condition
+				eventJson: JSON.stringify(new Event()),
 			}
-			req.session!.event = event
 
-			eventFactory.create = sinon.stub().returns(new Event())
+			const errors = {fields: [{location: ['validation.module.event.venue.location.empty']}], size: 1}
+
 			eventValidator.check = sinon
 				.stub()
-				.returns({fields: [{location: ['validation.module.event.venue.location.empty']}], size: 1})
+				.returns(errors)
+
 			learningCatalogue.createEvent = sinon.stub().returns(event)
 
-			req.session!.save = callback => {
-				callback(undefined)
-			}
 			await eventController.setLocation()(req, res)
 
 			expect(learningCatalogue.createEvent).to.not.have.been.called
-			expect(res.redirect).to.have.been.calledOnceWith(
-				'/content-management/courses/courseId123/modules/moduleId123/events/location'
+			expect(res.render).to.have.been.calledOnceWith(
+				'page/course/module/events/event-location', {
+					eventJson:req.body.eventJson,
+					errors: errors,
+				}
 			)
 		})
 	})
