@@ -185,33 +185,53 @@ export class EventController {
 				...request.body,
 			}
 
-
 			const courseId = request.params.courseId
 			const moduleId = request.params.moduleId
 			const eventId = request.params.eventId
 			const dateRangeIndex = request.params.dateRangeIndex
 
-			// validate form
+			const errors = await this.dateRangeCommandValidator.check(data)
 
-			const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
+			if (errors.size) {
+				response.render('page/course/module/events/event-dateRange-edit', {
+					errors: errors,
+					day: request.body.day,
+					month: request.body.month,
+					year: request.body.year,
+					startHours: request.body.startHours,
+					startMinutes: request.body.startMinutes,
+					endHours: request.body.endHours,
+					endMinutes: request.body.endMinutes,
+					dateRangeIndex: dateRangeIndex
+				})
 
-			const date = moment([data.year, data.month -1, data.day]).format('YYYY-MM-DD')
+			} else {
+				const dateRangeCommand = this.dateRangeCommandFactory.create(data)
+				const dateRange = dateRangeCommand.asDateRange()
 
-			const startTime = moment([data.startTime[0], data.startTime[1]], 'HH:mm').format('HH:mm')
-			const endTime = moment([data.endTime[0], data.endTime[1]], 'HH:mm').format('HH:mm')
+				const errors = await this.dateRangeValidator.check(dateRange)
+				if (errors.size) {
+					response.render('page/course/module/events/event-dateRange-edit', {
+						errors: errors,
+						day: request.body.day,
+						month: request.body.month,
+						year: request.body.year,
+						startHours: request.body.startHours,
+						startMinutes: request.body.startMinutes,
+						endHours: request.body.endHours,
+						endMinutes: request.body.endMinutes,
+						dateRangeIndex: dateRangeIndex
+					})
+				} else {
+					const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
 
-			event!.dateRanges![dateRangeIndex].date = date
-			event!.dateRanges![dateRangeIndex].startTime = startTime
-			event!.dateRanges![dateRangeIndex].endTime = endTime
+					event!.dateRanges![dateRangeIndex] = dateRange
 
-			// validate dateRange
+					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 
-			this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
-
-			request.session!.event = event
-			request.session!.save(() => {
-				response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
-			})
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+				}
+			}
 		}
 	}
 
