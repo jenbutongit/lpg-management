@@ -23,6 +23,13 @@
 	}
 }
 
+.govuk-grid-column-two-thirds,
+.govuk-grid-column-full {
+	.page-title {
+		padding-top: 0;
+	}
+}
+
 .govuk-header__container {
 	border-color: $theme;
 }
@@ -193,6 +200,10 @@ ul {
 	&:hover {
 		background-color: $theme;
 	}
+}
+
+.hidden {
+    display: none;
 }
 
 @media screen and (min-width: $tablet-small) {
