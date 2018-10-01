@@ -168,9 +168,6 @@ export class EventController {
 
 	public editDateRange() {
 		return async (request: Request, response: Response) => {
-			// const courseId = request.params.courseId
-			// const moduleId = request.params.moduleId
-			// const eventId = request.params.eventId
 			const dateRangeIndex = request.params.dateRangeIndex
 
 			// const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
