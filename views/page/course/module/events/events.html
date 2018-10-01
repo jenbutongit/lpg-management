@@ -12,11 +12,7 @@
     {{ phaseBanner("beta") }}
   {% endblock%}
   {% block backLink %}
-    {% if event %}
-        {{ backLink("/content-management/courses/" + course.id + "/modules/" + module.id + "/events-preview/" + event.id) }}
-    {% else %}
-        {{ backLink("/content-management/courses/" + course.id + "/overview") }}
-    {% endif %}
+    {{ backLink("/content-management/courses/" + course.id + "/overview") }}
   {% endblock%}
 {% endblock %}
 
@@ -41,7 +37,7 @@
                     <ul class="event-list">
                         {% for dateRange in event.dateRanges %}
                             <li class="events u--border--bgrey">
-                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit"><a href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/dateRanges/{{loop.index0}}" class="govuk-link">Edit</a>
+                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit">
                             </li>
                         {% endfor %}
                     </ul>
