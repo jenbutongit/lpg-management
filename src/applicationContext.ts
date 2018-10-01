@@ -45,6 +45,10 @@ import {CsrsService} from './csrs/service/csrsService'
 import {YoutubeService} from './youtube/youtubeService'
 import {YoutubeConfig} from './youtube/youtubeConfig'
 import {OauthRestService} from './lib/http/oauthRestService'
+import {DateRangeCommand} from './controllers/command/dateRangeCommand'
+import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
+import {DateRange} from './learning-catalogue/model/dateRange'
+import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -88,6 +92,10 @@ export class ApplicationContext {
 	audienceService: AudienceService
 	csrsConfig: CsrsConfig
 	csrsService: CsrsService
+	dateRangeCommandFactory: DateRangeCommandFactory
+	dateRangeCommandValidator: Validator<DateRangeCommand>
+	dateRangeFactory: DateRangeFactory
+	dateRangeValidator: Validator<DateRange>
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -199,7 +207,13 @@ export class ApplicationContext {
 		)
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
-		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory)
+
+		this.dateRangeCommandFactory = new DateRangeCommandFactory()
+		this.dateRangeCommandValidator = new Validator<DateRangeCommand>(this.dateRangeCommandFactory)
+		this.dateRangeFactory = new DateRangeFactory()
+		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
+
+		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory, this.dateRangeCommandValidator, this.dateRangeValidator, this.dateRangeCommandFactory)
 
 		this.audienceService = new AudienceService(this.learningCatalogue)
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
