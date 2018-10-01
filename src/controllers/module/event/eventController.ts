@@ -82,8 +82,6 @@ export class EventController {
 			this.setLocation()
 		)
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.getDateTime())
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId?', this.setDateTime())
 		this.router.get(
 			'/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?',
 			this.getDatePreview()
@@ -93,9 +91,22 @@ export class EventController {
 			this.getEventOverview()
 		)
 
+
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', this.getDateTime())
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', this.setDateTime())
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.editDateRange()
 		)
+
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
+			this.dateRangeOverview()
+		)
+
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
+			this.addDateRange()
+		)
+
 
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
@@ -149,6 +160,12 @@ export class EventController {
 		}
 	}
 
+	public dateRangeOverview() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/event-dateRange-edit')
+		}
+	}
+
 	public editDateRange() {
 		return async (request: Request, response: Response) => {
 			// const courseId = request.params.courseId
@@ -176,6 +193,59 @@ export class EventController {
 				endMinutes: endTime.format('mm'),
 				dateRangeIndex: dateRangeIndex
 			})
+		}
+	}
+
+	public addDateRange() {
+		return async (request: Request, response: Response) => {
+			let data = {
+				...request.body,
+			}
+
+			const courseId = request.params.courseId
+			const moduleId = request.params.moduleId
+			const eventId = request.params.eventId
+
+			const errors = await this.dateRangeCommandValidator.check(data)
+
+			if (errors.size) {
+				response.render('page/course/module/events/event-dateRange-edit', {
+					errors: errors,
+					day: request.body.day,
+					month: request.body.month,
+					year: request.body.year,
+					startHours: request.body.startHours,
+					startMinutes: request.body.startMinutes,
+					endHours: request.body.endHours,
+					endMinutes: request.body.endMinutes,
+				})
+
+			} else {
+				const dateRangeCommand = this.dateRangeCommandFactory.create(data)
+				const dateRange = dateRangeCommand.asDateRange()
+
+				const errors = await this.dateRangeValidator.check(dateRange)
+				if (errors.size) {
+					response.render('page/course/module/events/event-dateRange-edit', {
+						errors: errors,
+						day: request.body.day,
+						month: request.body.month,
+						year: request.body.year,
+						startHours: request.body.startHours,
+						startMinutes: request.body.startMinutes,
+						endHours: request.body.endHours,
+						endMinutes: request.body.endMinutes,
+					})
+				} else {
+					const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
+
+					event!.dateRanges!.push(dateRange)
+
+					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
+
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+				}
+			}
 		}
 	}
 
@@ -229,7 +299,7 @@ export class EventController {
 
 					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 
-					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 				}
 			}
 		}

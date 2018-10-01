@@ -41,7 +41,8 @@
                     <ul class="event-list">
                         {% for dateRange in event.dateRanges %}
                             <li class="events u--border--bgrey">
-                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit"><a href="#" class="govuk-link">Edit</a>
+                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit">
+                                <a href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/dateRanges/{{loop.index0}}" class="govuk-link">Edit</a>
                             </li>
                         {% endfor %}
                     </ul>
@@ -126,16 +127,11 @@
                 {{ timeInputs("End time", setHours, setMinutes , "endTime", "Hours", "Minutes", endHours, endMinutes) }}
 
                 {{ govukButton({
-                    text: "Add this date",
+                    text: "Update this date" if dateRangeIndex|length else "Add this date",
                     classes: "button-blue left-aligned"
                 }) }}
             </form>
 
-            {% if event.dateRanges and event.dateRanges.length > 0 %}
-                <div class="button-container">
-                    <a class="govuk-button" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location">Continue</a>
-                </div>
-            {% endif %}
             <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
         </div>
     </div>

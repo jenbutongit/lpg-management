@@ -285,7 +285,7 @@ describe('EventController', function() {
 			})
 		})
 
-		it('should update event successfully', async () => {
+		it('should update date range successfully', async () => {
 			const courseId = 'course-id'
 			const moduleId= 'module-id'
 			const eventId = 'event-id'
@@ -356,11 +356,11 @@ describe('EventController', function() {
 					}
 				]
 			})
-			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}`)
+			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 		})
 
 
-		it('should display errors if form validation fails', async () => {
+		it('should display errors if form validation fails on update', async () => {
 			const courseId = 'course-id'
 			const moduleId= 'module-id'
 			const eventId = 'event-id'
@@ -418,7 +418,7 @@ describe('EventController', function() {
 			})
 		})
 
-		it('should display errors if DateRange validation fails', async () => {
+		it('should display errors if DateRange validation fails on update', async () => {
 			const courseId = 'course-id'
 			const moduleId= 'module-id'
 			const eventId = 'event-id'
@@ -484,6 +484,222 @@ describe('EventController', function() {
 				endHours: request.body.endHours,
 				endMinutes: request.body.endMinutes,
 				dateRangeIndex: dateRangeIndex
+			})
+		})
+
+		it('should render dateRange overview', async () => {
+
+			const request = mockReq()
+			const response = mockRes()
+
+			eventController.dateRangeOverview()(request, response)
+
+			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit')
+		})
+
+		it('should add date range successfully', async () => {
+			const courseId = 'course-id'
+			const moduleId= 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId,
+					dateRangeIndex: 0
+				},
+				body: {
+					day: '01',
+					month: '12',
+					year: '2019',
+					startTime: [ '11', '30'],
+					endTime: ['12', '30'],
+				}
+			}
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			const errors: any = {}
+
+			const dateRange = <DateRange>{
+				date: '2019-12-01',
+				startTime: '11:30',
+				endTime: '12:30'
+			}
+
+			let dateRangeCommand = <DateRangeCommand>{}
+			dateRangeCommandValidator.check = sinon.stub().returns(errors)
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
+
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			const event = <Event>{
+				id: 'event-id',
+				venue: {
+					address: 'London',
+					location:'London',
+					minCapacity: 5,
+					capacity: 5
+				},
+				dateRanges: [
+					{
+						date: '2019-03-31',
+						startTime: '09:30',
+						endTime: '16:30'
+					}
+				]
+			}
+			learningCatalogue.getEvent = sinon.stub().returns(event)
+			learningCatalogue.updateEvent = sinon.stub()
+
+			await eventController.addDateRange()(request, response)
+
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
+			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId, {
+				id: 'event-id',
+				venue: {
+					address: 'London',
+					location:'London',
+					minCapacity: 5,
+					capacity: 5
+				},
+				dateRanges: [
+					{
+						date: '2019-03-31',
+						startTime: '09:30',
+						endTime: '16:30'
+					},
+					{
+						date: '2019-12-01',
+						startTime: '11:30',
+						endTime: '12:30'
+					}
+				]
+			})
+			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+		})
+
+		it('should display errors if form validation fails on add', async () => {
+			const courseId = 'course-id'
+			const moduleId= 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId
+				},
+				body: {
+					day: '01',
+					month: '12',
+					year: '2019',
+					startTime: [ '11', '30'],
+					endTime: ['12', '30'],
+				}
+			}
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			const errors: any = {
+				fields: [
+					{
+						day:[
+							'error'
+						]
+					}
+				],
+				size: 1
+			}
+
+			dateRangeCommandValidator.check = sinon.stub().returns(errors)
+
+			learningCatalogue.getEvent = sinon.stub()
+			learningCatalogue.updateEvent = sinon.stub()
+
+			await eventController.addDateRange()(request, response)
+
+			expect(learningCatalogue.getEvent).to.have.not.been.called
+			expect(learningCatalogue.updateEvent).to.not.have.been.called
+			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				errors: errors,
+				day: request.body.day,
+				month: request.body.month,
+				year: request.body.year,
+				startHours: request.body.startHours,
+				startMinutes: request.body.startMinutes,
+				endHours: request.body.endHours,
+				endMinutes: request.body.endMinutes
+			})
+		})
+
+		it('should display errors if DateRange validation fails on add', async () => {
+			const courseId = 'course-id'
+			const moduleId= 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId
+				},
+				body: {
+					day: '01',
+					month: '12',
+					year: '2019',
+					startTime: [ '11', '30'],
+					endTime: ['12', '30'],
+				}
+			}
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			const errors: any = {
+				fields: [
+					{
+						day:[
+							'error'
+						]
+					}
+				],
+				size: 1
+			}
+
+			dateRangeCommandValidator.check = sinon.stub().returns({})
+
+
+			const dateRangeCommand = <DateRangeCommand>{}
+			const dateRange = <DateRange>{}
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			learningCatalogue.getEvent = sinon.stub()
+			learningCatalogue.updateEvent = sinon.stub()
+
+			await eventController.addDateRange()(request, response)
+
+			expect(learningCatalogue.getEvent).to.have.not.been.called
+			expect(learningCatalogue.updateEvent).to.not.have.been.called
+			expect(dateRangeCommandValidator.check).to.have.been.calledOnceWith(request.body)
+			expect(dateRangeCommandFactory.create).to.have.been.calledOnceWith(request.body)
+			expect(dateRangeCommand.asDateRange).to.have.been.calledOnce
+			expect(dateRangeValidator.check).to.have.been.calledOnceWith(dateRange)
+			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				errors: errors,
+				day: request.body.day,
+				month: request.body.month,
+				year: request.body.year,
+				startHours: request.body.startHours,
+				startMinutes: request.body.startMinutes,
+				endHours: request.body.endHours,
+				endMinutes: request.body.endMinutes
 			})
 		})
 
