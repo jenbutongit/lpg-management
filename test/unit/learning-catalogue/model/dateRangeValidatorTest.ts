@@ -14,7 +14,7 @@ describe('DateRange validation tests', () => {
 		validator = new Validator<DateRange>(dateRangeFactory)
 	})
 
-	it('should pass validation if valid', async () => {
+	it('should pass validation if date is in the future and start time is after end time', async () => {
 		const data: any = {
 			date: moment().add(1, 'day').format('YYYY-MM-DD'),
 			startTime: moment([9,30], 'HH:mm').format('HH:mm'),
