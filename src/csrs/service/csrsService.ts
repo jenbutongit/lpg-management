@@ -1,4 +1,5 @@
 import {OauthRestService} from '../../lib/http/oauthRestService'
+import {JsonpathService} from '../../lib/jsonpathService'
 
 export class CsrsService {
 	restService: OauthRestService
@@ -21,5 +22,19 @@ export class CsrsService {
 
 	async getInterests() {
 		return await this.restService.get('interests')
+	}
+
+	async getDepartmentCodeToNameMapping() {
+		const organisations = JsonpathService.jsonpath().query(
+			await this.getOrganisations(),
+			'$._embedded.organisations.*'
+		)
+		const codeToName: any = {}
+
+		for (let organisation of organisations) {
+			codeToName[organisation.code] = organisation.name
+		}
+
+		return codeToName
 	}
 }

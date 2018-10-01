@@ -80,13 +80,14 @@ export class ApplicationContext {
 	audienceController: AudienceController
 	audienceValidator: Validator<Audience>
 	audienceFactory: AudienceFactory
-	eventController: EventController
 	eventFactory: EventFactory
 	fileController: FileController
 	pagination: Pagination
 	youtubeService: YoutubeService
 	youtubeConfig: YoutubeConfig
 	faceToFaceController: FaceToFaceModuleController
+	eventController: EventController
+	mediaConfig: LearningCatalogueConfig
 	courseService: CourseService
 	audienceService: AudienceService
 	csrsConfig: CsrsConfig
@@ -96,7 +97,8 @@ export class ApplicationContext {
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -128,13 +130,17 @@ export class ApplicationContext {
 
 		this.pagination = new Pagination()
 
+		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
+		this.csrsService = new CsrsService(new OauthRestService(this.csrsConfig, this.auth))
+
 		this.courseValidator = new Validator<Course>(this.courseFactory)
 		this.courseService = new CourseService(this.learningCatalogue)
 		this.courseController = new CourseController(
 			this.learningCatalogue,
 			this.courseValidator,
 			this.courseFactory,
-			this.courseService
+			this.courseService,
+			this.csrsService
 		)
 
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
@@ -183,8 +189,15 @@ export class ApplicationContext {
 			this.termsAndConditionsValidator
 		)
 
+		this.mediaConfig = new LearningCatalogueConfig('http://localhost:9001/media')
+
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
-		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.fileController = new FileController(
+			this.learningCatalogue,
+			this.moduleValidator,
+			this.moduleFactory,
+			new OauthRestService(this.mediaConfig, this.auth)
+		)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
 
 		this.faceToFaceController = new FaceToFaceModuleController(
@@ -201,9 +214,6 @@ export class ApplicationContext {
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
 		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory, this.dateRangeCommandValidator, this.dateRangeValidator, this.dateRangeCommandFactory)
-
-		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
-		this.csrsService = new CsrsService(new OauthRestService(this.csrsConfig, this.auth))
 
 		this.audienceService = new AudienceService(this.learningCatalogue)
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
