@@ -10,6 +10,7 @@ export class CsrsService {
 	static readonly AREAS_OF_WORK = 'CsrsService.areasOfWork'
 	static readonly GRADES = 'CsrsService.grades'
 	static readonly GRADE_CODE_TO_NAME_MAPPING = 'CsrsService.gradeCodeToNameMapping'
+	static readonly INTERESTS = 'CsrsService.interests'
 
 	constructor(restService: OauthRestService, cacheService: CacheService) {
 		this.restService = restService
@@ -61,8 +62,24 @@ export class CsrsService {
 		return gradesLookupResult.length > 0
 	}
 
-	async getInterests() {
-		return await this.restService.get('interests')
+	async isCoreLearningValid(interest: string) {
+		const interestsLookupResult = JsonpathService.queryWithLimit(
+			await this.getCoreLearning(),
+			`$..interests[?(@.name==${JSON.stringify(interest)})]`,
+			1
+		)
+		return interestsLookupResult.length > 0
+	}
+
+	async getCoreLearning() {
+		let interests = this.cacheService.cache.get(CsrsService.INTERESTS)
+
+		if (!interests) {
+			interests = await this.restService.get('interests')
+			this.cacheService.cache.set(CsrsService.INTERESTS, interests)
+		}
+
+		return interests
 	}
 
 	async getDepartmentCodeToNameMapping() {

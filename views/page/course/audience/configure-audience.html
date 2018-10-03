@@ -51,7 +51,7 @@
                         <div class="audience-content">
                             <p class="govuk-body">Area of work</p>
                             {% if audience.areasOfWork and audience.areasOfWork.length > 0 %}
-                                <p class="audience-type no-margin">{{ audience.areasOfWork | join(', ') }}</p>
+                                <p class="audience-type no-margin">{{ audience.areasOfWork | join(', ') | default("Area of work unset", true) }}</p>
                             {% else %}
                                 <p class="unset">No areas of work have been added</p>
                             {% endif %}
@@ -66,17 +66,17 @@
                     </div>
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
-                            <p class="govuk-body">Interests</p>
-                            {% if audience.interests and audience.interests.length > 0 %}
-                                <p class="audience-type no-margin">{{ audience.interests }}</p>
+                            <p class="govuk-body">Core learning</p>
+                            {% if audience.interests.length > 0 %}
+                                <p class="audience-type no-margin">{{ audience.interests | join(", ") | default("Core learning unset", true) }}</p>
                             {% else %}
-                                <p class="unset">No interests have been added {{event.id}}</p>
+                                <p class="unset">No core learning has been added {{event.id}}</p>
                             {% endif %}
                         </div>
-                        {% if audience.interests and audience.interests.length > 0 %}
-                             <a href="#" class="govuk-link audience-link">Delete</a>
+                        {% if audience.interests.length > 0 %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/core-learning/delete" method="post" class="audience-link"><button class="govuk-link linkish-button">Delete</button></form>
                         {% else %}
-                            <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/interests" class="govuk-link audience-link">Add</a>
+                            <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/add-core-learning" class="govuk-link audience-link">Add</a>
                         {% endif %}
                     </div>
                     <div class="flex-container u--border--bgrey">

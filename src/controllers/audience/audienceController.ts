@@ -67,10 +67,6 @@ export class AudienceController {
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/deadline', this.getDeadline())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/deadline', this.setDeadline())
 		this.router.get(
-			'/content-management/courses/:courseId/audiences/:audienceId/configure',
-			this.getConfigureAudience()
-		)
-		this.router.get(
 			'/content-management/courses/:courseId/audiences/:audienceId/delete',
 			this.deleteAudienceConfirmation()
 		)
@@ -86,6 +82,18 @@ export class AudienceController {
 		this.router.post(
 			'/content-management/courses/:courseId/audiences/:audienceId/area-of-work/delete',
 			this.deleteAreasOfWork()
+		)
+		this.router.get(
+			'/content-management/courses/:courseId/audiences/:audienceId/add-core-learning',
+			this.getCoreLearning()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/add-core-learning',
+			this.setCoreLearning()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/core-learning/delete',
+			this.deleteCoreLearning()
 		)
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/grades', this.getGrades())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades', this.setGrades())
@@ -312,16 +320,41 @@ export class AudienceController {
 		}
 	}
 
-	getInterests() {
+	getCoreLearning() {
 		return async (request: Request, response: Response) => {
-			const interests = await this.csrsService.getInterests()
-			response.render('page/course/audience/add-interests', {interests})
+			const interests = await this.csrsService.getCoreLearning()
+			response.render('page/course/audience/add-core-learning', {interests})
 		}
 	}
 
-	setInterests() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/configure-audience')
+	setCoreLearning() {
+		return async (req: Request, res: Response) => {
+			const interests = Array.isArray(req.body.interests) ? req.body.interests : [req.body.interests]
+			if (interests) {
+				const allInterestsValid = await interests.reduce(
+					async (allValid: boolean, interest: string) =>
+						allValid ? await this.csrsService.isCoreLearningValid(interest) : false,
+					true
+				)
+				if (allInterestsValid) {
+					this.audienceService.setCoreLearningOnAudience(res.locals.course, req.params.audienceId, interests)
+					await this.learningCatalogue.updateCourse(res.locals.course)
+				}
+			}
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
+		}
+	}
+
+	deleteCoreLearning() {
+		return async (req: Request, res: Response) => {
+			this.audienceService.setCoreLearningOnAudience(res.locals.course, req.params.audienceId, [])
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
 		}
 	}
 }
