@@ -101,6 +101,9 @@ export class AudienceController {
 			'/content-management/courses/:courseId/audiences/:audienceId/grades/delete',
 			this.deleteGrades()
 		)
+		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/event', this.getEvent())
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event', this.setEvent())
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event/delete', this.deleteEvent())
 	}
 
 	getAudienceName() {
@@ -352,6 +355,28 @@ export class AudienceController {
 			this.audienceService.setCoreLearningOnAudience(res.locals.course, req.params.audienceId, [])
 			await this.learningCatalogue.updateCourse(res.locals.course)
 
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
+		}
+	}
+
+	getEvent() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/add-event')
+		}
+	}
+
+	setEvent() {
+		return async (req: Request, res: Response) => {
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
+		}
+	}
+
+	deleteEvent() {
+		return async (req: Request, res: Response) => {
 			res.redirect(
 				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
 			)
