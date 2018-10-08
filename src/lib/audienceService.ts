@@ -26,10 +26,26 @@ export class AudienceService {
 	}
 
 	setDepartmentsOnAudience(course: Course, audienceId: string, departments: any) {
-		JsonpathService.jsonpath().value(
+		JsonpathService.setValue(
 			course,
 			`$..audiences[?(@.id==${JSON.stringify(audienceId)})].departments`,
 			departments
 		)
+	}
+
+	setAreasOfWorkOnAudience(course: Course, audienceId: string, areasOfWork: string[]) {
+		JsonpathService.setValue(
+			course,
+			`$..audiences[?(@.id==${JSON.stringify(audienceId)})].areasOfWork`,
+			areasOfWork
+		)
+	}
+
+	setGradesOnAudience(course: Course, audienceId: string, grades: string[]) {
+		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].grades`, grades)
+	}
+
+	setCoreLearningOnAudience(course: Course, audienceId: string, interests: string[]) {
+		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].interests`, interests)
 	}
 }

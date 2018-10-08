@@ -60,12 +60,12 @@ export class AudienceController {
 			'/content-management/courses/:courseId/audiences/:audienceId/organisation',
 			this.setOrganisation()
 		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/organisation/delete',
+			this.deleteOrganisation()
+		)
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/deadline', this.getDeadline())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/deadline', this.setDeadline())
-		this.router.get(
-			'/content-management/courses/:courseId/audiences/:audienceId/configure',
-			this.getConfigureAudience()
-		)
 		this.router.get(
 			'/content-management/courses/:courseId/audiences/:audienceId/delete',
 			this.deleteAudienceConfirmation()
@@ -79,17 +79,37 @@ export class AudienceController {
 			'/content-management/courses/:courseId/audiences/:audienceId/area-of-work',
 			this.setAreasOfWork()
 		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/area-of-work/delete',
+			this.deleteAreasOfWork()
+		)
+		this.router.get(
+			'/content-management/courses/:courseId/audiences/:audienceId/add-core-learning',
+			this.getCoreLearning()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/add-core-learning',
+			this.setCoreLearning()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/core-learning/delete',
+			this.deleteCoreLearning()
+		)
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/grades', this.getGrades())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades', this.setGrades())
+		this.router.post(
+			'/content-management/courses/:courseId/audiences/:audienceId/grades/delete',
+			this.deleteGrades()
+		)
 	}
 
-	public getAudienceName() {
+	getAudienceName() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/audience/audience-name')
 		}
 	}
 
-	public setAudienceName() {
+	setAudienceName() {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
 			const errors = await this.audienceValidator.check(data, ['audience.name'])
@@ -109,13 +129,13 @@ export class AudienceController {
 		}
 	}
 
-	public getAudienceType() {
+	getAudienceType() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/audience/audience-type')
 		}
 	}
 
-	public setAudienceType() {
+	setAudienceType() {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
 			const errors = await this.audienceValidator.check(data, ['audience.type'])
@@ -139,21 +159,22 @@ export class AudienceController {
 		}
 	}
 
-	public getConfigureAudience() {
+	getConfigureAudience() {
 		return async (req: Request, res: Response) => {
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
-			res.render('page/course/audience/configure-audience', {departmentCodeToName})
+			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
+			res.render('page/course/audience/configure-audience', {departmentCodeToName, gradeCodeToName})
 		}
 	}
 
-	public getOrganisation() {
+	getOrganisation() {
 		return async (req: Request, res: Response) => {
 			const organisations = await this.csrsService.getOrganisations()
 			res.render('page/course/audience/add-organisation', {organisations})
 		}
 	}
 
-	public setOrganisation() {
+	setOrganisation() {
 		return async (req: Request, res: Response) => {
 			const organisations = await this.csrsService.getOrganisations()
 			const selectedOrganisations = this.mapSelectedOrganisationToCodes(
@@ -175,6 +196,16 @@ export class AudienceController {
 		}
 	}
 
+	deleteOrganisation() {
+		return async (req: Request, res: Response) => {
+			this.audienceService.setDepartmentsOnAudience(res.locals.course, req.params.audienceId, [])
+			await this.learningCatalogue.updateCourse(res.locals.course)
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
+		}
+	}
+
 	private mapSelectedOrganisationToCodes(
 		organisation: string,
 		organisationName: string,
@@ -189,68 +220,141 @@ export class AudienceController {
 			})
 	}
 
-	public deleteAudienceConfirmation() {
+	deleteAudienceConfirmation() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/audience/delete-audience-confirmation')
 		}
 	}
 
-	public deleteAudience() {
+	deleteAudience() {
 		return async (req: Request, res: Response) => {
 			await this.learningCatalogue.deleteAudience(req.params.courseId, req.params.audienceId)
 			res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
 		}
 	}
 
-	public getAreasOfWork() {
-		return async (request: Request, response: Response) => {
+	getAreasOfWork() {
+		return async (req: Request, res: Response) => {
 			const areasOfWork = await this.csrsService.getAreasOfWork()
-
-			response.render('page/course/audience/add-area-of-work', {areasOfWork})
+			res.render('page/course/audience/add-area-of-work', {areasOfWork})
 		}
 	}
 
-	public setAreasOfWork() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/configure-audience')
+	setAreasOfWork() {
+		return async (req: Request, res: Response) => {
+			const areaOfWork = req.body['area-of-work']
+			if (areaOfWork) {
+				if (await this.csrsService.isAreaOfWorkValid(areaOfWork)) {
+					this.audienceService.setAreasOfWorkOnAudience(res.locals.course, req.params.audienceId, [
+						areaOfWork,
+					])
+					await this.learningCatalogue.updateCourse(res.locals.course)
+				}
+			}
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
 		}
 	}
 
-	public getDeadline() {
+	deleteAreasOfWork() {
+		return async (req: Request, res: Response) => {
+			this.audienceService.setAreasOfWorkOnAudience(res.locals.course, req.params.audienceId, [])
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
+		}
+	}
+
+	getDeadline() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/audience/add-deadline')
 		}
 	}
 
-	public setDeadline() {
+	setDeadline() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/audience/configure-audience')
 		}
 	}
-	public getGrades() {
-		return async (request: Request, response: Response) => {
+
+	getGrades() {
+		return async (req: Request, res: Response) => {
 			const grades = await this.csrsService.getGrades()
-
-			response.render('page/course/audience/add-grades', {grades})
+			res.render('page/course/audience/add-grades', {grades})
 		}
 	}
 
-	public setGrades() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/configure-audience')
+	setGrades() {
+		return async (req: Request, res: Response) => {
+			const gradeCodes = Array.isArray(req.body.grades) ? req.body.grades : [req.body.grades]
+			if (gradeCodes && gradeCodes.length > 0) {
+				const allGradesValid = await gradeCodes.reduce(
+					async (allValid: boolean, gradeCode: string) =>
+						allValid ? await this.csrsService.isGradeCodeValid(gradeCode) : false,
+					true
+				)
+				if (allGradesValid) {
+					this.audienceService.setGradesOnAudience(res.locals.course, req.params.audienceId, gradeCodes)
+					await this.learningCatalogue.updateCourse(res.locals.course)
+				}
+			}
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
 		}
 	}
 
-	public getInterests() {
-		return async (request: Request, response: Response) => {
-			const interests = await this.csrsService.getInterests()
-			response.render('page/course/audience/add-interests', {interests})
+	deleteGrades() {
+		return async (req: Request, res: Response) => {
+			this.audienceService.setGradesOnAudience(res.locals.course, req.params.audienceId, [])
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
 		}
 	}
 
-	public setInterests() {
+	getCoreLearning() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/audience/configure-audience')
+			const interests = await this.csrsService.getCoreLearning()
+			response.render('page/course/audience/add-core-learning', {interests})
+		}
+	}
+
+	setCoreLearning() {
+		return async (req: Request, res: Response) => {
+			const interests = Array.isArray(req.body.interests) ? req.body.interests : [req.body.interests]
+			if (interests) {
+				const allInterestsValid = await interests.reduce(
+					async (allValid: boolean, interest: string) =>
+						allValid ? await this.csrsService.isCoreLearningValid(interest) : false,
+					true
+				)
+				if (allInterestsValid) {
+					this.audienceService.setCoreLearningOnAudience(res.locals.course, req.params.audienceId, interests)
+					await this.learningCatalogue.updateCourse(res.locals.course)
+				}
+			}
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
+		}
+	}
+
+	deleteCoreLearning() {
+		return async (req: Request, res: Response) => {
+			this.audienceService.setCoreLearningOnAudience(res.locals.course, req.params.audienceId, [])
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`
+			)
 		}
 	}
 }
