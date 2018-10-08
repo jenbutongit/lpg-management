@@ -8,6 +8,7 @@ import {Module} from '../learning-catalogue/model/module'
 import * as datetime from '../lib/datetime'
 import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
+import {Audience} from '../learning-catalogue/model/audience'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -68,7 +69,13 @@ export class CourseController {
 				(module: Module) => module.type == Module.Type.FACE_TO_FACE
 			)
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
-			res.render('page/course/course-overview', {faceToFaceModules, departmentCodeToName})
+			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
+			res.render('page/course/course-overview', {
+				faceToFaceModules,
+				AudienceType: Audience.Type,
+				departmentCodeToName,
+				gradeCodeToName,
+			})
 		}
 	}
 

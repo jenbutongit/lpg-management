@@ -33,59 +33,65 @@
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Organisation</p>
-                            {% if audience.departments.length > 0 %}
+                            {% if audience.departments and audience.departments.length > 0 %}
                                 <p class="audience-type no-margin">{{ audience.departments | jsonpath(departmentCodeToName) | join(', ') }}</p>
                             {% else %}
                                 <p class="unset">No organisations have been added</p>
                             {% endif %}
                         </div>
-                        {% if audience.organisation %}
-                             <a href="#" class="govuk-link audience-link">Remove</a>
-                        {% else%}
+                        {% if audience.departments and audience.departments.length > 0 %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation/delete" method="post" class="audience-link">
+                                <button class="govuk-link audience-link linkish-button">Delete</button>
+                            </form>
+                        {% else %}
                             <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" class="govuk-link audience-link">Add</a>
                         {% endif %}
                     </div>
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Area of work</p>
-                            {% if audience.areas %}
-                                <p class="audience-type no-margin">{{ audience.areas | default("Area of work unset", true) }}</p>
+                            {% if audience.areasOfWork and audience.areasOfWork.length > 0 %}
+                                <p class="audience-type no-margin">{{ audience.areasOfWork | join(', ') | default("Area of work unset", true) }}</p>
                             {% else %}
                                 <p class="unset">No areas of work have been added</p>
                             {% endif %}
                         </div>
-                        {% if audience.areas %}
-                             <a href="#" class="govuk-link audience-link">Remove</a>
-                        {% else%}
+                        {% if audience.areasOfWork and audience.areasOfWork.length > 0 %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/area-of-work/delete" method="post" class="audience-link">
+                                <button class="govuk-link linkish-button">Delete</button>
+                            </form>
+                        {% else %}
                             <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/area-of-work" class="govuk-link audience-link">Add</a>
                         {% endif %}
                     </div>
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
-                            <p class="govuk-body">Interests</p>
-                            {% if audience.interests %}
-                                <p class="audience-type no-margin">{{ audience.interests | default("Interests unset", true) }}</p>
+                            <p class="govuk-body">Core learning</p>
+                            {% if audience.interests.length > 0 %}
+                                <p class="audience-type no-margin">{{ audience.interests | join(", ") | default("Core learning unset", true) }}</p>
                             {% else %}
-                                <p class="unset">No interests have been added {{event.id}}</p>
+                                <p class="unset">No core learning has been added {{event.id}}</p>
                             {% endif %}
                         </div>
-                        {% if audience.interests %}
-                             <a href="#" class="govuk-link audience-link">Remove</a>
+                        {% if audience.interests.length > 0 %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/core-learning/delete" method="post" class="audience-link"><button class="govuk-link linkish-button">Delete</button></form>
                         {% else %}
-                            <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/interests" class="govuk-link audience-link">Add</a>
+                            <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/add-core-learning" class="govuk-link audience-link">Add</a>
                         {% endif %}
                     </div>
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
-                            <p class="govuk-body">Grade</p>
-                            {% if audience.grades %}
-                                <p class="audience-type no-margin">{{ audience.grades | default("Grade unset", true) }}</p>
+                            <p class="govuk-body">Grades</p>
+                            {% if audience.grades and audience.grades.length > 0 %}
+                                <p class="audience-type no-margin">{{ audience.grades | jsonpath(gradeCodeToName) | join(', ') }}</p>
                             {% else %}
                                 <p class="unset">No grades have been added</p>
                             {% endif %}
                         </div>
-                        {% if audience.grades %}
-                             <a href="#" class="govuk-link audience-link">Remove</a>
+                        {% if audience.grades and audience.grades.length > 0 %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades/delete" method="post" class="audience-link">
+                                <button class="govuk-link linkish-button">Delete</button>
+                            </form>
                         {% else %}
                             <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades" class="govuk-link audience-link">Add</a>
                         {% endif %}
@@ -95,13 +101,13 @@
                             <div class="audience-content">
                                 <p class="govuk-body">Deadline date</p>
                                 {% if audience.deadline %}
-                                    <p class="audience-type no-margin">{{ audience.deadline | default("Deadline unset", true) }}</p>
+                                    <p class="audience-type no-margin">{{ audience.deadline }}</p>
                                 {% else %}
                                     <p class="unset">No date has been added</p>
                                 {% endif %}
                             </div>
                             {% if audience.deadline %}
-                                 <a href="#" class="govuk-link audience-link">Remove</a>
+                                <a href="#" class="govuk-link audience-link">Delete</a>
                             {% else %}
                                 <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/deadline" class="govuk-link audience-link">Add</a>
                             {% endif %}
@@ -110,13 +116,13 @@
                             <div class="audience-content">
                                 <p class="govuk-body">Frequency</p>
                                 {% if audience.frequency %}
-                                    <p class="audience-type no-margin">{{ audience.frequency | default("Frequency unset", true) }}</p>
+                                    <p class="audience-type no-margin">{{ audience.frequency }}</p>
                                 {% else %}
                                     <p class="unset">No frequency has been added</p>
                                 {% endif %}
                             </div>
                             {% if audience.frequency %}
-                                 <a href="#" class="govuk-link audience-link">Remove</a>
+                                <a href="#" class="govuk-link audience-link">Delete</a>
                             {% else %}
                                 <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/frequency" class="govuk-link audience-link">Add</a>
                             {% endif %}
@@ -127,7 +133,7 @@
                         <div class="audience-content">
                             <p class="govuk-body">Associated event</p>
                             {% if audience.event %}
-                                <p class="audience-type no-margin">{{ audience.event | default("Event unset", true) }}</p>
+                                <p class="audience-type no-margin">{{ audience.event }}</p>
                             {% else %}
                                 <p class="unset">No event has been added</p>
                             {% endif %}
