@@ -34,7 +34,7 @@
                 <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             {% endif %}
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course details</h2>
-            <form action="/content-management/courses/title/{{ course.id }}" method="post">
+            <form action="/content-management/courses/title/{{ course.id }}" method="post" class="course-form">
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}
                         {{ govukInput({
@@ -59,10 +59,11 @@
                         }) }}
                     {% endif %}
                 </fieldset>
-                {{ govukButton({
-                    text: "Continue"
-                }) }}
-
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
                 <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
             </form>
         </div>
