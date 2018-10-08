@@ -25,7 +25,6 @@
           <p class="govuk-body">This event is for the <strong>{{module.title | default("Module title", true)}}</strong> module on the <a href="/content-management/courses/{{course.id}}/overview" class="govuk-link">{{course.title}}</a> course</p>
           <div class="event-overview">
             <h3 class="govuk-heading-m">Event overview</h3>
-
               {{ govukTable({
                 firstCellIsHeader: true,
                 classes: "course-table",
@@ -98,10 +97,20 @@
             </div>
             <div class="course-attendees">
               <h3 class="govuk-heading-m">Course attendees</h3>
-              {% if course.attendees > 0 %}
+              {# {% if course.attendees.length === 0 %}
+                <ul class="atendees-headers list">
+                  <li class="list-header">Name</li>
+                  <li class="list-header">Payment</li>
+                  <li class="spacer"></li>
+                </ul>
+                <ul class="attendees-list">
+                  {% for attendee in attendees %}
+                  
+                  {% endfor %}
+                </ul>
               {% else %}
                 <p class="govuk-body">This course doesn't have any attendees yet.</p>
-              {% endif %}
+              {% endif %} #}
             </div>
         </div>
         <div class="govuk-grid-column-one-third">
