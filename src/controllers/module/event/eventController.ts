@@ -8,9 +8,11 @@ import * as moment from 'moment'
 import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
+import {LearnerRecord} from '../../../leaner-record'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
+	learnerRecord: LearnerRecord
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -18,10 +20,17 @@ export class EventController {
 	dateRangeCommandFactory: DateRangeCommandFactory
 	router: Router
 
-	constructor(learningCatalogue: LearningCatalogue, eventValidator: Validator<Event>, eventFactory: EventFactory,
-	            dateRangeCommandValidator: Validator<DateRangeCommand>, dateRangeValidator: Validator<DateRange>,
-	            dateRangeCommandFactory: DateRangeCommandFactory) {
+	constructor(
+		learningCatalogue: LearningCatalogue,
+		learnerRecord: LearnerRecord,
+		eventValidator: Validator<Event>,
+		eventFactory: EventFactory,
+		dateRangeCommandValidator: Validator<DateRangeCommand>,
+		dateRangeValidator: Validator<DateRange>,
+		dateRangeCommandFactory: DateRangeCommandFactory
+	) {
 		this.learningCatalogue = learningCatalogue
+		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
@@ -67,6 +76,17 @@ export class EventController {
 			}
 		})
 
+		this.router.param('eventId', async (req, res, next, eventId) => {
+			const eventRecord = await this.learnerRecord.getEventRecord(eventId)
+
+			if (eventRecord) {
+				res.locals.event = eventRecord
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const date = new Date(Date.now())
 			res.locals.exampleYear = date.getFullYear() + 1
@@ -83,10 +103,7 @@ export class EventController {
 			this.editLocation()
 		)
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/location/',
-			this.setLocation()
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/', this.setLocation())
 
 		this.router.post(
 			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId',
@@ -102,24 +119,26 @@ export class EventController {
 			this.getEventOverview()
 		)
 
-
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', this.getDateTime())
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', this.setDateTime())
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.editDateRange()
 		)
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
 			this.dateRangeOverview()
 		)
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
 			this.addDateRange()
 		)
 
-
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
 		)
 	}
@@ -135,14 +154,14 @@ export class EventController {
 			let data = {
 				...request.body,
 			}
-			const event = (data.eventJson) ? JSON.parse(data.eventJson) : this.eventFactory.create({})
+			const event = data.eventJson ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 			let errors = await this.dateRangeCommandValidator.check(data)
 
 			if (errors.size) {
 				response.render('page/course/module/events/events', {
 					event: event,
 					eventJson: JSON.stringify(event),
-					errors: errors
+					errors: errors,
 				})
 			} else {
 				const dateRangeCommand: DateRangeCommand = this.dateRangeCommandFactory.create(data)
@@ -151,15 +170,14 @@ export class EventController {
 				errors = await this.dateRangeValidator.check(dateRange)
 
 				if (errors.size) {
-					const event = (data.eventJson) ? JSON.parse(data.eventJson) : this.eventFactory.create({})
+					const event = data.eventJson ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 					response.render('page/course/module/events/events', {
 						event: event,
 						eventJson: JSON.stringify(event),
 						errors: errors,
 					})
-
 				} else {
-					const event = (data.eventJson) ? JSON.parse(data.eventJson) : this.eventFactory.create({})
+					const event = data.eventJson ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 					event.dateRanges.push(dateRange)
 
 					response.render('page/course/module/events/events', {
@@ -193,13 +211,13 @@ export class EventController {
 
 			response.render('page/course/module/events/event-dateRange-edit', {
 				day: date.date(),
-				month : date.month() + 1,
+				month: date.month() + 1,
 				year: date.year(),
 				startHours: startTime.format('HH'),
 				startMinutes: startTime.format('mm'),
 				endHours: endTime.format('HH'),
 				endMinutes: endTime.format('mm'),
-				dateRangeIndex: dateRangeIndex
+				dateRangeIndex: dateRangeIndex,
 			})
 		}
 	}
@@ -227,7 +245,6 @@ export class EventController {
 					endHours: request.body.endHours,
 					endMinutes: request.body.endMinutes,
 				})
-
 			} else {
 				const dateRangeCommand = this.dateRangeCommandFactory.create(data)
 				const dateRange = dateRangeCommand.asDateRange()
@@ -251,7 +268,9 @@ export class EventController {
 
 					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 
-					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+					response.redirect(
+						`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`
+					)
 				}
 			}
 		}
@@ -280,9 +299,8 @@ export class EventController {
 					startMinutes: request.body.startMinutes,
 					endHours: request.body.endHours,
 					endMinutes: request.body.endMinutes,
-					dateRangeIndex: dateRangeIndex
+					dateRangeIndex: dateRangeIndex,
 				})
-
 			} else {
 				const dateRangeCommand = this.dateRangeCommandFactory.create(data)
 				const dateRange = dateRangeCommand.asDateRange()
@@ -298,7 +316,7 @@ export class EventController {
 						startMinutes: request.body.startMinutes,
 						endHours: request.body.endHours,
 						endMinutes: request.body.endMinutes,
-						dateRangeIndex: dateRangeIndex
+						dateRangeIndex: dateRangeIndex,
 					})
 				} else {
 					const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
@@ -307,7 +325,9 @@ export class EventController {
 
 					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 
-					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+					response.redirect(
+						`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`
+					)
 				}
 			}
 		}
@@ -323,7 +343,7 @@ export class EventController {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/module/events/event-location', {
 				event: JSON.parse(req.body.eventJson || '{}'),
-				eventJson: req.body.eventJson
+				eventJson: req.body.eventJson,
 			})
 		}
 	}
@@ -344,7 +364,7 @@ export class EventController {
 			if (errors.size) {
 				res.render('page/course/module/events/event-location', {
 					eventJson: req.body.eventJson,
-					errors: errors
+					errors: errors,
 				})
 			} else {
 				let event = JSON.parse(req.body.eventJson || '{}')
@@ -356,7 +376,9 @@ export class EventController {
 					event
 				)
 				res.redirect(
-					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`
+					`/content-management/courses/${req.params.courseId}/modules/${
+						req.params.moduleId
+					}/events-overview/${savedEvent.id}`
 				)
 			}
 		}
@@ -387,7 +409,7 @@ export class EventController {
 					address: req.body.address,
 					capacity: req.body.capacity,
 					minCapacity: req.body.minCapacity,
-					errors: errors
+					errors: errors,
 				})
 			} else {
 				let event = await this.learningCatalogue.getEvent(
@@ -405,12 +427,13 @@ export class EventController {
 					event
 				)
 				res.redirect(
-					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`
+					`/content-management/courses/${req.params.courseId}/modules/${
+						req.params.moduleId
+					}/events-overview/${req.params.eventId}`
 				)
 			}
 		}
 	}
-
 
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
