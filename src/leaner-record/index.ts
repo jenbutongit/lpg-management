@@ -14,8 +14,14 @@ export class LearnerRecord {
 	}
 
 	async getEventRecord(eventId: string) {
-		const data = this._restService.get('/events/' + eventId)
+		const data = await this._restService.get('/events/' + eventId)
 
-		return this._eventRecordFactory.create(data)
+		let records = []
+
+		for (const record of data) {
+			records.push(this._eventRecordFactory.create(record))
+		}
+
+		return records
 	}
 }

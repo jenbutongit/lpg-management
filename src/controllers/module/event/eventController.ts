@@ -80,7 +80,7 @@ export class EventController {
 			const eventRecord = await this.learnerRecord.getEventRecord(eventId)
 
 			if (eventRecord) {
-				res.locals.event = eventRecord
+				res.locals.eventRecord = eventRecord
 				next()
 			} else {
 				res.sendStatus(404)
