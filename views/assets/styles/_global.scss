@@ -23,6 +23,13 @@
 	}
 }
 
+.govuk-grid-column-two-thirds,
+.govuk-grid-column-full {
+	.page-title {
+		padding-top: 0;
+	}
+}
+
 .govuk-header__container {
 	border-color: $theme;
 }
@@ -164,6 +171,10 @@ ul {
 	}
 }
 
+.provider-list {
+	margin-bottom: 30px;
+}
+
 .course-table {
 	.govuk-table__header {
 		width: 50%;
@@ -189,6 +200,10 @@ ul {
 	&:hover {
 		background-color: $theme;
 	}
+}
+
+.hidden {
+    display: none;
 }
 
 @media screen and (min-width: $tablet-small) {

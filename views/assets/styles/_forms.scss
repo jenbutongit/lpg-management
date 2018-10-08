@@ -20,7 +20,7 @@
 	}
 
 	.govuk-select {
-		width: 51px;
+		width: 62px;
 	}
 }
 
@@ -45,6 +45,11 @@
 	font-size: $font-mobile;
 	color: $govuk-secondary-text-colour;
 	margin-top: 0;
+}
+
+.audience-form,
+.module-form {
+	padding-top: 50px;
 }
 
 .no-errors {
@@ -255,6 +260,16 @@
 .autocomplete__menu--inline {
 	position: absolute;
 	z-index: 10;
+}
+
+.linkish-button {
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	font-size: $font-mobile;
+	text-decoration: underline;
+	color: $link;
 }
 
 @media screen and (min-width: $tablet-small) {
