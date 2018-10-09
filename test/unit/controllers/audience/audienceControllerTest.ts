@@ -13,6 +13,7 @@ import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
 import {AudienceService} from '../../../../src/lib/audienceService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
+import {Module} from '../../../../src/learning-catalogue/model/module'
 
 chai.use(sinonChai)
 
@@ -22,6 +23,7 @@ describe('AudienceController', () => {
 	let audienceValidator: Validator<Audience>
 	let audienceFactory: AudienceFactory
 	let csrsService: CsrsService
+	let courseService: CourseService
 	let req: Request
 	let res: Response
 
@@ -33,11 +35,12 @@ describe('AudienceController', () => {
 		audienceValidator = <Validator<Audience>>{}
 		audienceFactory = <AudienceFactory>{}
 		csrsService = <CsrsService>{}
+		courseService = new CourseService(learningCatalogue)
 		audienceController = new AudienceController(
 			learningCatalogue,
 			audienceValidator,
 			audienceFactory,
-			new CourseService(learningCatalogue),
+			courseService,
 			new AudienceService(learningCatalogue),
 			csrsService
 		)
@@ -398,6 +401,63 @@ describe('AudienceController', () => {
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, interests: []}],
+			})
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
+		})
+	})
+
+	describe('#getPrivateCourseEvent', () => {
+		it('should gather events from all face-to-face modules into an events array and render add event page', async () => {
+			const dateRanges = [{date: '2018-10-08'}]
+			res.locals.course = {
+				modules: [
+					{type: Module.Type.FACE_TO_FACE, events: undefined},
+					{type: Module.Type.FACE_TO_FACE, events: [{id: 1, dateRanges}, {id: 2, dateRanges}]},
+					{type: Module.Type.FACE_TO_FACE, events: [{id: 3, dateRanges}]},
+				],
+			}
+
+			await audienceController.getPrivateCourseEvent()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-event', {
+				courseEvents: [{id: 1, dateRanges}, {id: 2, dateRanges}, {id: 3, dateRanges}],
+			})
+		})
+	})
+
+	describe('#setPrivateCourseEvent', () => {
+		it('should update audience with selected event ID and redirect to audience configuration page', async () => {
+			const eventId = 'event-id'
+			req.body.events = eventId
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, eventId: null}
+			res.locals.course = {audiences: [audience]}
+
+			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
+
+			await audienceController.setPrivateCourseEvent()(req, res)
+
+			expect(audience.eventId).to.be.equal(eventId)
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
+		})
+	})
+
+	describe('#deletePrivateCourseEvent', () => {
+		it('should update audience with null event ID and redirect to audience configuration page', async () => {
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, eventId: 'event-id'}
+			res.locals.course = {audiences: [audience]}
+
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.deletePrivateCourseEvent()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, eventId: undefined}],
 			})
 			expect(res.redirect).to.have.been.calledOnceWith(
 				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`

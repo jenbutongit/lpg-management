@@ -1,8 +1,8 @@
 import {LearningCatalogue} from '../learning-catalogue'
 import {NextFunction, Request, Response} from 'express'
 import {Audience} from '../learning-catalogue/model/audience'
-import {JsonpathService} from '../lib/jsonpathService'
 import {Course} from '../learning-catalogue/model/course'
+import {JsonpathService} from '../lib/jsonpathService'
 
 export class AudienceService {
 	learningCatalogue: LearningCatalogue
@@ -47,5 +47,9 @@ export class AudienceService {
 
 	setCoreLearningOnAudience(course: Course, audienceId: string, interests: string[]) {
 		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].interests`, interests)
+	}
+
+	setEventIdOnAudience(course: Course, audienceId: string, eventId?: string) {
+		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].eventId`, eventId)
 	}
 }

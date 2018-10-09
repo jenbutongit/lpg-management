@@ -1,11 +1,13 @@
 import {describe} from 'mocha'
 import {CourseService} from '../../../src/lib/courseService'
 import {Course} from '../../../src/learning-catalogue/model/course'
+import {Event} from '../../../src/learning-catalogue/model/event'
 import {Module} from '../../../src/learning-catalogue/model/module'
+import * as chai from 'chai'
 import {expect} from 'chai'
 import * as sinon from 'sinon'
-import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
+import {FaceToFaceModule} from '../../../src/learning-catalogue/model/faceToFaceModule'
 
 chai.use(chaiAsPromised)
 
@@ -104,5 +106,20 @@ describe('CourseService tests', () => {
 		return expect(courseService.sortModules(courseId, ['3', '2'])).to.be.rejectedWith(
 			'Course modules length(3) does not match module ids length(2)'
 		)
+	})
+
+	describe('#getAllEventsOnCourse', () => {
+		it('', () => {
+			const course = new Course()
+			const module1 = new FaceToFaceModule()
+			module1.type = Module.Type.FACE_TO_FACE
+			module1.events = [<Event>{id: '1'}]
+			const module2 = new FaceToFaceModule()
+			module2.type = Module.Type.FACE_TO_FACE
+			module2.events = [<Event>{id: '2'}, <Event>{id: '3'}]
+			course.modules = [module1, module2]
+
+			expect(courseService.getAllEventsOnCourse(course)).to.be.deep.equal([{id: '1'}, {id: '2'}, {id: '3'}])
+		})
 	})
 })

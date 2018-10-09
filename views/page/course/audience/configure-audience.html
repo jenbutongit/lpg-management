@@ -138,12 +138,14 @@
                                 <p class="unset">No event has been added</p>
                             {% endif %}
                         </div>
-                            {% if audience.event %}
-                                <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event"><button>Delete</button></form>
-                            {% else %}
-                                <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event" class="govuk-link audience-link">Add</a>
-                            {% endif %}
-                        </div>
+                        {% if audience.event %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event">
+                                <button class="govuk-link audience-link linkish-button">Delete</button>
+                            </form>
+                        {% else %}
+                            <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event" class="govuk-link audience-link">Add</a>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </div>
             <div class="button-container">
