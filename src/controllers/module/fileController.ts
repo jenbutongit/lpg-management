@@ -56,7 +56,7 @@ export class FileController {
 				return response.render('page/course/module/module-file', {type: 'file', media})
 			}
 
-			return response.render('page/course/module/module-file', {type: 'file'})
+			return response.render('page/course/module/module-file', {type: 'file', courseCatalogueUrl: config.COURSE_CATALOGUE.url})
 		}
 	}
 

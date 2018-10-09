@@ -67,6 +67,7 @@
             
             <strong>{{type}}</strong> module</p>
             <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
+            <input id="courseCatalogueUrl" type="hidden" value="{{courseCatalogueUrl}}">
 
             <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post" class="module-form">
                 <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">
