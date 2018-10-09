@@ -1,11 +1,11 @@
 import {OauthRestService} from '../lib/http/oauthRestService'
 import {LearnerRecordConfig} from './learnerRecordConfig'
 import {Auth} from '../identity/auth'
-import {EventRecordFactory} from './model/factory/EventRecordFactory'
+import {EventRecordFactory} from './model/factory/eventRecordFactory'
 
 export class LearnerRecord {
-	_restService: OauthRestService
-	_eventRecordFactory: EventRecordFactory
+	private _restService: OauthRestService
+	private _eventRecordFactory: EventRecordFactory
 
 	constructor(config: LearnerRecordConfig, auth: Auth, eventRecordFactory: EventRecordFactory) {
 		this._restService = new OauthRestService(config, auth)
@@ -23,5 +23,9 @@ export class LearnerRecord {
 		}
 
 		return records
+	}
+
+	set restService(value: OauthRestService) {
+		this._restService = value
 	}
 }

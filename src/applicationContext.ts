@@ -52,7 +52,7 @@ import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
 import {LearnerRecord} from './leaner-record'
 import {LearnerRecordConfig} from './leaner-record/learnerRecordConfig'
-import {EventRecordFactory} from './leaner-record/model/factory/EventRecordFactory'
+import {EventRecordFactory} from './leaner-record/model/factory/eventRecordFactory'
 
 log4js.configure(config.LOGGING)
 
