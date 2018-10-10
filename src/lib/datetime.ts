@@ -27,7 +27,6 @@ export function parseDuration(isoDuration: string): number | undefined {
 	return duration
 }
 
-
 export function convertDate(date: string): string {
 	let formattedDate: string = date.substr(date.length - 2, 2)
 
