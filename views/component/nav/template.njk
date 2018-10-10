@@ -1,35 +1,14 @@
-<nav>
-    <a href="/html/">HomeL</a>
-    <a href="/css/">Suggestions for you</a>
-    <a href="/js/">Learning record</a>
-    <a href="/jquery/">Profile</a>
-    <a href="/js/">Admin</a>
-    <a href="/jquery/">Sign out</a>
-</nav>
-        {# navigation: [
-            {
-                href: lpgUiUrl + "/home",
-                text: "Home",
-                active: true
-            },
-            {
-                href: lpgUiUrl + "/suggestions-for-you",
-                text: "Suggestions for you"
-            },
-            {
-                href: lpgUiUrl + "/learning-record",
-                text: "Learning record"
-            },
-            {
-                href: lpgUiUrl + "/profile",
-                text: "Profile"
-            },
-            {
-                href: "/content-management",
-                text: "Admin"
-            },
-            {
-                href: lpgUiUrl + "/sign-out",
-                text: "Sign out"
-            }
-            ] #}
+<div class="nav-wrapper">
+    <input class="mobile-nav nav-button" type="checkbox" id="mobileNav" />
+    <label class="mobile-nav nav-label" for="mobileNav">Menu</label>
+    <div class="nav-container">
+        <nav class="nav">
+            <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/">Home</a>
+            <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/suggestions-for-you">Suggestions for you</a>
+            <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/learning-record">Learning record</a>
+            <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/learning-record">Profile</a>
+            <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/content-management">Admin</a>
+            <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/sign-out">Sign out</a>
+        </nav>
+    </div>
+</div>
