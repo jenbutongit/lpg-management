@@ -41,7 +41,8 @@
 			text-decoration: none;
 			margin-bottom: 10px;
 
-			&:hover {
+			&:hover,
+			&.active {
 				color: $link;
 				border-bottom: none;
 				border-left: 3px solid $link;
@@ -88,7 +89,8 @@
 			.nav-item {
 				padding-bottom: 8px;
 
-				&:hover {
+				&:hover,
+				&.active {
 					color: $link;
 					border-bottom: 3px solid $link;
 					border-left: none;
