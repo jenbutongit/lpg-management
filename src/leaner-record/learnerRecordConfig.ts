@@ -1,11 +1,4 @@
 export class LearnerRecordConfig {
-	get timeout(): number {
-		return this._timeout
-	}
-
-	set timeout(value: number) {
-		this._timeout = value
-	}
 	private _url: string
 	private _timeout: number
 
@@ -20,5 +13,13 @@ export class LearnerRecordConfig {
 
 	set url(value: string) {
 		this._url = value
+	}
+
+	get timeout(): number {
+		return this._timeout
+	}
+
+	set timeout(value: number) {
+		this._timeout = value
 	}
 }
