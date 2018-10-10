@@ -15,8 +15,8 @@ export class EventRecord {
 
 export namespace EventRecord {
 	export enum Status {
-		APPROVED,
-		CANCELLED,
-		REQUESTED,
+		APPROVED, //Booked
+		CANCELLED, //Cancelled
+		REQUESTED, //Pending
 	}
 }
