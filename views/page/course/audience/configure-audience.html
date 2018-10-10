@@ -134,14 +134,14 @@
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Associated event</p>
-                            {% if audience.event %}
-                                <p class="audience-type no-margin">{{ audience.event }}</p>
+                            {% if audienceEvent %}
+                                <p class="audience-type no-margin">{{audienceEvent.venue.location}}, {{audienceEvent.dateRanges[0].date | formatDate}}</p>
                             {% else %}
                                 <p class="unset">No event has been added</p>
                             {% endif %}
                         </div>
-                        {% if audience.event %}
-                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event">
+                        {% if audienceEvent %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event/delete" method="post">
                                 <button class="govuk-link audience-link linkish-button">Delete</button>
                             </form>
                         {% else %}

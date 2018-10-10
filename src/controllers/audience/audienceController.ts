@@ -181,7 +181,16 @@ export class AudienceController {
 		return async (req: Request, res: Response) => {
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
-			res.render('page/course/audience/configure-audience', {departmentCodeToName, gradeCodeToName})
+			const audienceEvent = res.locals.audience.eventId
+				? this.courseService
+						.getAllEventsOnCourse(res.locals.course)
+						.filter((event: Event) => event.id == res.locals.audience.eventId)[0]
+				: null
+			res.render('page/course/audience/configure-audience', {
+				departmentCodeToName,
+				gradeCodeToName,
+				audienceEvent,
+			})
 		}
 	}
 
@@ -426,6 +435,7 @@ export class AudienceController {
 					.filter((event: Event) => event.id == eventId)[0]
 				if (event) {
 					this.audienceService.setEventIdOnAudience(res.locals.course, req.params.audienceId, eventId)
+					await this.learningCatalogue.updateCourse(res.locals.course)
 				}
 			}
 			res.redirect(

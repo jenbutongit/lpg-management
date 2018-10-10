@@ -481,10 +481,14 @@ describe('AudienceController', () => {
 			res.locals.course = {audiences: [audience]}
 
 			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
+			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setPrivateCourseEvent()(req, res)
 
 			expect(audience.eventId).to.be.equal(eventId)
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, eventId: eventId}],
+			})
 			expect(res.redirect).to.have.been.calledOnceWith(
 				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
 			)
