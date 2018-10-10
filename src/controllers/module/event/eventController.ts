@@ -8,9 +8,11 @@ import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 import {DateTime} from '../../../lib/dateTime'
+import {LearnerRecord} from '../../../leaner-record'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
+	learnerRecord: LearnerRecord
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -20,6 +22,7 @@ export class EventController {
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
+		learnerRecord: LearnerRecord,
 		eventValidator: Validator<Event>,
 		eventFactory: EventFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
@@ -27,6 +30,7 @@ export class EventController {
 		dateRangeCommandFactory: DateRangeCommandFactory
 	) {
 		this.learningCatalogue = learningCatalogue
+		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
@@ -66,6 +70,17 @@ export class EventController {
 
 			if (event) {
 				res.locals.event = event
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
+		this.router.param('eventId', async (req, res, next, eventId) => {
+			const eventRecord = await this.learnerRecord.getEventRecord(eventId)
+
+			if (eventRecord) {
+				res.locals.eventRecord = eventRecord
 				next()
 			} else {
 				res.sendStatus(404)

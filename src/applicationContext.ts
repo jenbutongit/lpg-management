@@ -50,6 +50,9 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {LearnerRecord} from './leaner-record'
+import {LearnerRecordConfig} from './leaner-record/learnerRecordConfig'
+import {EventRecordFactory} from './leaner-record/model/factory/eventRecordFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -98,6 +101,9 @@ export class ApplicationContext {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
+	learnerRecord: LearnerRecord
+	learnerRecordConfig: LearnerRecordConfig
+	eventRecordFactory: EventRecordFactory
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -220,7 +226,20 @@ export class ApplicationContext {
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
-		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory, this.dateRangeCommandValidator, this.dateRangeValidator, this.dateRangeCommandFactory)
+		this.eventRecordFactory = new EventRecordFactory()
+
+		this.learnerRecordConfig = new LearnerRecordConfig('http://localhost:9000')
+		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.eventRecordFactory)
+
+		this.eventController = new EventController(
+			this.learningCatalogue,
+			this.learnerRecord,
+			this.eventValidator,
+			this.eventFactory,
+			this.dateRangeCommandValidator,
+			this.dateRangeValidator,
+			this.dateRangeCommandFactory
+		)
 
 		this.audienceService = new AudienceService(this.learningCatalogue)
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
