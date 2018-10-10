@@ -442,4 +442,12 @@ export class EventController {
 			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
 		}
 	}
+
+	public getAttendeeDetails() {
+		return async (req: Request, res: Response) => {
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = datetime.convertDate(event.dateRanges[0].date)
+			res.render('page/course/module/events/attendee', {eventDateWithMonthAsText})
+		}
+	}
 }
