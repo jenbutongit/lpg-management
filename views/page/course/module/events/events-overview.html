@@ -114,10 +114,12 @@
               {% endif %}
             </div>
             <div class="add-attendee">
-              <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}}/events/{{event.id}}/invite" method="post" class="attendee-form">
-                  <p class="govuk-body no-margin"><strong>Add an attendee with their email address</strong></p>
-                  <div class="input-with-button">
+              <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
+                <div class="input-with-button">
                   {{ govukInput({
+                    label: {
+                      text: "Add an attendee with their email address"
+                    },
                     id: "user",
                     name: "user"
                   }) }}

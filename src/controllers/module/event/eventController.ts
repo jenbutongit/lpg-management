@@ -457,8 +457,8 @@ export class EventController {
 				...req.body,
 			}
 
-			const emailAddress = data.emailAddress
-			const identityDetails = this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
+			const emailAddress = data.user
+			const identityDetails = await this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
 
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)

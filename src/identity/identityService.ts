@@ -22,7 +22,7 @@ export class IdentityService {
 	}
 
 	async getDetailsByEmail(emailAddress: string, token: string) {
-		const response = await this.http.get(`/api/identities/${emailAddress}`, {
+		const response = await this.http.get(`/api/identities/?emailAddress=${emailAddress}`, {
 			baseURL: config.AUTHENTICATION.authenticationServiceUrl,
 			headers: {
 				Authorization: `Bearer ${token}`,
