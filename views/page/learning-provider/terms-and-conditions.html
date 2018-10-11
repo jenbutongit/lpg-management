@@ -45,7 +45,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <form action="/content-management/learning-providers/{{learningProvider.id}}/terms-and-conditions/{{termsAndConditions.id}}" method="post" class="module-form">
-                <input type="hidden" value="{{termsAndConditions.id}}" name="id"/>
+
+                {% if termsAndConditions.id %}
+                    <input type="hidden" value="{{termsAndConditions.id}}" name="id"/>
+                {% endif %}
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields %}
                         {{ govukInput({
