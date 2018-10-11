@@ -17,6 +17,7 @@ export class EventController {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeValidator: Validator<DateRange>
 	dateRangeCommandFactory: DateRangeCommandFactory
+	identityService: IdentityService
 	router: Router
 
 	constructor(
@@ -25,7 +26,8 @@ export class EventController {
 		eventFactory: EventFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
 		dateRangeValidator: Validator<DateRange>,
-		dateRangeCommandFactory: DateRangeCommandFactory
+		dateRangeCommandFactory: DateRangeCommandFactory,
+		identityService: IdentityService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.eventValidator = eventValidator
@@ -33,6 +35,7 @@ export class EventController {
 		this.dateRangeCommandValidator = dateRangeCommandValidator
 		this.dateRangeValidator = dateRangeValidator
 		this.dateRangeCommandFactory = dateRangeCommandFactory
+		this.identityService = identityService
 		this.router = Router()
 
 		this.setRouterPaths()
@@ -126,6 +129,11 @@ export class EventController {
 		this.router.post(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
+		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite',
+			this.inviteLearner()
 		)
 	}
 
@@ -435,8 +443,9 @@ export class EventController {
 				...req.body,
 			}
 
-			const identityService = new IdentityService()
-			const identityDetails =
+			const identityDetails = this.identityService.getDetailsByEmail(data.emailAddress, req.user!.accessToken)
+
+			console.log(identityDetails)
 		}
 	}
 }
