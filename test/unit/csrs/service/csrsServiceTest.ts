@@ -33,14 +33,11 @@ describe('CsrsService tests', () => {
 				},
 			]
 
-			restService.get = sinon
-				.stub()
-				.withArgs('organisations')
-				.returns(data)
+			restService.get = sinon.stub().returns(data)
 
 			const result = await csrsService.getOrganisations()
 
-			expect(restService.get).to.have.been.calledOnceWith('organisations')
+			expect(restService.get).to.have.been.calledOnceWith('organisationalUnits')
 			expect(result).to.eql(data)
 		})
 	})
@@ -135,7 +132,7 @@ describe('CsrsService tests', () => {
 
 			csrsService.getOrganisations = sinon.stub().returns({
 				_embedded: {
-					organisations: [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}],
+					organisationalUnits: [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}],
 				},
 			})
 			expect(await csrsService.getDepartmentCodeToNameMapping()).to.be.deep.equal({

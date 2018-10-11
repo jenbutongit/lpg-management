@@ -5,10 +5,10 @@ import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Module} from '../learning-catalogue/model/module'
-import * as datetime from '../lib/datetime'
 import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
+import {DateTime} from '../lib/dateTime'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -70,11 +70,15 @@ export class CourseController {
 			)
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
+			const audienceIdToEvent = this.courseService.getAudienceIdToEventMapping(res.locals.course)
+			const eventIdToModuleId = this.courseService.getEventIdToModuleIdMapping(res.locals.course)
 			res.render('page/course/course-overview', {
 				faceToFaceModules,
 				AudienceType: Audience.Type,
 				departmentCodeToName,
 				gradeCodeToName,
+				audienceIdToEvent,
+				eventIdToModuleId,
 			})
 		}
 	}
@@ -84,7 +88,7 @@ export class CourseController {
 			const modules: Module[] = response.locals.course.modules
 
 			for (let module of modules) {
-				module.formattedDuration = datetime.formatDuration(module.duration)
+				module.formattedDuration = DateTime.formatDuration(module.duration)
 			}
 
 			response.render('page/course/course-preview')

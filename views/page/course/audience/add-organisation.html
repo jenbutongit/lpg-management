@@ -7,14 +7,8 @@
 
 {% block pageTitle %}{{ i18n.audience.page_title.add_organisation }} - {{ i18n.proposition_name }}{% endblock %}
 
-{% block beforeContent %}
-    {% block phaseBanner %}
-        {{ phaseBanner("beta") }}
-    {% endblock%}
-    {% block backLink %}
-        {{ backLink("/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure") }}
-    {% endblock%}
-{% endblock %}
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure" %}
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -29,7 +23,7 @@
                     {% set classNames = "govuk-fieldset audience-fieldset" %}
                     {% set message = "no-errors" %}
                 {% endif %}
-                
+
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
 
@@ -86,8 +80,8 @@
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
     <script type="text/javascript" src="/js/add-organisation.js"></script>
     {% set orgs = [] %}
-    {% for organisation in organisations._embedded.organisations %}
-        {% set orgName = orgs.push(organisation.name)%}  
+    {% for organisation in organisations._embedded.organisationalUnits %}
+        {% set orgName = orgs.push(organisation.name)%}
     {% endfor %}
     <script orgs='{{orgs}}' src="/js/orgs.js"></script>
 {% endblock %}

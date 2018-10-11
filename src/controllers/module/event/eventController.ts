@@ -3,11 +3,11 @@ import {Validator} from '../../../learning-catalogue/validator/validator'
 import {Request, Response, Router} from 'express'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
 import {Event} from '../../../learning-catalogue/model/event'
-import * as DateTime from '../../../lib/datetime'
 import * as moment from 'moment'
 import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
+import {DateTime} from '../../../lib/dateTime'
 import {LearnerRecord} from '../../../leaner-record'
 import {EventRecord} from '../../../leaner-record/model/eventRecord'
 
@@ -451,7 +451,7 @@ export class EventController {
 	public getAttendeeDetails() {
 		return async (req: Request, res: Response) => {
 			const eventRecords = res.locals.eventRecord
-			const bookingRef = req.params.bookingReferenece
+			const bookingRef = req.params.bookingReference
 
 			const eventRecord = eventRecords.filter((record: EventRecord) => record.bookingReference == bookingRef)
 

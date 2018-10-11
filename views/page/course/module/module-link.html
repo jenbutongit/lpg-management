@@ -7,14 +7,8 @@
 
 {% block pageTitle %}{{ i18n['module_link_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
-{% block beforeContent %}
-  {% block phaseBanner %}
-    {{ phaseBanner("beta") }}
-  {% endblock%}
-  {% block backLink %}
-    {{ backLink("/content-management") }}
-  {% endblock%}
-{% endblock %}
+{% set banner = true %}
+{% set backButton = "/content-management/" %}
 
 {% block content %}
 
@@ -26,9 +20,9 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
-            <p class="govuk-body">You are adding a <strong>link</strong> module</p>
+            <p class="govuk-body no-margin">You are adding a <strong>link</strong> module</p>
 
-            <form action="/content-management/courses/{{ course.id }}/module-link" method="post">
+            <form action="/content-management/courses/{{ course.id }}/module-link" method="post" class="module-form">
                 <fieldset class="govuk-fieldset">
                     {{ govukInput({
                     label: {
@@ -101,7 +95,7 @@
                         }
                     ]
                     }) }}
-
+                
                 {{ govukButton({
                 text: "Add item",
                 classes: "button-blue left-aligned"

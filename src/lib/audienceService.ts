@@ -1,11 +1,10 @@
 import {LearningCatalogue} from '../learning-catalogue'
 import {NextFunction, Request, Response} from 'express'
-import {Audience} from '../learning-catalogue/model/audience'
-import {JsonpathService} from '../lib/jsonpathService'
 import {Course} from '../learning-catalogue/model/course'
+import {JsonpathService} from '../lib/jsonpathService'
 
 export class AudienceService {
-	learningCatalogue: LearningCatalogue
+	private readonly learningCatalogue: LearningCatalogue
 
 	constructor(learningCatalogue: LearningCatalogue) {
 		this.learningCatalogue = learningCatalogue
@@ -17,7 +16,6 @@ export class AudienceService {
 			const audience = await this.learningCatalogue.getAudience(res.locals.course.id, audienceId)
 			if (audience) {
 				res.locals.audience = audience
-				res.locals.audienceTypeAsString = Audience.Type[audience.type]
 				next()
 			} else {
 				res.sendStatus(404)
@@ -25,7 +23,7 @@ export class AudienceService {
 		}
 	}
 
-	setDepartmentsOnAudience(course: Course, audienceId: string, departments: any) {
+	setDepartmentsOnAudience(course: Course, audienceId: string, departments: string[]) {
 		JsonpathService.setValue(
 			course,
 			`$..audiences[?(@.id==${JSON.stringify(audienceId)})].departments`,
@@ -47,5 +45,13 @@ export class AudienceService {
 
 	setCoreLearningOnAudience(course: Course, audienceId: string, interests: string[]) {
 		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].interests`, interests)
+	}
+
+	setDeadlineOnAudience(course: Course, audienceId: string, deadline: Date | null) {
+		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].requiredBy`, deadline)
+	}
+
+	setEventIdOnAudience(course: Course, audienceId: string, eventId?: string) {
+		JsonpathService.setValue(course, `$..audiences[?(@.id==${JSON.stringify(audienceId)})].eventId`, eventId)
 	}
 }

@@ -225,7 +225,6 @@ export class ApplicationContext {
 		this.dateRangeCommandValidator = new Validator<DateRangeCommand>(this.dateRangeCommandFactory)
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
-
 		this.eventRecordFactory = new EventRecordFactory()
 
 		this.learnerRecordConfig = new LearnerRecordConfig('http://localhost:9000')

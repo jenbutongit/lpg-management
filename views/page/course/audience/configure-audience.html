@@ -6,16 +6,12 @@
 
 {% block pageTitle %}{{ i18n.audience.page_title.configure_audience }} - {{ i18n.proposition_name }}{% endblock %}
 
-{% block beforeContent %}
-    {% block phaseBanner %}
-        {{ phaseBanner("beta") }}
-    {% endblock %}
-    {% block backLink %}
-        {{ backLink("/content-management/courses/" + course.id + "/overview") }}
-    {% endblock %}
-{% endblock %}
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/overview" %}
 
 {% block content %}
+    {% set audienceTypeAsString = AudienceType[audience.type] %}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
@@ -100,14 +96,16 @@
                         <div class="flex-container u--border--bgrey">
                             <div class="audience-content">
                                 <p class="govuk-body">Deadline date</p>
-                                {% if audience.deadline %}
-                                    <p class="audience-type no-margin">{{ audience.deadline }}</p>
+                                {% if audience.requiredBy %}
+                                    <p class="audience-type no-margin">{{audience.requiredBy | formatDate}}</p>
                                 {% else %}
                                     <p class="unset">No date has been added</p>
                                 {% endif %}
                             </div>
-                            {% if audience.deadline %}
-                                <a href="#" class="govuk-link audience-link">Delete</a>
+                            {% if audience.requiredBy %}
+                                <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/deadline/delete" method="post" class="audience-link">
+                                    <button class="govuk-link linkish-button">Delete</button>
+                                </form>
                             {% else %}
                                 <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/deadline" class="govuk-link audience-link">Add</a>
                             {% endif %}
@@ -129,16 +127,23 @@
                         </div>
                     {% endif %}
                 {% else %}
+                    {% set audienceEvent = audienceIdToEvent[audience.id] %}
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Associated event</p>
-                            {% if audience.event %}
-                                <p class="audience-type no-margin">{{ audience.event }}</p>
+                            {% if audienceEvent %}
+                                <p class="audience-type no-margin">{{audienceEvent.venue.location}}, {{audienceEvent.dateRanges[0].date | formatDate}}</p>
                             {% else %}
                                 <p class="unset">No event has been added</p>
                             {% endif %}
                         </div>
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event" class="govuk-link audience-link">Add</a>
+                        {% if audienceEvent %}
+                            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event/delete" method="post">
+                                <button class="govuk-link audience-link linkish-button">Delete</button>
+                            </form>
+                        {% else %}
+                            <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event" class="govuk-link audience-link">Add</a>
+                        {% endif %}
                     </div>
                 {% endif %}
             </div>

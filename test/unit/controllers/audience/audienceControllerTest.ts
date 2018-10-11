@@ -13,6 +13,8 @@ import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
 import {AudienceService} from '../../../../src/lib/audienceService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
+import {Module} from '../../../../src/learning-catalogue/model/module'
+import moment = require('moment')
 
 chai.use(sinonChai)
 
@@ -22,6 +24,8 @@ describe('AudienceController', () => {
 	let audienceValidator: Validator<Audience>
 	let audienceFactory: AudienceFactory
 	let csrsService: CsrsService
+	let courseService: CourseService
+	let audienceService: AudienceService
 	let req: Request
 	let res: Response
 
@@ -33,12 +37,14 @@ describe('AudienceController', () => {
 		audienceValidator = <Validator<Audience>>{}
 		audienceFactory = <AudienceFactory>{}
 		csrsService = <CsrsService>{}
+		courseService = new CourseService(learningCatalogue)
+		audienceService = new AudienceService(learningCatalogue)
 		audienceController = new AudienceController(
 			learningCatalogue,
 			audienceValidator,
 			audienceFactory,
-			new CourseService(learningCatalogue),
-			new AudienceService(learningCatalogue),
+			courseService,
+			audienceService,
 			csrsService
 		)
 
@@ -146,6 +152,7 @@ describe('AudienceController', () => {
 			csrsService.getOrganisations = sinon.stub()
 			csrsService.getDepartmentCodeToNameMapping = sinon.stub()
 			csrsService.getGradeCodeToNameMapping = sinon.stub()
+			courseService.getAudienceIdToEventMapping = sinon.stub()
 
 			await audienceController.getConfigureAudience()(req, res)
 
@@ -196,7 +203,7 @@ describe('AudienceController', () => {
 			const hmrcCode = 'hmrc'
 			csrsService.getOrganisations = sinon
 				.stub()
-				.returns({_embedded: {organisations: [{code: hmrcCode, name: hmrcName}]}})
+				.returns({_embedded: {organisationalUnits: [{code: hmrcCode, name: hmrcName}]}})
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setOrganisation()(req, res)
@@ -219,7 +226,7 @@ describe('AudienceController', () => {
 			const dwpCode = 'dwp'
 			csrsService.getOrganisations = sinon.stub().returns({
 				_embedded: {
-					organisations: [
+					organisationalUnits: [
 						{code: hmrcCode, name: 'HM Revenue & Customs'},
 						{code: dwpCode, name: 'Department for Work and Pensions'},
 					],
@@ -398,6 +405,111 @@ describe('AudienceController', () => {
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, interests: []}],
+			})
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
+		})
+	})
+
+	describe('#getDeadline', () => {
+		it('should render add deadline page', async () => {
+			await audienceController.getDeadline()(req, res)
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-deadline')
+		})
+	})
+
+	describe('#setDeadline', () => {
+		it('should update course with deadline date if the date is valid and redirect to audience configuration page', async () => {
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, requiredBy: null}
+			res.locals.course = {audiences: [audience]}
+			req.body = {'deadline-year': '2018', 'deadline-month': '12', 'deadline-day': '16'}
+
+			audienceValidator.check = sinon.stub().returns({size: 0})
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.setDeadline()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, requiredBy: moment('2018-12-16').toDate()}],
+			})
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
+		})
+	})
+
+	describe('#deleteDeadline', () => {
+		it('should update course with null deadline and redirect to audience configuration page', async () => {
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, requiredBy: new Date()}
+			res.locals.course = {audiences: [audience]}
+
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.deleteDeadline()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, requiredBy: null}],
+			})
+		})
+	})
+
+	describe('#getPrivateCourseEvent', () => {
+		it('should gather events from all face-to-face modules into an events array and render add event page', async () => {
+			const dateRanges = [{date: '2018-10-08'}]
+			res.locals.course = {
+				modules: [
+					{type: Module.Type.FACE_TO_FACE, events: undefined},
+					{type: Module.Type.FACE_TO_FACE, events: [{id: 1, dateRanges}, {id: 2, dateRanges}]},
+					{type: Module.Type.FACE_TO_FACE, events: [{id: 3, dateRanges}]},
+				],
+			}
+
+			await audienceController.getPrivateCourseEvent()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-event', {
+				courseEvents: [{id: 1, dateRanges}, {id: 2, dateRanges}, {id: 3, dateRanges}],
+			})
+		})
+	})
+
+	describe('#setPrivateCourseEvent', () => {
+		it('should update audience with selected event ID and redirect to audience configuration page', async () => {
+			const eventId = 'event-id'
+			req.body.events = eventId
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, eventId: null}
+			res.locals.course = {audiences: [audience]}
+
+			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.setPrivateCourseEvent()(req, res)
+
+			expect(audience.eventId).to.be.equal(eventId)
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, eventId: eventId}],
+			})
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
+		})
+	})
+
+	describe('#deletePrivateCourseEvent', () => {
+		it('should update audience with null event ID and redirect to audience configuration page', async () => {
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, eventId: 'event-id'}
+			res.locals.course = {audiences: [audience]}
+
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.deletePrivateCourseEvent()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, eventId: undefined}],
 			})
 			expect(res.redirect).to.have.been.calledOnceWith(
 				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
