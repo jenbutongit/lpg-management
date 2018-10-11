@@ -108,6 +108,10 @@
 			display: inline-block;
 			margin-bottom: 30px;
 
+			.govuk-label {
+				white-space: nowrap;
+			}
+
 			.govuk-input {
 				width: 100%;
 			}
