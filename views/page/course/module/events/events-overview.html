@@ -91,20 +91,25 @@
             </div>
             <div class="course-attendees">
               <h3 class="govuk-heading-m">Course attendees</h3>
-              {# {% if course.attendees.length === 0 %}
-                <ul class="atendees-headers list">
-                  <li class="list-header">Name</li>
-                  <li class="list-header">Payment</li>
-                  <li class="spacer"></li>
+              {% if eventRecord.length > 0 %}
+                <ul class="attendees headers">
+                  <li class="list-headers"><p class="govuk-body header title"><strong>Name</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><span class="button-header"></span></li>
                 </ul>
-                <ul class="attendees-list">
-                  {% for attendee in attendees %}
-                  
+                <ul class="attendees list">
+                  {% for attendee in eventRecord %}
+                      {% if attendee.status === 0 %}
+                        {% set payment = "Booked" %}
+                      {% elif attendee.status === 1 %}
+                        {% set payment = "Cancelled" %}
+                      {% elif attendee.status === 2 %} 
+                         {% set payment = "Pending" %}
+                      {% endif %}
+                      <li class="list-details"><p class="govuk-body title">{{ attendee.delegateEmailAddress}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="#">View</a></p></li>
                   {% endfor %}
                 </ul>
               {% else %}
                 <p class="govuk-body">This course doesn't have any attendees yet.</p>
-              {% endif %} #}
+              {% endif %}
             </div>
         </div>
         <div class="govuk-grid-column-one-third">
