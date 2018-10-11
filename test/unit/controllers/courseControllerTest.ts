@@ -49,6 +49,8 @@ describe('Course Controller Tests', function() {
 
 		csrsService.getDepartmentCodeToNameMapping = sinon.stub()
 		csrsService.getGradeCodeToNameMapping = sinon.stub()
+		courseService.getAudienceIdToEventMapping = sinon.stub()
+		courseService.getEventIdToModuleIdMapping = sinon.stub()
 
 		const course = new Course()
 		course.modules = []

@@ -14,33 +14,41 @@ import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
+import {LearnerRecord} from '../../../../../src/leaner-record'
+import {IdentityService} from '../../../../../src/identity/identityService'
 
 chai.use(sinonChai)
 
 describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
+	let leanerRecord: LearnerRecord
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
 	let dateRangeValidator: Validator<DateRange>
 	let dateRangeCommandFactory: DateRangeCommandFactory
+	let identityService: IdentityService
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
+		leanerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
 		dateRangeValidator = <Validator<DateRange>>{}
 		dateRangeCommandFactory = <DateRangeCommandFactory>{}
+		identityService = <IdentityService>{}
 
 		eventController = new EventController(
 			learningCatalogue,
+			leanerRecord,
 			eventValidator,
 			eventFactory,
 			dateRangeCommandValidator,
 			dateRangeValidator,
-			dateRangeCommandFactory
+			dateRangeCommandFactory,
+			identityService
 		)
 	})
 

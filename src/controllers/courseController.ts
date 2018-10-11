@@ -70,11 +70,15 @@ export class CourseController {
 			)
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
+			const audienceIdToEvent = this.courseService.getAudienceIdToEventMapping(res.locals.course)
+			const eventIdToModuleId = this.courseService.getEventIdToModuleIdMapping(res.locals.course)
 			res.render('page/course/course-overview', {
 				faceToFaceModules,
 				AudienceType: Audience.Type,
 				departmentCodeToName,
 				gradeCodeToName,
+				audienceIdToEvent,
+				eventIdToModuleId,
 			})
 		}
 	}
