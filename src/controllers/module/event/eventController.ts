@@ -3,12 +3,13 @@ import {Validator} from '../../../learning-catalogue/validator/validator'
 import {Request, Response, Router} from 'express'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
 import {Event} from '../../../learning-catalogue/model/event'
-import * as datetime from '../../../lib/datetime'
+import * as DateTime from '../../../lib/datetime'
 import * as moment from 'moment'
 import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 import {LearnerRecord} from '../../../leaner-record'
+import {EventRecord} from '../../../leaner-record/model/eventRecord'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -141,6 +142,11 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
 		)
+
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference',
+			this.getAttendeeDetails()
+		)
 	}
 
 	public getDateTime() {
@@ -199,7 +205,6 @@ export class EventController {
 		return async (request: Request, response: Response) => {
 			const dateRangeIndex = request.params.dateRangeIndex
 
-			// const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
 			const event = response.locals.event
 
 			const dateRange = event!.dateRanges![dateRangeIndex]
@@ -438,16 +443,19 @@ export class EventController {
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
 			const event = res.locals.event
-			const eventDateWithMonthAsText: string = datetime.convertDate(event.dateRanges[0].date)
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
 		}
 	}
 
 	public getAttendeeDetails() {
 		return async (req: Request, res: Response) => {
-			const event = res.locals.event
-			const eventDateWithMonthAsText: string = datetime.convertDate(event.dateRanges[0].date)
-			res.render('page/course/module/events/attendee', {eventDateWithMonthAsText})
+			const eventRecords = res.locals.eventRecord
+			const bookingRef = req.params.bookingReferenece
+
+			const eventRecord = eventRecords.filter((record: EventRecord) => record.bookingReference == bookingRef)
+
+			res.render('page/course/module/events/attendee', {eventRecord})
 		}
 	}
 }
