@@ -1,4 +1,6 @@
 {% from "table/macro.njk" import govukTable %}
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
 {% from "../../../../component/menu/macro.njk" import menu %}
 
 {% extends "../../../../component/Page.njk" %}
@@ -110,6 +112,23 @@
               {% else %}
                 <p class="govuk-body">This course doesn't have any attendees yet.</p>
               {% endif %}
+            </div>
+            <div class="add-attendee">
+              <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}}/events/{{event.id}}/invite" method="post" class="attendee-form">
+                <div class="input-with-button">
+                  {{ govukInput({
+                    label: {
+                      text: "Add an attendee with their email address"
+                    },
+                    id: "user",
+                    name: "user"
+                  }) }}
+                  {{ govukButton({
+                    text: "Search for user",
+                    classes: "button-blue"
+                  }) }}
+                  </div>
+              </form>
             </div>
         </div>
         <div class="govuk-grid-column-one-third">
