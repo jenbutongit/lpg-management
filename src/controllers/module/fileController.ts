@@ -53,7 +53,7 @@ export class FileController {
 
 				const media = await this.restService.get(`/${mediaId}`)
 
-				return response.render('page/course/module/module-file', {type: 'file', media})
+				return response.render('page/course/module/module-file', {type: 'file', media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
 			}
 
 			return response.render('page/course/module/module-file', {type: 'file', courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
@@ -116,10 +116,10 @@ export class FileController {
 
 				const media = await this.restService.get(`/${mediaId}`)
 
-				return response.render('page/course/module/module-file', {type: 'e-learning', media})
+				return response.render('page/course/module/module-file', {type: 'e-learning', media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
 			}
 
-			return response.render('page/course/module/module-file', {type: 'e-learning'})
+			return response.render('page/course/module/module-file', {type: 'e-learning', courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
 		}
 	}
 }
