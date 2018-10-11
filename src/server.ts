@@ -51,7 +51,7 @@ nunjucks
 				: jsonpath.value(map, path)
 	})
 	.addFilter('formatDate', function(date: Date) {
-		return moment(date).format('DD/MM/YYYY')
+		return date ? moment(date).format('DD/MM/YYYY') : null
 	})
 
 app.set('view engine', 'html')

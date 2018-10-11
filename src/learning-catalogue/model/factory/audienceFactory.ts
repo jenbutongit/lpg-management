@@ -16,6 +16,7 @@ export class AudienceFactory {
 		audience.requiredBy = data.requiredBy
 		audience.type = Audience.Type[data.type as keyof typeof Audience.Type]
 		audience.frequency = data.frequency
+		audience.eventId = data.eventId
 
 		return audience
 	}
