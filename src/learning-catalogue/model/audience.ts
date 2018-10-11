@@ -13,13 +13,13 @@ export class Audience {
 	})
 	name: string
 
-	areasOfWork: string[]
+	areasOfWork?: string[]
 
-	departments: string[]
+	departments?: string[]
 
-	grades: string[]
+	grades?: string[]
 
-	interests: string[]
+	interests?: string[]
 
 	@IsNotEmpty({
 		groups: ['all', 'audience.all', 'audience.type'],
@@ -31,9 +31,11 @@ export class Audience {
 		groups: ['all', 'audience.all', 'audience.requiredBy'],
 		message: 'audience.validation.requiredBy.invalidDate',
 	})
-	requiredBy?: Date | null
+	requiredBy?: Date
 
-	frequency?: string | null
+	frequency?: string
+
+	eventId?: string
 }
 
 export namespace Audience {
