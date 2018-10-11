@@ -11,6 +11,18 @@
 {% set backButton = "/content-management/courses/" + course.id + "/overview" %}
 
 {% block content %}
+
+    {% set emailAddressFoundMessage = sessionFlash.emailAddressFoundMessage %}
+    {% set emailAddress = sessionFlash.emailAddress %}
+
+    {% if emailAddressFoundMessage %}
+    <div class="panel govuk-panel govuk-panel--confirmation">
+        <div class="govuk-panel__body custom-panel">
+            <p class="govuk-body"><strong>{{ emailAddress }}</strong>{{ i18n[emailAddressFoundMessage] }}</p>
+        </div>
+    </div>
+    {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       <h1 class="govuk-heading-l no-margin">{{ eventDateWithMonthAsText }}, {{ event.venue.location }}</h1>
@@ -115,11 +127,9 @@
             </div>
             <div class="add-attendee">
               <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
+                <p class="govuk-body no-margin"><strong>Add an attendee with their email address</strong></p>
                 <div class="input-with-button">
                   {{ govukInput({
-                    label: {
-                      text: "Add an attendee with their email address"
-                    },
                     id: "user",
                     name: "user"
                   }) }}

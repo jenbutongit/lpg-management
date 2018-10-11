@@ -18,7 +18,7 @@ export class CsrsService {
 	}
 
 	async getOrganisations() {
-		return await this.restService.get('organisations')
+		return await this.restService.get('organisationalUnits')
 	}
 
 	async getAreasOfWork() {

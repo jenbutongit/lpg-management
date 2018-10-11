@@ -465,19 +465,25 @@ export class EventController {
 
 			if (!identityDetails) {
 				req.session!.sessionFlash = {
-					emailAddressNotFoundMessage: `${emailAddress} is not registered. Check the email address and try adding them again.`,
+					emailAddressFoundMessage: 'email_address_not_found_message',
+					emailAddress: emailAddress,
 					eventDateWithMonthAsText,
 				}
-				res.redirect('page/course/module/events/events-overview')
+			} else {
+				//TODO: Send email to learner
+
+				req.session!.sessionFlash = {
+					emailAddressFoundMessage: 'email_address_found_message',
+					emailAddress: emailAddress,
+					eventDateWithMonthAsText,
+				}
 			}
 
-			//TODO: Send email to learner
-
-			req.session!.sessionFlash = {
-				emailAddressNotFoundMessage: `${emailAddress} has been added to this event.`,
-				eventDateWithMonthAsText,
-			}
-			res.redirect('page/course/module/events/events-overview')
+			return res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
+					req.params.eventId
+				}`
+			)
 		}
 	}
 }
