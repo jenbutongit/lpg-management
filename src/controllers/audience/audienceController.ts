@@ -181,15 +181,12 @@ export class AudienceController {
 		return async (req: Request, res: Response) => {
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
-			const audienceEvent = res.locals.audience.eventId
-				? this.courseService
-						.getAllEventsOnCourse(res.locals.course)
-						.filter((event: Event) => event.id == res.locals.audience.eventId)[0]
-				: null
+			const audienceIdToEvent = this.courseService.getAudienceIdToEventMapping(res.locals.course)
 			res.render('page/course/audience/configure-audience', {
+				AudienceType: Audience.Type,
 				departmentCodeToName,
 				gradeCodeToName,
-				audienceEvent,
+				audienceIdToEvent,
 			})
 		}
 	}

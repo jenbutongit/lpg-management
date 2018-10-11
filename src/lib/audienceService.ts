@@ -1,6 +1,5 @@
 import {LearningCatalogue} from '../learning-catalogue'
 import {NextFunction, Request, Response} from 'express'
-import {Audience} from '../learning-catalogue/model/audience'
 import {Course} from '../learning-catalogue/model/course'
 import {JsonpathService} from '../lib/jsonpathService'
 
@@ -17,7 +16,6 @@ export class AudienceService {
 			const audience = await this.learningCatalogue.getAudience(res.locals.course.id, audienceId)
 			if (audience) {
 				res.locals.audience = audience
-				res.locals.audienceTypeAsString = Audience.Type[audience.type]
 				next()
 			} else {
 				res.sendStatus(404)

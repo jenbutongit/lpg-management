@@ -16,6 +16,8 @@
 {% endblock %}
 
 {% block content %}
+    {% set audienceTypeAsString = AudienceType[audience.type] %}
+
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
@@ -131,6 +133,7 @@
                         </div>
                     {% endif %}
                 {% else %}
+                    {% set audienceEvent = audienceIdToEvent[audience.id] %}
                     <div class="flex-container u--border--bgrey">
                         <div class="audience-content">
                             <p class="govuk-body">Associated event</p>

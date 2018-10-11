@@ -25,6 +25,7 @@ describe('AudienceController', () => {
 	let audienceFactory: AudienceFactory
 	let csrsService: CsrsService
 	let courseService: CourseService
+	let audienceService: AudienceService
 	let req: Request
 	let res: Response
 
@@ -37,12 +38,13 @@ describe('AudienceController', () => {
 		audienceFactory = <AudienceFactory>{}
 		csrsService = <CsrsService>{}
 		courseService = new CourseService(learningCatalogue)
+		audienceService = new AudienceService(learningCatalogue)
 		audienceController = new AudienceController(
 			learningCatalogue,
 			audienceValidator,
 			audienceFactory,
 			courseService,
-			new AudienceService(learningCatalogue),
+			audienceService,
 			csrsService
 		)
 
@@ -150,6 +152,7 @@ describe('AudienceController', () => {
 			csrsService.getOrganisations = sinon.stub()
 			csrsService.getDepartmentCodeToNameMapping = sinon.stub()
 			csrsService.getGradeCodeToNameMapping = sinon.stub()
+			courseService.getAudienceIdToEventMapping = sinon.stub()
 
 			await audienceController.getConfigureAudience()(req, res)
 
