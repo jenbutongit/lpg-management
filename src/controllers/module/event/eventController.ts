@@ -451,23 +451,33 @@ export class EventController {
 		}
 	}
 
-	public getAttendeeDetails() {
-		return async (req: Request, res: Response) => {
-			const event = res.locals.event
-			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
-			res.render('page/course/module/events/attendee', {eventDateWithMonthAsText})
-		}
-	}
-
 	public inviteLearner() {
 		return async (req: Request, res: Response) => {
 			const data = {
 				...req.body,
 			}
 
-			const identityDetails = this.identityService.getDetailsByEmail(data.emailAddress, req.user!.accessToken)
+			const emailAddress = data.emailAddress
+			const identityDetails = this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
 
-			console.log(identityDetails)
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			if (!identityDetails) {
+				req.session!.sessionFlash = {
+					emailAddressNotFoundMessage: `${emailAddress} is not registered. Check the email address and try adding them again.`,
+					eventDateWithMonthAsText,
+				}
+				res.redirect('page/course/module/events/events-overview')
+			}
+
+			//TODO: Send email to learner
+
+			req.session!.sessionFlash = {
+				emailAddressNotFoundMessage: `${emailAddress} has been added to this event.`,
+				eventDateWithMonthAsText,
+			}
+			res.redirect('page/course/module/events/events-overview')
 		}
 	}
 }

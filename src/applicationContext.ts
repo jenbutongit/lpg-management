@@ -238,7 +238,7 @@ export class ApplicationContext {
 			this.dateRangeCommandValidator,
 			this.dateRangeValidator,
 			this.dateRangeCommandFactory,
-            this.identityService
+			this.identityService
 		)
 
 		this.audienceService = new AudienceService(this.learningCatalogue)
