@@ -220,7 +220,14 @@ export class ApplicationContext {
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
-		this.eventController = new EventController(this.learningCatalogue, this.eventValidator, this.eventFactory, this.dateRangeCommandValidator, this.dateRangeValidator, this.dateRangeCommandFactory)
+		this.eventController = new EventController(
+			this.learningCatalogue,
+			this.eventValidator,
+			this.eventFactory,
+			this.dateRangeCommandValidator,
+			this.dateRangeValidator,
+			this.dateRangeCommandFactory
+		)
 
 		this.audienceService = new AudienceService(this.learningCatalogue)
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)

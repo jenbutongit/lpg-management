@@ -20,4 +20,16 @@ export class IdentityService {
 
 		return identity
 	}
+
+	async getDetailsByEmail(emailAddress: string, token: string) {
+		const response = await this.http.get(`/api/identities/${emailAddress}`, {
+			baseURL: config.AUTHENTICATION.authenticationServiceUrl,
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+		const identity = new Identity(response.data.uid, response.data.roles, token)
+
+		return identity
+	}
 }

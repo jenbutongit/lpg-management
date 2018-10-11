@@ -8,6 +8,7 @@ import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 import {DateTime} from '../../../lib/dateTime'
+import {IdentityService} from '../../../identity/identityService'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -425,6 +426,17 @@ export class EventController {
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
+		}
+	}
+
+	public inviteLearner() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
+
+			const identityService = new IdentityService()
+			const identityDetails =
 		}
 	}
 }
