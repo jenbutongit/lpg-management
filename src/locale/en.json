@@ -64,7 +64,6 @@
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
-	"course": "Course",
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
@@ -107,6 +106,5 @@
 	"validation_module_event_dateRanges_past": "Start date must be in the future",
 	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
-	"validation_module_mediaId_empty": "File is required",
-	"video": "Video"
+	"validation_module_mediaId_empty": "File is required"
 }
