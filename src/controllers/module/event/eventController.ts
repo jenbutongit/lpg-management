@@ -453,9 +453,13 @@ export class EventController {
 			const eventRecords = res.locals.eventRecord
 			const bookingRef = req.params.bookingReference
 
-			const eventRecord = eventRecords.filter((record: EventRecord) => record.bookingReference == bookingRef)
+			const attendeeEventRecord = eventRecords.filter(
+				(record: EventRecord) => record.bookingReference == bookingRef
+			)
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
-			res.render('page/course/module/events/attendee', {eventRecord})
+			res.render('page/course/module/events/attendee', {attendeeEventRecord, eventDateWithMonthAsText})
 		}
 	}
 }
