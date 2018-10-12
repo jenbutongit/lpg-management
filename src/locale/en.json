@@ -92,7 +92,7 @@
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
-	"validation.termsAndConditions.name.empty": "Title is required",
+	"validation.termsAndConditions.name.empty": "Name is required",
 	"validation.termsAndConditions.content.empty": "Content is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
