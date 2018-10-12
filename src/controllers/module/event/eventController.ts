@@ -460,14 +460,10 @@ export class EventController {
 			const emailAddress = data.user
 			const identityDetails = await this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
 
-			const event = res.locals.event
-			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
-
 			if (!identityDetails) {
 				req.session!.sessionFlash = {
 					emailAddressFoundMessage: 'email_address_not_found_message',
 					emailAddress: emailAddress,
-					eventDateWithMonthAsText,
 				}
 			} else {
 				//TODO: Send email to learner
@@ -475,7 +471,6 @@ export class EventController {
 				req.session!.sessionFlash = {
 					emailAddressFoundMessage: 'email_address_found_message',
 					emailAddress: emailAddress,
-					eventDateWithMonthAsText,
 				}
 			}
 

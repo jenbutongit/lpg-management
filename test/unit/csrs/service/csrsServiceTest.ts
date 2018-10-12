@@ -37,7 +37,7 @@ describe('CsrsService tests', () => {
 
 			const result = await csrsService.getOrganisations()
 
-			expect(restService.get).to.have.been.calledOnceWith('organisationalUnits')
+			expect(restService.get).to.have.been.calledOnceWith('organisations')
 			expect(result).to.eql(data)
 		})
 	})
