@@ -11,8 +11,8 @@ import {Audience} from '../../../../src/learning-catalogue/model/audience'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
-import {AudienceService} from '../../../../src/lib/audienceService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
+import {Module} from '../../../../src/learning-catalogue/model/module'
 import moment = require('moment')
 
 chai.use(sinonChai)
@@ -23,6 +23,7 @@ describe('AudienceController', () => {
 	let audienceValidator: Validator<Audience>
 	let audienceFactory: AudienceFactory
 	let csrsService: CsrsService
+	let courseService: CourseService
 	let req: Request
 	let res: Response
 
@@ -34,12 +35,12 @@ describe('AudienceController', () => {
 		audienceValidator = <Validator<Audience>>{}
 		audienceFactory = <AudienceFactory>{}
 		csrsService = <CsrsService>{}
+		courseService = new CourseService(learningCatalogue)
 		audienceController = new AudienceController(
 			learningCatalogue,
 			audienceValidator,
 			audienceFactory,
-			new CourseService(learningCatalogue),
-			new AudienceService(learningCatalogue),
+			courseService,
 			csrsService
 		)
 
@@ -131,7 +132,7 @@ describe('AudienceController', () => {
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
-			expect(req.session!.sessionFlash.errors).to.be.undefined
+			expect(req.session!.sessionFlash).to.be.undefined
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(res.redirect).to.have.been.calledWith(
 				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
@@ -147,6 +148,7 @@ describe('AudienceController', () => {
 			csrsService.getOrganisations = sinon.stub()
 			csrsService.getDepartmentCodeToNameMapping = sinon.stub()
 			csrsService.getGradeCodeToNameMapping = sinon.stub()
+			courseService.getAudienceIdToEventMapping = sinon.stub()
 
 			await audienceController.getConfigureAudience()(req, res)
 
@@ -193,6 +195,7 @@ describe('AudienceController', () => {
 
 			const audience = {id: audienceId, departments: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			const hmrcCode = 'hmrc'
 			csrsService.getOrganisations = sinon
@@ -215,6 +218,7 @@ describe('AudienceController', () => {
 			req.body = {organisation: 'all', 'input-autocomplete': ''}
 			const audience = {id: audienceId, departments: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			const hmrcCode = 'hmrc'
 			const dwpCode = 'dwp'
@@ -244,6 +248,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, departments: ['hmrc']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -274,6 +279,7 @@ describe('AudienceController', () => {
 			req.body = {'area-of-work': aowHumanResources}
 			const audience = {id: audienceId, areasOfWork: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			csrsService.isAreaOfWorkValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
@@ -294,6 +300,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, areasOfWork: ['some area of work']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -323,6 +330,7 @@ describe('AudienceController', () => {
 			req.body = {grades: gradeCode}
 			const audience = {id: audienceId, grades: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			csrsService.isGradeCodeValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
@@ -343,6 +351,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, grades: ['some grade']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -372,6 +381,7 @@ describe('AudienceController', () => {
 			req.body = {interests: interestCode}
 			const audience = {id: audienceId, interests: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			csrsService.isCoreLearningValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
@@ -392,6 +402,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, interests: ['some interest']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -418,6 +429,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: null}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 			req.body = {'deadline-year': '2018', 'deadline-month': '12', 'deadline-day': '16'}
 
 			audienceValidator.check = sinon.stub().returns({size: 0})
@@ -439,14 +451,78 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: new Date()}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.deleteDeadline()(req, res)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: null}],
+				audiences: [{id: audienceId, requiredBy: undefined}],
 			})
+		})
+	})
+
+	describe('#getPrivateCourseEvent', () => {
+		it('should gather events from all face-to-face modules into an events array and render add event page', async () => {
+			const dateRanges = [{date: '2018-10-08'}]
+			res.locals.course = {
+				modules: [
+					{type: Module.Type.FACE_TO_FACE, events: undefined},
+					{type: Module.Type.FACE_TO_FACE, events: [{id: 1, dateRanges}, {id: 2, dateRanges}]},
+					{type: Module.Type.FACE_TO_FACE, events: [{id: 3, dateRanges}]},
+				],
+			}
+
+			await audienceController.getPrivateCourseEvent()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-event', {
+				courseEvents: [{id: 1, dateRanges}, {id: 2, dateRanges}, {id: 3, dateRanges}],
+			})
+		})
+	})
+
+	describe('#setPrivateCourseEvent', () => {
+		it('should update audience with selected event ID and redirect to audience configuration page', async () => {
+			const eventId = 'event-id'
+			req.body.events = eventId
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, eventId: null}
+			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
+
+			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.setPrivateCourseEvent()(req, res)
+
+			expect(audience.eventId).to.be.equal(eventId)
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, eventId: eventId}],
+			})
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
+		})
+	})
+
+	describe('#deletePrivateCourseEvent', () => {
+		it('should update audience with null event ID and redirect to audience configuration page', async () => {
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, eventId: 'event-id'}
+			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
+
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.deletePrivateCourseEvent()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
+				audiences: [{id: audienceId, eventId: undefined}],
+			})
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
+			)
 		})
 	})
 })

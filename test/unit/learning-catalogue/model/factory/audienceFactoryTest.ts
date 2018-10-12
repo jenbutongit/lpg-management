@@ -15,6 +15,7 @@ describe('AudienceFactory tests', () => {
 		const requiredBy = new Date()
 		const type = 'OPEN'
 		const frequency = 'YEARLY'
+		const eventId = 'event-id'
 
 		const data: object = {
 			id: id,
@@ -25,6 +26,7 @@ describe('AudienceFactory tests', () => {
 			requiredBy: requiredBy,
 			type: type,
 			frequency: frequency,
+			eventId: eventId,
 		}
 
 		const result: Audience = audienceFactory.create(data)
@@ -37,6 +39,7 @@ describe('AudienceFactory tests', () => {
 		expect(result.requiredBy).to.equal(requiredBy)
 		expect(result.type).to.equal(Audience.Type.OPEN)
 		expect(result.frequency).to.equal(frequency)
+		expect(result.eventId).to.equal(eventId)
 	})
 
 	it('Should ignore requiredBy if missing', () => {
