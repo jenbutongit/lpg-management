@@ -466,6 +466,7 @@ export class EventController {
 					emailAddress: emailAddress,
 				}
 			} else {
+				//TODO: Set leaner as attendee in leaner-record
 				//TODO: Send email to learner
 
 				req.session!.sessionFlash = {
