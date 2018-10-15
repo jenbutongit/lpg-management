@@ -50,7 +50,7 @@
 
                     <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Reading duration</p>
                     <div class="time-inputs">
-   
+
                         {{ govukInput({
                             type: "number",
                             label: {
@@ -90,23 +90,23 @@
                         },
                         items: [
                         {
-                            value: "isOptional",
+                            value: "true",
                             text: "Yes, this is optional"
                         }
                     ]
                     }) }}
-                
+
                 {{ govukButton({
                 text: "Add item",
                 classes: "button-blue left-aligned"
                 }) }}
             </form>
 
-            <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>        
+            <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
         </div>
 
         <div class="govuk-grid-column-one-third">
-       
+
         </div>
     </div>
 {% endblock %}
