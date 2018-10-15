@@ -7,7 +7,7 @@ export class VideoModule extends Module {
 		message: 'validation_module_url_empty',
 	})
 	@IsUrl({
-		require_protocol: false,
+		require_protocol: true,
 		require_tld: true,
 		allow_underscores: true,
 		allow_trailing_dot: false

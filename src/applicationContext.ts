@@ -205,7 +205,7 @@ export class ApplicationContext {
 			this.moduleFactory,
 			new OauthRestService(this.mediaConfig, this.auth)
 		)
-		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory)
+		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory, this.moduleValidator)
 
 		this.faceToFaceController = new FaceToFaceModuleController(
 			this.learningCatalogue,

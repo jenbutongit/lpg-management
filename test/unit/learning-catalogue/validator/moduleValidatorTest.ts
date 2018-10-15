@@ -128,7 +128,18 @@ describe('ModuleValidator tests', () => {
 			])
 		})
 
-		it('should pass validation if url is present on LinkModule', async () => {
+		it('should pass validation if url is present and has protocol and tld', async () => {
+			const params = {
+				type: 'link',
+				url: 'http://example.org',
+			}
+
+			const errors = await validator.check(params, ['url'])
+
+			expect(errors.size).to.equal(0)
+		})
+
+		it('should fail validation if url has no protocol', async () => {
 			const params = {
 				type: 'link',
 				url: 'example.org',
@@ -136,8 +147,28 @@ describe('ModuleValidator tests', () => {
 
 			const errors = await validator.check(params, ['url'])
 
-			expect(errors.size).to.equal(0)
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['url']).to.eql([
+				'validation_module_url_invalid',
+			])
+
 		})
+
+		it('should fail validation if url is not tld', async () => {
+			const params = {
+				type: 'link',
+				url: 'http://localhost',
+			}
+
+			const errors = await validator.check(params, ['url'])
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields['url']).to.eql([
+				'validation_module_url_invalid',
+			])
+		})
+
+
 
 		it('should fail validation if url is not present on VideoModule', async () => {
 			const params = {
@@ -156,7 +187,7 @@ describe('ModuleValidator tests', () => {
 		it('should pass validation if url is present on VideoModule', async () => {
 			const params = {
 				type: 'video',
-				url: 'example.org',
+				url: 'http://example.org',
 			}
 
 			const errors = await validator.check(params, ['url'])
@@ -850,7 +881,7 @@ describe('ModuleValidator tests', () => {
 		it('should fail validation if title is not present', async () => {
 			const params = {
 				type: 'link',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -925,7 +956,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'link',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				duration: 99,
 				audiences: [
 					{
@@ -949,7 +980,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'link',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				audiences: [
 					{
@@ -974,7 +1005,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'link',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				duration: -99,
 				audiences: [
@@ -999,7 +1030,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'link',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -1022,7 +1053,7 @@ describe('ModuleValidator tests', () => {
 		it('should fail validation if title is not present', async () => {
 			const params = {
 				type: 'video',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				duration: 99,
 				audiences: [
@@ -1072,7 +1103,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				duration: 99,
 				audiences: [
 					{
@@ -1096,7 +1127,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				audiences: [
 					{
@@ -1121,7 +1152,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				duration: -99,
 				audiences: [
@@ -1146,7 +1177,7 @@ describe('ModuleValidator tests', () => {
 			const params = {
 				type: 'video',
 				title: 'module title',
-				url: 'example.org',
+				url: 'http://example.org',
 				description: 'module description',
 				duration: 99,
 				audiences: [

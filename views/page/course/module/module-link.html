@@ -24,29 +24,38 @@
 
             <form action="/content-management/courses/{{ course.id }}/module-link" method="post" class="module-form">
                 <fieldset class="govuk-fieldset">
-                    {{ govukInput({
-                    label: {
-                        text: "Module title"
-                    },
-                    id: "title",
-                    name: "title"
-                    }) }}
+                    {{
+                        govukInput({
+                            label: {
+                                text: "Module title"
+                            },
+                            id: "title",
+                            name: "title",
+                            value: module.title
+                        })
+                    }}
 
-                    {{ govukTextarea({
-                    name: "description",
-                    id: "description",
-                    label: {
-                        text: "Description"
-                    }
-                    }) }}
+                    {{
+                        govukTextarea({
+                            name: "description",
+                            id: "description",
+                            label: {
+                                text: "Description"
+                            },
+                            value: module.description
+                        })
+                    }}
 
-                    {{ govukInput({
-                    label: {
-                        text: "URL"
-                    },
-                    id: "url",
-                    name: "url"
-                    }) }}
+                    {{
+                        govukInput({
+                            label: {
+                                text: "URL"
+                            },
+                            id: "url",
+                            name: "url",
+                            value: module.url
+                        })
+                    }}
 
                     <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Reading duration</p>
                     <div class="time-inputs">
@@ -61,6 +70,7 @@
                             },
                             id: "hours",
                             name: "hours",
+                            value: module.hours,
                             classes: "govuk-date-input__input govuk-input--width-3 font-light"
                         }) }}
                         {{ govukInput({
@@ -72,7 +82,8 @@
                                 maxlength: "2"
                             },
                             id: "minutes",
-                            name: "miniutes",
+                            value: module.minutes,
+                            name: "minutes",
                             classes: "govuk-date-input__input govuk-input--width-3"
                         }) }}
                     </div>
@@ -91,7 +102,8 @@
                         items: [
                         {
                             value: "true",
-                            text: "Yes, this is optional"
+                            text: "Yes, this is optional",
+                            checked: true if module.optional
                         }
                     ]
                     }) }}
