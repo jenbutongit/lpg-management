@@ -189,7 +189,7 @@ describe('ModuleValidator tests', () => {
 
 		it('should fail validation if url is not present', async () => {
 			const params = {
-				type: 'file',
+				type: 'link',
 			}
 
 			const errors = await validator.check(params, ['url'])
@@ -197,13 +197,13 @@ describe('ModuleValidator tests', () => {
 			expect(errors.size).to.equal(2)
 			expect(errors.fields['url']).to.eql([
 				'validation_module_url_invalid',
-				'validation_module_url_empty',
+				'validation_module_blog_url_empty',
 			])
 		})
 
 		it('should fail validation if url is not a top level domain', async () => {
 			const params = {
-				type: 'file',
+				type: 'link',
 				url: 'localhost'
 			}
 
@@ -673,7 +673,6 @@ describe('ModuleValidator tests', () => {
 				type: 'file',
 				description: 'module description',
 				duration: 99,
-				url: 'http://example.org',
 				fileSize: 102,
 				mediaId: 'abc',
 				audiences: [
@@ -699,7 +698,6 @@ describe('ModuleValidator tests', () => {
 				type: 'file',
 				title: 'module title',
 				duration: 99,
-				url: 'http://example.org',
 				mediaId: 'abc',
 				fileSize: 102,
 				audiences: [
@@ -725,7 +723,6 @@ describe('ModuleValidator tests', () => {
 				type: 'file',
 				title: 'module title',
 				description: 'module description',
-				url: 'http://example.org',
 				fileSize: 102,
 				mediaId: 'abc',
 				audiences: [
@@ -753,7 +750,6 @@ describe('ModuleValidator tests', () => {
 				title: 'module title',
 				description: 'module description',
 				duration: -99,
-				url: 'http://example.org',
 				fileSize: 102,
 				mediaId: 'abc',
 				audiences: [
@@ -774,64 +770,12 @@ describe('ModuleValidator tests', () => {
 			])
 		})
 
-		it('should fail validation if url is not present', async () => {
-			const params = {
-				type: 'file',
-				title: 'module title',
-				description: 'module description',
-				duration: 99,
-				fileSize: 99,
-				mediaId: 'abc',
-				audiences: [
-					{
-						areasOfWork: ['blah'],
-						departments: ['blah'],
-						grades: ['blah'],
-						interests: ['blah'],
-						mandatory: false,
-					},
-				],
-			}
-
-			const errors = await validator.check(params)
-			expect(errors.size).to.equal(2)
-			expect(errors.fields['url']).to.eql([
-				'validation_module_url_invalid',
-				'validation_module_url_empty',
-			])
-		})
-
-		it('should pass validation if url is present', async () => {
-			const params = {
-				type: 'file',
-				title: 'module title',
-				description: 'module description',
-				duration: 99,
-				fileSize: 99,
-				url: 'http://example.org',
-				mediaId: 'abc',
-				audiences: [
-					{
-						areasOfWork: ['blah'],
-						departments: ['blah'],
-						grades: ['blah'],
-						interests: ['blah'],
-						mandatory: false,
-					},
-				],
-			}
-
-			const errors = await validator.check(params)
-			expect(errors.size).to.equal(0)
-		})
-
 		it('should fail validation if fileSize is not present', async () => {
 			const params = {
 				type: 'file',
 				title: 'module title',
 				description: 'module description',
 				duration: 99,
-				url: 'http://example.org',
 				mediaId: 'abc',
 				audiences: [
 					{
@@ -858,7 +802,6 @@ describe('ModuleValidator tests', () => {
 				title: 'module title',
 				description: 'module description',
 				duration: 99,
-				url: 'http://example.org',
 				fileSize: -102,
 				mediaId: 'abc',
 				audiences: [
@@ -885,7 +828,6 @@ describe('ModuleValidator tests', () => {
 				title: 'module title',
 				description: 'module description',
 				duration: 99,
-				url: 'http://example.org',
 				fileSize: 102,
 				mediaId: 'abc',
 				audiences: [
