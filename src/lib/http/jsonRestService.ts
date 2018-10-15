@@ -30,7 +30,9 @@ export class JsonRestService {
 			return this.get(url.parse(response.headers.location).path!)
 		} catch (e) {
 			throw new Error(
-				`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${this.config.url}${this.ensureStartsWithSlash(path)}`
+				`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${
+					this.config.url
+				}${JsonRestService.ensureStartsWithSlash(path)}`
 			)
 		}
 	}
@@ -39,7 +41,11 @@ export class JsonRestService {
 		try {
 			return (await this._http.get(path, this.getHeaders())).data
 		} catch (e) {
-			throw new Error(`Error with GET request: ${e} when getting ${this.config.url}${this.ensureStartsWithSlash(path)}`)
+			throw new Error(
+				`Error with GET request: ${e} when getting ${this.config.url}${JsonRestService.ensureStartsWithSlash(
+					path
+				)}`
+			)
 		}
 	}
 
@@ -48,7 +54,9 @@ export class JsonRestService {
 			return (await this._http.put(path, resource, this.getHeaders())).data
 		} catch (e) {
 			throw new Error(
-				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${this.ensureStartsWithSlash(path)}`
+				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${
+					this.config.url
+				}${JsonRestService.ensureStartsWithSlash(path)}`
 			)
 		}
 	}
@@ -57,7 +65,11 @@ export class JsonRestService {
 		try {
 			return await this._http.delete(path, this.getHeaders())
 		} catch (e) {
-			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${this.ensureStartsWithSlash(path)}`)
+			throw new Error(
+				`Error with DELETE request: ${e} when deleting ${
+					this.config.url
+				}${JsonRestService.ensureStartsWithSlash(path)}`
+			)
 		}
 	}
 
@@ -65,7 +77,7 @@ export class JsonRestService {
 		this._http = value
 	}
 
-	private ensureStartsWithSlash(path: string) {
+	private static ensureStartsWithSlash(path: string) {
 		return path.startsWith('/') ? path : '/' + path
 	}
 }
