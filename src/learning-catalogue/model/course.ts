@@ -1,6 +1,7 @@
 import {Module} from './module'
 import {IsNotEmpty, MaxLength} from 'class-validator'
 import {Audience} from './audience'
+import {LearningProvider} from './learningProvider'
 
 export class Course {
 	id: string
@@ -35,6 +36,7 @@ export class Course {
 	price: number
 	modules: Module[]
 	audiences: Audience[]
+	learningProvider: LearningProvider
 
 	getCost() {
 		const costArray = this.modules.map(module => module.price)
