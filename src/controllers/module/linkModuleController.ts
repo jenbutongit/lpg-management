@@ -35,11 +35,11 @@ export class LinkModuleController {
 				res.sendStatus(404)
 			}
 		})
-		this.router.get('/content-management/courses/:courseId/module-link', this.addModuleLink())
-		this.router.post('/content-management/courses/:courseId/module-link', this.setModuleLink())
+		this.router.get('/content-management/courses/:courseId/module-link', this.addLinkModule())
+		this.router.post('/content-management/courses/:courseId/module-link', this.setLinkModule())
 	}
 
-	public addModuleLink() {
+	public addLinkModule() {
 		logger.debug('Add module page')
 
 		return async (request: Request, response: Response) => {
@@ -47,7 +47,7 @@ export class LinkModuleController {
 		}
 	}
 
-	public setModuleLink() {
+	public setLinkModule() {
 		return async (request: Request, response: Response) => {
 			const course = response.locals.course
 			const data = {
@@ -67,7 +67,6 @@ export class LinkModuleController {
 					errors: errors
 				})
 			}
-
 
 			const linkModule = this.linkFactory.create(data)
 			await this.learningCatalogue.createModule(course.id, linkModule)
