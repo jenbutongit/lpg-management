@@ -1,17 +1,23 @@
 {
 	"audience": {
 		"pageTitle": {
-			"add_name": "Add audience name",
-			"edit_name": "Edit audience name",
-			"add_type": "Add audience type",
-			"edit_type": "Edit audience type",
-			"configure_audience": "Configure audience",
-			"add_organisation": "Add organisation",
+			"addName": "Add audience name",
+			"editName": "Edit audience name",
+			"addType": "Add audience type",
+			"editType": "Edit audience type",
+			"configureAudience": "Configure audience",
+			"addOrganisation": "Add organisation",
 			"addDeadline": "Add deadline date",
-			"delete_audience": "Delete audience",
-			"add_area_of_work": "Add area of work",
-			"add_grades": "Add grades",
-			"add_core_learning": "Add core learning"
+			"deleteAudience": "Delete audience",
+			"addAreaOfWork": "Add area of work",
+			"addGrades": "Add grades",
+			"addCoreLearning": "Add core learning",
+			"addEvent": "Add event for private course audience"
+		},
+		"pageText": {
+			"edit": "Edit audience",
+			"addNew": "Add a new audience",
+			"audienceName": "Audience name"
 		},
 		"validation": {
 			"name": {
@@ -41,9 +47,10 @@
 			"editCourseDetails": "Edit course details"
 		},
 		"text": {
+			"details": "Course details",
 			"title": "Course title",
 			"addNew": "Add a new course",
-			"editTitle": "Edit course title"
+			"editDetails": "Edit course details"
 		},
 		"validation": {
 			"title": {
