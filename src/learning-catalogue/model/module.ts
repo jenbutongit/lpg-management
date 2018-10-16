@@ -38,7 +38,7 @@ export class Module {
 
 	formattedDuration: string
 
-	price?: number
+	cost?: number
 
 	optional: boolean
 

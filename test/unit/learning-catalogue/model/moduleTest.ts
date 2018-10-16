@@ -35,9 +35,9 @@ describe('Course tests', () => {
 		expect(module.duration).to.equal(999)
 	})
 
-	it('should be able to set price', () => {
-		module.price = 1000
-		expect(module.price).to.equal(1000)
+	it('should be able to set cost', () => {
+		module.cost = 1000
+		expect(module.cost).to.equal(1000)
 	})
 
 	it('should be able to set audience', () => {

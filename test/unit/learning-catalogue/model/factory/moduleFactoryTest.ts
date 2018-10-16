@@ -23,7 +23,7 @@ describe('ModuleFactory tests', () => {
 			description: 'module description',
 			url: 'module url',
 			duration: 3600,
-			price: 100,
+			cost: 100,
 		}
 	})
 

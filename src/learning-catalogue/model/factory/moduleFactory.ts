@@ -22,7 +22,7 @@ export class ModuleFactory {
 		module.title = data.title
 		module.description = data.description
 		module.duration = data.duration
-		module.price = data.price
+		module.cost = data.cost
 		module.optional = data.optional
 
 		return module
@@ -45,27 +45,25 @@ export class ModuleFactory {
 		},
 		link: (data: any) => {
 			const module = this.defaultCreate(new LinkModule(), data)
-			module.id = data.id
-			module.title = data.title
 			module.description = data.description
-			module.url = data.url
 			module.duration = data.duration
+			module.id = data.id
 			module.isOptional = data.isOptional
-
+			module.title = data.title
+			module.url = data.url
 			return module
 		},
 		file: (data: any) => {
 			const module = this.defaultCreate(new FileModule(), data)
-			module.url = data.url
-			module.mediaId = data.mediaId
 			module.fileSize = data.fileSize
+			module.mediaId = data.mediaId
+			module.url = data.url
 			return module
 		},
 		'face-to-face': (data: any) => {
 			const module = this.defaultCreate(new FaceToFaceModule(), data)
 			module.events = (data.events || []).map(this.eventFactory.create)
 			module.productCode = data.productCode
-
 			return module
 		},
 		elearning: (data: any) => {

@@ -32,13 +32,19 @@ export class Course {
 	description: string
 	duration: number
 	learningOutcomes: string
-	price: number
 	modules: Module[]
 	audiences: Audience[]
 
 	getCost() {
-		const costArray = this.modules.map(module => module.price)
-		return costArray.length ? costArray.reduce((p, c) => (p || 0) + (c || 0), 0) : null
+		return this.modules
+			.map(module => module.cost)
+			.reduce(
+				(acc, moduleCost) =>
+					Object.is(acc, undefined) && Object.is(moduleCost, undefined)
+						? undefined
+						: (acc || 0) + (moduleCost || 0),
+				undefined
+			)
 	}
 
 	getType() {

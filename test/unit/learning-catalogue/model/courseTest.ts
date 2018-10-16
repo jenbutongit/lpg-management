@@ -43,11 +43,6 @@ describe('Course tests', () => {
 		expect(course.learningOutcomes).to.equal('test-learningOutcomes')
 	})
 
-	it('should be able to set price', () => {
-		course.price = 1000
-		expect(course.price).to.equal(1000)
-	})
-
 	it('should be able to set modules', () => {
 		const modules = [new Module()]
 
@@ -56,39 +51,55 @@ describe('Course tests', () => {
 		expect(course.modules).to.equal(modules)
 	})
 
-	it('should be able to get costs by sum of module costs', () => {
-		const module1 = new VideoModule()
-		module1.price = 100
+	describe('#getCost', () => {
+		let module1: VideoModule
+		let module2: LinkModule
+		let module3: FaceToFaceModule
 
-		const module2 = new LinkModule()
-		module2.price = 50
+		beforeEach(() => {
+			module1 = new VideoModule()
+			module2 = new LinkModule()
+			module3 = new FaceToFaceModule()
+			course.modules = [module1, module2, module3]
+		})
 
-		const module3 = new FaceToFaceModule()
-		module3.price = 25.25
+		it('should be able to get cost by sum of module costs', () => {
+			module1.cost = 100
+			module2.cost = 50
+			module3.cost = 25.25
 
-		course.modules = [module1, module2, module3]
+			expect(course.getCost()).to.equal(175.25)
+		})
 
-		expect(course.getCost()).to.equal(175.25)
-	})
+		it('should get undefined if there are no modules', () => {
+			course.modules = []
 
-	it('should get null if no module costs', () => {
-		course.modules = []
+			expect(course.getCost()).to.be.undefined
+		})
 
-		expect(course.getCost()).to.equal(null)
-	})
+		it('should get undefined if all module costs are undefined', () => {
+			module1.cost = undefined
+			module2.cost = undefined
+			module3.cost = undefined
 
-	it('should get 0 if no module costs are 0', () => {
-		const module1 = new VideoModule()
-		module1.price = 0
+			expect(course.getCost()).to.be.undefined
+		})
 
-		const module2 = new LinkModule()
-		module2.price = 0
+		it('should get cost if some module costs are undefined but some have a cost', () => {
+			module1.cost = undefined
+			module2.cost = 50
+			module3.cost = undefined
 
-		const module3 = new FaceToFaceModule()
-		module3.price = 0
+			expect(course.getCost()).to.equal(50)
+		})
 
-		course.modules = [module1, module2, module3]
-		expect(course.getCost()).to.equal(0)
+		it('should get 0 if all module costs are 0', () => {
+			module1.cost = 0
+			module2.cost = 0
+			module3.cost = 0
+
+			expect(course.getCost()).to.equal(0)
+		})
 	})
 
 	it('should get type to be null if no modules', () => {
