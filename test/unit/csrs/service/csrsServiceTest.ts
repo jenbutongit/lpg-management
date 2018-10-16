@@ -89,7 +89,7 @@ describe('CsrsService tests', () => {
 
 			const result = await csrsService.getCoreLearning()
 
-			expect(restService.get).to.have.been.calledOnceWith('interests')
+			expect(restService.get).to.have.been.calledOnceWith('/interests')
 			expect(result).to.eql(data)
 		})
 	})

@@ -75,7 +75,7 @@ export class CsrsService {
 		let interests = this.cacheService.cache.get(CsrsService.INTERESTS)
 
 		if (!interests) {
-			interests = await this.restService.get('interests')
+			interests = await this.restService.get('/interests')
 			this.cacheService.cache.set(CsrsService.INTERESTS, interests)
 		}
 
