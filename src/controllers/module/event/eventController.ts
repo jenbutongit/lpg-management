@@ -1,12 +1,12 @@
-import {LearningCatalogue} from '../../../learning-catalogue/index'
-import {Validator} from '../../../learning-catalogue/validator/validator'
-import {Request, Response, Router} from 'express'
-import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
-import {Event} from '../../../learning-catalogue/model/event'
+import { LearningCatalogue } from '../../../learning-catalogue/index'
+import { Validator } from '../../../learning-catalogue/validator/validator'
+import { Request, Response, Router } from 'express'
+import { EventFactory } from '../../../learning-catalogue/model/factory/eventFactory'
+import { Event } from '../../../learning-catalogue/model/event'
 import * as moment from 'moment'
-import {DateRangeCommand} from '../../command/dateRangeCommand'
-import {DateRange} from '../../../learning-catalogue/model/dateRange'
-import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
+import { DateRangeCommand } from '../../command/dateRangeCommand'
+import { DateRange } from '../../../learning-catalogue/model/dateRange'
+import { DateRangeCommandFactory } from '../../command/factory/dateRangeCommandFactory'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -125,6 +125,8 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
 		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.cancelEvent())
+
 	}
 
 	public getDateTime() {
@@ -360,7 +362,7 @@ export class EventController {
 				)
 				res.redirect(
 					`/content-management/courses/${req.params.courseId}/modules/${
-						req.params.moduleId
+					req.params.moduleId
 					}/events-overview/${savedEvent.id}`
 				)
 			}
@@ -411,7 +413,7 @@ export class EventController {
 				)
 				res.redirect(
 					`/content-management/courses/${req.params.courseId}/modules/${
-						req.params.moduleId
+					req.params.moduleId
 					}/events-overview/${req.params.eventId}`
 				)
 			}
@@ -421,6 +423,12 @@ export class EventController {
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/module/events/events-overview')
+		}
+	}
+
+	public cancelEvent() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/cancel')
 		}
 	}
 }

@@ -38,7 +38,6 @@
 			"REQUIRED_LEARNING": "Required learning"
 		}
 	},
-
 	"course": {
 		"pageTitle": {
 			"addCourseTitle": "Add course title",
@@ -66,7 +65,11 @@
 			}
 		}
 	},
-
+	"event": {
+		"title": {
+			"cancel": "Cancel event"
+		}
+	},
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
