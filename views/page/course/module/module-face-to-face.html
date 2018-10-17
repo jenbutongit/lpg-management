@@ -76,12 +76,14 @@
                             text: i18n.module.text.cost
                         },
                         id: "cost",
+                        classes: "govuk-input--width-10",
                         errorMessage: {
                             text: i18n.module.validation.cost.positive
                         }
                     }) }}
                 {% else %}
                     {{ govukInput({
+                        classes: "govuk-input--width-10",
                         label: {
                             text: i18n.module.text.cost
                         },
