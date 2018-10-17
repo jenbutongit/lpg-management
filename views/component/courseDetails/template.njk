@@ -27,7 +27,7 @@
                 text: "Type"
             },
             {
-                text: i18n[course.getType()]  | default("Course", true),
+                text: i18n.courseType[course.getType()] if course.getType() else "Course",
                 format: "numeric"
             }
         ],
@@ -36,7 +36,7 @@
                 text: "Cost"
             },
             {
-                text: ('£' + course.getCost()) if course.getCost() else ('Free' if course.getCost() == 0 else i18n.course.text.notConfigured),
+                text: '£' + course.getCost(),
                 format: "numeric"
             }
         ],

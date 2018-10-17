@@ -30,30 +30,17 @@ export class Course {
 		message: 'course.validation.description.maxLength',
 	})
 	description: string
+
 	duration: number
 	learningOutcomes: string
 	modules: Module[]
 	audiences: Audience[]
 
 	getCost() {
-		return this.modules
-			.map(module => module.cost)
-			.reduce(
-				(acc, moduleCost) =>
-					Object.is(acc, undefined) && Object.is(moduleCost, undefined)
-						? undefined
-						: (acc || 0) + (moduleCost || 0),
-				undefined
-			)
+		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
 	}
 
 	getType() {
-		if (!this.modules.length) {
-			return 'course'
-		}
-		if (this.modules.length > 1) {
-			return 'blended'
-		}
-		return this.modules[0].type
+		return this.modules.length > 1 ? 'blended' : this.modules.length == 1 ? this.modules[0].type : undefined
 	}
 }

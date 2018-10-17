@@ -50,8 +50,7 @@
 			"details": "Course details",
 			"title": "Course title",
 			"addNew": "Add a new course",
-			"editDetails": "Edit course details",
-			"notConfigured": "Not configured"
+			"editDetails": "Edit course details"
 		},
 		"validation": {
 			"title": {
@@ -80,7 +79,15 @@
 		}
 	},
 
-	"blended": "Blended",
+	"courseType": {
+		"face-to-face": "Face to Face",
+		"link": "Link",
+		"elearning": "E-learning",
+		"video": "Video",
+		"file": "File",
+		"blended": "Blended"
+	},
+
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
@@ -90,11 +97,6 @@
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
-	"face-to-face": "Face to Face",
-	"link": "Link",
-	"elearning": "e-learning",
-	"video": "Video",
-	"file": "File",
 	"learning_provider_add_title": "Add learning provider",
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",

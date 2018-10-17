@@ -77,49 +77,43 @@ describe('Course tests', () => {
 			expect(course.getCost()).to.equal(0)
 		})
 
-		it('should get 0 if all module costs are undefined', () => {
-			module1.cost = undefined
-			module2.cost = undefined
-			module3.cost = undefined
+		it('should get 0 if all module costs are missing', () => {
+			delete module1.cost
+			delete module2.cost
+			delete module3.cost
 
 			expect(course.getCost()).to.equal(0)
 		})
 
-		it('should get null if any module cost is null', () => {
-			module1.cost = undefined
+		it('should get a sum even if any of the module costs is missing', () => {
+			delete module1.cost
 			module2.cost = 50
 			module3.cost = 20
 
-			expect(course.getCost()).to.be.null
-		})
-
-		it('should get 0 if all module costs are 0', () => {
-			module1.cost = 0
-			module2.cost = 0
-			module3.cost = 0
-
-			expect(course.getCost()).to.equal(0)
+			expect(course.getCost()).to.equal(70)
 		})
 	})
 
-	it('should get type to be null if no modules', () => {
-		course.modules = []
+	describe('#getType', () => {
+		it('should get type to be undefined if no modules', () => {
+			course.modules = []
 
-		expect(course.getType()).to.equal('course')
-	})
+			expect(course.getType()).to.be.undefined
+		})
 
-	it('should get type to be blended if more than one module', () => {
-		course.modules = [new Module(), new Module(), new Module()]
+		it('should get type to be blended if more than one module', () => {
+			course.modules = [new Module(), new Module(), new Module()]
 
-		expect(course.getType()).to.equal('blended')
-	})
+			expect(course.getType()).to.equal('blended')
+		})
 
-	it('should get type to be type of module if only one module', () => {
-		const module1 = new Module()
-		module1.type = Module.Type.VIDEO
+		it('should get type to be type of module if only one module', () => {
+			const module1 = new Module()
+			module1.type = Module.Type.VIDEO
 
-		course.modules = [module1]
+			course.modules = [module1]
 
-		expect(course.getType()).to.equal('video')
+			expect(course.getType()).to.equal('video')
+		})
 	})
 })
