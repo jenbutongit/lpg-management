@@ -1,5 +1,4 @@
 import {Request, Response, Router} from 'express'
-import {ContentRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
@@ -109,13 +108,10 @@ export class CourseController {
 				request.session!.save(() => {
 					response.redirect('/content-management/courses/title')
 				})
+			} else if (request.params.courseId) {
+				await this.editCourse(request, response)
+				response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 			} else {
-				if (request.params.courseId) {
-					await this.editCourse(request, response)
-
-					return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
-				}
-
 				const course = this.courseFactory.create(request.body)
 				request.session!.sessionFlash = {course}
 				request.session!.save(() => {
@@ -132,33 +128,26 @@ export class CourseController {
 	}
 
 	setCourseDetails() {
-		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-
-			const data = {
-				...req.body,
-			}
-
+		return async (req: Request, res: Response) => {
+			const data = {...req.body}
 			const course = this.courseFactory.create(data)
-
 			const errors = await this.courseValidator.check(course)
 
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors, course: course}
-				return response.redirect('/content-management/courses/details')
+				req.session!.sessionFlash = {errors: errors, course: course}
+				req.session!.save(() => {
+					res.redirect('/content-management/courses/details')
+				})
+			} else if (req.params.courseId) {
+				await this.editCourse(req, res)
+				res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
+			} else {
+				const savedCourse = await this.learningCatalogue.createCourse(course)
+				req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
+				req.session!.save(() => {
+					res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
+				})
 			}
-
-			if (request.params.courseId) {
-				await this.editCourse(request, response)
-
-				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
-			}
-
-			request.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
-
-			const savedCourse = await this.learningCatalogue.createCourse(course)
-
-			return response.redirect(`/content-management/courses/${savedCourse.id}/overview`)
 		}
 	}
 

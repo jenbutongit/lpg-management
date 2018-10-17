@@ -50,7 +50,8 @@
 			"details": "Course details",
 			"title": "Course title",
 			"addNew": "Add a new course",
-			"editDetails": "Edit course details"
+			"editDetails": "Edit course details",
+			"notConfigured": "Not configured"
 		},
 		"validation": {
 			"title": {
@@ -64,6 +65,18 @@
 				"empty": "Description is required",
 				"maxLength": "Description is too long"
 			}
+		}
+	},
+
+	"module": {
+		"validation": {
+			"cost": {
+				"positive": "Module cost must be a positive number"
+			}
+		},
+
+		"text": {
+			"cost": "Cost £ (ex VAT)"
 		}
 	},
 

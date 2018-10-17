@@ -1,7 +1,6 @@
 import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
 import {Module} from '../../../../src/learning-catalogue/model/module'
-import {Audience} from '../../../../src/learning-catalogue/model/audience'
 
 describe('Course tests', () => {
 	let module: Module
@@ -38,11 +37,5 @@ describe('Course tests', () => {
 	it('should be able to set cost', () => {
 		module.cost = 1000
 		expect(module.cost).to.equal(1000)
-	})
-
-	it('should be able to set audience', () => {
-		const audiences: Audience[] = [new Audience()]
-		module.audiences = audiences
-		expect(module.audiences).to.equal(audiences)
 	})
 })

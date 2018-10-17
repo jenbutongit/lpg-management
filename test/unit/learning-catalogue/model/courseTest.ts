@@ -71,26 +71,26 @@ describe('Course tests', () => {
 			expect(course.getCost()).to.equal(175.25)
 		})
 
-		it('should get undefined if there are no modules', () => {
+		it('should get 0 if there are no modules', () => {
 			course.modules = []
 
-			expect(course.getCost()).to.be.undefined
+			expect(course.getCost()).to.equal(0)
 		})
 
-		it('should get undefined if all module costs are undefined', () => {
+		it('should get 0 if all module costs are undefined', () => {
 			module1.cost = undefined
 			module2.cost = undefined
 			module3.cost = undefined
 
-			expect(course.getCost()).to.be.undefined
+			expect(course.getCost()).to.equal(0)
 		})
 
-		it('should get cost if some module costs are undefined but some have a cost', () => {
+		it('should get null if any module cost is null', () => {
 			module1.cost = undefined
 			module2.cost = 50
-			module3.cost = undefined
+			module3.cost = 20
 
-			expect(course.getCost()).to.equal(50)
+			expect(course.getCost()).to.be.null
 		})
 
 		it('should get 0 if all module costs are 0', () => {
