@@ -72,11 +72,13 @@
 
                 {% if errors.fields.cost %}
                     {{ govukInput({
+                        classes: "govuk-input--width-10",
                         label: {
                             text: i18n.module.text.cost
                         },
                         id: "cost",
-                        classes: "govuk-input--width-10",
+                        name: "cost",
+                        value: module.cost,
                         errorMessage: {
                             text: i18n.module.validation.cost.positive
                         }
@@ -87,7 +89,9 @@
                         label: {
                             text: i18n.module.text.cost
                         },
-                        id: "cost"
+                        id: "cost",
+                        name: "cost",
+                        value: module.cost
                     }) }}
                 {% endif %}
 

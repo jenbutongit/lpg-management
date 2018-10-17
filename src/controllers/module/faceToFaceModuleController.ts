@@ -48,6 +48,9 @@ export class FaceToFaceModuleController {
 	public setModule() {
 		return async (request: Request, response: Response) => {
 			const data = {...request.body}
+			if (!data.cost) {
+				delete data.cost
+			}
 
 			const course = response.locals.course
 			const errors = await this.moduleValidator.check(data, ['title', 'description', 'cost'])
