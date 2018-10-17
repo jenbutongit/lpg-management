@@ -1,6 +1,8 @@
+{% from "input/macro.njk" import govukInput %}
+
 {% extends "../../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['event.title.cancel'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n.event.title.cancel }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
 {% if event %}
@@ -14,40 +16,25 @@
 
     {% set errors = sessionFlash.errors %}
     {{ errorSummary(errors.fields) }}
-\ <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <h1 class="govuk-heading-l no-margin">{{event.venue.location}}, {{event.dateRanges[0].date | formatDate}}</h1>
-    </div>
-  </div>
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <p class="govuk-body form-header govuk-!-font-size-24">Add a new event</p>
-            <h2 class="govuk-heading-m govuk-!-font-size-36">Event date and time</h2>
-            <p class="govuk-body">This event is for the <strong>{{ module.title }}</strong> module on the <strong>{{ course.title }}</strong> course.</p>
-
-            {% if event.dateRanges and event.dateRanges.length > 0 %}
-                <div class="event-container">
-                    <ul class="event-list headers">
-                        <li class="events">
-                            <p class="govuk-body event-header date">Date</p><p class="govuk-body event-header time">Start time</p><p class="govuk-body event-header time">End time</p><span class="spacer"></span>
-                        </li>
-                    </ul>
-                    <ul class="event-list">
-                        {% for dateRange in event.dateRanges %}
-                            <li class="events u--border--bgrey">
-                                <p class="govuk-body event date">{{ dateRange.date }}</p><p class="govuk-body event time">{{ dateRange.startTime }}</p><p class="govuk-body event time">{{ dateRange.endTime }}</p><p class="govuk-body event edit">
-                                <a href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/dateRanges/{{loop.index0}}" class="govuk-link">Edit</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            {% endif %}
-
-            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/dateRanges/{{dateRangeIndex}}" method="post">
-               
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l no-margin">Cancel event</h1>
+            <p class="govuk-body">This event is for the <strong>{{module.title | default("Module title", true)}}</strong> module on the <a href="/content-management/courses/{{course.id}}/overview" class="govuk-link">{{course.title}}</a> course</p>
+            <p class="govuk-body no-margin">Cancelling an event will notify attendeed by email and refund any paid POs.
+            <p class="govuk-body">The event will be labelled as cancelled.</p>
+            <p class="govuk-body">This cannot be undone</p>
+            <form action="" method="post">
+                {{ govukInput({
+                    label: {
+                        text: "Two-thirds width",
+                        classes: "govuk-!-width-two-thirds"
+                    },
+                    classes: "govuk-!-width-two-thirds",
+                    id: "cancel",
+                    name: "cancel"
+                }) }}
             </form>
-
-            <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
         </div>
     </div>
+
 {% endblock %}
