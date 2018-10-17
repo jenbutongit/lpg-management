@@ -6,12 +6,12 @@ import {LearningProviderFactory} from './learningProviderFactory'
 export class CourseFactory {
 	private _moduleFactory: ModuleFactory
 	private audienceFactory: AudienceFactory
-	private learningProviderFactory: LearningProviderFactory
+	private _learningProviderFactory: LearningProviderFactory
 
 	constructor() {
 		this.audienceFactory = new AudienceFactory()
 		this._moduleFactory = new ModuleFactory()
-		this.learningProviderFactory = new LearningProviderFactory()
+		this._learningProviderFactory = new LearningProviderFactory()
 		this.create = this.create.bind(this)
 	}
 
@@ -25,12 +25,16 @@ export class CourseFactory {
 		course.title = data.title
 		course.modules = (data.modules || []).map(this._moduleFactory.create)
 		course.audiences = (data.audiences || []).map(this.audienceFactory.create)
-		course.learningProvider = this.learningProviderFactory.create(data.learningProvider || {})
+		course.learningProvider = this._learningProviderFactory.create(data.learningProvider || {})
 
 		return course
 	}
 
 	set moduleFactory(value: ModuleFactory) {
 		this._moduleFactory = value
+	}
+
+	set learningProviderFactory(value: LearningProviderFactory) {
+		this._learningProviderFactory = value
 	}
 }
