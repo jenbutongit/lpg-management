@@ -12,7 +12,6 @@
     {% set backButton = "/content-management/courses/" + course.id + "/overview" %}
 {% endif %}
 
-
 {% block content %}
 
     {% set errors = sessionFlash.errors %}
@@ -25,8 +24,6 @@
             <p class="govuk-body">The event will be labelled as cancelled.</p>
             <p class="govuk-body">This cannot be undone</p>
             <form action="" method="post">
-
-
                 {{ govukSelect({
                 id: "sort",
                 name: "sort",
@@ -40,17 +37,16 @@
                     selected: true
                     },
                     {
-                    value: "updated",
-                    text: "Recently updated",
-                    selected: true
+                    value: "reason1",
+                    text: "Hard coded Reason 1"
                     },
                     {
-                    value: "views",
-                    text: "Most views"
+                    value: "reason2",
+                    text: "Hard coded Reason 2"
                     },
                     {
-                    value: "comments",
-                    text: "Most comments"
+                    value: "reason3",
+                    text: "Hard coded Reason 3"
                     }
                 ]
                 }) }}

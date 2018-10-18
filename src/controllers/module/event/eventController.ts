@@ -125,7 +125,8 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
 		)
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.cancelEvent())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.getCancelEvent())
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.setCancelEvent())
 
 	}
 
@@ -426,9 +427,15 @@ export class EventController {
 		}
 	}
 
-	public cancelEvent() {
+	public getCancelEvent() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/cancel')
+		}
+	}
+
+	public setCancelEvent() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/events-overview')
 		}
 	}
 }
