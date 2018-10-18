@@ -37,19 +37,19 @@
                     <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Course type</span>
-                            <span class="item item-value type">{{ course.getType()}}</span>
+                            <span class="item item-value type">{{ course.getType() | default("Unspecified", true) }}</span>
                         </div>
                     </li>
                     <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Grades</span>
-                            <span class="item item-value">{{ course.grades }}</span>
+                            <span class="item item-value">{{ course.getGrades() | default("Unspecified", true) }}</span>
                         </div>
                     </li>
                     <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Duration</span>
-                            <span class="item item-value">{{ course.module.formattedDuration }}</span>
+                            <span class="item item-value">{{ course.getDuration() | default("Unspecified", true) }}</span>
                         </div>
                     </li>
                     <li class="course-summary-item">
@@ -63,10 +63,16 @@
                             </span>
                         </div>
                     </li>
-                      <li class="course-summary-item">
+                    <li class="course-summary-item">
                         <div class="item-container">
                             <span class="item item-header">Availability</span>
-                            <span class="item item-value">{{ course.module.formattedDuration }}</span>
+                            <span class="item item-value">{{ course.getNextAvaialableDate() | default("Unspecified", true) }}</span>
+                        </div>
+                    </li>
+                    <li class="course-summary-item">
+                        <div class="item-container">
+                            <span class="item item-header">Primaray area</span>
+                            <span class="item item-value">{{ course.getAreasOfWork() | default("Unspecified", true) }}</span>
                         </div>
                     </li>
                 </ul>
