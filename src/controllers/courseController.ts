@@ -82,7 +82,7 @@ export class CourseController {
 				gradeCodeToName,
 				audienceIdToEvent,
 				eventIdToModuleId,
-				grades
+				grades,
 			})
 		}
 	}
