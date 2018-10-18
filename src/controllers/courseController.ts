@@ -60,7 +60,7 @@ export class CourseController {
 		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 
-		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
+		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules?', this.sortModules())
 	}
 
 	courseOverview() {
@@ -72,6 +72,9 @@ export class CourseController {
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
 			const audienceIdToEvent = this.courseService.getAudienceIdToEventMapping(res.locals.course)
 			const eventIdToModuleId = this.courseService.getEventIdToModuleIdMapping(res.locals.course)
+
+			const grades = this.courseService.getUniqueGrades(res.locals.course)
+
 			res.render('page/course/course-overview', {
 				faceToFaceModules,
 				AudienceType: Audience.Type,
@@ -79,6 +82,7 @@ export class CourseController {
 				gradeCodeToName,
 				audienceIdToEvent,
 				eventIdToModuleId,
+				grades,
 			})
 		}
 	}
