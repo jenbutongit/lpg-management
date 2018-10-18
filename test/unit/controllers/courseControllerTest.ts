@@ -330,6 +330,9 @@ describe('Course Controller Tests', function() {
 				originalUrl: 'http://test-url',
 				body: {
 					status: 'Published'
+				},
+				params: {
+					courseId: 'course-id',
 				}
 			})
 			const response = mockRes({
@@ -350,7 +353,7 @@ describe('Course Controller Tests', function() {
 			expect(courseValidator.check).to.have.been.calledOnceWith(request.body)
 			expect(course.status).to.equal(Status.PUBLISHED)
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
-			expect(response.redirect).to.have.been.calledOnceWith(request.originalUrl)
+			expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/course-id/overview')
 		})
 
 		it('should not update if status is invalid', async () => {
@@ -361,6 +364,9 @@ describe('Course Controller Tests', function() {
 				originalUrl: 'http://test-url',
 				body: {
 					status: 'Not a status'
+				},
+				params: {
+					courseId: 'course-id',
 				}
 			})
 			const response = mockRes({
@@ -389,7 +395,7 @@ describe('Course Controller Tests', function() {
 			expect(request.session.sessionFlash).to.eql({
 				errors: errors
 			})
-			expect(response.redirect).to.have.been.calledOnceWith(request.originalUrl)
+			expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/course-id/overview')
 		})
 	})
 })

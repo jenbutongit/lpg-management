@@ -61,6 +61,8 @@ export class CourseController {
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 
 		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
+
+		this.router.post('/content-management/courses/:courseId/status', this.setStatus())
 	}
 
 	courseOverview() {
@@ -179,14 +181,14 @@ export class CourseController {
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors}
-				return response.redirect(request.originalUrl)
+				return response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 			}
 
 			let course = response.locals.course
 			course.status = request.body.status
 
 			this.learningCatalogue.updateCourse(course)
-			response.redirect(request.originalUrl)
+			response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 		}
 	}
 
