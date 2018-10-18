@@ -65,7 +65,6 @@
 				"maxLength": "Description is too long"
 			},
 			"status": {
-				"empty": "Status is required",
 				"invalid": "Status needs to one of 'Draft', 'Published' or 'Archived'"
 			}
 		}
