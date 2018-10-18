@@ -53,19 +53,25 @@ export class Course {
 		return this.modules[0].type
 	}
 
-	getNextAvaialableDate() {
+	getNextAvailableDate() {
 		const now: Date = new Date(Date.now())
+		let earliestDate: Date
+		let earliestDateString
 		for (let module of this.modules) {
 			if (module.type == 'face-to-face') {
 				for (const event of (<FaceToFaceModule>module).events) {
-					const date: Date = new Date(Date.parse(event.dateRanges[0].date.toString()))
+					if (event.dateRanges[0]) {
+						const date: Date = new Date(Date.parse(event.dateRanges[0].date.toString()))
 
-					if (date > now) {
-						return event.dateRanges[0].date.toString()
+						if (date > now && (!earliestDate! || date < earliestDate)) {
+							earliestDate = date
+							earliestDateString = event.dateRanges[0].date.toString()
+						}
 					}
 				}
 			}
 		}
+		return earliestDateString
 	}
 
 	getDuration() {
@@ -78,12 +84,14 @@ export class Course {
 
 	getGrades() {
 		let grades: string = ''
-		for (const audience of this.audiences) {
-			if (audience.grades) {
-				if (grades != '') {
-					grades += ','
+		if (this.audiences) {
+			for (const audience of this.audiences) {
+				if (audience.grades) {
+					if (grades != '') {
+						grades += ','
+					}
+					grades += audience.grades.toString()
 				}
-				grades += audience.grades.toString()
 			}
 		}
 		return grades
@@ -91,12 +99,14 @@ export class Course {
 
 	getAreasOfWork() {
 		let areasOfWork: string = ''
-		for (const audience of this.audiences) {
-			if (audience.areasOfWork) {
-				if (areasOfWork != '') {
-					areasOfWork += ', '
+		if (this.audiences) {
+			for (const audience of this.audiences) {
+				if (audience.areasOfWork) {
+					if (areasOfWork != '') {
+						areasOfWork += ','
+					}
+					areasOfWork += audience.areasOfWork.toString()
 				}
-				areasOfWork += audience.areasOfWork.toString()
 			}
 		}
 		return areasOfWork
