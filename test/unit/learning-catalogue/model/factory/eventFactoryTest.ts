@@ -12,7 +12,6 @@ describe('EventFactory tests', () => {
 	let venueFactory: VenueFactory
 	let dateRangeFactory: DateRangeFactory
 
-
 	before(() => {
 		venueFactory = <VenueFactory>{}
 		dateRangeFactory = <DateRangeFactory>{}
@@ -67,7 +66,6 @@ describe('EventFactory tests', () => {
 				minCapacity: minCapacity,
 			},
 		}
-
 
 		const venue = new Venue()
 		venueFactory.create = sinon.stub().returns(venue)

@@ -30,7 +30,7 @@ export class DateTime {
 	static formatDuration(seconds: number): string {
 		if (seconds) {
 			const duration = this.convert(seconds)
-			return duration.hours + 'h' + duration.minutes + 'm'
+			return Math.floor(duration.hours / 24) + 'd' + (duration.hours % 24) + 'h' + duration.minutes + 'm'
 		} else {
 			return '0m'
 		}

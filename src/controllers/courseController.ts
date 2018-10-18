@@ -1,14 +1,14 @@
-import { Request, Response, Router } from 'express'
-import { ContentRequest } from '../extended'
-import { CourseFactory } from '../learning-catalogue/model/factory/courseFactory'
-import { LearningCatalogue } from '../learning-catalogue'
-import { Course } from '../learning-catalogue/model/course'
-import { Validator } from '../learning-catalogue/validator/validator'
-import { Module } from '../learning-catalogue/model/module'
-import { CourseService } from '../lib/courseService'
-import { CsrsService } from '../csrs/service/csrsService'
-import { Audience } from '../learning-catalogue/model/audience'
-import { DateTime } from '../lib/dateTime'
+import {Request, Response, Router} from 'express'
+import {ContentRequest} from '../extended'
+import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
+import {LearningCatalogue} from '../learning-catalogue'
+import {Course} from '../learning-catalogue/model/course'
+import {Validator} from '../learning-catalogue/validator/validator'
+import {Module} from '../learning-catalogue/model/module'
+import {CourseService} from '../lib/courseService'
+import {CsrsService} from '../csrs/service/csrsService'
+import {Audience} from '../learning-catalogue/model/audience'
+import {DateTime} from '../lib/dateTime'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -86,12 +86,26 @@ export class CourseController {
 	coursePreview() {
 		return async (request: Request, response: Response) => {
 			const modules: Module[] = response.locals.course.modules
+			let duration = 0
 
 			for (let module of modules) {
 				module.formattedDuration = DateTime.formatDuration(module.duration)
+				duration += module.duration
+			}
+			const courseDuration = DateTime.formatDuration(duration)
+
+			let grades: string = ''
+			let areasOfWork: string = ''
+			for (const audience of response.locals.course.audiences) {
+				if (grades != '') {
+					grades += ','
+					areasOfWork += ', '
+				}
+				grades += audience.grades.toString()
+				areasOfWork += audience.areasOfWork.toString()
 			}
 
-			response.render('page/course/course-preview')
+			response.render('page/course/course-preview', {courseDuration, grades, areasOfWork})
 		}
 	}
 
@@ -105,7 +119,7 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
-				request.session!.sessionFlash = { errors }
+				request.session!.sessionFlash = {errors}
 				request.session!.save(() => {
 					response.redirect('/content-management/courses/title')
 				})
@@ -117,7 +131,7 @@ export class CourseController {
 				}
 
 				const course = this.courseFactory.create(request.body)
-				request.session!.sessionFlash = { course }
+				request.session!.sessionFlash = {course}
 				request.session!.save(() => {
 					response.redirect('/content-management/courses/details')
 				})
@@ -144,7 +158,7 @@ export class CourseController {
 			const errors = await this.courseValidator.check(course)
 
 			if (errors.size) {
-				request.session!.sessionFlash = { errors: errors, course: course }
+				request.session!.sessionFlash = {errors: errors, course: course}
 				return response.redirect('/content-management/courses/details')
 			}
 
@@ -154,7 +168,7 @@ export class CourseController {
 				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 			}
 
-			request.session!.sessionFlash = { courseAddedSuccessMessage: 'course_added_success_message' }
+			request.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
 
 			const savedCourse = await this.learningCatalogue.createCourse(course)
 
