@@ -447,5 +447,48 @@ describe('CourseValidator tests', () => {
 
 			expect(errors.size).to.equal(0)
 		})
+
+		describe('validate status', () => {
+			it('should pass validation with "Draft" status', async () => {
+				const params = {
+					status: 'Draft'
+				}
+
+				const errors = await validator.check(params, ['status'])
+				expect(errors.size).to.equal(0)
+			})
+
+			it('should pass validation with "Published" status', async () => {
+				const params = {
+					status: 'Published'
+				}
+
+				const errors = await validator.check(params, ['status'])
+				expect(errors.size).to.equal(0)
+			})
+
+			it('should pass validation with "Archived" status', async () => {
+				const params = {
+					status: 'Archived'
+				}
+
+				const errors = await validator.check(params, ['status'])
+				expect(errors.size).to.equal(0)
+			})
+
+			it('should fail validation with invalid status', async () => {
+				const params = {
+					status: 'Not a status'
+				}
+
+				const errors = await validator.check(params, ['status'])
+				expect(errors.size).to.equal(1)
+				expect(errors.fields).to.eql({
+					"status": [
+						"course.validation.status.invalid"
+					]
+				})
+			})
+		})
 	})
 })

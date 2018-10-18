@@ -14,6 +14,7 @@ import {Validator} from '../../../src/learning-catalogue/validator/validator'
 import {Module} from '../../../src/learning-catalogue/model/module'
 import {CourseService} from '../../../src/lib/courseService'
 import {CsrsService} from '../../../src/csrs/service/csrsService'
+import {Status} from '../../../src/learning-catalogue/model/status'
 
 chai.use(sinonChai)
 
@@ -318,5 +319,77 @@ describe('Course Controller Tests', function() {
 		const allGrades = [].concat.apply([], audiences.map(audience => audience.grades))
 
 		expect(allGrades).to.eql(['a', 'b', 'c', 'd', 'e', 'f'])
+	})
+
+	describe('Update status', () => {
+		it('should update with valid status', async () => {
+			let course = new Course()
+			course.status = Status.DRAFT
+
+			const request = mockReq({
+				originalUrl: 'http://test-url',
+				body: {
+					status: 'Published'
+				}
+			})
+			const response = mockRes({
+				locals: {
+					course: course
+				}
+			})
+
+			const errors = {
+				size:0
+			}
+
+			courseValidator.check = sinon.stub().returns(errors)
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await courseController.setStatus()(request, response)
+
+			expect(courseValidator.check).to.have.been.calledOnceWith(request.body)
+			expect(course.status).to.equal(Status.PUBLISHED)
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
+			expect(response.redirect).to.have.been.calledOnceWith(request.originalUrl)
+		})
+
+		it('should not update if status is invalid', async () => {
+			let course = new Course()
+			course.status = Status.DRAFT
+
+			const request = mockReq({
+				originalUrl: 'http://test-url',
+				body: {
+					status: 'Not a status'
+				}
+			})
+			const response = mockRes({
+				locals: {
+					course: course
+				}
+			})
+
+			const errors= {
+				size: 1,
+				fields: [
+					{
+						status: [
+							'course.validation.status.invalid'
+						]
+					}
+				]
+			}
+
+			courseValidator.check = sinon.stub().returns(errors)
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await courseController.setStatus()(request, response)
+
+			expect(learningCatalogue.updateCourse).to.not.have.been.called
+			expect(request.session.sessionFlash).to.eql({
+				errors: errors
+			})
+			expect(response.redirect).to.have.been.calledOnceWith(request.originalUrl)
+		})
 	})
 })

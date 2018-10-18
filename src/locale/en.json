@@ -63,10 +63,12 @@
 			"description": {
 				"empty": "Description is required",
 				"maxLength": "Description is too long"
+			},
+			"status": {
+				"invalid": "Status needs to one of 'Draft', 'Published' or 'Archived'"
 			}
-		}
+		},
 	},
-
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",

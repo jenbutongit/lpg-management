@@ -173,6 +173,23 @@ export class CourseController {
 		}
 	}
 
+	setStatus() {
+		return async (request: Request, response: Response) => {
+			const errors = await this.courseValidator.check(request.body, ['status'])
+
+			if (errors.size) {
+				request.session!.sessionFlash = {errors: errors}
+				return response.redirect(request.originalUrl)
+			}
+
+			let course = response.locals.course
+			course.status = request.body.status
+
+			this.learningCatalogue.updateCourse(course)
+			response.redirect(request.originalUrl)
+		}
+	}
+
 	private async editCourse(request: Request, response: Response) {
 		const data = {
 			...request.body,
