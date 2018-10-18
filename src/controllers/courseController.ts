@@ -9,7 +9,6 @@ import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
 import {DateTime} from '../lib/dateTime'
-import {FaceToFaceModule} from '../learning-catalogue/model/faceToFaceModule'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -87,38 +86,12 @@ export class CourseController {
 	coursePreview() {
 		return async (request: Request, response: Response) => {
 			const modules: Module[] = response.locals.course.modules
-			let duration = 0
 
-			let nextAvailableDate: string = ''
 			for (let module of modules) {
 				module.formattedDuration = DateTime.formatDuration(module.duration)
-				duration += module.duration
-
-				if (module.type == 'face-to-face') {
-					const now: Date = new Date(Date.now())
-					for (const event of (<FaceToFaceModule>module).events) {
-						const date: Date = new Date(Date.parse(event.dateRanges[0].date.toString()))
-						if (date > now) {
-							nextAvailableDate = event.dateRanges[0].date.toString()
-							break
-						}
-					}
-				}
-			}
-			const courseDuration = DateTime.formatDuration(duration)
-
-			let grades: string = ''
-			let areasOfWork: string = ''
-			for (const audience of response.locals.course.audiences) {
-				if (grades != '') {
-					grades += ','
-					areasOfWork += ', '
-				}
-				grades += audience.grades.toString()
-				areasOfWork += audience.areasOfWork.toString()
 			}
 
-			response.render('page/course/course-preview', {courseDuration, grades, areasOfWork, nextAvailableDate})
+			response.render('page/course/course-preview')
 		}
 	}
 
