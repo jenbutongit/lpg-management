@@ -158,6 +158,8 @@
                         <div class="add-file-form govuk-form-group">
                             {% if type === 'file' %}
                                 {% set fileTypes = 'PDF, Powerpoint, Excel, Word' %}
+                            {% elif  type === 'mp4'%}
+                                {% set fileTypes = 'MP4' %}
                             {% else %}
                                 {% set fileTypes = 'E-learning (.zip)' %}
                             {% endif %}
