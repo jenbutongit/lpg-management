@@ -64,7 +64,7 @@ describe('Course Controller Tests', function() {
 		expect(courseService.getUniqueGrades).to.have.been.calledOnceWith(course)
 	})
 
-	it('should call course preview page', async function() {
+	it('should render course preview page', async function() {
 		const course: Course = new Course()
 		const module: Module = new Module()
 
@@ -84,6 +84,29 @@ describe('Course Controller Tests', function() {
 		await coursePreview(request, response)
 
 		expect(response.render).to.have.been.calledOnceWith('page/course/course-preview')
+	})
+
+	it('should render course preview page with duration 0m', async function() {
+		const course: Course = new Course()
+		const module: Module = new Module()
+
+		module.duration = 0
+		course.modules = [module]
+
+		const coursePreview: (request: Request, response: Response) => void = courseController.coursePreview()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		const req = request as ContentRequest
+		req.course = course
+
+		response.locals.course = course
+
+		await coursePreview(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/course-preview')
+		expect(course.modules[0].formattedDuration).to.equal('0m')
 	})
 
 	it('should render add-course-title page', async function() {
