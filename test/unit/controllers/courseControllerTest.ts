@@ -57,6 +57,7 @@ describe('Course Controller Tests', function() {
 		csrsService.getGradeCodeToNameMapping = sinon.stub()
 		courseService.getAudienceIdToEventMapping = sinon.stub()
 		courseService.getEventIdToModuleIdMapping = sinon.stub()
+		courseService.getUniqueGrades = sinon.stub().returns(['G1', 'G2', 'G3'])
 
 		const course = new Course()
 		course.modules = []
@@ -65,9 +66,10 @@ describe('Course Controller Tests', function() {
 		await courseOverview(req, res)
 
 		expect(res.render).to.have.been.calledOnceWith('page/course/course-overview')
+		expect(courseService.getUniqueGrades).to.have.been.calledOnceWith(course)
 	})
 
-	it('should call course preview page', async function() {
+	it('should render course preview page', async function() {
 		const course: Course = new Course()
 		const module: Module = new Module()
 
@@ -78,6 +80,23 @@ describe('Course Controller Tests', function() {
 		await courseController.coursePreview()(req, res)
 
 		expect(res.render).to.have.been.calledOnceWith('page/course/course-preview')
+	})
+
+	it('should render course preview page with duration 0m', async function() {
+		const course: Course = new Course()
+		const module: Module = new Module()
+
+		module.duration = 0
+		course.modules = [module]
+
+		const coursePreview: (request: Request, response: Response) => void = courseController.coursePreview()
+
+		res.locals.course = course
+
+		await coursePreview(req, res)
+
+		expect(res.render).to.have.been.calledOnceWith('page/course/course-preview')
+		expect(course.modules[0].formattedDuration).to.equal('0m')
 	})
 
 	it('should render add-course-title page', async function() {
@@ -228,5 +247,20 @@ describe('Course Controller Tests', function() {
 
 		expect(courseService.sortModules).to.have.been.calledWith(courseId, moduleIds)
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/add-module`)
+	})
+
+	it('should flatten grades for all audiences', async () => {
+		const audiences: any[] = [
+			{
+				grades: ['a', 'b', 'c'],
+			},
+			{
+				grades: ['d', 'e', 'f'],
+			},
+		]
+
+		const allGrades = [].concat.apply([], audiences.map(audience => audience.grades))
+
+		expect(allGrades).to.eql(['a', 'b', 'c', 'd', 'e', 'f'])
 	})
 })

@@ -1,6 +1,7 @@
 import {Module} from './module'
 import {IsNotEmpty, MaxLength} from 'class-validator'
 import {Audience} from './audience'
+import {Status} from './status'
 
 export class Course {
 	id: string
@@ -35,6 +36,7 @@ export class Course {
 	learningOutcomes: string
 	modules: Module[]
 	audiences: Audience[]
+	status: Status = Status.DRAFT
 
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)

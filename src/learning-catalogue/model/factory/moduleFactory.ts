@@ -5,6 +5,8 @@ import {LinkModule} from '../linkModule'
 import {FileModule} from '../fileModule'
 import {ELearningModule} from '../eLearningModule'
 import {Module} from '../module'
+import {Event} from '../event'
+import {DateTime} from '../../../lib/dateTime'
 
 export class ModuleFactory {
 	private eventFactory: EventFactory
@@ -64,6 +66,15 @@ export class ModuleFactory {
 			const module = <FaceToFaceModule>ModuleFactory.defaultCreate(new FaceToFaceModule(), data)
 			module.events = (data.events || []).map(this.eventFactory.create)
 			module.productCode = data.productCode
+
+			module.events.sort((event1: Event, event2: Event) => {
+				return !event1.dateRanges[0]
+					? 1
+					: !event2.dateRanges[0]
+						? -1
+						: DateTime.sortDateRanges(event1.dateRanges[0], event2.dateRanges[0])
+			})
+
 			return module
 		},
 		elearning: (data: any) => {
