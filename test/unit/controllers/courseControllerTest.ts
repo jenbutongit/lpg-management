@@ -356,6 +356,11 @@ describe('Course Controller Tests', function() {
 				},
 				params: {
 					courseId: 'course-id',
+				},
+				session: {
+					save:(x:any) => {
+						x()
+					}
 				}
 			})
 			const response = mockRes({
@@ -368,15 +373,17 @@ describe('Course Controller Tests', function() {
 				size:0
 			}
 
+			response.redirect = sinon.stub().returns('hello')
 			courseValidator.check = sinon.stub().returns(errors)
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await courseController.setStatus()(request, response)
 
+			// expect(request.session.save).to.have.been.called
 			expect(courseValidator.check).to.have.been.calledOnceWith(request.body)
 			expect(course.status).to.equal(Status.PUBLISHED)
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
-			expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/course-id/overview')
+			expect(response.redirect).to.have.been.calledWith('/content-management/courses/course-id/overview')
 		})
 
 		it('should not update if status is invalid', async () => {
@@ -390,6 +397,11 @@ describe('Course Controller Tests', function() {
 				},
 				params: {
 					courseId: 'course-id',
+				},
+				session: {
+					save:(x:any) => {
+						x()
+					}
 				}
 			})
 			const response = mockRes({

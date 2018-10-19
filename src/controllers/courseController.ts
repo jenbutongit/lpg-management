@@ -60,10 +60,10 @@ export class CourseController {
 		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 
-		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
+		this.router.get('/content-management/courses/:courseId/sort-modules', this.sortModules())
 
 		this.router.post('/content-management/courses/:courseId/status', this.setStatus())
-		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules?', this.sortModules())
+		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules', this.sortModules())
 	}
 
 	courseOverview() {
@@ -182,14 +182,18 @@ export class CourseController {
 
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors}
-				return response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+				return request.session!.save(() => {
+					response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+				})
 			}
 
 			let course = response.locals.course
 			course.status = request.body.status
 
 			this.learningCatalogue.updateCourse(course)
-			response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+			request.session!.save(() => {
+				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+			})
 		}
 	}
 
