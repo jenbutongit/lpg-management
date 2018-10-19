@@ -64,7 +64,6 @@ describe('CourseFactory tests', () => {
 		expect(result.learningOutcomes).to.equal(learningOutcomes)
 		expect(result.modules[0]).to.deep.equal(courseModule)
 		expect(result.audiences[0]).to.deep.equal(courseAudience)
-		expect(result.status).to.equal(Status.DRAFT)
 	})
 
 	it('should add empty list if modules is null', () => {
