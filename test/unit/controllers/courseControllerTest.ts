@@ -51,7 +51,7 @@ describe('Course Controller Tests', function() {
 		csrsService.getGradeCodeToNameMapping = sinon.stub()
 		courseService.getAudienceIdToEventMapping = sinon.stub()
 		courseService.getEventIdToModuleIdMapping = sinon.stub()
-		courseService.getUniqueGrades = sinon.stub().returns(['G1','G2', 'G3'])
+		courseService.getUniqueGrades = sinon.stub().returns(['G1', 'G2', 'G3'])
 
 		const course = new Course()
 		course.modules = []
@@ -329,14 +329,15 @@ describe('Course Controller Tests', function() {
 		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/add-module`)
 	})
 
-
 	it('should flatten grades for all audiences', async () => {
-		const audiences: any[] = [{
-			grades: ['a', 'b', 'c'],
-		},
-		{
-			grades: ['d', 'e', 'f'],
-		}]
+		const audiences: any[] = [
+			{
+				grades: ['a', 'b', 'c'],
+			},
+			{
+				grades: ['d', 'e', 'f'],
+			},
+		]
 
 		const allGrades = [].concat.apply([], audiences.map(audience => audience.grades))
 
