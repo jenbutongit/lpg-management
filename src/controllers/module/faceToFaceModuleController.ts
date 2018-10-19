@@ -1,8 +1,8 @@
-import { LearningCatalogue } from '../../learning-catalogue'
-import { Validator } from '../../learning-catalogue/validator/validator'
-import { ModuleFactory } from '../../learning-catalogue/model/factory/moduleFactory'
-import { Request, Response, Router } from 'express'
-import { Module } from '../../learning-catalogue/model/module'
+import {LearningCatalogue} from '../../learning-catalogue'
+import {Validator} from '../../learning-catalogue/validator/validator'
+import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
+import {Request, Response, Router} from 'express'
+import {Module} from '../../learning-catalogue/model/module'
 
 export class FaceToFaceModuleController {
 	learningCatalogue: LearningCatalogue
@@ -37,7 +37,10 @@ export class FaceToFaceModuleController {
 
 		this.router.get('/content-management/courses/:courseId/module-classroom/:moduleId?', this.getModule())
 		this.router.post('/content-management/courses/:courseId/module-classroom/:moduleId?', this.setModule())
-		this.router.get('/content-management/courses/:courseId/module-classroom/add-learning-provider', this.getLearnerProvider())
+		this.router.get(
+			'/content-management/courses/:courseId/module-classroom/:moduleId/add-learning-provider',
+			this.getLearnerProvider()
+		)
 	}
 
 	public getModule() {
@@ -59,13 +62,15 @@ export class FaceToFaceModuleController {
 			const module = await this.moduleFactory.create(data)
 
 			if (errors.size) {
-				request.session!.sessionFlash = { errors: errors, module: module }
+				request.session!.sessionFlash = {errors: errors, module: module}
 				return response.redirect(`/content-management/courses/${course.id}/module-classroom`)
 			}
 
-			await this.learningCatalogue.createModule(course.id, module)
+			const catalogueModule: Module = await this.learningCatalogue.createModule(course.id, module)
 
-			return response.redirect(`/content-management/courses/${course.id}/module-classroom/add-learning-provider`)
+			return response.redirect(
+				`/content-management/courses/${course.id}/module-classroom/${catalogueModule.id}/add-learning-provider`
+			)
 		}
 	}
 
