@@ -11,6 +11,7 @@ import {Audience} from '../../../../../src/learning-catalogue/model/audience'
 import {AudienceFactory} from '../../../../../src/learning-catalogue/model/factory/audienceFactory'
 import {LearningProvider} from '../../../../../src/learning-catalogue/model/learningProvider'
 import {LearningProviderFactory} from '../../../../../src/learning-catalogue/model/factory/learningProviderFactory'
+import {Status} from '../../../../../src/learning-catalogue/model/status'
 
 chai.use(sinonChai)
 
@@ -75,6 +76,7 @@ describe('CourseFactory tests', () => {
 		expect(result.modules[0]).to.deep.equal(courseModule)
 		expect(result.audiences[0]).to.deep.equal(courseAudience)
 		expect(result.learningProvider).to.deep.equal(courseLearningProvider)
+		expect(result.status).to.equal(Status.DRAFT)
 	})
 
 	it('should add empty list if modules is null', () => {
@@ -91,6 +93,7 @@ describe('CourseFactory tests', () => {
 			description: description,
 			learningOutcomes: learningOutcomes,
 			modules: null,
+			status: "Published"
 		}
 
 		moduleFactory.create = sinon.stub()
@@ -104,6 +107,7 @@ describe('CourseFactory tests', () => {
 		expect(result.learningOutcomes).to.equal(learningOutcomes)
 		expect(result.modules).to.eql([])
 		expect(moduleFactory.create).to.not.have.been.called
+		expect(result.status).to.equal(Status.PUBLISHED)
 	})
 
 	it('should add empty object if learning provider is null', () => {
