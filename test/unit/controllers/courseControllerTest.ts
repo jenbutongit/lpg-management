@@ -51,7 +51,7 @@ describe('Course Controller Tests', function() {
 		csrsService.getGradeCodeToNameMapping = sinon.stub()
 		courseService.getAudienceIdToEventMapping = sinon.stub()
 		courseService.getEventIdToModuleIdMapping = sinon.stub()
-		courseService.getUniqueGrades = sinon.stub().returns(['G1','G2', 'G3'])
+		courseService.getUniqueGrades = sinon.stub().returns(['G1', 'G2', 'G3'])
 
 		const course = new Course()
 		course.modules = []
@@ -105,7 +105,7 @@ describe('Course Controller Tests', function() {
 		await coursePreview(request, response)
 
 		expect(response.render).to.have.been.calledOnceWith('page/course/course-preview')
-		expect(course.modules[0].formattedDuration).to.equal('0m')
+		expect(course.modules[0].formattedDuration).to.equal('0 minutes')
 	})
 
 	it('should render add-course-title page', async function() {
@@ -329,14 +329,15 @@ describe('Course Controller Tests', function() {
 		expect(response.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/add-module`)
 	})
 
-
 	it('should flatten grades for all audiences', async () => {
-		const audiences: any[] = [{
-			grades: ['a', 'b', 'c'],
-		},
-		{
-			grades: ['d', 'e', 'f'],
-		}]
+		const audiences: any[] = [
+			{
+				grades: ['a', 'b', 'c'],
+			},
+			{
+				grades: ['d', 'e', 'f'],
+			},
+		]
 
 		const allGrades = [].concat.apply([], audiences.map(audience => audience.grades))
 

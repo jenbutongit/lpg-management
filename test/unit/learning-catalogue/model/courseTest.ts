@@ -166,7 +166,7 @@ describe('Course tests', () => {
 
 		course.modules = [module1, module2]
 
-		expect(course.getDuration()).to.be.equal('3h2m')
+		expect(course.getDuration()).to.be.equal('3 hours 2 minutes')
 	})
 
 	it('should be able to get grades', () => {
