@@ -76,7 +76,7 @@ export class FaceToFaceModuleController {
 
 	public getLearnerProvider() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/add-learner-provider')
+			response.render('page/learning-provider/add-learning-provider-to-course')
 		}
 	}
 
