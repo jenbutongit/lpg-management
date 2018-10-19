@@ -85,6 +85,8 @@
 	"learning_provider_overview_title": "Learning provider overview",
 	"learning_providers_title": "Learning providers",
 	"module_add_file": "Add a file",
+	"module_add_learning_provider": "Add learning provider",
+	"module_add_learning_provider_policies": "Add learning provider polices",
 	"module_add_video_mp4": "Add a Video (MP4)",
 	"module_add_scorm": "Add e-learning",
 	"module_add_title": "Add a module",

@@ -1,9 +1,9 @@
 {% from "select/macro.njk" import govukSelect %}
 {% from "button/macro.njk" import govukButton %}
 
-{% extends "../../../component/Page.njk" %}
+{% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['module_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n['module_add_learning_provider'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
 {% set backButton = "/content-management" %}
@@ -19,14 +19,14 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">           
             <p class="govuk-body">Add the learning provider and their policies if required</p>       
-                <form action="/content-management/courses/{{ course.id }}/module-classroom/{{module.id}}/learner-provider" method="post" class="module-form">
+                <form action="/content-management/courses/{{ course.id }}/module-classroom/{{ module.id }}/add-learner-provider" method="post" class="module-form">
                     <fieldset class="govuk-fieldset module-selector">
                         {{ govukSelect({
                             id: "learning-provider",
-                            name: "module",
+                            name: "learning-provider",
                             classes: "govuk-!-width-one-half govuk-!-margin-bottom-6",
                             label: {
-                                text: "Add a new module"
+                                text: "Learning providers"
                             },
                             items: [
                                 {

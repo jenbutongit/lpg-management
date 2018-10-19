@@ -1,8 +1,8 @@
-import {LearningCatalogue} from '../../learning-catalogue'
-import {Validator} from '../../learning-catalogue/validator/validator'
-import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
-import {Request, Response, Router} from 'express'
-import {Module} from '../../learning-catalogue/model/module'
+import { LearningCatalogue } from '../../learning-catalogue'
+import { Validator } from '../../learning-catalogue/validator/validator'
+import { ModuleFactory } from '../../learning-catalogue/model/factory/moduleFactory'
+import { Request, Response, Router } from 'express'
+import { Module } from '../../learning-catalogue/model/module'
 
 export class FaceToFaceModuleController {
 	learningCatalogue: LearningCatalogue
@@ -41,6 +41,10 @@ export class FaceToFaceModuleController {
 			'/content-management/courses/:courseId/module-classroom/:moduleId/add-learning-provider',
 			this.getLearnerProvider()
 		)
+		this.router.post(
+			'/content-management/courses/:courseId/module-classroom/:moduleId/add-learning-provider',
+			this.setLearnerProvider()
+		)
 	}
 
 	public getModule() {
@@ -62,7 +66,7 @@ export class FaceToFaceModuleController {
 			const module = await this.moduleFactory.create(data)
 
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors, module: module}
+				request.session!.sessionFlash = { errors: errors, module: module }
 				return response.redirect(`/content-management/courses/${course.id}/module-classroom`)
 			}
 
