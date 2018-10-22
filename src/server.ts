@@ -23,6 +23,7 @@ const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
+const authorisedRole = 'COURSE_MANAGER'
 
 app.use(
 	i18n({
@@ -88,7 +89,7 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
-ctx.auth.configure(app)
+ctx.auth.configure(app, authorisedRole)
 app.use(ctx.addToResponseLocals())
 app.use(ctx.courseController.router)
 app.use(ctx.audienceController.router)
