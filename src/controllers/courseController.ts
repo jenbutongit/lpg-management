@@ -8,6 +8,7 @@ import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
 import {DateTime} from '../lib/dateTime'
+import {Status} from "../learning-catalogue/model/status"
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -138,6 +139,7 @@ export class CourseController {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
 			const course = this.courseFactory.create(data)
+			course.status = Status.PUBLISHED
 			const errors = await this.courseValidator.check(course)
 
 			if (errors.size) {
