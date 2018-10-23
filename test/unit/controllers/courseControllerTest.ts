@@ -175,7 +175,7 @@ describe('Course Controller Tests', function() {
 		courseFactory.create = sinon.stub().returns(course)
 		courseValidator.check = sinon.stub().returns(noErrors)
 
-		await courseController.setCourseDetails()(req, res)
+		await courseController.createCourseDetails()(req, res)
 
 		expect(courseFactory.create).to.have.been.calledWith(req.body)
 		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title', 'shortDescription', 'description'])
@@ -202,7 +202,7 @@ describe('Course Controller Tests', function() {
 		courseFactory.create = sinon.stub().returns(course)
 		courseValidator.check = sinon.stub().returns(errors)
 
-		await courseController.setCourseDetails()(req, res)
+		await courseController.createCourseDetails()(req, res)
 
 		expect(courseFactory.create).to.not.have.been.called
 		expect(courseValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'shortDescription', 'description'])
@@ -213,7 +213,36 @@ describe('Course Controller Tests', function() {
 		})
 	})
 
-	it('should edit course details', async function() {
+	it('should update course details', async function() {
+		req.body = {
+			id: 'abc123',
+			shortDescription: 'Updated short description',
+			description: 'Updated description',
+			learningOutcomes: 'Updated learning outcomes',
+			preparation: 'Updated preparation'
+		}
+
+		const courseId = 'abc123'
+		req.params.courseId = courseId
+
+		res.locals.course = new Course()
+
+		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
+		learningCatalogue.updateCourse = sinon.stub()
+
+		await courseController.updateCourseDetails()(req, res)
+
+		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title', 'shortDescription', 'description'])
+
+		expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(res.locals.course)
+		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/preview`)
+		expect(res.locals.course.shortDescription).to.equal(req.body.shortDescription)
+		expect(res.locals.course.description).to.equal(req.body.description)
+		expect(res.locals.course.learningOutcomes).to.equal(req.body.learningOutcomes)
+		expect(res.locals.course.preparation).to.equal(req.body.preparation)
+	})
+
+	it('should render validation errors on course details update', async function() {
 		req.body = {
 			id: 'abc123',
 			title: 'New Course',
@@ -227,14 +256,23 @@ describe('Course Controller Tests', function() {
 		course.id = courseId
 		res.locals.course = course
 
-		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
+		const errors = {
+			fields: ['validation.course.description.empty'],
+			size: 1,
+		}
+
+		courseValidator.check = sinon.stub().returns(errors)
 		courseFactory.create = sinon.stub().returns(course)
 		learningCatalogue.updateCourse = sinon.stub().returns(course)
 
-		await courseController.setCourseDetails()(req, res)
+		await courseController.updateCourseDetails()(req, res)
 
+		expect(learningCatalogue.updateCourse).to.not.have.been.called
 		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title', 'shortDescription', 'description'])
-		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/preview`)
+		expect(res.render).to.have.been.calledWith('page/course/course-details', {
+			errors: errors,
+			course: req.body,
+		})
 	})
 
 	it('should re-sort modules with order list of module ids', async () => {
