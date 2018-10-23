@@ -9,10 +9,14 @@ export class CourseFactory {
 	private audienceFactory: AudienceFactory
 	private _learningProviderFactory: LearningProviderFactory
 
-	constructor(audienceFactory = new AudienceFactory(), moduleFactory = new ModuleFactory(), learningProviderFactory = new LearningProviderFactory()) {
+	constructor(
+		audienceFactory = new AudienceFactory(),
+		moduleFactory = new ModuleFactory(),
+		learningProviderFactory = new LearningProviderFactory()
+	) {
 		this.audienceFactory = audienceFactory
 		this._moduleFactory = moduleFactory
-    this._learningProviderFactory = learningProviderFactory
+		this._learningProviderFactory = learningProviderFactory
 		this.create = this.create.bind(this)
 	}
 
