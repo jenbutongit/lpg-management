@@ -28,7 +28,6 @@ export class CourseFactory {
 		course.audiences = (data.audiences || []).map(this.audienceFactory.create)
 		course.learningProvider = this._learningProviderFactory.create(data.learningProvider || {})
 		course.status = data.status || Status.DRAFT
-    
 		return course
 	}
 

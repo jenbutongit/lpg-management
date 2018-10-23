@@ -1,5 +1,5 @@
 import {Module} from './module'
-import {IsNotEmpty, MaxLength} from 'class-validator'
+import {IsIn, IsNotEmpty, MaxLength} from 'class-validator'
 import {Audience} from './audience'
 import {LearningProvider} from './learningProvider'
 import {Status} from './status'
@@ -37,7 +37,11 @@ export class Course {
 	learningOutcomes: string
 	modules: Module[]
 	audiences: Audience[]
-	learningProvider: LearningProvider
+  
+	@IsIn(['Draft', 'Published', 'Archived'], {
+		groups: ['all', 'status'],
+		message: 'course.validation.status.invalid',
+	})
 	status: Status = Status.DRAFT
 
 	getCost() {
