@@ -36,7 +36,7 @@
                 text: "Cost"
             },
             {
-                text: '£' + course.getCost(),
+                text: '£' + course.getCost() if course.getCost() != 0 else "£Free",
                 format: "numeric"
             }
         ],
