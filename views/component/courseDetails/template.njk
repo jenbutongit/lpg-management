@@ -20,13 +20,13 @@
                    }
                ],
                [
-                 {
-                   text: "Level"
-                 },
-                 {
-                   text: "AO to SEO",
-                   format: "numeric"
-                 }
+                   {
+                       text: "Grades"
+                   },
+                   {
+                       text: grades|join(", ") if grades.length > 0 else "Unspecified",
+                       format: "numeric"
+                   }
                ]
              ]
 %}
