@@ -1,63 +1,58 @@
 {% from "table/macro.njk" import govukTable %}
 
-{{ govukTable({
-    firstCellIsHeader: true,
-    classes: "course-table",
-    rows: [
-        [
-            {
-                text: "Added on"
-            },
-            {
-                text: "13th August 2018",
-                format: "numeric"
-            }
-        ],
-        [
-            {
-                text: "Added by"
-            },
-            {
-                text: "course-manager@domain.com",
-                format: "numeric"
-            }
-        ],
-        [
-            {
-                text: "Type"
-            },
-            {
-                text: i18n.courseType[course.getType()] if course.getType() else "Course",
-                format: "numeric"
-            }
-        ],
-        [
-            {
-                text: "Cost"
-            },
-            {
-                text: '£' + course.getCost() if course.getCost() != 0 else "£Free",
-                format: "numeric"
-            }
-        ],
-        [
-            {
-                text: "Grades"
-            },
-            {
-                text: grades|join(", ") if grades.length > 0 else "Unspecified",
-                format: "numeric"
-            }
-        ],
-        [
-            {
-                text: "Learning Provider"
-            },
-            {
-                text: "KPMG",
-                format: "numeric"
-            }
-        ]
-    ]
-}) }}
+{% set rows = [
+               [
+                 {
+                   text: "Type"
+                 },
+                 {
+                   text: i18n[course.getType()]  | default("Course", true),
+                   format: "numeric"
+                 }
+               ],
+               [
+                   {
+                   text: "Cost"
+                   },
+                   {
+                   text: "£" + course.getCost() | default("Free", true),
+                   format: "numeric"
+                   }
+               ],
+               [
+                 {
+                   text: "Level"
+                 },
+                 {
+                   text: "AO to SEO",
+                   format: "numeric"
+                 }
+               ]
+             ]
+%}
 
+{% set faceToFace = false %}
+{% for module in course.modules %}
+    {% if module.type == 'face-to-face' %}
+        {% set faceToFace = true %}
+    {% endif %}
+{% endfor %}
+
+{% if faceToFace %}
+    {{ rows.push([
+                {
+                    text: "Learning Provider"
+                },
+                {
+                    text: course.learningProvider.name | default("Unspecified", true),
+                    format: "numeric"
+                }
+                ])
+            }}
+{% endif %}
+
+{{ govukTable({
+          firstCellIsHeader: true,
+          classes: "course-table",
+          rows: rows
+}) }}
