@@ -130,6 +130,9 @@ pipeline {
         disabled */
         stage('Post') {
             agent { label 'master' }
+            steps {
+
+            }
             post {
                 cleanup {
                     deleteDir()
