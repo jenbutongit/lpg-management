@@ -128,8 +128,13 @@ pipeline {
             }
         }
         disabled */
-        cleanup {
-            deleteDir()
+        stage('Post') {
+            agent { label 'master' }
+            post {
+                cleanup {
+                    deleteDir()
+                }
+            }
         }
     }
 }
