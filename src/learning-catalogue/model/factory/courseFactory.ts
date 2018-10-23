@@ -18,11 +18,12 @@ export class CourseFactory {
 		course.id = data.id
 		course.description = data.description
 		course.learningOutcomes = data.learningOutcomes
+		course.preparation = data.preparation
 		course.shortDescription = data.shortDescription
 		course.title = data.title
 		course.modules = (data.modules || []).map(this._moduleFactory.create)
 		course.audiences = (data.audiences || []).map(this.audienceFactory.create)
-		course.status = data.status
+		course.status = ('status' in data) ? data.status : course.status
 		return course
 	}
 

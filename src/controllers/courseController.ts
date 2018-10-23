@@ -111,9 +111,9 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
-				request.session!.sessionFlash = {errors}
-				request.session!.save(() => {
-					response.redirect('/content-management/courses/title')
+				response.render('page/course/course-title',{
+					errors: errors,
+					course: request.body
 				})
 			} else if (request.params.courseId) {
 				await this.editCourse(request, response)
@@ -137,18 +137,17 @@ export class CourseController {
 	setCourseDetails() {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
-			const course = this.courseFactory.create(data)
-			const errors = await this.courseValidator.check(course)
+			const errors = await this.courseValidator.check(data, ['title', 'shortDescription', 'description'])
 
 			if (errors.size) {
-				req.session!.sessionFlash = {errors: errors, course: course}
-				req.session!.save(() => {
-					res.redirect('/content-management/courses/details')
+				res.render('page/course/course-details', {
+					errors: errors, course: data
 				})
 			} else if (req.params.courseId) {
 				await this.editCourse(req, res)
 				res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
 			} else {
+				const course = this.courseFactory.create(data)
 				const savedCourse = await this.learningCatalogue.createCourse(course)
 				req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
 				req.session!.save(() => {

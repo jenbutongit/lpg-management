@@ -175,7 +175,9 @@ describe('CourseValidator tests', () => {
 		})
 
 		it('should fail validation if title, shortDescription, description and status are missing', async () => {
-			const params = {}
+			const params = {
+				status: null
+			}
 
 			const errors = await validator.check(params)
 
@@ -427,8 +429,9 @@ describe('CourseValidator tests', () => {
 				expect(errors.size).to.equal(0)
 			})
 
-			it('should fail validation with missing status', async () => {
+			it('should fail validation with null status', async () => {
 				const params = {
+					status: null
 				}
 
 				const errors = await validator.check(params, ['status'])

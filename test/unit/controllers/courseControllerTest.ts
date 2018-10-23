@@ -131,8 +131,10 @@ describe('Course Controller Tests', function() {
 
 		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title'])
 		expect(courseValidator.check).to.have.returned(errors)
-		expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(res.redirect).to.have.been.calledWith('/content-management/courses/title')
+		expect(res.render).to.have.been.calledWith('page/course/course-title',{
+			errors: errors,
+			course: req.body
+		})
 	})
 
 	it('should edit title', async function() {
@@ -164,7 +166,7 @@ describe('Course Controller Tests', function() {
 			title: 'New Course',
 			description: 'desc',
 			shortDescription: 'short',
-			learningOutcomes: 'outcomes',
+			learningOutcomes: 'outcomes'
 		}
 		const course = new Course()
 		const noErrors = {fields: [], size: 0}
@@ -176,7 +178,7 @@ describe('Course Controller Tests', function() {
 		await courseController.setCourseDetails()(req, res)
 
 		expect(courseFactory.create).to.have.been.calledWith(req.body)
-		expect(courseValidator.check).to.have.been.calledWith(course)
+		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title', 'shortDescription', 'description'])
 		expect(courseValidator.check).to.have.returned(noErrors)
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
 		expect(req.session!.sessionFlash).to.contain({courseAddedSuccessMessage: 'course_added_success_message'})
@@ -202,20 +204,24 @@ describe('Course Controller Tests', function() {
 
 		await courseController.setCourseDetails()(req, res)
 
-		expect(courseFactory.create).to.have.been.calledWith(req.body)
-		expect(courseValidator.check).to.have.been.calledWith(course)
+		expect(courseFactory.create).to.not.have.been.called
+		expect(courseValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'shortDescription', 'description'])
 		expect(courseValidator.check).to.have.returned(errors)
-		expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(req.session!.sessionFlash.course).to.be.equal(course)
-		expect(req.session!.sessionFlash).to.not.contain({
-			courseAddedSuccessMessage: 'course_added_success_message',
+		expect(res.render).to.have.been.calledOnceWith('page/course/course-details', {
+			errors: errors,
+			course: req.body,
 		})
-		expect(res.redirect).to.have.been.calledWith('/content-management/courses/details')
 	})
 
 	it('should edit course details', async function() {
+		req.body = {
+			id: 'abc123',
+			title: 'New Course',
+		}
+
 		const courseId = 'abc123'
 		req.params.courseId = courseId
+
 		const course = new Course()
 		course.title = 'New Course'
 		course.id = courseId
@@ -227,7 +233,7 @@ describe('Course Controller Tests', function() {
 
 		await courseController.setCourseDetails()(req, res)
 
-		expect(courseValidator.check).to.have.been.calledWith(course)
+		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title', 'shortDescription', 'description'])
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/preview`)
 	})
 

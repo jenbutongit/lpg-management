@@ -34,6 +34,7 @@ export class Course {
 
 	duration: number
 	learningOutcomes: string
+	preparation: string
 	modules: Module[]
 	audiences: Audience[]
 
