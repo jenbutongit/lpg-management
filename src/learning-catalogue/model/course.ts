@@ -37,7 +37,8 @@ export class Course {
 	learningOutcomes: string
 	modules: Module[]
 	audiences: Audience[]
-  
+	learningProvider: LearningProvider
+
 	@IsIn(['Draft', 'Published', 'Archived'], {
 		groups: ['all', 'status'],
 		message: 'course.validation.status.invalid',

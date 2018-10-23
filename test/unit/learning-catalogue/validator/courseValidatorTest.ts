@@ -179,7 +179,7 @@ describe('CourseValidator tests', () => {
 
 			const errors = await validator.check(params)
 
-			expect(errors.size).to.equal(6)
+			expect(errors.size).to.equal(5)
 			expect(errors.fields.shortDescription).to.eql([
 				'course.validation.shortDescription.maxLength',
 				'course.validation.shortDescription.empty',
@@ -190,9 +190,6 @@ describe('CourseValidator tests', () => {
 			])
 			expect(errors.fields.title).to.eql([
 				'course.validation.title.empty',
-			])
-			expect(errors.fields.status).to.eql([
-				'course.validation.status.invalid',
 			])
 		})
 
@@ -425,33 +422,6 @@ describe('CourseValidator tests', () => {
 
 				const errors = await validator.check(params, ['status'])
 				expect(errors.size).to.equal(0)
-			})
-
-			it('should fail validation with missing status', async () => {
-				const params = {
-				}
-
-				const errors = await validator.check(params, ['status'])
-				expect(errors.size).to.equal(1)
-				expect(errors.fields).to.eql({
-					"status": [
-						"course.validation.status.invalid"
-					]
-				})
-			})
-
-			it('should fail validation with invalid status', async () => {
-				const params = {
-					status: 'Not a status'
-				}
-
-				const errors = await validator.check(params, ['status'])
-				expect(errors.size).to.equal(1)
-				expect(errors.fields).to.eql({
-					"status": [
-						"course.validation.status.invalid"
-					]
-				})
 			})
 		})
 	})

@@ -1,4 +1,4 @@
-import {beforeEach, describe} from 'mocha'
+import {beforeEach, describe, it} from 'mocha'
 import * as sinonChai from 'sinon-chai'
 import * as chai from 'chai'
 import {expect} from 'chai'

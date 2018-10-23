@@ -128,5 +128,8 @@ pipeline {
             }
         }
         disabled */
+        cleanup {
+            deleteDir()
+        }
     }
 }
