@@ -9,7 +9,7 @@
                     <a class="govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Edit</a>
                 </div>
                 {% set audienceHTML = '<ul class="list audience">
-                    <li class="audience-item u--border--bgrey"><span class="audience-header">Course type</span><span class="audience-info">'
+                    <li class="audience-item u--border--bgrey"><span class="audience-header">Audience type</span><span class="audience-info">'
                         + (i18n.audience.type[audienceTypeAsString] | default("Unspecified", true)) + '</span></li>' %}
                 {% if audienceTypeAsString !== 'PRIVATE_COURSE' %}
                     {% set audienceHTML = audienceHTML + '<li class="audience-item u--border--bgrey"><span class="audience-header">Organisations</span><span class="audience-info">'
