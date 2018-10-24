@@ -44,7 +44,7 @@ export class Course {
 		groups: ['all', 'status'],
 		message: 'course.validation.status.invalid',
 	})
-	status: Status
+	status: Status = Status.DRAFT
 
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
