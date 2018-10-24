@@ -121,7 +121,7 @@ export class CourseController {
 				const course = response.locals.course
 				course.title = request.body.title
 
-				this.learningCatalogue.updateCourse(course)
+				await this.learningCatalogue.updateCourse(course)
 
 				response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 			} else {
@@ -207,11 +207,8 @@ export class CourseController {
 			let course = response.locals.course
 			course.status = request.body.status
 
-			this.learningCatalogue.updateCourse(course)
-			request.session!.save(() => {
-				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
-			})
+			await this.learningCatalogue.updateCourse(course)
+			response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 		}
 	}
-
 }
