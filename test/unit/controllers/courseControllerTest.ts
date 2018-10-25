@@ -208,7 +208,7 @@ describe('Course Controller Tests', function() {
 		expect(validator.check).to.have.returned(errors)
 
 		expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(req.session!.sessionFlash.course).to.be.equal(req.body)
+		expect(req.session!.sessionFlash.form).to.eql(req.body)
 		expect(req.session!.sessionFlash).to.not.contain({
 			courseAddedSuccessMessage: 'course_added_success_message',
 		})
@@ -269,7 +269,6 @@ describe('Course Controller Tests', function() {
 		}
 		validator.check = sinon.stub().returns(errors)
 		learningCatalogue.updateCourse = sinon.stub()
-		// req.session!.sessionFlash = sinon.stub()
 
 		await courseController.updateCourseDetails()(req, res)
 
@@ -278,7 +277,7 @@ describe('Course Controller Tests', function() {
 		expect(learningCatalogue.updateCourse).to.not.have.been.called
 		expect(req.session!.sessionFlash).to.eql({
 			errors: errors,
-			course: req.body,
+			form: req.body,
 		})
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/details/:courseId`)
 	})
@@ -400,7 +399,7 @@ describe('Course Controller Tests', function() {
 			expect(learningCatalogue.updateCourse).to.not.have.been.called
 			expect(request.session.sessionFlash).to.eql({
 				errors: errors,
-				course: request.body,
+				form: request.body,
 			})
 			expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/course-id/overview')
 		})

@@ -76,7 +76,7 @@ describe('formValidatorTests', () => {
 		expect(response.redirect).to.have.been.calledOnceWith(redirect)
 		expect(request.session!.sessionFlash).to.eql({
 			errors: errors,
-			course: request.body,
+			form: request.body,
 		})
 	})
 
