@@ -26,8 +26,7 @@
                 {% if course.id %}
                 <input type="hidden" name="id" value="{{ course.id }}">
                 {% endif %}
-
-                {% set course = sessionFlash.course %}</input>
+                {% set course = sessionFlash.course %}
                 <input id="title" name="title" type="hidden" value="{{ course.title }}">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
