@@ -23,11 +23,10 @@
             <p class="govuk-body form-header govuk-!-font-size-24">{{i18n.course.text.editDetails if course else i18n.course.text.addNew}}</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n.course.text.details}}</h2>
             <form action="/content-management/courses/details/{{ course.id }}" method="post" class="course-form">
+                {% set course = sessionFlash.course %}
                 {% if course.id %}
                 <input type="hidden" name="id" value="{{ course.id }}">
                 {% endif %}
-
-                {% set course = sessionFlash.course %}</input>
                 <input id="title" name="title" type="hidden" value="{{ course.title }}">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
