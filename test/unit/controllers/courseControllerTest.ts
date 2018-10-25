@@ -175,11 +175,10 @@ describe('Course Controller Tests', function() {
 
 		await courseController.setCourseDetails()(req, res)
 
-		expect(courseFactory.create).to.have.been.calledWith(req.body)
+		expect(courseFactory.create).to.have.been.calledOnce
 		expect(courseValidator.check).to.have.been.calledWith(course)
 		expect(courseValidator.check).to.have.returned(noErrors)
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
-		expect(req.session!.sessionFlash).to.contain({courseAddedSuccessMessage: 'course_added_success_message'})
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${course.id}/overview`)
 	})
 
@@ -202,7 +201,7 @@ describe('Course Controller Tests', function() {
 
 		await courseController.setCourseDetails()(req, res)
 
-		expect(courseFactory.create).to.have.been.calledWith(req.body)
+		expect(courseFactory.create).to.have.been.calledOnce
 		expect(courseValidator.check).to.have.been.calledWith(course)
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(req.session!.sessionFlash.errors).to.be.equal(errors)
@@ -279,10 +278,10 @@ describe('Course Controller Tests', function() {
 					courseId: 'course-id',
 				},
 				session: {
-					save:(x:any) => {
+					save: (x: any) => {
 						x()
-					}
-				}
+					},
+				},
 			})
 			const response = mockRes({
 				locals: {
@@ -320,10 +319,10 @@ describe('Course Controller Tests', function() {
 					courseId: 'course-id',
 				},
 				session: {
-					save:(x:any) => {
+					save: (x: any) => {
 						x()
-					}
-				}
+					},
+				},
 			})
 			const response = mockRes({
 				locals: {

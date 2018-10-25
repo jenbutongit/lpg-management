@@ -1,34 +1,34 @@
 {% from "table/macro.njk" import govukTable %}
 
 {% set rows = [
-               [
-                 {
-                   text: "Type"
-                 },
-                 {
-                   text: i18n[course.getType()]  | default("Course", true),
-                   format: "numeric"
-                 }
-               ],
-               [
-                   {
-                   text: "Cost"
-                   },
-                   {
-                   text: "£" + course.getCost() | default("Free", true),
-                   format: "numeric"
-                   }
-               ],
-               [
-                   {
-                       text: "Grades"
-                   },
-                   {
-                       text: grades|join(", ") if grades.length > 0 else "Unspecified",
-                       format: "numeric"
-                   }
-               ]
-             ]
+       [
+         {
+           text: "Type"
+         },
+         {
+           text: i18n[course.getType()]  | default("Course", true),
+           format: "numeric"
+         }
+       ],
+       [
+           {
+           text: "Cost"
+           },
+           {
+           text: "£" + course.getCost() | default("Free", true),
+           format: "numeric"
+           }
+       ],
+       [
+           {
+               text: "Grades"
+           },
+           {
+               text: grades|join(", ") if grades.length > 0 else "Unspecified",
+               format: "numeric"
+           }
+       ]
+     ]
 %}
 
 {% set faceToFace = false %}
@@ -40,15 +40,15 @@
 
 {% if faceToFace %}
     {{ rows.push([
-                {
-                    text: "Learning Provider"
-                },
-                {
-                    text: course.learningProvider.name | default("Unspecified", true),
-                    format: "numeric"
-                }
-                ])
-            }}
+        {
+            text: "Learning Provider"
+        },
+        {
+            text: course.learningProvider.name | default("Unspecified", true),
+            format: "numeric"
+        }
+        ])
+    }}
 {% endif %}
 
 {{ govukTable({

@@ -8,7 +8,7 @@ import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
 import {DateTime} from '../lib/dateTime'
-import {Status} from "../learning-catalogue/model/status"
+import {Status} from '../learning-catalogue/model/status'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -140,6 +140,7 @@ export class CourseController {
 			const data = {...req.body}
 			const course = this.courseFactory.create(data)
 			course.status = Status.PUBLISHED
+
 			const errors = await this.courseValidator.check(course)
 
 			if (errors.size) {
@@ -182,9 +183,7 @@ export class CourseController {
 			course.status = request.body.status
 
 			this.learningCatalogue.updateCourse(course)
-			request.session!.save(() => {
-				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
-			})
+			response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 		}
 	}
 
@@ -198,6 +197,7 @@ export class CourseController {
 			learningOutcomes: request.body.learningOutcomes || response.locals.course.learningOutcomes,
 			modules: request.body.modules || response.locals.course.modules,
 			audiences: request.body.audiences || response.locals.course.audiences,
+			status: request.body.status || response.locals.course.status,
 		}
 
 		const course = this.courseFactory.create(data)
