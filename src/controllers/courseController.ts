@@ -113,7 +113,7 @@ export class CourseController implements FormController {
 
 	@Validate({
 		fields: ['title'],
-		redirect: '/content-management/courses/title/:courseId'
+		redirect: '/content-management/courses/title/:courseId',
 	})
 	updateCourseTitle() {
 		return async (request: Request, response: Response) => {
@@ -126,7 +126,7 @@ export class CourseController implements FormController {
 
 	@Validate({
 		fields: ['title'],
-		redirect: '/content-management/courses/title/'
+		redirect: '/content-management/courses/title/',
 	})
 	createCourseTitle() {
 		return async (request: Request, response: Response) => {
@@ -146,7 +146,7 @@ export class CourseController implements FormController {
 
 	@Validate({
 		fields: ['shortDescription', 'description'],
-		redirect: '/content-management/courses/details'
+		redirect: '/content-management/courses/details',
 	})
 	createCourseDetails() {
 		return async (req: Request, res: Response) => {
@@ -162,7 +162,7 @@ export class CourseController implements FormController {
 
 	@Validate({
 		fields: ['shortDescription', 'description'],
-		redirect: '/content-management/courses/details/:courseId'
+		redirect: '/content-management/courses/details/:courseId',
 	})
 	updateCourseDetails() {
 		return async (req: Request, res: Response) => {
@@ -178,7 +178,6 @@ export class CourseController implements FormController {
 		}
 	}
 
-
 	sortModules() {
 		return async (request: Request, response: Response) => {
 			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
@@ -188,7 +187,7 @@ export class CourseController implements FormController {
 
 	@Validate({
 		fields: ['status'],
-		redirect: '/content-management/courses/:courseId/overview'
+		redirect: '/content-management/courses/:courseId/overview',
 	})
 	setStatus() {
 		return async (request: Request, response: Response) => {
