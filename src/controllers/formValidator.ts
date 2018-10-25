@@ -23,7 +23,7 @@ export function Validate(validationArgs: {fields: string[]; redirect: string}) {
 				if (errors.size) {
 					request.session!.sessionFlash = {
 						errors,
-						course: request.body,
+						form: request.body,
 					}
 
 					return request.session!.save(() => {

@@ -119,7 +119,7 @@ export class CourseController implements FormController {
 		return async (request: Request, response: Response) => {
 			let course = response.locals.course
 			course.title = request.body.title
-			this.learningCatalogue.updateCourse(course)
+			await this.learningCatalogue.updateCourse(course)
 			response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 		}
 	}
@@ -172,7 +172,7 @@ export class CourseController implements FormController {
 			course.learningOutcomes = req.body.learningOutcomes
 			course.preparation = req.body.preparation
 
-			this.learningCatalogue.updateCourse(course)
+			await this.learningCatalogue.updateCourse(course)
 
 			res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
 		}
@@ -194,7 +194,7 @@ export class CourseController implements FormController {
 			let course = response.locals.course
 			course.status = request.body.status
 
-			this.learningCatalogue.updateCourse(course)
+			await this.learningCatalogue.updateCourse(course)
 			request.session!.save(() => {
 				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 			})

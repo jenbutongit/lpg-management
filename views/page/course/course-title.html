@@ -12,7 +12,8 @@
 {% set backButton = "/content-management" %}
 
 {% block content %}
-    {% set errors = sessionFlash.errors %}
+{% set errors = sessionFlash.errors %}
+{% set form = sessionFlash.form %}
 
     {{ errorSummary(errors.fields) }}
 
@@ -33,7 +34,7 @@
                             },
                             id: "title",
                             name: "title",
-                            value: course.title,
+                            value: form.title,
                             errorMessage: {
                                 text: i18n.course.validation.title.empty
                             }

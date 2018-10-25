@@ -35,13 +35,7 @@ describe('Course Controller Tests', function() {
 		courseService = <CourseService>{}
 		csrsService = <CsrsService>{}
 
-		courseController = new CourseController(
-			learningCatalogue,
-			validator,
-			courseFactory,
-			courseService,
-			csrsService
-		)
+		courseController = new CourseController(learningCatalogue, validator, courseFactory, courseService, csrsService)
 
 		req = mockReq()
 		res = mockRes()
@@ -171,7 +165,7 @@ describe('Course Controller Tests', function() {
 			title: 'New Course',
 			description: 'desc',
 			shortDescription: 'short',
-			learningOutcomes: 'outcomes'
+			learningOutcomes: 'outcomes',
 		}
 		const course = new Course()
 		const noErrors = {fields: [], size: 0}
@@ -219,7 +213,6 @@ describe('Course Controller Tests', function() {
 			courseAddedSuccessMessage: 'course_added_success_message',
 		})
 		expect(res.redirect).to.have.been.calledWith('/content-management/courses/details')
-
 	})
 
 	it('should update course details', async function() {
@@ -228,7 +221,7 @@ describe('Course Controller Tests', function() {
 			shortDescription: 'Updated short description',
 			description: 'Updated description',
 			learningOutcomes: 'Updated learning outcomes',
-			preparation: 'Updated preparation'
+			preparation: 'Updated preparation',
 		}
 
 		req.params.courseId = 'abc123'
@@ -257,14 +250,14 @@ describe('Course Controller Tests', function() {
 			id: courseId,
 			shortDescription: 'Short description...',
 			description: 'Description...',
-			preparation: 'Preparation...'
+			preparation: 'Preparation...',
 		}
 
 		res.locals.course = {
 			id: courseId,
 			shortDescription: 'Old Short description...',
 			description: 'Old description...',
-			preparation: 'Old preparation...'
+			preparation: 'Old preparation...',
 		}
 		const errors = {
 			size: 1,
@@ -285,9 +278,9 @@ describe('Course Controller Tests', function() {
 		expect(learningCatalogue.updateCourse).to.not.have.been.called
 		expect(req.session!.sessionFlash).to.eql({
 			errors: errors,
-			course: req.body
+			course: req.body,
 		})
-		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/details/:courseId`,)
+		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/details/:courseId`)
 	})
 
 	it('should re-sort modules with order list of module ids', async () => {
