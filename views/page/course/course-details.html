@@ -15,7 +15,7 @@
 
 {% block content %}
     {% set errors = sessionFlash.errors %}
-    
+
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
@@ -24,6 +24,10 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n.course.text.details}}</h2>
             <form action="/content-management/courses/details/{{ course.id }}" method="post" class="course-form">
                 {% set course = sessionFlash.course %}
+                {% if course.id %}
+                <input type="hidden" name="id" value="{{ course.id }}">
+                {% endif %}
+
                 <input id="title" name="title" type="hidden" value="{{ course.title }}">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}

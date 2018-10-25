@@ -20,7 +20,7 @@ chai.use(sinonChai)
 describe('Course Controller Tests', function() {
 	let courseController: CourseController
 	let learningCatalogue: LearningCatalogue
-	let courseValidator: Validator<Course>
+	let validator: Validator<Course>
 	let courseFactory: CourseFactory
 	let courseService: CourseService
 	let csrsService: CsrsService
@@ -30,14 +30,14 @@ describe('Course Controller Tests', function() {
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		courseValidator = <Validator<Course>>{}
 		courseFactory = <CourseFactory>{}
+		validator = <Validator<Course>>{}
 		courseService = <CourseService>{}
 		csrsService = <CsrsService>{}
 
 		courseController = new CourseController(
 			learningCatalogue,
-			courseValidator,
+			validator,
 			courseFactory,
 			courseService,
 			csrsService
@@ -111,12 +111,13 @@ describe('Course Controller Tests', function() {
 		course.title = 'New Course'
 
 		courseFactory.create = sinon.stub().returns(course)
-		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
+		validator.check = sinon.stub().returns({fields: [], size: 0})
 
-		await courseController.setCourseTitle()(req, res)
+		const action = courseController.createCourseTitle()
+		await action(req, res)
 
-		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title'])
-		expect(courseValidator.check).to.have.returned(errors)
+		expect(validator.check).to.have.been.calledWith(req.body, ['title'])
+		expect(validator.check).to.have.returned(errors)
 		expect(req.session!.sessionFlash.course).to.be.equal(course)
 		expect(res.redirect).to.have.been.calledWith('/content-management/courses/details')
 	})
@@ -125,32 +126,38 @@ describe('Course Controller Tests', function() {
 		req.body = {title: ''}
 		const errors = {fields: ['validation.course.title.empty'], size: 1}
 
-		courseValidator.check = sinon.stub().returns(errors)
+		validator.check = sinon.stub().returns(errors)
 
-		await courseController.setCourseTitle()(req, res)
+		await courseController.createCourseTitle()(req, res)
 
-		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title'])
-		expect(courseValidator.check).to.have.returned(errors)
+		expect(validator.check).to.have.been.calledWith(req.body, ['title'])
+		expect(validator.check).to.have.returned(errors)
 		expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(res.redirect).to.have.been.calledWith('/content-management/courses/title')
+		expect(res.redirect).to.have.been.calledWith('/content-management/courses/title/')
 	})
 
-	it('should edit title', async function() {
+	it('should update title', async function() {
 		const courseId = 'abc123'
-		req.body = {title: ''}
+
 		req.params.courseId = courseId
-		const course = new Course()
-		course.title = 'New Course'
-		course.id = courseId
-		res.locals.course = course
 
-		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
-		courseFactory.create = sinon.stub().returns(course)
-		learningCatalogue.updateCourse = sinon.stub().returns(course)
+		req.body = {
+			title: 'New Title',
+			id: courseId,
+		}
 
-		await courseController.setCourseTitle()(req, res)
+		res.locals.course = <Course>{
+			id: courseId,
+			title: 'Old Title',
+		}
 
-		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title'])
+		validator.check = sinon.stub().returns({fields: [], size: 0})
+		learningCatalogue.updateCourse = sinon.stub()
+
+		await courseController.updateCourseTitle()(req, res)
+
+		expect(validator.check).to.have.been.calledWith(req.body, ['title'])
+		expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(req.body)
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/preview`)
 	})
 
@@ -171,13 +178,13 @@ describe('Course Controller Tests', function() {
 
 		learningCatalogue.createCourse = sinon.stub().returns('123')
 		courseFactory.create = sinon.stub().returns(course)
-		courseValidator.check = sinon.stub().returns(noErrors)
+		validator.check = sinon.stub().returns(noErrors)
 
-		await courseController.setCourseDetails()(req, res)
+		await courseController.createCourseDetails()(req, res)
 
 		expect(courseFactory.create).to.have.been.calledWith(req.body)
-		expect(courseValidator.check).to.have.been.calledWith(course)
-		expect(courseValidator.check).to.have.returned(noErrors)
+		expect(validator.check).to.have.been.calledWith(req.body)
+		expect(validator.check).to.have.returned(noErrors)
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
 		expect(req.session!.sessionFlash).to.contain({courseAddedSuccessMessage: 'course_added_success_message'})
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${course.id}/overview`)
@@ -198,36 +205,51 @@ describe('Course Controller Tests', function() {
 
 		learningCatalogue.createCourse = sinon.stub().returns('123')
 		courseFactory.create = sinon.stub().returns(course)
-		courseValidator.check = sinon.stub().returns(errors)
+		validator.check = sinon.stub().returns(errors)
 
-		await courseController.setCourseDetails()(req, res)
+		await courseController.createCourseDetails()(req, res)
 
-		expect(courseFactory.create).to.have.been.calledWith(req.body)
-		expect(courseValidator.check).to.have.been.calledWith(course)
-		expect(courseValidator.check).to.have.returned(errors)
+		expect(courseFactory.create).to.not.have.been.called
+		expect(learningCatalogue.createCourse).to.not.have.been.called
+
+		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
+		expect(validator.check).to.have.returned(errors)
+
 		expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-		expect(req.session!.sessionFlash.course).to.be.equal(course)
+		expect(req.session!.sessionFlash.course).to.be.equal(req.body)
 		expect(req.session!.sessionFlash).to.not.contain({
 			courseAddedSuccessMessage: 'course_added_success_message',
 		})
 		expect(res.redirect).to.have.been.calledWith('/content-management/courses/details')
+
 	})
 
 	it('should edit course details', async function() {
 		const courseId = 'abc123'
+
 		req.params.courseId = courseId
-		const course = new Course()
-		course.title = 'New Course'
-		course.id = courseId
-		res.locals.course = course
 
-		courseValidator.check = sinon.stub().returns({fields: [], size: 0})
-		courseFactory.create = sinon.stub().returns(course)
-		learningCatalogue.updateCourse = sinon.stub().returns(course)
+		req.body = {
+			id: courseId,
+			shortDescription: 'Short description...',
+			description: 'Description...',
+			preparation: 'Preparation...'
+		}
 
-		await courseController.setCourseDetails()(req, res)
+		res.locals.course = {
+			id: courseId,
+			shortDescription: 'Old Short description...',
+			description: 'Old description...',
+			preparation: 'Old preparation...'
+		}
 
-		expect(courseValidator.check).to.have.been.calledWith(course)
+		validator.check = sinon.stub().returns({fields: [], size: 0})
+		learningCatalogue.updateCourse = sinon.stub()
+
+		await courseController.updateCourseDetails()(req, res)
+
+		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
+		expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(req.body)
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${req.params.courseId}/preview`)
 	})
 
@@ -295,13 +317,13 @@ describe('Course Controller Tests', function() {
 			}
 
 			response.redirect = sinon.stub().returns('hello')
-			courseValidator.check = sinon.stub().returns(errors)
+			validator.check = sinon.stub().returns(errors)
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await courseController.setStatus()(request, response)
 
 			// expect(request.session.save).to.have.been.called
-			expect(courseValidator.check).to.have.been.calledOnceWith(request.body)
+			expect(validator.check).to.have.been.calledOnceWith(request.body)
 			expect(course.status).to.equal(Status.PUBLISHED)
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
 			expect(response.redirect).to.have.been.calledWith('/content-management/courses/course-id/overview')
@@ -340,7 +362,7 @@ describe('Course Controller Tests', function() {
 				],
 			}
 
-			courseValidator.check = sinon.stub().returns(errors)
+			validator.check = sinon.stub().returns(errors)
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await courseController.setStatus()(request, response)
@@ -348,6 +370,7 @@ describe('Course Controller Tests', function() {
 			expect(learningCatalogue.updateCourse).to.not.have.been.called
 			expect(request.session.sessionFlash).to.eql({
 				errors: errors,
+				course: request.body,
 			})
 			expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/course-id/overview')
 		})
