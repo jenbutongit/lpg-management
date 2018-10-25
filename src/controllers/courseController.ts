@@ -143,7 +143,7 @@ export class CourseController {
 	createCourseDetails() {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
-			const errors = await this.courseValidator.check(data, ['title', 'shortDescription', 'description'])
+			const errors = await this.courseValidator.check(data, ['shortDescription', 'description'])
 
 			if (errors.size) {
 				return res.render('page/course/course-details', {
@@ -165,7 +165,6 @@ export class CourseController {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
 			const errors = await this.courseValidator.check(data, ['title', 'shortDescription', 'description'])
-
 			if (errors.size) {
 				return res.render('page/course/course-details', {
 					errors: errors,

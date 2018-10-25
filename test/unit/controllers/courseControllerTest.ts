@@ -178,7 +178,7 @@ describe('Course Controller Tests', function() {
 		await courseController.createCourseDetails()(req, res)
 
 		expect(courseFactory.create).to.have.been.calledWith(req.body)
-		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title', 'shortDescription', 'description'])
+		expect(courseValidator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
 		expect(courseValidator.check).to.have.returned(noErrors)
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${course.id}/overview`)
@@ -204,7 +204,7 @@ describe('Course Controller Tests', function() {
 		await courseController.createCourseDetails()(req, res)
 
 		expect(courseFactory.create).to.not.have.been.called
-		expect(courseValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'shortDescription', 'description'])
+		expect(courseValidator.check).to.have.been.calledOnceWith(req.body, ['shortDescription', 'description'])
 		expect(courseValidator.check).to.have.returned(errors)
 		expect(res.render).to.have.been.calledOnceWith('page/course/course-details', {
 			errors: errors,
