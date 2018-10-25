@@ -113,9 +113,9 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			const errors = await this.courseValidator.check(request.body, ['title'])
 			if (errors.size) {
-				response.render('page/course/course-title',{
-					errors: errors,
-					course: request.body
+				response.render('page/course/course-title', {
+					errors,
+					course: request.body,
 				})
 			} else if (request.params.courseId) {
 				const course = response.locals.course
@@ -147,8 +147,8 @@ export class CourseController {
 
 			if (errors.size) {
 				return res.render('page/course/course-details', {
-					errors: errors,
-					course: data
+					errors,
+					course: data,
 				})
 			}
 
@@ -167,8 +167,8 @@ export class CourseController {
 			const errors = await this.courseValidator.check(data, ['title', 'shortDescription', 'description'])
 			if (errors.size) {
 				return res.render('page/course/course-details', {
-					errors: errors,
-					course: data
+					errors,
+					course: data,
 				})
 			}
 
@@ -183,7 +183,6 @@ export class CourseController {
 			res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
 		}
 	}
-
 
 	sortModules() {
 		return async (request: Request, response: Response) => {

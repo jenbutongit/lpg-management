@@ -30,7 +30,7 @@ export class CourseFactory {
 		course.title = data.title
 		course.modules = (data.modules || []).map(this._moduleFactory.create)
 		course.audiences = (data.audiences || []).map(this.audienceFactory.create)
-		course.status = ('status' in data) ? data.status : course.status
+		course.status = 'status' in data ? data.status : course.status
 		course.learningProvider = this._learningProviderFactory.create(data.learningProvider || {})
 		return course
 	}

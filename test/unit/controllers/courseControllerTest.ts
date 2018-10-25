@@ -131,9 +131,9 @@ describe('Course Controller Tests', function() {
 
 		expect(courseValidator.check).to.have.been.calledWith(req.body, ['title'])
 		expect(courseValidator.check).to.have.returned(errors)
-		expect(res.render).to.have.been.calledWith('page/course/course-title',{
+		expect(res.render).to.have.been.calledWith('page/course/course-title', {
 			errors: errors,
-			course: req.body
+			course: req.body,
 		})
 	})
 
@@ -166,7 +166,7 @@ describe('Course Controller Tests', function() {
 			title: 'New Course',
 			description: 'desc',
 			shortDescription: 'short',
-			learningOutcomes: 'outcomes'
+			learningOutcomes: 'outcomes',
 		}
 		const course = new Course()
 		const noErrors = {fields: [], size: 0}
@@ -218,7 +218,7 @@ describe('Course Controller Tests', function() {
 			shortDescription: 'Updated short description',
 			description: 'Updated description',
 			learningOutcomes: 'Updated learning outcomes',
-			preparation: 'Updated preparation'
+			preparation: 'Updated preparation',
 		}
 
 		req.params.courseId = 'abc123'

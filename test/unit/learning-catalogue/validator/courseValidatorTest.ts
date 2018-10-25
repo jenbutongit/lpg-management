@@ -176,7 +176,7 @@ describe('CourseValidator tests', () => {
 
 		it('should fail validation if title, shortDescription, description and status are missing', async () => {
 			const params = {
-				status: null
+				status: null,
 			}
 
 			const errors = await validator.check(params)
@@ -426,29 +426,25 @@ describe('CourseValidator tests', () => {
 
 			it('should fail validation with null status', async () => {
 				const params = {
-					status: null
+					status: null,
 				}
 
 				const errors = await validator.check(params, ['status'])
 				expect(errors.size).to.equal(1)
 				expect(errors.fields).to.eql({
-					"status": [
-						"course.validation.status.invalid"
-					]
+					status: ['course.validation.status.invalid'],
 				})
 			})
 
 			it('should fail validation with invalid status', async () => {
 				const params = {
-					status: 'Not a status'
+					status: 'Not a status',
 				}
 
 				const errors = await validator.check(params, ['status'])
 				expect(errors.size).to.equal(1)
 				expect(errors.fields).to.eql({
-					"status": [
-						"course.validation.status.invalid"
-					]
+					status: ['course.validation.status.invalid'],
 				})
 			})
 		})
