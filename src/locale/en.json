@@ -28,7 +28,8 @@
 				"empty": "Audience type is required"
 			},
 			"requiredBy": {
-				"invalidDate": "Enter a valid deadline date"
+				"invalidDate": "Enter a valid deadline date",
+				"dateIsNotInFuture": "Deadline date needs to be in the future"
 			}
 		},
 		"type": {
@@ -63,11 +64,14 @@
 			"description": {
 				"empty": "Description is required",
 				"maxLength": "Description is too long"
+			},
+			"status": {
+				"invalid": "Status needs to one of 'Draft', 'Published' or 'Archived'"
 			}
 		}
 	},
 
-	"module": {
+    "module": {
 		"validation": {
 			"cost": {
 				"positive": "Module cost must be a positive number"
