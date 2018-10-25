@@ -138,11 +138,9 @@ export class CourseController {
 	setCourseDetails() {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
-			if (!req.params.courseId) {
-				data.status = Status.DRAFT
-			}
-
 			const course = this.courseFactory.create(data)
+			course.status = Status.PUBLISHED
+
 			const errors = await this.courseValidator.check(course)
 
 			if (errors.size) {
@@ -155,7 +153,10 @@ export class CourseController {
 				res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
 			} else {
 				const savedCourse = await this.learningCatalogue.createCourse(course)
-				res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
+				req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
+				req.session!.save(() => {
+					res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
+				})
 			}
 		}
 	}
