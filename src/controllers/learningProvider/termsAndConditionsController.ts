@@ -1,11 +1,8 @@
 import {Request, Response, Router} from 'express'
-import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {TermsAndConditionsFactory} from '../../learning-catalogue/model/factory/termsAndConditionsFactory'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {TermsAndConditions} from '../../learning-catalogue/model/termsAndConditions'
-
-const logger = log4js.getLogger('controllers/learningProviderController')
 
 export class TermsAndConditionsController {
 	learningCatalogue: LearningCatalogue
@@ -73,39 +70,25 @@ export class TermsAndConditionsController {
 	}
 
 	public getTermsAndConditions() {
-		logger.debug('Getting terms and conditions')
-		return async (request: Request, response: Response) => {
-			response.render('page/learning-provider/terms-and-conditions')
+		return async (req: Request, res: Response) => {
+			res.render('page/learning-provider/terms-and-conditions')
 		}
 	}
 
 	public setTermsAndConditions() {
-		return async (request: Request, response: Response) => {
-			const learningProviderId: string = request.params.learningProviderId
+		return async (req: Request, res: Response) => {
+			const termsAndConditions = this.termsAndConditionsFactory.create(req.body)
+			const errors = await this.termsAndConditionsValidator.check(req.body, ['name', 'content'])
 
-			const data = {
-				...request.body,
-			}
-
-			const termsAndConditions = this.termsAndConditionsFactory.create(data)
-
-			const errors = await this.termsAndConditionsValidator.check(request.body, ['name', 'content'])
 			if (errors.size) {
-				return response.render('page/learning-provider/terms-and-conditions', {
-					errors: errors,
-					termsAndConditions: termsAndConditions,
-				})
+				res.render('page/learning-provider/terms-and-conditions', {errors, termsAndConditions})
+			} else if (req.params.termsAndConditionsId) {
+				await this.editTermsAndConditions(req, res)
+				res.redirect(`/content-management/learning-providers/${req.params.learningProviderId}`)
+			} else {
+				await this.learningCatalogue.createTermsAndConditions(req.params.learningProviderId, termsAndConditions)
+				res.redirect(`/content-management/learning-providers/${req.params.learningProviderId}`)
 			}
-
-			if (request.params.termsAndConditionsId) {
-				await this.editTermsAndConditions(request, response)
-
-				return response.redirect(`/content-management/learning-providers/${learningProviderId}`)
-			}
-
-			await this.learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
-
-			response.redirect(`/content-management/learning-providers/${learningProviderId}`)
 		}
 	}
 

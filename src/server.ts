@@ -117,14 +117,4 @@ app.get('/', function(req, res) {
 
 app.get('/content-management', ctx.homeController.index())
 
-app.get(
-	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
-	ctx.termsAndConditionsController.getTermsAndConditions()
-)
-
-app.post(
-	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
-	ctx.termsAndConditionsController.setTermsAndConditions()
-)
-
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
