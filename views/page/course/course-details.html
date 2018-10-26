@@ -11,7 +11,7 @@
 
 {% set banner = true %}
 {% set backButton = "/content-management/courses/title/" %}
-
+{% set form = sessionFlash.form %}
 
 {% block content %}
     {% set errors = sessionFlash.errors %}
@@ -26,14 +26,13 @@
                 {% if course.id %}
                 <input type="hidden" name="id" value="{{ course.id }}">
                 {% endif %}
-                {% set course = sessionFlash.course %}
                 <input id="title" name="title" type="hidden" value="{{ course.title }}">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
-                        {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, course.shortDescription, "Short description") }}
-                        {{ textarea("description", "description", "Maximum of 1500 characters", 1500, course.description, "Description") }}
-                        {{ textarea("learningOutcomes", "learningOutcomes", "Maximum of 1500 characters", 1500, course.learningOutcomes, "Learning outcomes (optional)") }}
-                        {{ textarea("preparation", "preparation", "Maximum of 1500 characters", 1500, course.preparation, "Preparation (optional)") }}
+                        {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, form.shortDescription|default(course.shortDescription), "Short description") }}
+                        {{ textarea("description", "description", "Maximum of 1500 characters", 1500, form.description|default(course.description), "Description") }}
+                        {{ textarea("learningOutcomes", "learningOutcomes", "Maximum of 1500 characters", 1500, form.learningOutcomes|default(course.learningOutcomes), "Learning outcomes (optional)") }}
+                        {{ textarea("preparation", "preparation", "Maximum of 1500 characters", 1500, form.preparation|default(course.preparation), "Preparation (optional)") }}
                     {% endblock %}
                 </fieldset>
                 <div class="button-container">
