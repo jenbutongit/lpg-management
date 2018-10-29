@@ -10,12 +10,12 @@
 
 {% block content %}
     {% set errors = sessionFlash.errors %}
-
     {{ errorSummary(errors.fields) }}
+    {% set deadlineDate = sessionFlash.deadlineDate %}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <p class="govuk-body form-header govuk-!-font-size-24 no-margin">Add a new audience</p>
+            <p class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Add a deadline date</h2>
             <form class="audience-form" action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/deadline" method="post">
                 {% if errors.fields.requiredBy %}
@@ -33,9 +33,21 @@
                             text: "For example, 30 11 " + exampleYear
                         },
                         items: [
-                            {name: "year", value: deadlineDate.year},
-                            {name: "month", value: deadlineDate.month},
-                            {name: "day", value: deadlineDate.day}
+                            {
+                                name: "day",
+                                value: deadlineDate.day,
+                                classes: "govuk-input--width-2 govuk-input--error"
+                            },
+                            {
+                                name: "month",
+                                value: deadlineDate.month,
+                                classes: "govuk-input--width-2 govuk-input--error"
+                            },
+                            {
+                                name: "year",
+                                value: deadlineDate.year,
+                                classes: "govuk-input--width-4 govuk-input--error"
+                            }
                         ]
                     }) }}
                 {% else %}

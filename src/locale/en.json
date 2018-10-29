@@ -1,17 +1,23 @@
 {
 	"audience": {
 		"pageTitle": {
-			"add_name": "Add audience name",
-			"edit_name": "Edit audience name",
-			"add_type": "Add audience type",
-			"edit_type": "Edit audience type",
-			"configure_audience": "Configure audience",
-			"add_organisation": "Add organisation",
+			"addName": "Add audience name",
+			"editName": "Edit audience name",
+			"addType": "Add audience type",
+			"editType": "Edit audience type",
+			"configureAudience": "Configure audience",
+			"addOrganisation": "Add organisation",
 			"addDeadline": "Add deadline date",
-			"delete_audience": "Delete audience",
-			"add_area_of_work": "Add area of work",
-			"add_grades": "Add grades",
-			"add_core_learning": "Add core learning"
+			"deleteAudience": "Delete audience",
+			"addAreaOfWork": "Add area of work",
+			"addGrades": "Add grades",
+			"addCoreLearning": "Add core learning",
+			"addEvent": "Add event for private course audience"
+		},
+		"pageText": {
+			"edit": "Edit audience",
+			"addNew": "Add a new audience",
+			"audienceName": "Audience name"
 		},
 		"validation": {
 			"name": {
@@ -22,7 +28,8 @@
 				"empty": "Audience type is required"
 			},
 			"requiredBy": {
-				"invalidDate": "Enter a valid deadline date"
+				"invalidDate": "Enter a valid deadline date",
+				"dateIsNotInFuture": "Deadline date needs to be in the future"
 			}
 		},
 		"type": {
@@ -41,9 +48,10 @@
 			"editCourseDetails": "Edit course details"
 		},
 		"text": {
+			"details": "Course details",
 			"title": "Course title",
 			"addNew": "Add a new course",
-			"editTitle": "Edit course title"
+			"editDetails": "Edit course details"
 		},
 		"validation": {
 			"title": {
@@ -56,31 +64,49 @@
 			"description": {
 				"empty": "Description is required",
 				"maxLength": "Description is too long"
+			},
+			"status": {
+				"invalid": "Status needs to one of 'Draft', 'Published' or 'Archived'"
 			}
 		}
 	},
 
-	"blended": "Blended",
+    "module": {
+		"validation": {
+			"cost": {
+				"positive": "Module cost must be a positive number"
+			}
+		},
+
+		"text": {
+			"cost": "Cost £ (ex VAT)"
+		}
+	},
+
+	"courseType": {
+		"face-to-face": "Face to Face",
+		"link": "Link",
+		"elearning": "E-learning",
+		"video": "Video",
+		"file": "File",
+		"blended": "Blended"
+	},
+
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
-	"course": "Course",
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
-	"face-to-face": "Face to Face",
-	"link": "Link",
-	"elearning": "e-learning",
-	"video": "Video",
-	"file": "File",
 	"learning_provider_add_title": "Add learning provider",
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",
 	"learning_providers_title": "Learning providers",
 	"module_add_file": "Add a file",
+	"module_add_video_mp4": "Add a Video (MP4)",
 	"module_add_scorm": "Add e-learning",
 	"module_add_title": "Add a module",
 	"module_link_add_title": "Add a link",
@@ -95,10 +121,11 @@
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
-	"validation.termsAndConditions.name.empty": "Title is required",
+	"validation.termsAndConditions.name.empty": "Name is required",
 	"validation.termsAndConditions.content.empty": "Content is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
+	"validation_module_url_invalid": "A URL should include a protocol and be a top level domain",
 	"validation_module_title_empty": "Title is required",
 	"validation.module.duration.empty": "Duration is required",
 	"validation.module.duration.positive": "Duration must be positive",
@@ -109,6 +136,5 @@
 	"validation_module_event_dateRanges_past": "Start date must be in the future",
 	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
-	"validation_module_mediaId_empty": "File is required",
-	"video": "Video"
+	"validation_module_mediaId_empty": "File is required"
 }
