@@ -10,6 +10,7 @@ import {ApplicationContext} from './applicationContext'
 import * as bodyParser from 'body-parser'
 import {AppConfig} from './config/appConfig'
 import moment = require('moment')
+import {DateTime} from './lib/dateTime'
 
 Properties.initialize()
 
@@ -22,6 +23,7 @@ const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
+const authorisedRole = 'COURSE_MANAGER'
 
 app.use(
 	i18n({
@@ -51,7 +53,21 @@ nunjucks
 				: jsonpath.value(map, path)
 	})
 	.addFilter('formatDate', function(date: Date) {
-		return date ? moment(date).format('DD/MM/YYYY') : null
+		return date
+			? moment(date)
+					.local()
+					.format('D MMMM YYYY')
+			: null
+	})
+	.addFilter('formatDateShort', function(date: Date) {
+		return date
+			? moment(date)
+					.local()
+					.format('D MMM YYYY')
+			: null
+	})
+	.addFilter('dateWithMonthAsText', function(date: string) {
+		return date ? DateTime.convertDate(date) : 'date unset'
 	})
 
 app.set('view engine', 'html')
@@ -81,7 +97,7 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
-ctx.auth.configure(app)
+ctx.auth.configure(app, authorisedRole)
 app.use(ctx.addToResponseLocals())
 app.use(ctx.courseController.router)
 app.use(ctx.audienceController.router)

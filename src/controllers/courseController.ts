@@ -1,5 +1,4 @@
 import {Request, Response, Router} from 'express'
-import {ContentRequest} from '../extended'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
@@ -9,6 +8,7 @@ import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
 import {DateTime} from '../lib/dateTime'
+import {Status} from '../learning-catalogue/model/status'
 
 export class CourseController {
 	learningCatalogue: LearningCatalogue
@@ -60,7 +60,10 @@ export class CourseController {
 		this.router.get('/content-management/courses/details/:courseId?', this.getCourseDetails())
 		this.router.post('/content-management/courses/details/:courseId?', this.setCourseDetails())
 
-		this.router.get('/content-management/courses/:courseId/sort-modules?', this.sortModules())
+		this.router.get('/content-management/courses/:courseId/sort-modules', this.sortModules())
+
+		this.router.post('/content-management/courses/:courseId/status', this.setStatus())
+		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules', this.sortModules())
 	}
 
 	courseOverview() {
@@ -72,6 +75,9 @@ export class CourseController {
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
 			const audienceIdToEvent = this.courseService.getAudienceIdToEventMapping(res.locals.course)
 			const eventIdToModuleId = this.courseService.getEventIdToModuleIdMapping(res.locals.course)
+
+			const grades = this.courseService.getUniqueGrades(res.locals.course)
+
 			res.render('page/course/course-overview', {
 				faceToFaceModules,
 				AudienceType: Audience.Type,
@@ -79,6 +85,7 @@ export class CourseController {
 				gradeCodeToName,
 				audienceIdToEvent,
 				eventIdToModuleId,
+				grades,
 			})
 		}
 	}
@@ -109,13 +116,10 @@ export class CourseController {
 				request.session!.save(() => {
 					response.redirect('/content-management/courses/title')
 				})
+			} else if (request.params.courseId) {
+				await this.editCourse(request, response)
+				response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 			} else {
-				if (request.params.courseId) {
-					await this.editCourse(request, response)
-
-					return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
-				}
-
 				const course = this.courseFactory.create(request.body)
 				request.session!.sessionFlash = {course}
 				request.session!.save(() => {
@@ -132,33 +136,28 @@ export class CourseController {
 	}
 
 	setCourseDetails() {
-		return async (request: Request, response: Response) => {
-			const req = request as ContentRequest
-
-			const data = {
-				...req.body,
-			}
-
+		return async (req: Request, res: Response) => {
+			const data = {...req.body}
 			const course = this.courseFactory.create(data)
+			course.status = Status.PUBLISHED
 
 			const errors = await this.courseValidator.check(course)
 
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors, course: course}
-				return response.redirect('/content-management/courses/details')
+				req.session!.sessionFlash = {errors: errors, course: course}
+				req.session!.save(() => {
+					res.redirect('/content-management/courses/details')
+				})
+			} else if (req.params.courseId) {
+				await this.editCourse(req, res)
+				res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
+			} else {
+				const savedCourse = await this.learningCatalogue.createCourse(course)
+				req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
+				req.session!.save(() => {
+					res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
+				})
 			}
-
-			if (request.params.courseId) {
-				await this.editCourse(request, response)
-
-				return response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
-			}
-
-			request.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
-
-			const savedCourse = await this.learningCatalogue.createCourse(course)
-
-			return response.redirect(`/content-management/courses/${savedCourse.id}/overview`)
 		}
 	}
 
@@ -166,6 +165,25 @@ export class CourseController {
 		return async (request: Request, response: Response) => {
 			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
 			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
+		}
+	}
+
+	setStatus() {
+		return async (request: Request, response: Response) => {
+			const errors = await this.courseValidator.check(request.body, ['status'])
+
+			if (errors.size) {
+				request.session!.sessionFlash = {errors: errors}
+				return request.session!.save(() => {
+					response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+				})
+			}
+
+			let course = response.locals.course
+			course.status = request.body.status
+
+			this.learningCatalogue.updateCourse(course)
+			response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 		}
 	}
 
@@ -179,6 +197,7 @@ export class CourseController {
 			learningOutcomes: request.body.learningOutcomes || response.locals.course.learningOutcomes,
 			modules: request.body.modules || response.locals.course.modules,
 			audiences: request.body.audiences || response.locals.course.audiences,
+			status: request.body.status || response.locals.course.status,
 		}
 
 		const course = this.courseFactory.create(data)

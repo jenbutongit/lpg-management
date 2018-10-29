@@ -11,7 +11,6 @@ import {Audience} from '../../../../src/learning-catalogue/model/audience'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
-import {AudienceService} from '../../../../src/lib/audienceService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 import moment = require('moment')
@@ -20,12 +19,11 @@ chai.use(sinonChai)
 
 describe('AudienceController', () => {
 	let audienceController: AudienceController
-	let learningCatalogue: LearningCatalogue
-	let audienceValidator: Validator<Audience>
 	let audienceFactory: AudienceFactory
+	let audienceValidator: Validator<Audience>
 	let csrsService: CsrsService
+	let learningCatalogue: LearningCatalogue
 	let courseService: CourseService
-	let audienceService: AudienceService
 	let req: Request
 	let res: Response
 
@@ -34,17 +32,15 @@ describe('AudienceController', () => {
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		audienceValidator = <Validator<Audience>>{}
-		audienceFactory = <AudienceFactory>{}
 		csrsService = <CsrsService>{}
 		courseService = new CourseService(learningCatalogue)
-		audienceService = new AudienceService(learningCatalogue)
+		audienceFactory = new AudienceFactory()
+		audienceValidator = new Validator(audienceFactory)
 		audienceController = new AudienceController(
 			learningCatalogue,
 			audienceValidator,
 			audienceFactory,
 			courseService,
-			audienceService,
 			csrsService
 		)
 
@@ -119,6 +115,7 @@ describe('AudienceController', () => {
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
+			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
 			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
 		})
 
@@ -136,7 +133,7 @@ describe('AudienceController', () => {
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
-			expect(req.session!.sessionFlash.errors).to.be.undefined
+			expect(req.session!.sessionFlash).to.be.undefined
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(res.redirect).to.have.been.calledWith(
 				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
@@ -199,6 +196,7 @@ describe('AudienceController', () => {
 
 			const audience = {id: audienceId, departments: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			const hmrcCode = 'hmrc'
 			csrsService.getOrganisations = sinon
@@ -221,6 +219,7 @@ describe('AudienceController', () => {
 			req.body = {organisation: 'all', 'input-autocomplete': ''}
 			const audience = {id: audienceId, departments: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			const hmrcCode = 'hmrc'
 			const dwpCode = 'dwp'
@@ -250,6 +249,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, departments: ['hmrc']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -280,6 +280,7 @@ describe('AudienceController', () => {
 			req.body = {'area-of-work': aowHumanResources}
 			const audience = {id: audienceId, areasOfWork: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			csrsService.isAreaOfWorkValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
@@ -300,6 +301,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, areasOfWork: ['some area of work']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -329,6 +331,7 @@ describe('AudienceController', () => {
 			req.body = {grades: gradeCode}
 			const audience = {id: audienceId, grades: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			csrsService.isGradeCodeValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
@@ -349,6 +352,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, grades: ['some grade']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -378,6 +382,7 @@ describe('AudienceController', () => {
 			req.body = {interests: interestCode}
 			const audience = {id: audienceId, interests: []}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			csrsService.isCoreLearningValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
@@ -398,6 +403,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, interests: ['some interest']}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
@@ -424,9 +430,9 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: null}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 			req.body = {'deadline-year': '2018', 'deadline-month': '12', 'deadline-day': '16'}
 
-			audienceValidator.check = sinon.stub().returns({size: 0})
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setDeadline()(req, res)
@@ -438,6 +444,21 @@ describe('AudienceController', () => {
 				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
 			)
 		})
+
+		it('should error when deadline date is in the past', async () => {
+			req.params.audienceId = audienceId
+			const audience = {id: audienceId, requiredBy: null}
+			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
+			req.body = {'deadline-year': '1999', 'deadline-month': '1', 'deadline-day': '1'}
+
+			await audienceController.setDeadline()(req, res)
+
+			expect(req.session!.sessionFlash.errors).is.not.undefined
+			expect(res.redirect).to.have.been.calledOnceWith(
+				`/content-management/courses/${courseId}/audiences/${audienceId}/deadline`
+			)
+		})
 	})
 
 	describe('#deleteDeadline', () => {
@@ -445,13 +466,14 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: new Date()}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.deleteDeadline()(req, res)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: null}],
+				audiences: [{id: audienceId, requiredBy: undefined}],
 			})
 		})
 	})
@@ -482,6 +504,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, eventId: null}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
 			learningCatalogue.updateCourse = sinon.stub()
@@ -503,6 +526,7 @@ describe('AudienceController', () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, eventId: 'event-id'}
 			res.locals.course = {audiences: [audience]}
+			res.locals.audience = audience
 
 			learningCatalogue.updateCourse = sinon.stub()
 

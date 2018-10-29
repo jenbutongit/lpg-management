@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         }
-        */ disabled
+        /* disabled
         stage('Deploy to Integration?')  {
             agent none
             steps {
@@ -33,7 +33,6 @@ pipeline {
                 }
             }
         }
-        disabled */
         stage('Deploy to Integration') {
             agent { label 'master' }
             steps {
@@ -60,7 +59,6 @@ pipeline {
                 }
             }
         }
-        /* disabled
         stage('Deploy to Staging?')  {
             agent none
             steps {
@@ -130,5 +128,16 @@ pipeline {
             }
         }
         disabled */
+        stage('Post') {
+            agent { label 'master' }
+            steps {
+                echo 'cleanup'
+            }
+            post {
+                cleanup {
+                    deleteDir()
+                }
+            }
+        }
     }
 }
