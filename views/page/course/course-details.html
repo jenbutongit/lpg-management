@@ -11,10 +11,11 @@
 
 {% set banner = true %}
 {% set backButton = "/content-management/courses/title/" %}
-{% set form = sessionFlash.form %}
 
 {% block content %}
-    {% set errors = sessionFlash.errors %}
+{% set errors = sessionFlash.errors %}
+{% set form = sessionFlash.form %}
+{% set course = sessionFlash.course %}
 
     {{ errorSummary(errors.fields) }}
 
@@ -24,9 +25,9 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n.course.text.details}}</h2>
             <form action="/content-management/courses/details/{{ course.id }}" method="post" class="course-form">
                 {% if course.id %}
-                <input type="hidden" name="id" value="{{ course.id }}">
+                <input type="hidden" name="id" value="{{ form.id|default(course.id) }}">
                 {% endif %}
-                <input id="title" name="title" type="hidden" value="{{ course.title }}">
+                <input id="title" name="title" type="hidden" value="{{ form.title|default(course.title)}}">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
                         {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, form.shortDescription|default(course.shortDescription), "Short description") }}
