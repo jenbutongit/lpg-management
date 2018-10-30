@@ -31,8 +31,13 @@
                                 </p>
                             </span>
                             {% if attendeeEventRecord[0].status === 2 %} 
-                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ attendee.bookingReference }}" method="post" class="attendee-button">
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ attendee.bookingReference }}/register" method="post" class="attendee-button">
                                     <button type="submit" class="linkish-button">Change to booked</button>
+                                <form>
+                            {% endif %}
+                            {% if attendeeEventRecord[0].status === 0 %}
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ attendeeEventRecord[0].bookingReference }}/unregister" method="post" class="attendee-button">
+                                    <button type="submit" class="linkish-button">Change to pending</button>
                                 <form>
                             {% endif %}
                         </li>

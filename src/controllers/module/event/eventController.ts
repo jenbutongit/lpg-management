@@ -147,6 +147,16 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference',
 			this.getAttendeeDetails()
 		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/register',
+			this.registerLearner()
+		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/unregister',
+			this.unregisterLearner()
+		)
 	}
 
 	public getDateTime() {
@@ -460,6 +470,36 @@ export class EventController {
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
 			res.render('page/course/module/events/attendee', {attendeeEventRecord, eventDateWithMonthAsText})
+		}
+	}
+
+	public registerLearner() {
+		return async (req: Request, res: Response) => {
+			let eventRecord: EventRecord = res.locals.eventRecord[0]
+			eventRecord.status = EventRecord.Status.APPROVED
+
+			this.learnerRecord.registerLearner(eventRecord)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+					req.params.eventId
+				}/attendee/${req.params.bookingReference}`
+			)
+		}
+	}
+
+	public unregisterLearner() {
+		return async (req: Request, res: Response) => {
+			let eventRecord: EventRecord = res.locals.eventRecord[0]
+			eventRecord.status = EventRecord.Status.REQUESTED
+
+			this.learnerRecord.unregisterLearner(eventRecord)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+					req.params.eventId
+				}/attendee/${req.params.bookingReference}`
+			)
 		}
 	}
 }
