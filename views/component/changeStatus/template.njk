@@ -1,0 +1,29 @@
+{% from "button/macro.njk" import govukButton %}
+
+{% if status !== "Archived" %}
+    <div class="change-status">
+        {% if status === "Draft" %}
+            {% set buttonText = "Publish this course" %}
+            {% set value = "Published" %}
+            <p class="govuk-body">This course has not been published. You can still add events.</p>
+        {% elif status === "Published" %}
+            {% set buttonText = "Archive this course" %}
+            {% set value = "Archived" %}
+            <p class="govuk-body">This course has been published. Any further edits will be shown immediately.</p>
+            <p class="govuk-body">Archiving this course will stop it being listed and prevent further interactions.</p>
+        {% endif %}
+        <form method="post" action="/content-management/courses/{{course.id}}/status">
+            <input type="hidden" name="status" value="{{ value }}" />
+            {% if status === "Draft" %}
+                {{ govukButton({
+                    text: buttonText
+                }) }}
+            {% elif status === "Published" %}
+                {{ govukButton({
+                    text: buttonText,
+                    classes: "red-button"
+                }) }}
+            {% endif %}
+        </form>
+    </div>
+{% endif %}
