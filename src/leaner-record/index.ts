@@ -26,9 +26,7 @@ export class LearnerRecord {
 		return records
 	}
 
-	async registerLearner(eventRecord: EventRecord) {}
-
-	async unregisterLearner(eventRecord: EventRecord) {}
+	async updateBooking(eventRecord: EventRecord) {}
 
 	set restService(value: OauthRestService) {
 		this._restService = value

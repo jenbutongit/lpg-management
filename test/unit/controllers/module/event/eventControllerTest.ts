@@ -376,12 +376,12 @@ describe('EventController', function() {
 		request.params.eventId = 'eventId'
 		request.params.bookingReference = 'bookingReference'
 
-		learnerRecord.registerLearner = sinon.stub()
+		learnerRecord.updateBooking = sinon.stub()
 
 		await registerLearner(request, response)
 
 		expect(eventRecord.status).to.equal(EventRecord.Status.APPROVED)
-		expect(learnerRecord.registerLearner).to.have.been.calledOnce
+		expect(learnerRecord.updateBooking).to.have.been.calledOnce
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
 		)
@@ -403,12 +403,12 @@ describe('EventController', function() {
 		request.params.eventId = 'eventId'
 		request.params.bookingReference = 'bookingReference'
 
-		learnerRecord.unregisterLearner = sinon.stub()
+		learnerRecord.updateBooking = sinon.stub()
 
 		await unregisterLearner(request, response)
 
 		expect(eventRecord.status).to.equal(EventRecord.Status.REQUESTED)
-		expect(learnerRecord.unregisterLearner).to.have.been.calledOnce
+		expect(learnerRecord.updateBooking).to.have.been.calledOnce
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
 		)

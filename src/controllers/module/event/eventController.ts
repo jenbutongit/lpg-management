@@ -478,7 +478,7 @@ export class EventController {
 			let eventRecord: EventRecord = res.locals.eventRecord[0]
 			eventRecord.status = EventRecord.Status.APPROVED
 
-			this.learnerRecord.registerLearner(eventRecord)
+			this.learnerRecord.updateBooking(eventRecord)
 
 			res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
@@ -493,7 +493,7 @@ export class EventController {
 			let eventRecord: EventRecord = res.locals.eventRecord[0]
 			eventRecord.status = EventRecord.Status.REQUESTED
 
-			this.learnerRecord.unregisterLearner(eventRecord)
+			this.learnerRecord.updateBooking(eventRecord)
 
 			res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
