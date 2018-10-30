@@ -22,7 +22,7 @@ chai.use(sinonChai)
 describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
-	let leanerRecord: LearnerRecord
+	let learnerRecord: LearnerRecord
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -32,7 +32,7 @@ describe('EventController', function() {
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		leanerRecord = <LearnerRecord>{}
+		learnerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
@@ -42,7 +42,7 @@ describe('EventController', function() {
 
 		eventController = new EventController(
 			learningCatalogue,
-			leanerRecord,
+			learnerRecord,
 			eventValidator,
 			eventFactory,
 			dateRangeCommandValidator,
@@ -827,6 +827,8 @@ describe('EventController', function() {
 				.stub()
 				.withArgs('test@test.com', 'test-token')
 				.returns({test: 'test'})
+
+			learnerRecord.inviteLearner = sinon.stub()
 
 			await eventController.inviteLearner()(request, response)
 

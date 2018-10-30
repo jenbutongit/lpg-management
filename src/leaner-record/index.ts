@@ -27,7 +27,7 @@ export class LearnerRecord {
 
 	async getEventInvitees(eventId: string) {}
 
-	async inviteLeaner(eventId: string, emailAddress: string) {
+	async inviteLearner(eventId: string, emailAddress: string) {
 		//TODO: Invite Leaner
 	}
 
