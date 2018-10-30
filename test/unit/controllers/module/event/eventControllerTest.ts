@@ -15,13 +15,14 @@ import {DateRangeCommand} from '../../../../../src/controllers/command/dateRange
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/leaner-record'
+import {EventRecord} from '../../../../../src/leaner-record/model/eventRecord'
 
 chai.use(sinonChai)
 
 describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
-	let leanerRecord: LearnerRecord
+	let learnerRecord: LearnerRecord
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -30,7 +31,7 @@ describe('EventController', function() {
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
-		leanerRecord = <LearnerRecord>{}
+		learnerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
@@ -39,7 +40,7 @@ describe('EventController', function() {
 
 		eventController = new EventController(
 			learningCatalogue,
-			leanerRecord,
+			learnerRecord,
 			eventValidator,
 			eventFactory,
 			dateRangeCommandValidator,
@@ -320,7 +321,7 @@ describe('EventController', function() {
 	})
 
 	it('should render event overview page', async function() {
-		let event: Event = new Event()
+		const event: Event = new Event()
 		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
 
 		const getEventOverview: (request: Request, response: Response) => void = eventController.getEventOverview()
@@ -333,6 +334,84 @@ describe('EventController', function() {
 		await getEventOverview(request, response)
 
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
+	})
+
+	it('should render attendee details page', async function() {
+		const eventRecord: EventRecord = new EventRecord()
+		eventRecord.bookingReference = 'test-ref'
+
+		const date: string = '2020-02-01'
+		const dateRange = new DateRange()
+		dateRange.date = date
+
+		const event: Event = new Event()
+		event.dateRanges = [dateRange]
+
+		const getAttendeeDetails: (request: Request, response: Response) => void = eventController.getAttendeeDetails()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.eventRecord = [eventRecord]
+		response.locals.event = event
+
+		request.params.bookingReference = 'test-ref'
+
+		await getAttendeeDetails(request, response)
+	})
+
+	it('should change event record state to approved and redirect to attendee page', async function() {
+		const eventRecord: EventRecord = new EventRecord()
+		eventRecord.status = EventRecord.Status.REQUESTED
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.registerLearner()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.eventRecord = [eventRecord]
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingReference = 'bookingReference'
+
+		learnerRecord.registerLearner = sinon.stub()
+
+		await registerLearner(request, response)
+
+		expect(eventRecord.status).to.equal(EventRecord.Status.APPROVED)
+		expect(learnerRecord.registerLearner).to.have.been.calledOnce
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
+		)
+	})
+
+	it('should change event record state to requested and redirect to attendee page', async function() {
+		const eventRecord: EventRecord = new EventRecord()
+		eventRecord.status = EventRecord.Status.APPROVED
+
+		const unregisterLearner: (request: Request, response: Response) => void = eventController.unregisterLearner()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.eventRecord = [eventRecord]
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingReference = 'bookingReference'
+
+		learnerRecord.unregisterLearner = sinon.stub()
+
+		await unregisterLearner(request, response)
+
+		expect(eventRecord.status).to.equal(EventRecord.Status.REQUESTED)
+		expect(learnerRecord.unregisterLearner).to.have.been.calledOnce
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
+		)
 	})
 
 	describe('Edit and update DateRange', () => {
