@@ -25,6 +25,12 @@ export class LearnerRecord {
 		return records
 	}
 
+	async getEventInvitees(eventId: string) {}
+
+	async inviteLeaner(eventId: string, emailAddress: string) {
+		//TODO: Invite Leaner
+	}
+
 	set restService(value: OauthRestService) {
 		this._restService = value
 	}

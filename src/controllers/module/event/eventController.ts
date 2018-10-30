@@ -466,7 +466,7 @@ export class EventController {
 					emailAddress: emailAddress,
 				}
 			} else {
-				//TODO: Set leaner as attendee in leaner-record
+				await this.learnerRecord.inviteLeaner(req.params.eventId, emailAddress)
 				//TODO: Send email to learner
 
 				req.session!.sessionFlash = {
