@@ -339,6 +339,71 @@ describe('EventController', function() {
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
 	})
 
+	it('Should check email address and redirect to event overview with success message', async () => {
+		const request = mockReq()
+		const response = mockRes()
+
+		request.body.user = 'test@test.com'
+		request.user = {accessToken: 'test-token'}
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		const dateRange = new DateRange()
+		dateRange.date = '01-01-2020'
+		const dateRanges: DateRange[] = [dateRange]
+		response.locals.event = {dateRanges}
+
+		eventController.identityService.getDetailsByEmail = sinon
+			.stub()
+			.withArgs('test@test.com', 'test-token')
+			.returns({test: 'test'})
+
+		learnerRecord.inviteLearner = sinon.stub()
+
+		await eventController.inviteLearner()(request, response)
+
+		expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
+			'test@test.com',
+			'test-token'
+		)
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
+		)
+		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_found_message')
+	})
+
+	it('Should check email address and redirect to event overview with not found message', async () => {
+		const request = mockReq()
+		const response = mockRes()
+
+		request.body.user = 'test@test.com'
+		request.user = {accessToken: 'test-token'}
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		const dateRange = new DateRange()
+		dateRange.date = '01-01-2020'
+		const dateRanges: DateRange[] = [dateRange]
+		response.locals.event = {dateRanges}
+
+		eventController.identityService.getDetailsByEmail = sinon.stub().returns(null)
+
+		await eventController.inviteLearner()(request, response)
+
+		expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
+			'test@test.com',
+			'test-token'
+		)
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
+		)
+		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_not_found_message')
+	})
+
 	describe('Edit and update DateRange', () => {
 		it('should retrieve DateRange for edit', async () => {
 			const courseId = 'course-id'
@@ -805,71 +870,6 @@ describe('EventController', function() {
 				endHours: request.body.endHours,
 				endMinutes: request.body.endMinutes,
 			})
-		})
-
-		it('Should check email address and redirect to event overview with success message', async () => {
-			const request = mockReq()
-			const response = mockRes()
-
-			request.body.user = 'test@test.com'
-			request.user = {accessToken: 'test-token'}
-
-			request.params.courseId = 'courseId'
-			request.params.moduleId = 'moduleId'
-			request.params.eventId = 'eventId'
-
-			const dateRange = new DateRange()
-			dateRange.date = '01-01-2020'
-			const dateRanges: DateRange[] = [dateRange]
-			response.locals.event = {dateRanges}
-
-			eventController.identityService.getDetailsByEmail = sinon
-				.stub()
-				.withArgs('test@test.com', 'test-token')
-				.returns({test: 'test'})
-
-			learnerRecord.inviteLearner = sinon.stub()
-
-			await eventController.inviteLearner()(request, response)
-
-			expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
-				'test@test.com',
-				'test-token'
-			)
-			expect(response.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
-			)
-			expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_found_message')
-		})
-
-		it('Should check email address and redirect to event overview with not found message', async () => {
-			const request = mockReq()
-			const response = mockRes()
-
-			request.body.user = 'test@test.com'
-			request.user = {accessToken: 'test-token'}
-
-			request.params.courseId = 'courseId'
-			request.params.moduleId = 'moduleId'
-			request.params.eventId = 'eventId'
-
-			const dateRange = new DateRange()
-			dateRange.date = '01-01-2020'
-			const dateRanges: DateRange[] = [dateRange]
-			response.locals.event = {dateRanges}
-
-			eventController.identityService.getDetailsByEmail = sinon.stub().returns(null)
-
-			await eventController.inviteLearner()(request, response)
-
-			expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
-				'test@test.com',
-				'test-token'
-			)
-			expect(response.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
-			)
-			expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_not_found_message')
 		})
 	})
 })
