@@ -19,10 +19,7 @@
                     text: buttonText
                 }) }}
             {% elif status === "Published" %}
-                {{ govukButton({
-                    text: buttonText,
-                    classes: "red-button"
-                }) }}
+                <a href="/content-management/courses/{{course.id }}/archive" class="govuk-button red-button">{{buttonText}}</a>
             {% endif %}
         </form>
     </div>
