@@ -157,6 +157,11 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/unregister',
 			this.unregisterLearner()
 		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/remove',
+			this.removeLearner()
+		)
 	}
 
 	public getDateTime() {
@@ -478,6 +483,7 @@ export class EventController {
 			let eventRecord: EventRecord = res.locals.eventRecord[0]
 			eventRecord.status = EventRecord.Status.APPROVED
 
+			//await
 			this.learnerRecord.updateBooking(eventRecord)
 
 			res.redirect(
@@ -499,6 +505,20 @@ export class EventController {
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
 					req.params.eventId
 				}/attendee/${req.params.bookingReference}`
+			)
+		}
+	}
+
+	public removeLearner() {
+		return async (req: Request, res: Response) => {
+			let eventRecord: EventRecord = res.locals.eventRecord[0]
+
+			this.learnerRecord.deleteBooking(eventRecord)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
+					req.params.eventId
+				}`
 			)
 		}
 	}

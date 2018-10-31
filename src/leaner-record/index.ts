@@ -28,6 +28,8 @@ export class LearnerRecord {
 
 	async updateBooking(eventRecord: EventRecord) {}
 
+	async deleteBooking(eventRecord: EventRecord) {}
+
 	set restService(value: OauthRestService) {
 		this._restService = value
 	}

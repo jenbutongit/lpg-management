@@ -414,6 +414,30 @@ describe('EventController', function() {
 		)
 	})
 
+	it('should delete booking and redirect to event overview page', async function() {
+		const eventRecord: EventRecord = new EventRecord()
+
+		const removeLearner: (request: Request, response: Response) => void = eventController.removeLearner()
+
+		const request = mockReq()
+		const response = mockRes()
+
+		response.locals.eventRecord = [eventRecord]
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		learnerRecord.deleteBooking = sinon.stub()
+
+		await removeLearner(request, response)
+
+		expect(learnerRecord.deleteBooking).to.have.been.calledOnceWith(eventRecord)
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
+		)
+	})
+
 	describe('Edit and update DateRange', () => {
 		it('should retrieve DateRange for edit', async () => {
 			const courseId = 'course-id'
