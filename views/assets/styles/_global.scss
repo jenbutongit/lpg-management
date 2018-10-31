@@ -6,8 +6,14 @@
 .app-body-class {
 	overflow-wrap: break-word;
 	word-wrap: break-word;
-	word-break: break-all;
+	word-break: break-word;
 }
+
+@-moz-document url-prefix() {
+	.app-body-class {
+		word-break: break-all;
+	}
+  }
 
 .app
 .pre {
