@@ -1,8 +1,9 @@
 import {Module} from './module'
-import {IsNotEmpty, MaxLength} from 'class-validator'
+import {IsIn, IsNotEmpty, MaxLength} from 'class-validator'
 import {Audience} from './audience'
 import {FaceToFaceModule} from './faceToFaceModule'
 import {DateTime} from '../../lib/dateTime'
+import {LearningProvider} from './learningProvider'
 import {Status} from './status'
 
 export class Course {
@@ -33,26 +34,26 @@ export class Course {
 		message: 'course.validation.description.maxLength',
 	})
 	description: string
+
 	duration: number
 	learningOutcomes: string
-	price: number
+	preparation: string
 	modules: Module[]
 	audiences: Audience[]
+	learningProvider: LearningProvider
+
+	@IsIn(['Draft', 'Published', 'Archived'], {
+		groups: ['all', 'status'],
+		message: 'course.validation.status.invalid',
+	})
 	status: Status = Status.DRAFT
 
 	getCost() {
-		const costArray = this.modules.map(module => module.price)
-		return costArray.length ? costArray.reduce((p, c) => (p || 0) + (c || 0), 0) : null
+		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
 	}
 
 	getType() {
-		if (!this.modules.length) {
-			return 'course'
-		}
-		if (this.modules.length > 1) {
-			return 'blended'
-		}
-		return this.modules[0].type
+		return this.modules.length > 1 ? 'blended' : this.modules.length == 1 ? this.modules[0].type : undefined
 	}
 
 	getNextAvailableDate() {
