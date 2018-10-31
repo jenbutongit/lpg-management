@@ -122,6 +122,40 @@ describe('EventController', function() {
 			})
 		})
 
+		it('should render errors in DateRange', async function() {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.body = {
+				day: '',
+				month: '1',
+				year: '2019',
+				startTime: ['07', '00'],
+				endTime: ['06', '00'],
+			}
+
+			dateRangeCommandValidator.check = sinon.stub().returns({})
+
+			const event = new Event()
+			eventFactory.create = sinon.stub().returns(event)
+
+			const errors = {fields: {day: ['error']}, size: 1}
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			const dateRangeCommand = new DateRangeCommand()
+			dateRangeCommand.startTime = ['09:00']
+			dateRangeCommand.endTime = ['17:00']
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+
+			await eventController.setDateTime()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events', {
+				event: event,
+				eventJson: JSON.stringify(event),
+				errors: errors,
+			})
+		})
+
 		it('should render event preview page', async function() {
 			const response: Response = mockRes()
 
@@ -320,6 +354,17 @@ describe('EventController', function() {
 		})
 	})
 
+	it('should render edit location page', async function() {
+		const editLocation: (request: Request, response: Response) => void = eventController.editLocation()
+
+		const request = mockReq()
+		const response = mockRes()
+
+		await editLocation(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
+	})
+
 	it('should render event overview page', async function() {
 		const event: Event = new Event()
 		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
@@ -381,7 +426,7 @@ describe('EventController', function() {
 		await registerLearner(request, response)
 
 		expect(eventRecord.status).to.equal(EventRecord.Status.APPROVED)
-		expect(learnerRecord.updateBooking).to.have.been.calledOnce
+		expect(learnerRecord.updateBooking).to.have.been.calledOnceWith(eventRecord)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
 		)
@@ -408,7 +453,7 @@ describe('EventController', function() {
 		await unregisterLearner(request, response)
 
 		expect(eventRecord.status).to.equal(EventRecord.Status.REQUESTED)
-		expect(learnerRecord.updateBooking).to.have.been.calledOnce
+		expect(learnerRecord.updateBooking).to.have.been.calledOnceWith(eventRecord)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
 		)
