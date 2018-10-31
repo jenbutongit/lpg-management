@@ -28,7 +28,8 @@
 				"empty": "Audience type is required"
 			},
 			"requiredBy": {
-				"invalidDate": "Enter a valid deadline date"
+				"invalidDate": "Enter a valid deadline date",
+				"dateIsNotInFuture": "Deadline date needs to be in the future"
 			}
 		},
 		"type": {
@@ -62,6 +63,9 @@
 			"description": {
 				"empty": "Description is required",
 				"maxLength": "Description is too long"
+			},
+			"status": {
+				"invalid": "Status needs to be 'Draft', 'Published' or 'Archived'"
 			}
 		}
 	},
@@ -71,6 +75,26 @@
 		}
 	},
 	"blended": "Blended",
+    "module": {
+		"validation": {
+			"cost": {
+				"positive": "Module cost must be a positive number"
+			}
+		},
+
+		"text": {
+			"cost": "Cost £ (ex VAT)"
+		}
+	},
+
+	"courseType": {
+		"face-to-face": "Face to Face",
+		"link": "Link",
+		"elearning": "E-learning",
+		"video": "Video",
+		"file": "File",
+		"blended": "Blended"
+	},
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
@@ -80,11 +104,6 @@
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
-	"face-to-face": "Face to Face",
-	"link": "Link",
-	"elearning": "e-learning",
-	"video": "Video",
-	"file": "File",
 	"learning_provider_add_title": "Add learning provider",
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",
