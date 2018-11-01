@@ -148,14 +148,14 @@ export class EventController {
 			this.getAttendeeDetails()
 		)
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/register',
-			this.registerLearner()
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/cancel',
+			this.getCancelAttendee()
 		)
 
 		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/unregister',
-			this.unregisterLearner()
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingReference/cancel',
+			this.cancelAttendee()
 		)
 	}
 
@@ -473,32 +473,28 @@ export class EventController {
 		}
 	}
 
-	public registerLearner() {
+	public getCancelAttendee() {
 		return async (req: Request, res: Response) => {
-			let eventRecord: EventRecord = res.locals.eventRecord[0]
-			eventRecord.status = EventRecord.Status.APPROVED
+			const eventRecords = res.locals.eventRecord
+			const bookingRef = req.params.bookingReference
 
-			this.learnerRecord.updateBooking(eventRecord)
-
-			res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
-					req.params.eventId
-				}/attendee/${req.params.bookingReference}`
+			const attendeeEventRecord = eventRecords.filter(
+				(record: EventRecord) => record.bookingReference == bookingRef
 			)
+
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			res.render('page/course/module/events/cancel-attendee', {eventDateWithMonthAsText, attendeeEventRecord})
 		}
 	}
 
-	public unregisterLearner() {
+	public cancelAttendee() {
 		return async (req: Request, res: Response) => {
-			let eventRecord: EventRecord = res.locals.eventRecord[0]
-			eventRecord.status = EventRecord.Status.REQUESTED
-
-			this.learnerRecord.updateBooking(eventRecord)
-
 			res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
 					req.params.eventId
-				}/attendee/${req.params.bookingReference}`
+				}`
 			)
 		}
 	}

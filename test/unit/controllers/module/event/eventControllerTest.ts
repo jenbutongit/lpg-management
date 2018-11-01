@@ -405,60 +405,6 @@ describe('EventController', function() {
 		await getAttendeeDetails(request, response)
 	})
 
-	it('should change event record state to approved and redirect to attendee page', async function() {
-		const eventRecord: EventRecord = new EventRecord()
-		eventRecord.status = EventRecord.Status.REQUESTED
-
-		const registerLearner: (request: Request, response: Response) => void = eventController.registerLearner()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-
-		response.locals.eventRecord = [eventRecord]
-
-		request.params.courseId = 'courseId'
-		request.params.moduleId = 'moduleId'
-		request.params.eventId = 'eventId'
-		request.params.bookingReference = 'bookingReference'
-
-		learnerRecord.updateBooking = sinon.stub()
-
-		await registerLearner(request, response)
-
-		expect(eventRecord.status).to.equal(EventRecord.Status.APPROVED)
-		expect(learnerRecord.updateBooking).to.have.been.calledOnceWith(eventRecord)
-		expect(response.redirect).to.have.been.calledOnceWith(
-			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
-		)
-	})
-
-	it('should change event record state to requested and redirect to attendee page', async function() {
-		const eventRecord: EventRecord = new EventRecord()
-		eventRecord.status = EventRecord.Status.APPROVED
-
-		const unregisterLearner: (request: Request, response: Response) => void = eventController.unregisterLearner()
-
-		const request: Request = mockReq()
-		const response: Response = mockRes()
-
-		response.locals.eventRecord = [eventRecord]
-
-		request.params.courseId = 'courseId'
-		request.params.moduleId = 'moduleId'
-		request.params.eventId = 'eventId'
-		request.params.bookingReference = 'bookingReference'
-
-		learnerRecord.updateBooking = sinon.stub()
-
-		await unregisterLearner(request, response)
-
-		expect(eventRecord.status).to.equal(EventRecord.Status.REQUESTED)
-		expect(learnerRecord.updateBooking).to.have.been.calledOnceWith(eventRecord)
-		expect(response.redirect).to.have.been.calledOnceWith(
-			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
-		)
-	})
-
 	describe('Edit and update DateRange', () => {
 		it('should retrieve DateRange for edit', async () => {
 			const courseId = 'course-id'

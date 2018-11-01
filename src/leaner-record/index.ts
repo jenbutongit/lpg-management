@@ -2,7 +2,6 @@ import {OauthRestService} from '../lib/http/oauthRestService'
 import {LearnerRecordConfig} from './learnerRecordConfig'
 import {Auth} from '../identity/auth'
 import {EventRecordFactory} from './model/factory/eventRecordFactory'
-import {EventRecord} from './model/eventRecord'
 
 export class LearnerRecord {
 	private _restService: OauthRestService
@@ -25,8 +24,6 @@ export class LearnerRecord {
 
 		return records
 	}
-
-	async updateBooking(eventRecord: EventRecord) {}
 
 	set restService(value: OauthRestService) {
 		this._restService = value
