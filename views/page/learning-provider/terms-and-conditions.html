@@ -13,6 +13,8 @@
 {% set banner = true %}
 
 {% block content %}
+    {% set errors = sessionFlash.errors %}
+    {% set form = sessionFlash.form %}
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
@@ -30,7 +32,7 @@
                             },
                             id: "name",
                             name: "name",
-                            value: termsAndConditions.name,
+                            value: form.name,
                             errorMessage: {
                                 text: i18n.termsAndConditions.validation.name.empty
                             }
@@ -42,7 +44,7 @@
                             },
                             id: "name",
                             name: "name",
-                            value: termsAndConditions.name
+                            value: form.name or termsAndConditions.name
                         }) }}
                     {% endif %}
 
@@ -50,7 +52,7 @@
                         {% if errors.fields.content %}
                             {{ textareaError("content", "content", "", null, "Terms and conditions", i18n.termsAndConditions.validation.content.empty) }}
                         {% else %}
-                            {{ textarea("content", "content", "",  null, termsAndConditions.content, "Content") }}
+                            {{ textarea("content", "content", "",  null, form.content or termsAndConditions.content, "Content") }}
                         {% endif %}
                     {% endblock %}
                 </fieldset>
