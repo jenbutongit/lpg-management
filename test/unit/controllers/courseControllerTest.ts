@@ -90,13 +90,12 @@ describe('Course Controller Tests', function() {
 
 		await coursePreview(req, res)
 
-		response.locals.course = course
+		res.locals.course = course
 
-		await coursePreview(request, response)
+		await coursePreview(req, res)
 
 		expect(res.render).to.have.been.calledOnceWith('page/course/course-preview')
 		expect(course.modules[0].formattedDuration).to.equal('0m')
-
 	})
 
 	it('should render add-course-title page', async function() {
