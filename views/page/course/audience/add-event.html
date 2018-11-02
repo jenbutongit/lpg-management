@@ -4,15 +4,15 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n.audience.pageTitle.addEvent !!! TODO !!! }} - {{ i18n.proposition_name }}{% endblock %}
+{% block pageTitle %}{{i18n.audience.pageTitle.addEvent}} - {{i18n.proposition_name}}{% endblock %}
 
 {% block beforeContent %}
     {% block phaseBanner %}
         {{ phaseBanner("beta") }}
-    {% endblock%}
+    {% endblock %}
     {% block backLink %}
         {{ backLink("/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure") }}
-    {% endblock%}
+    {% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -51,7 +51,9 @@
                     </div>
                 </form>
             {% else %}
-                <p class="govuk-body">There are no events to display</p>
+                <p class="govuk-body">
+                    <div class="custom-panel">No event has been created, <a href="/content-management/courses/{{course.id}}/add-module">add a classroom module</a> to create an event.</div>
+                </p>
             {% endif %}
             <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Cancel</a>
         </div>

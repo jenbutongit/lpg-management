@@ -15,7 +15,7 @@
         <div class="govuk-grid-column-full govuk-!-margin-bottom-6">
             <div class="panel panel-blue">
                 <h5 class="govuk-heading-s">This page is in preview and has not been published yet.</h5>
-                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="/content-management/courses/title/{{ course.id }}" class="govuk-link panel-links">Title</a> <a href="/content-management/courses/details/{{ course.id }}" class="govuk-link panel-links">Details</a><a href="/content-management/courses/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a> <a href="/content-management/courses/{{course.id}}/audiences/audience-name" class="govuk-link panel-links">Audiences</a></p>
+                <p class="govuk-body govuk-!-margin-bottom-0">Edit: <a href="/content-management/courses/title/{{ course.id }}" class="govuk-link panel-links">Title</a> <a href="/content-management/courses/details/{{ course.id }}" class="govuk-link panel-links">Details</a><a href="/content-management/courses/{{course.id}}/add-module" class="govuk-link panel-links">Modules</a></p>
             </div>
         </div>
     </div>
@@ -65,13 +65,17 @@
                     </li>
                     <li class="course-summary-item">
                         <div class="item-container">
+<<<<<<< HEAD
                             <span class="item item-header">Availability</span>
+=======
+                            <span class="item item-header">Next availabile date</span>
+>>>>>>> ea4a8644c53609ebae33e414d5fd6ba7a961cde1
                             <span class="item item-value">{{ course.getNextAvailableDate() | default("Unspecified", true) }}</span>
                         </div>
                     </li>
                     <li class="course-summary-item">
                         <div class="item-container">
-                            <span class="item item-header">Primaray area</span>
+                            <span class="item item-header">Primary area</span>
                             <span class="item item-value">{{ course.getAreasOfWork() | default("Unspecified", true) }}</span>
                         </div>
                     </li>
