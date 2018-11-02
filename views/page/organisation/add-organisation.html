@@ -1,0 +1,69 @@
+{% from "input/macro.njk" import govukInput with context%}
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['learning_provider_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/learning-providers" %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">Add new organisation</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% set errors = sessionFlash.errors %}
+
+            {% if errors.fields %}
+                <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+                    <h2 class="govuk-error-summary__title" id="error-summary-title">
+                        There is a problem
+                    </h2>
+                    <div class="govuk-error-summary__body">
+                        <ul class="govuk-list govuk-error-summary__list">
+                            {% for field, message in errors.fields %}
+                                <li><a href="#">{{ i18n[message] }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {%endif%}
+            <form action="/content-management/learning-providers/learning-provider" method="post" class="module-form">
+                <fieldset class="govuk-fieldset">
+                 {% if errors.fields %}
+                    {{ govukInput({
+                        label: {
+                            text: "Learning provider name"
+                        },
+                        id: "name",
+                        name: "name",
+                        errorMessage: {
+                            text: "A name is required"
+                        }
+                    }) }}
+                    {% else %}
+                    {{ govukInput({
+                        label: {
+                        text: "Learning provider name"
+                        },
+                        id: "name",
+                        name: "name"
+                    }) }}
+                {% endif %}
+                </fieldset>
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Add a new learning provider"
+                    }) }}
+                </div>
+            </form>
+            <a href="/content-management/learning-providers" class="govuk-link">Cancel</a>
+        </div>
+        <div class="govuk-grid-column-one-third">
+        </div>
+    </div>
+{% endblock %}
