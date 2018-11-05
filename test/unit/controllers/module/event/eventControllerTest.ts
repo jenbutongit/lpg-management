@@ -347,7 +347,7 @@ describe('EventController', function() {
 		const request = mockReq()
 		const response = mockRes()
 
-		request.body.user = 'test@test.com'
+		request.body.learnerEmail = 'test@test.com'
 		request.user = {accessToken: 'test-token'}
 
 		request.params.courseId = 'courseId'
@@ -366,6 +366,8 @@ describe('EventController', function() {
 
 		learnerRecord.inviteLearner = sinon.stub()
 
+		inviteFactory.create = sinon.stub()
+
 		await eventController.inviteLearner()(request, response)
 
 		expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
@@ -382,7 +384,7 @@ describe('EventController', function() {
 		const request = mockReq()
 		const response = mockRes()
 
-		request.body.user = 'test@test.com'
+		request.body.learnerEmail = 'test@test.com'
 		request.user = {accessToken: 'test-token'}
 
 		request.params.courseId = 'courseId'

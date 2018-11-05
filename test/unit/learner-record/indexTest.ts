@@ -10,6 +10,7 @@ import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {OauthRestService} from 'lib/http/oauthRestService'
 import {InviteFactory} from '../../../src/leaner-record/model/factory/inviteFactory'
+import {Invite} from '../../../src/leaner-record/model/invite'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -40,5 +41,27 @@ describe('Leaner Record Tests', () => {
 
 		expect(eventRecordFactory.create).to.have.been.calledOnceWith('one')
 		expect(restService.get).to.have.been.calledOnceWith('/events/eventId')
+	})
+
+	it('Should call rest service when getting invitees', async () => {
+		const eventId = 'eventId'
+		restService.get = sinon.stub().returns([{learnerEmail: 'test1@test.com'}])
+		inviteFactory.create = sinon.stub()
+
+		await learnerRecord.getEventInvitees(eventId)
+
+		expect(restService.get).to.have.been.calledOnceWith('/event/eventId/invitee')
+		expect(inviteFactory.create).to.have.been.calledOnceWith({learnerEmail: 'test1@test.com'})
+	})
+
+	it('Should call rest service when posting learner', async () => {
+		const eventId = 'eventId'
+		const invite: Invite = new Invite()
+
+		restService.post = sinon.stub()
+
+		await learnerRecord.inviteLearner(eventId, invite)
+
+		expect(restService.post).to.have.been.calledOnceWith('/event/eventId/invitee', invite)
 	})
 })
