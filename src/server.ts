@@ -1,3 +1,4 @@
+import * as appInsights from 'applicationinsights'
 import * as express from 'express'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
@@ -25,6 +26,8 @@ const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const authorisedRole = 'COURSE_MANAGER'
 
+appInsights.setup(config.INSTRUMENTATION_KEY).start()
+
 app.use(
 	i18n({
 		translationsPath: appRoot + '/src/locale',
@@ -48,9 +51,7 @@ nunjucks
 	.addFilter('jsonpath', function(path: string | string[], map: any) {
 		return Object.is(path, undefined)
 			? undefined
-			: Array.isArray(path)
-				? path.map(pathElem => jsonpath.value(map, pathElem))
-				: jsonpath.value(map, path)
+			: Array.isArray(path) ? path.map(pathElem => jsonpath.value(map, pathElem)) : jsonpath.value(map, path)
 	})
 	.addFilter('formatDate', function(date: Date) {
 		return date
