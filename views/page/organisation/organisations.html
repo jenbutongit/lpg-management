@@ -1,0 +1,34 @@
+{% from "../../component/menu/macro.njk" import menu %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['learning_provider_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/learning-providers" %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-l">Manage organisations</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+        Content
+        </div>
+        <div class="govuk-grid-column-one-third">
+            <div class="right-menu">
+                {% block menu %}
+                {% set actions = [
+                        {
+                            link: '/content-management/add-organisation',
+                            text: 'Add a new organisation'
+                        }
+                    ] %}
+                    {{ menu("Actions", actions) }}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
