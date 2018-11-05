@@ -50,7 +50,7 @@ describe('Event Record Tests', () => {
 		expect(eventRecord.paymentDetails).to.equal('paymentDetails')
 	})
 
-	it('should be able to set email address', () => {
+	it('should be able to set learnerEmail address', () => {
 		eventRecord.delegateEmailAddress = 'test@test.com'
 		expect(eventRecord.delegateEmailAddress).to.equal('test@test.com')
 	})

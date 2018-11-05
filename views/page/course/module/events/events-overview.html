@@ -142,13 +142,26 @@
                 <p class="govuk-body">This course doesn't have any attendees yet.</p>
               {% endif %}
             </div>
+            {% if invitees.length > 0 %}
+            <div class="course-invitees">
+                <h3 class="govuk-heading-m">Course invitees</h3>
+                <ul class="attendees headers">
+                    <li class="list-headers"><p class="govuk-body header title"><strong>Name</strong></p></li>
+                </ul>
+                <ul class="attendees list">
+                    {% for invitee in invitees %}
+                    <li class="list-details"><p class="govuk-body title">{{ invitee.learnerEmail}}</p></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
             <div class="add-attendee">
               <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
                 <p class="govuk-body no-margin"><strong>Add an attendee with their email address</strong></p>
                 <div class="input-with-button">
                   {{ govukInput({
-                    id: "user",
-                    name: "user"
+                    id: "learnerEmail",
+                    name: "learnerEmail"
                   }) }}
                   {{ govukButton({
                     text: "Search for user",

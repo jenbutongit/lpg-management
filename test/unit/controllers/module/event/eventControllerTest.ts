@@ -16,6 +16,7 @@ import {DateRangeCommandFactory} from '../../../../../src/controllers/command/fa
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/leaner-record'
 import {IdentityService} from '../../../../../src/identity/identityService'
+import {InviteFactory} from '../../../../../src/leaner-record/model/factory/inviteFactory'
 
 chai.use(sinonChai)
 
@@ -25,6 +26,7 @@ describe('EventController', function() {
 	let learnerRecord: LearnerRecord
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
+	let inviteFactory: InviteFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
 	let dateRangeValidator: Validator<DateRange>
 	let dateRangeCommandFactory: DateRangeCommandFactory
@@ -35,6 +37,7 @@ describe('EventController', function() {
 		learnerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
+		inviteFactory = <InviteFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
 		dateRangeValidator = <Validator<DateRange>>{}
 		dateRangeCommandFactory = <DateRangeCommandFactory>{}
@@ -45,6 +48,7 @@ describe('EventController', function() {
 			learnerRecord,
 			eventValidator,
 			eventFactory,
+			inviteFactory,
 			dateRangeCommandValidator,
 			dateRangeValidator,
 			dateRangeCommandFactory,

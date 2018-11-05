@@ -10,12 +10,14 @@ import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFac
 import {DateTime} from '../../../lib/dateTime'
 import {IdentityService} from '../../../identity/identityService'
 import {LearnerRecord} from '../../../leaner-record'
+import {InviteFactory} from '../../../leaner-record/model/factory/inviteFactory'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
 	learnerRecord: LearnerRecord
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
+	inviteFactory: InviteFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeValidator: Validator<DateRange>
 	dateRangeCommandFactory: DateRangeCommandFactory
@@ -27,6 +29,7 @@ export class EventController {
 		learnerRecord: LearnerRecord,
 		eventValidator: Validator<Event>,
 		eventFactory: EventFactory,
+		inviteFactory: InviteFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
 		dateRangeValidator: Validator<DateRange>,
 		dateRangeCommandFactory: DateRangeCommandFactory,
@@ -36,6 +39,7 @@ export class EventController {
 		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
+		this.inviteFactory = inviteFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
 		this.dateRangeValidator = dateRangeValidator
 		this.dateRangeCommandFactory = dateRangeCommandFactory
@@ -85,6 +89,17 @@ export class EventController {
 
 			if (eventRecord) {
 				res.locals.eventRecord = eventRecord
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
+		this.router.param('eventId', async (req, res, next, eventId) => {
+			const invitees = await this.learnerRecord.getEventInvitees(eventId)
+
+			if (invitees) {
+				res.locals.invitees = invitees
 				next()
 			} else {
 				res.sendStatus(404)
@@ -457,7 +472,7 @@ export class EventController {
 				...req.body,
 			}
 
-			const emailAddress = data.user
+			const emailAddress = data.learnerEmail
 			const identityDetails = await this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
 
 			if (!identityDetails) {
@@ -466,8 +481,8 @@ export class EventController {
 					emailAddress: emailAddress,
 				}
 			} else {
-				await this.learnerRecord.inviteLearner(req.params.eventId, emailAddress)
-				//TODO: Send email to learner
+				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
+				//TODO: Send learnerEmail to learner
 
 				req.session!.sessionFlash = {
 					emailAddressFoundMessage: 'email_address_found_message',
