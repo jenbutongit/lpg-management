@@ -1,4 +1,3 @@
-import * as appInsights from 'applicationinsights'
 import * as express from 'express'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
@@ -14,8 +13,8 @@ import moment = require('moment')
 import {DateTime} from './lib/dateTime'
 
 Properties.initialize()
-
 const logger = log4js.getLogger('server')
+
 const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')
 const appRoot = require('app-root-path')
@@ -26,6 +25,7 @@ const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const authorisedRole = 'COURSE_MANAGER'
 
+const appInsights = require('applicationinsights')
 appInsights.setup(config.INSTRUMENTATION_KEY).start()
 
 app.use(
