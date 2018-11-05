@@ -11,7 +11,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l">Add new organisation</h1>
+            <h1 class="govuk-heading-l">Add a new organisation</h1>
         </div>
     </div>
     <div class="govuk-grid-row">
@@ -32,38 +32,70 @@
                     </div>
                 </div>
             {%endif%}
-            <form action="/content-management/learning-providers/learning-provider" method="post" class="module-form">
-                <fieldset class="govuk-fieldset">
-                 {% if errors.fields %}
-                    {{ govukInput({
-                        label: {
-                            text: "Learning provider name"
-                        },
-                        id: "name",
-                        name: "name",
-                        errorMessage: {
-                            text: "A name is required"
-                        }
-                    }) }}
-                    {% else %}
-                    {{ govukInput({
-                        label: {
-                        text: "Learning provider name"
-                        },
-                        id: "name",
-                        name: "name"
-                    }) }}
+              <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" method="post">
+                {% if errors.fields %}
+                    {% set classNames = "govuk-fieldset govuk-form-group--error" %}
+                    {% set message = "govuk-error-message" %}
+                {% else %}
+                    {% set classNames = "govuk-fieldset" %}
+                    {% set message = "no-errors" %}
                 {% endif %}
-                </fieldset>
+
+                <div class="{{classNames}}">
+                    <p class="{{message}}">Select which organisations are included</p>
+                  
+                        <div class="typeahead-container govuk-form-group">
+                            <label class="govuk-body no-margin" for="autocomplete"><strong>Parent organisation</strong></label>
+                            <p class="govuk-body no-margin">If your new organisation has an existing parent, find them in the list below.</p>
+                            <p class="govuk-hint no-margin govuk-body">Start typing to find your organisation name</p>
+                            <div id="autocomplete-container"></div>
+                        </div>
+               
+                </div>
+                {{ govukInput({
+                    label: {
+                        text: "New organisation name"
+                    },
+                    id: "new-name",
+                    name: "new-name"
+                    }) }}
+                    {{ govukInput({
+                    label: {
+                        text: "Organisation name"
+                    },
+                    classes: "govuk-input--width-10",
+                    id: "code",
+                    name: "code"
+                    }) }}
+                    {{ govukInput({
+                    label: {
+                        text: "Abbreviation"
+                    },
+                    classes: "govuk-input--width-10",
+                    id: "abbr",
+                    name: "abbr"
+                }) }}
                 <div class="button-container">
                     {{ govukButton({
-                        text: "Add a new learning provider"
+                        text: "Add organisation"
                     }) }}
                 </div>
             </form>
-            <a href="/content-management/learning-providers" class="govuk-link">Cancel</a>
+            <a href="/content-management" class="govuk-link">Cancel</a>
         </div>
         <div class="govuk-grid-column-one-third">
         </div>
     </div>
+{% endblock %}
+
+{% block bodyEnd %}
+    <script src="/govuk-frontend/all.js"></script>
+    <script>window.GOVUKFrontend.initAll()</script>
+    <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
+    <script type="text/javascript" src="/js/add-organisation.js"></script>
+    {% set orgs = [] %}
+    {% for organisation in organisations._embedded.organisationalUnits %}
+        {% set orgName = orgs.push(organisation.name)%}
+    {% endfor %}
+    <script orgs='{{orgs}}' src="/js/orgs.js"></script>
 {% endblock %}
