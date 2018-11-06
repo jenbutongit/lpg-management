@@ -7,7 +7,6 @@ export class organisationController {
     ) {
 
         this.router = Router()
-
         this.setRouterPaths()
     }
 
@@ -15,6 +14,8 @@ export class organisationController {
     private setRouterPaths() {
         this.router.get('/content-management/organisations', this.getOrganisations())
         this.router.get('/content-management/add-organisation', this.addOrganisation())
+
+        this.router.get('/content-management/organisation-overview', this.organisationView())
 
     }
 
@@ -33,5 +34,14 @@ export class organisationController {
             response.render('page/organisation/add-organisation')
         }
     }
+
+    public organisationView() {
+
+        return async (request: Request, response: Response) => {
+
+            response.render('page/organisation/organisation-overview')
+        }
+    }
+
 
 }
