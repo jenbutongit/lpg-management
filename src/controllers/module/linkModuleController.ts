@@ -109,6 +109,7 @@ export class LinkModuleController {
 	public updateLinkModule() {
 		return async (req: Request, res: Response) => {
 			const course = res.locals.course
+
 			let module: LinkModule = res.locals.module
 			module.title = req.body.title
 			module.description = req.body.description
@@ -132,7 +133,7 @@ export class LinkModuleController {
 
 			await this.learningCatalogue.updateModule(course.id, module)
 
-			res.redirect(`/content-management/courses/${req.params.courseId}/add-module`)
+			res.redirect(`/content-management/courses/${course.id}/add-module`)
 		}
 	}
 }

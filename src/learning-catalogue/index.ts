@@ -80,7 +80,6 @@ export class LearningCatalogue {
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
 		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
 	}
-
 	async updateModule(courseId: string, module: Module): Promise<Module> {
 		return this._moduleService.update(`/courses/${courseId}/modules/${module.id}`, module)
 	}
