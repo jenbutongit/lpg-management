@@ -9,12 +9,6 @@
 	word-break: break-word;
 }
 
-@-moz-document url-prefix() {
-	.app-body-class {
-		word-break: break-all;
-	}
-  }
-
 .app
 .pre {
 	white-space: pre-wrap; /* css-3 */
