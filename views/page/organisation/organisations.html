@@ -15,7 +15,17 @@
     </div>
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-        Content
+            <h2 class="govuk-heading-m">Organisation name</h2>
+            <ul class="list organisations-list">
+                <li class="list-item organisation-item u--border--bgrey">
+                    <p class="govuk-body flex-container no-margin"><span>Cabinet Office</span><a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
+                    <ul class="list sub-list">
+                        <li class="list-item organisation-item u--border--bgrey"><p class="no-margin govuk-body flex-container">Business Partnerships<a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
+                        <li class="list-item organisation-item u--border--bgrey"><p class="govuk-body no-margin  flex-container">Cabinet Office HR<a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
+                    </ul>
+                </li>    
+            </ul>
+            <a class="govuk-body govuk-link cancel" href="/content-management">&lt; Back to dashboard</a>
         </div>
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
