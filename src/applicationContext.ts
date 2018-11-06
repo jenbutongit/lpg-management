@@ -49,6 +49,7 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {LinkModule} from './learning-catalogue/model/linkModule'
 
 log4js.configure(config.LOGGING)
 
@@ -77,6 +78,7 @@ export class ApplicationContext {
 	moduleFactory: ModuleFactory
 	youtubeModuleController: YoutubeModuleController
 	moduleValidator: Validator<Module>
+	linkModuleValidator: Validator<LinkModule>
 	eventValidator: Validator<Event>
 	audienceController: AudienceController
 	audienceValidator: Validator<Audience>
@@ -97,8 +99,7 @@ export class ApplicationContext {
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -203,10 +204,12 @@ export class ApplicationContext {
 			this.moduleFactory,
 			new OauthRestService(this.mediaConfig, this.auth)
 		)
+		this.linkModuleValidator = new Validator<LinkModule>(this.moduleFactory)
 		this.linkModuleController = new LinkModuleController(
 			this.learningCatalogue,
 			this.moduleFactory,
-			this.moduleValidator
+			this.linkModuleValidator,
+			this.courseService
 		)
 
 		this.faceToFaceController = new FaceToFaceModuleController(
