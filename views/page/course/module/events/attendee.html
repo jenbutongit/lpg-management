@@ -16,27 +16,27 @@
                 <h3 class="govuk-heading-m">Attendee</h3>
                 <div class="attendee-details">
                     <ul class="attendees list">
-                        <li class="list-details view"><p class="govuk-body"><strong>Email</strong></p><p class="govuk-body">{{ attendeeEventRecord[0].delegateEmailAddress }}</p></li>
+                        <li class="list-details view"><p class="govuk-body"><strong>Email</strong></p><p class="govuk-body">{{ booking.learner.learnerEmail }}</p></li>
                         <li class="list-details column-view">
                             <span class="list-details span-view">
                                 <p class="govuk-body"><strong>Booking status</strong></p>
                                 <p class="govuk-body">
-                                    {% if attendeeEventRecord[0].status === 0 %}
+                                    {% if booking.status === 0 %}
                                         Booked
-                                    {% elif attendeeEventRecord[0].status === 1 %}
+                                    {% elif booking.status === 1 %}
                                         Cancelled
-                                    {% elif attendeeEventRecord[0].status === 2 %} 
+                                    {% elif booking.status === 2 %}
                                         Pending
                                     {% endif %}
                                 </p>
                             </span>
-                            {% if attendeeEventRecord[0].status === 2 %} 
-                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ attendee.bookingReference }}/register" method="post" class="attendee-button">
+                            {% if booking.status === 2 %}
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/register" method="post" class="attendee-button">
                                     <button type="submit" class="linkish-button">Change to booked</button>
                                 <form>
                             {% endif %}
-                            {% if attendeeEventRecord[0].status === 0 %}
-                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ attendeeEventRecord[0].bookingReference }}/unregister" method="post" class="attendee-button">
+                            {% if booking.status === 0 %}
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/unregister" method="post" class="attendee-button">
                                     <button type="submit" class="linkish-button">Change to pending</button>
                                 <form>
                             {% endif %}
