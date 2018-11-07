@@ -49,7 +49,10 @@ import { DateRangeCommand } from './controllers/command/dateRangeCommand'
 import { DateRangeCommandFactory } from './controllers/command/factory/dateRangeCommandFactory'
 import { DateRange } from './learning-catalogue/model/dateRange'
 import { DateRangeFactory } from './learning-catalogue/model/factory/dateRangeFactory'
-import { organisationController } from './controllers/organisation/organisationController'
+import { OrganisationController } from './controllers/organisation/organisationController'
+import { OrganisationFactory } from './learning-catalogue/model/factory/organisationFactory'
+import { Organisation } from './learning-catalogue/model/organisation';
+import { Csrs } from './csrs';
 
 log4js.configure(config.LOGGING)
 
@@ -70,6 +73,7 @@ export class ApplicationContext {
 	learningProviderValidator: Validator<LearningProvider>
 	cancellationPolicyValidator: Validator<CancellationPolicy>
 	termsAndConditionsValidator: Validator<TermsAndConditions>
+	organisationValidator: Validator<Organisation>
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
@@ -97,7 +101,8 @@ export class ApplicationContext {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
-	organisationController: organisationController
+	organisationController: OrganisationController
+	organisationFactory: OrganisationFactory
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -170,7 +175,6 @@ export class ApplicationContext {
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
-		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
 		this.cancellationPolicyValidator = new Validator<CancellationPolicy>(this.cancellationPolicyFactory)
 		this.termsAndConditionsValidator = new Validator<TermsAndConditions>(this.termsAndConditionsFactory)
 
@@ -218,8 +222,11 @@ export class ApplicationContext {
 			this.moduleFactory
 		)
 
-		this.organisationController = new organisationController(
-
+		this.organisationValidator = new Validator<Organisation>(this.organisationFactory)
+		this.organisationController = new OrganisationController(
+			this.organisationFactory,
+			this.organisationValidator,
+			this.csrs
 		)
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)

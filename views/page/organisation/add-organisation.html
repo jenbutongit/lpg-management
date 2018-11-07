@@ -32,7 +32,7 @@
                     </div>
                 </div>
             {%endif%}
-              <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" method="post">
+              <form action="/content-management/add-organisation" method="post">
                 {% if errors.fields %}
                     {% set classNames = "govuk-fieldset govuk-form-group--error" %}
                     {% set message = "govuk-error-message" %}
@@ -81,7 +81,7 @@
                     }) }}
                 </div>
             </form>
-            <a href="/content-management" class="govuk-link">Cancel</a>
+            <a href="/content-management/organisations" class="govuk-link">Cancel</a>
         </div>
         <div class="govuk-grid-column-one-third">
         </div>
