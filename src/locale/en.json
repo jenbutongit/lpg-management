@@ -104,6 +104,12 @@
 		},
 
 		"title":{
+			"edit": "Edit",
+			"add": "Add",
+			"video": "a video",
+			"file": "a file",
+			"e-learning": "an e-learning",
+			"add": "Add",
 			"link_add": "Add a link",
 			"link_edit": "Edit a link"
 		}

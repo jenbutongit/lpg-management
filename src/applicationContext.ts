@@ -202,7 +202,8 @@ export class ApplicationContext {
 			this.learningCatalogue,
 			this.moduleValidator,
 			this.moduleFactory,
-			new OauthRestService(this.mediaConfig, this.auth)
+			new OauthRestService(this.mediaConfig, this.auth),
+			this.courseService
 		)
 		this.linkModuleValidator = new Validator<LinkModule>(this.moduleFactory)
 		this.linkModuleController = new LinkModuleController(

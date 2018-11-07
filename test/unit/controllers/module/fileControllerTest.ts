@@ -11,6 +11,7 @@ import * as sinon from 'sinon'
 import {expect} from 'chai'
 import {Course} from '../../../../src/learning-catalogue/model/course'
 import {OauthRestService} from 'lib/http/oauthRestService'
+import {CourseService} from 'lib/courseService'
 
 chai.use(sinonChai)
 
@@ -20,6 +21,7 @@ describe('File Controller Test', function() {
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
 	let mediaRestService: OauthRestService
+	let courseService: CourseService
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -27,7 +29,13 @@ describe('File Controller Test', function() {
 		moduleFactory = <ModuleFactory>{}
 		mediaRestService = <OauthRestService>{}
 
-		fileController = new FileController(learningCatalogue, moduleValidator, moduleFactory, mediaRestService)
+		fileController = new FileController(
+			learningCatalogue,
+			moduleValidator,
+			moduleFactory,
+			mediaRestService,
+			courseService
+		)
 	})
 
 	it('Should render file module page', async function() {
