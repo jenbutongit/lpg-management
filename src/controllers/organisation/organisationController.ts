@@ -1,37 +1,28 @@
-import { Request, Response, Router } from 'express'
+import {Request, Response, Router} from 'express'
 export class organisationController {
-    router: Router
+	router: Router
 
-    constructor(
+	constructor() {
+		this.router = Router()
 
-    ) {
+		this.setRouterPaths()
+	}
 
-        this.router = Router()
+	/* istanbul ignore next */
+	private setRouterPaths() {
+		this.router.get('/content-management/organisations', this.getOrganisations())
+		this.router.get('/content-management/add-organisation', this.addOrganisation())
+	}
 
-        this.setRouterPaths()
-    }
+	public getOrganisations() {
+		return async (request: Request, response: Response) => {
+			response.render('page/organisation/organisations')
+		}
+	}
 
-    /* istanbul ignore next */
-    private setRouterPaths() {
-        this.router.get('/content-management/organisations', this.getOrganisations())
-        this.router.get('/content-management/add-organisation', this.addOrganisation())
-
-    }
-
-    public getOrganisations() {
-
-        return async (request: Request, response: Response) => {
-
-            response.render('page/organisation/organisations')
-        }
-    }
-
-    public addOrganisation() {
-
-        return async (request: Request, response: Response) => {
-
-            response.render('page/organisation/add-organisation')
-        }
-    }
-
+	public addOrganisation() {
+		return async (request: Request, response: Response) => {
+			response.render('page/organisation/add-organisation')
+		}
+	}
 }

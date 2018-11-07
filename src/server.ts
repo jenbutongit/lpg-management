@@ -5,12 +5,12 @@ import * as sessionFileStore from 'session-file-store'
 import * as log4js from 'log4js'
 import * as config from './config'
 import * as serveStatic from 'serve-static'
-import { Properties } from 'ts-json-properties'
-import { ApplicationContext } from './applicationContext'
+import {Properties} from 'ts-json-properties'
+import {ApplicationContext} from './applicationContext'
 import * as bodyParser from 'body-parser'
-import { AppConfig } from './config/appConfig'
+import {AppConfig} from './config/appConfig'
 import moment = require('moment')
-import { DateTime } from './lib/dateTime'
+import {DateTime} from './lib/dateTime'
 
 Properties.initialize()
 
@@ -19,7 +19,7 @@ const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')
 const appRoot = require('app-root-path')
 const FileStore = sessionFileStore(session)
-const { PORT = 3005 } = process.env
+const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
@@ -45,28 +45,26 @@ nunjucks
 			express: app,
 		}
 	)
-	.addFilter('jsonpath', function (path: string | string[], map: any) {
+	.addFilter('jsonpath', function(path: string | string[], map: any) {
 		return Object.is(path, undefined)
 			? undefined
-			: Array.isArray(path)
-				? path.map(pathElem => jsonpath.value(map, pathElem))
-				: jsonpath.value(map, path)
+			: Array.isArray(path) ? path.map(pathElem => jsonpath.value(map, pathElem)) : jsonpath.value(map, path)
 	})
-	.addFilter('formatDate', function (date: Date) {
+	.addFilter('formatDate', function(date: Date) {
 		return date
 			? moment(date)
-				.local()
-				.format('D MMMM YYYY')
+					.local()
+					.format('D MMMM YYYY')
 			: null
 	})
-	.addFilter('formatDateShort', function (date: Date) {
+	.addFilter('formatDateShort', function(date: Date) {
 		return date
 			? moment(date)
-				.local()
-				.format('D MMM YYYY')
+					.local()
+					.format('D MMM YYYY')
 			: null
 	})
-	.addFilter('dateWithMonthAsText', function (date: string) {
+	.addFilter('dateWithMonthAsText', function(date: string) {
 		return date ? DateTime.convertDate(date) : 'date unset'
 	})
 
@@ -90,12 +88,12 @@ app.use(
 		resave: appConfig.resave,
 		saveUninitialized: appConfig.saveUninitialized,
 		secret: appConfig.secret,
-		store: new FileStore({ path: appConfig.path }),
+		store: new FileStore({path: appConfig.path}),
 	})
 )
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({extended: false}))
 
 ctx.auth.configure(app, authorisedRole)
 app.use(ctx.addToResponseLocals())
@@ -112,7 +110,7 @@ app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 

@@ -1,55 +1,55 @@
 import * as config from './config'
 import * as log4js from 'log4js'
-import { HomeController } from './controllers/homeController'
-import axios, { AxiosInstance } from 'axios'
-import { IdentityService } from './identity/identityService'
-import { Auth } from './identity/auth'
+import {HomeController} from './controllers/homeController'
+import axios, {AxiosInstance} from 'axios'
+import {IdentityService} from './identity/identityService'
+import {Auth} from './identity/auth'
 import * as passport from 'passport'
-import { AuthConfig } from './identity/authConfig'
+import {AuthConfig} from './identity/authConfig'
 
-import { LearningCatalogueConfig } from './learning-catalogue/learningCatalogueConfig'
-import { LearningCatalogue } from './learning-catalogue'
-import { EnvValue } from 'ts-json-properties'
-import { CourseController } from './controllers/courseController'
-import { CourseFactory } from './learning-catalogue/model/factory/courseFactory'
-import { LearningProviderController } from './controllers/learningProvider/learningProviderController'
-import { LearningProviderFactory } from './learning-catalogue/model/factory/learningProviderFactory'
-import { CancellationPolicyFactory } from './learning-catalogue/model/factory/cancellationPolicyFactory'
-import { TermsAndConditionsFactory } from './learning-catalogue/model/factory/termsAndConditionsFactory'
-import { NextFunction, Request, Response } from 'express'
-import { Pagination } from './lib/pagination'
-import { CancellationPolicyController } from './controllers/learningProvider/cancellationPolicyController'
-import { TermsAndConditionsController } from './controllers/learningProvider/termsAndConditionsController'
-import { YoutubeModuleController } from './controllers/module/youtubeModuleController'
-import { Validator } from './learning-catalogue/validator/validator'
-import { LearningProvider } from './learning-catalogue/model/learningProvider'
-import { CancellationPolicy } from './learning-catalogue/model/cancellationPolicy'
-import { TermsAndConditions } from './learning-catalogue/model/termsAndConditions'
-import { Course } from './learning-catalogue/model/course'
-import { ModuleFactory } from './learning-catalogue/model/factory/moduleFactory'
-import { AudienceFactory } from './learning-catalogue/model/factory/audienceFactory'
-import { EventFactory } from './learning-catalogue/model/factory/eventFactory'
-import { ModuleController } from './controllers/module/moduleController'
-import { Module } from './learning-catalogue/model/module'
-import { FileController } from './controllers/module/fileController'
-import { LinkModuleController } from './controllers/module/linkModuleController'
-import { FaceToFaceModuleController } from './controllers/module/faceToFaceModuleController'
-import { EventController } from './controllers/module/event/eventController'
-import { Event } from './learning-catalogue/model/event'
-import { AudienceController } from './controllers/audience/audienceController'
-import { Audience } from './learning-catalogue/model/audience'
-import { CourseService } from './lib/courseService'
-import { CsrsConfig } from './csrs/csrsConfig'
-import { CsrsService } from './csrs/service/csrsService'
-import { YoutubeService } from './youtube/youtubeService'
-import { YoutubeConfig } from './youtube/youtubeConfig'
-import { OauthRestService } from './lib/http/oauthRestService'
-import { CacheService } from './lib/cacheService'
-import { DateRangeCommand } from './controllers/command/dateRangeCommand'
-import { DateRangeCommandFactory } from './controllers/command/factory/dateRangeCommandFactory'
-import { DateRange } from './learning-catalogue/model/dateRange'
-import { DateRangeFactory } from './learning-catalogue/model/factory/dateRangeFactory'
-import { organisationController } from './controllers/organisation/organisationController'
+import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
+import {LearningCatalogue} from './learning-catalogue'
+import {EnvValue} from 'ts-json-properties'
+import {CourseController} from './controllers/courseController'
+import {CourseFactory} from './learning-catalogue/model/factory/courseFactory'
+import {LearningProviderController} from './controllers/learningProvider/learningProviderController'
+import {LearningProviderFactory} from './learning-catalogue/model/factory/learningProviderFactory'
+import {CancellationPolicyFactory} from './learning-catalogue/model/factory/cancellationPolicyFactory'
+import {TermsAndConditionsFactory} from './learning-catalogue/model/factory/termsAndConditionsFactory'
+import {NextFunction, Request, Response} from 'express'
+import {Pagination} from './lib/pagination'
+import {CancellationPolicyController} from './controllers/learningProvider/cancellationPolicyController'
+import {TermsAndConditionsController} from './controllers/learningProvider/termsAndConditionsController'
+import {YoutubeModuleController} from './controllers/module/youtubeModuleController'
+import {Validator} from './learning-catalogue/validator/validator'
+import {LearningProvider} from './learning-catalogue/model/learningProvider'
+import {CancellationPolicy} from './learning-catalogue/model/cancellationPolicy'
+import {TermsAndConditions} from './learning-catalogue/model/termsAndConditions'
+import {Course} from './learning-catalogue/model/course'
+import {ModuleFactory} from './learning-catalogue/model/factory/moduleFactory'
+import {AudienceFactory} from './learning-catalogue/model/factory/audienceFactory'
+import {EventFactory} from './learning-catalogue/model/factory/eventFactory'
+import {ModuleController} from './controllers/module/moduleController'
+import {Module} from './learning-catalogue/model/module'
+import {FileController} from './controllers/module/fileController'
+import {LinkModuleController} from './controllers/module/linkModuleController'
+import {FaceToFaceModuleController} from './controllers/module/faceToFaceModuleController'
+import {EventController} from './controllers/module/event/eventController'
+import {Event} from './learning-catalogue/model/event'
+import {AudienceController} from './controllers/audience/audienceController'
+import {Audience} from './learning-catalogue/model/audience'
+import {CourseService} from './lib/courseService'
+import {CsrsConfig} from './csrs/csrsConfig'
+import {CsrsService} from './csrs/service/csrsService'
+import {YoutubeService} from './youtube/youtubeService'
+import {YoutubeConfig} from './youtube/youtubeConfig'
+import {OauthRestService} from './lib/http/oauthRestService'
+import {CacheService} from './lib/cacheService'
+import {DateRangeCommand} from './controllers/command/dateRangeCommand'
+import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
+import {DateRange} from './learning-catalogue/model/dateRange'
+import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {organisationController} from './controllers/organisation/organisationController'
 
 log4js.configure(config.LOGGING)
 
@@ -99,8 +99,7 @@ export class ApplicationContext {
 	dateRangeValidator: Validator<DateRange>
 	organisationController: organisationController
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -218,9 +217,7 @@ export class ApplicationContext {
 			this.moduleFactory
 		)
 
-		this.organisationController = new organisationController(
-
-		)
+		this.organisationController = new organisationController()
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 
