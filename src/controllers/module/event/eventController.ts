@@ -81,7 +81,7 @@ export class EventController {
 			const bookings = await this.learnerRecord.getEventBookings(eventId)
 
 			if (bookings) {
-				res.locals.eventRecord = bookings
+				res.locals.bookings = bookings
 				next()
 			} else {
 				res.sendStatus(404)
@@ -475,7 +475,12 @@ export class EventController {
 
 	public registerLearner() {
 		return async (req: Request, res: Response) => {
-			let booking: Booking = res.locals.booking
+			const bookings = res.locals.bookings
+			const bookingId = req.params.bookingId
+			const booking = bookings.find(function(booking: Booking) {
+				return booking.id == bookingId
+			})
+
 			booking.status = Booking.Status.CONFIRMED
 
 			this.learnerRecord.updateBooking(req.params.eventId, booking)
@@ -483,14 +488,19 @@ export class EventController {
 			res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
 					req.params.eventId
-				}/attendee/${req.params.bookingReference}`
+				}/attendee/${req.params.bookingId}`
 			)
 		}
 	}
 
 	public unregisterLearner() {
 		return async (req: Request, res: Response) => {
-			let booking: Booking = res.locals.booking
+			const bookings = res.locals.bookings
+			const bookingId = req.params.bookingId
+			const booking = bookings.find(function(booking: Booking) {
+				return booking.id == bookingId
+			})
+
 			booking.status = Booking.Status.REQUESTED
 
 			this.learnerRecord.updateBooking(req.params.eventId, booking)
@@ -498,7 +508,7 @@ export class EventController {
 			res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
 					req.params.eventId
-				}/attendee/${req.params.bookingReference}`
+				}/attendee/${req.params.bookingId}`
 			)
 		}
 	}

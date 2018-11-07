@@ -1,4 +1,3 @@
-import {DateTime} from 'lib/datetime'
 import {Learner} from './Learner'
 import {Event} from './Event'
 
@@ -8,7 +7,7 @@ export class Booking {
 	event: Event
 	paymentDetails: string
 	status: Booking.Status
-	bookingTime: DateTime
+	bookingTime: Date
 }
 
 export namespace Booking {

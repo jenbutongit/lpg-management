@@ -10,6 +10,7 @@ export class LearnerFactory {
 
 		learner.id = data.id
 		learner.uid = data.uid
+		learner.learnerEmail = data.learnerEmail
 
 		return learner
 	}
