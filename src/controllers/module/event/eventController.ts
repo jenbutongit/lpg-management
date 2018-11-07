@@ -85,7 +85,7 @@ export class EventController {
 		})
 
 		this.router.param('eventId', async (req, res, next, eventId) => {
-			const eventRecord = await this.learnerRecord.getEventRecord(eventId)
+			const eventRecord = {}
 
 			if (eventRecord) {
 				res.locals.eventRecord = eventRecord
