@@ -76,7 +76,7 @@
 	},
 	"blended": "Blended",
 
-    "module": {
+	"module": {
 		"validation": {
 			"cost": {
 				"positive": "Module cost must be a positive number"
@@ -117,6 +117,7 @@
 	"module_link_add_title": "Add a link",
 	"module_youtube_add_title": "Add a YouTube video",
 	"module_face_to_face_add": "Add a classroom module",
+	"organisation_delete": "Remove organisation",
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
