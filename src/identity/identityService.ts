@@ -36,7 +36,7 @@ export class IdentityService {
 			if (e.response.status == '404') {
 				return null
 			} else {
-				throw new Error(`Error with PUT request: ${e} when getting ${emailAddress} from identity-service`)
+				throw new Error(`Error with GET request: ${e} when getting ${emailAddress} from identity-service`)
 			}
 		}
 	}

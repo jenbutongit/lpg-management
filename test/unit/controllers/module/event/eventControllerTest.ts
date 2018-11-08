@@ -14,9 +14,9 @@ import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
-import {LearnerRecord} from '../../../../../src/leaner-record'
+import {LearnerRecord} from '../../../../../src/learner-record'
 import {IdentityService} from '../../../../../src/identity/identityService'
-import {InviteFactory} from '../../../../../src/leaner-record/model/factory/inviteFactory'
+import {InviteFactory} from '../../../../../src/learner-record/model/factory/inviteFactory'
 
 chai.use(sinonChai)
 

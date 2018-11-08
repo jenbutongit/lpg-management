@@ -9,8 +9,8 @@ import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 import {DateTime} from '../../../lib/dateTime'
 import {IdentityService} from '../../../identity/identityService'
-import {LearnerRecord} from '../../../leaner-record'
-import {InviteFactory} from '../../../leaner-record/model/factory/inviteFactory'
+import {LearnerRecord} from '../../../learner-record'
+import {InviteFactory} from '../../../learner-record/model/factory/inviteFactory'
 import * as config from '../../../config'
 
 export class EventController {

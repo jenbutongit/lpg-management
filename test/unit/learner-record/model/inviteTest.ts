@@ -1,9 +1,9 @@
 import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as sinonChai from 'sinon-chai'
-import {Invite} from '../../../../src/leaner-record/model/invite'
+import {Invite} from '../../../../src/learner-record/model/invite'
 import {expect} from 'chai'
-import {LearnerRecordEvent} from '../../../../src/leaner-record/model/learnerRecordEvent'
+import {LearnerRecordEvent} from '../../../../src/learner-record/model/learnerRecordEvent'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)

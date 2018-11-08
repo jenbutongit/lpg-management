@@ -49,10 +49,10 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
-import {LearnerRecord} from './leaner-record'
-import {LearnerRecordConfig} from './leaner-record/learnerRecordConfig'
-import {InviteFactory} from './leaner-record/model/factory/inviteFactory'
-import {LearnerRecordEventFactory} from './leaner-record/model/factory/learnerRecordEventFactory'
+import {LearnerRecord} from './learner-record'
+import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
+import {InviteFactory} from './learner-record/model/factory/inviteFactory'
+import {LearnerRecordEventFactory} from './learner-record/model/factory/learnerRecordEventFactory'
 
 log4js.configure(config.LOGGING)
 

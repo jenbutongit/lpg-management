@@ -2,7 +2,7 @@ import {expect} from 'chai'
 import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as sinonChai from 'sinon-chai'
-import {LearnerRecordEventFactory} from '../../../../../src/leaner-record/model/factory/learnerRecordEventFactory'
+import {LearnerRecordEventFactory} from '../../../../../src/learner-record/model/factory/learnerRecordEventFactory'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
