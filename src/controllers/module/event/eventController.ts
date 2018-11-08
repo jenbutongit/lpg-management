@@ -11,7 +11,6 @@ import {DateTime} from '../../../lib/dateTime'
 import {IdentityService} from '../../../identity/identityService'
 import {LearnerRecord} from '../../../leaner-record'
 import {InviteFactory} from '../../../leaner-record/model/factory/inviteFactory'
-import {LearnerRecordEvent} from '../../../leaner-record/model/learnerRecordEvent'
 import * as config from '../../../config'
 
 export class EventController {
@@ -483,13 +482,12 @@ export class EventController {
 					emailAddress: emailAddress,
 				}
 			} else {
-				let event: LearnerRecordEvent = new LearnerRecordEvent()
-				event.eventUid = req.params.eventId
-				event.path = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
-					req.params.moduleId
-				}/events/${req.params.eventId}`
-
-				data.event = event
+				data.event = {
+					eventUid: req.params.eventId,
+					path: `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
+						req.params.moduleId
+					}/events/${req.params.eventId}`,
+				}
 
 				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
 
