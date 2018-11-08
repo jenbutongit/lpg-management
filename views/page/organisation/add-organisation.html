@@ -3,7 +3,7 @@
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['add_organisation'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n['edit_organisation'] if organisation else i18n['add_organisation']}} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
 {% set backButton = "/content-management/learning-providers" %}
