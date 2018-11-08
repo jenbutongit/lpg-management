@@ -1,7 +1,12 @@
 import {Invite} from '../invite'
+import {LearnerRecordEventFactory} from './learnerRecordEventFactory'
 
 export class InviteFactory {
-	constructor() {
+	eventFactory: LearnerRecordEventFactory
+
+	constructor(eventFactory: LearnerRecordEventFactory) {
+		this.eventFactory = eventFactory
+
 		this.create = this.create.bind(this)
 	}
 
@@ -9,7 +14,7 @@ export class InviteFactory {
 		let invite: Invite = new Invite()
 
 		invite.id = data.id
-		invite.eventId = data.eventId
+		invite.event = this.eventFactory.create(data.event)
 		invite.learnerEmail = data.learnerEmail
 
 		return invite

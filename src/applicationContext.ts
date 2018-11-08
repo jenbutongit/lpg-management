@@ -52,6 +52,7 @@ import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFact
 import {LearnerRecord} from './leaner-record'
 import {LearnerRecordConfig} from './leaner-record/learnerRecordConfig'
 import {InviteFactory} from './leaner-record/model/factory/inviteFactory'
+import {LearnerRecordEventFactory} from './leaner-record/model/factory/learnerRecordEventFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -102,6 +103,7 @@ export class ApplicationContext {
 	learnerRecord: LearnerRecord
 	learnerRecordConfig: LearnerRecordConfig
 	inviteFactory: InviteFactory
+	learnerRecordEventFactory: LearnerRecordEventFactory
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -227,9 +229,11 @@ export class ApplicationContext {
 		this.dateRangeCommandValidator = new Validator<DateRangeCommand>(this.dateRangeCommandFactory)
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
-		this.inviteFactory = new InviteFactory()
 
-		this.learnerRecordConfig = new LearnerRecordConfig('http://localhost:9000')
+		this.learnerRecordEventFactory = new LearnerRecordEventFactory()
+		this.inviteFactory = new InviteFactory(this.learnerRecordEventFactory)
+
+		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
 		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.inviteFactory)
 
 		this.eventController = new EventController(
