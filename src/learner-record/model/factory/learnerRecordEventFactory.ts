@@ -1,4 +1,4 @@
-import {LearnerRecordEvent} from '../LearnerRecordEvent'
+import {LearnerRecordEvent} from '../learnerRecordEvent'
 
 export class LearnerRecordEventFactory {
 	constructor() {
