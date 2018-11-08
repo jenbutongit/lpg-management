@@ -76,7 +76,7 @@
 	},
 	"blended": "Blended",
 
-    "module": {
+	"module": {
 		"validation": {
 			"cost": {
 				"positive": "Module cost must be a positive number"
@@ -96,7 +96,7 @@
 		"file": "File",
 		"blended": "Blended"
 	},
-
+	"add_organisation": "Add a new organisation",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
