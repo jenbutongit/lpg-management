@@ -17,6 +17,7 @@ export class ModuleController {
 		this.setRouterPaths()
 	}
 
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const course = await this.learningCatalogue.getCourse(courseId)
@@ -29,6 +30,7 @@ export class ModuleController {
 		})
 		this.router.get('/content-management/courses/:courseId/add-module', this.addModule())
 		this.router.post('/content-management/courses/:courseId/add-module', this.setModule())
+		this.router.get('/content-management/courses/:courseId/:moduleId/delete', this.deleteModule())
 	}
 
 	public addModule() {
@@ -55,6 +57,17 @@ export class ModuleController {
 	public addFile() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/module-file')
+		}
+	}
+
+	public deleteModule() {
+		return async (request: Request, response: Response) => {
+			const courseId = response.locals.course.id
+			const moduleId = request.params.moduleId
+
+			await this.learningCatalogue.deleteModule(courseId, moduleId)
+
+			return response.redirect(`/content-management/courses/${courseId}/add-module`)
 		}
 	}
 }

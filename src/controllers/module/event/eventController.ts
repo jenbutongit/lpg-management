@@ -1,36 +1,50 @@
-import { LearningCatalogue } from '../../../learning-catalogue/index'
-import { Validator } from '../../../learning-catalogue/validator/validator'
-import { Request, Response, Router } from 'express'
-import { EventFactory } from '../../../learning-catalogue/model/factory/eventFactory'
-import { Event } from '../../../learning-catalogue/model/event'
+import {LearningCatalogue} from '../../../learning-catalogue/index'
+import {Validator} from '../../../learning-catalogue/validator/validator'
+import {Request, Response, Router} from 'express'
+import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
+import {Event} from '../../../learning-catalogue/model/event'
 import * as moment from 'moment'
-import { DateRangeCommand } from '../../command/dateRangeCommand'
-import { DateRange } from '../../../learning-catalogue/model/dateRange'
-import { DateRangeCommandFactory } from '../../command/factory/dateRangeCommandFactory'
+import {DateRangeCommand} from '../../command/dateRangeCommand'
+import {DateRange} from '../../../learning-catalogue/model/dateRange'
+import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
+import {DateTime} from '../../../lib/dateTime'
+import {IdentityService} from '../../../identity/identityService'
+import {LearnerRecord} from '../../../learner-record'
+import {InviteFactory} from '../../../learner-record/model/factory/inviteFactory'
+import * as config from '../../../config'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
+	learnerRecord: LearnerRecord
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
+	inviteFactory: InviteFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeValidator: Validator<DateRange>
 	dateRangeCommandFactory: DateRangeCommandFactory
+	identityService: IdentityService
 	router: Router
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
+		learnerRecord: LearnerRecord,
 		eventValidator: Validator<Event>,
 		eventFactory: EventFactory,
+		inviteFactory: InviteFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
 		dateRangeValidator: Validator<DateRange>,
-		dateRangeCommandFactory: DateRangeCommandFactory
+		dateRangeCommandFactory: DateRangeCommandFactory,
+		identityService: IdentityService
 	) {
 		this.learningCatalogue = learningCatalogue
+		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
+		this.inviteFactory = inviteFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
 		this.dateRangeValidator = dateRangeValidator
 		this.dateRangeCommandFactory = dateRangeCommandFactory
+		this.identityService = identityService
 		this.router = Router()
 
 		this.setRouterPaths()
@@ -65,6 +79,17 @@ export class EventController {
 
 			if (event) {
 				res.locals.event = event
+				next()
+			} else {
+				res.sendStatus(404)
+			}
+		})
+
+		this.router.param('eventId', async (req, res, next, eventId) => {
+			const invitees = await this.learnerRecord.getEventInvitees(eventId)
+
+			if (invitees) {
+				res.locals.invitees = invitees
 				next()
 			} else {
 				res.sendStatus(404)
@@ -128,6 +153,10 @@ export class EventController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.getCancelEvent())
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.setCancelEvent())
 
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite',
+			this.inviteLearner()
+		)
 	}
 
 	public getDateTime() {
@@ -363,7 +392,7 @@ export class EventController {
 				)
 				res.redirect(
 					`/content-management/courses/${req.params.courseId}/modules/${
-					req.params.moduleId
+						req.params.moduleId
 					}/events-overview/${savedEvent.id}`
 				)
 			}
@@ -414,7 +443,7 @@ export class EventController {
 				)
 				res.redirect(
 					`/content-management/courses/${req.params.courseId}/modules/${
-					req.params.moduleId
+						req.params.moduleId
 					}/events-overview/${req.params.eventId}`
 				)
 			}
@@ -423,7 +452,47 @@ export class EventController {
 
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/module/events/events-overview')
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
+		}
+	}
+
+	public inviteLearner() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
+
+			const emailAddress = data.learnerEmail
+			const identityDetails = await this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
+
+			if (!identityDetails) {
+				req.session!.sessionFlash = {
+					emailAddressFoundMessage: 'email_address_not_found_message',
+					emailAddress: emailAddress,
+				}
+			} else {
+				data.event = {
+					eventUid: req.params.eventId,
+					path: `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
+						req.params.moduleId
+					}/events/${req.params.eventId}`,
+				}
+
+				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
+
+				req.session!.sessionFlash = {
+					emailAddressFoundMessage: 'email_address_found_message',
+					emailAddress: emailAddress,
+				}
+			}
+
+			return res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
+					req.params.eventId
+				}`
+			)
 		}
 	}
 

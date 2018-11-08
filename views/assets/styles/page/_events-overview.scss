@@ -1,0 +1,57 @@
+.attendees {
+	&.headers {
+		display: none;
+	}
+
+	&.list {
+		margin-bottom: 30px;
+
+		.list-details,
+		.list-headers {
+			padding: 10px 0;
+		}
+	}
+
+	.list-details {
+		border-bottom: 1px solid $border;
+	}
+}
+
+@media screen and (min-width: $tablet-small) {
+	.attendees {
+		&.headers {
+			display: block;
+		}
+
+		.list-details,
+		.list-headers {
+			display: flex;
+
+			.govuk-body {
+				margin-bottom: 0;
+
+				&.title {
+					flex-basis: 66%;
+					padding: 0 10px 0 0;
+				}
+
+				&.payment {
+					flex-basis: 24%;
+					padding: 0 10px;
+				}
+
+				&.buttons {
+					flex-basis: 10%;
+					padding: 0;
+					text-align: right;
+				}
+			}
+
+			.button-header {
+				flex-basis: 10%;
+				padding: 0;
+				display: inline-flex;
+			}
+		}
+	}
+}
