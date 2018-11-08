@@ -161,6 +161,10 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
 		)
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
+			this.cancelEvent()
+		)
 
 		this.router.post(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite',
@@ -502,6 +506,12 @@ export class EventController {
 					req.params.eventId
 				}`
 			)
+		}
+	}
+
+	public cancelEvent() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/cancel')
 		}
 	}
 }

@@ -39,7 +39,6 @@
 			"REQUIRED_LEARNING": "Required learning"
 		}
 	},
-
 	"course": {
 		"pageTitle": {
 			"addCourseTitle": "Add course title",
@@ -66,10 +65,16 @@
 				"maxLength": "Description is too long"
 			},
 			"status": {
-				"invalid": "Status needs to one of 'Draft', 'Published' or 'Archived'"
+				"invalid": "Status needs to be 'Draft', 'Published' or 'Archived'"
 			}
 		}
 	},
+	"event": {
+		"title": {
+			"cancel": "Cancel event"
+		}
+	},
+	"blended": "Blended",
 
     "module": {
 		"validation": {

@@ -56,7 +56,9 @@ export class LearningCatalogue {
 	}
 
 	async listCourses(page: number = 0, size: number = 10): Promise<DefaultPageResults<Course>> {
-		return await this._courseService.listAll(`/courses?page=${page}&size=${size}`)
+		return await this._courseService.listAll(
+			`/courses?status=Draft&status=Published&status=Archived&page=${page}&size=${size}`
+		)
 	}
 
 	async createCourse(course: Course): Promise<Course> {
@@ -77,6 +79,10 @@ export class LearningCatalogue {
 
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
 		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
+	}
+
+	async deleteModule(courseId: string, moduleId: string) {
+		return this._moduleService.delete(`/courses/${courseId}/modules/${moduleId}`)
 	}
 
 	async createEvent(courseId: string, moduleId: string, event: Event): Promise<Event> {
