@@ -16,11 +16,14 @@
     {% set emailAddress = sessionFlash.emailAddress %}
 
     {% if emailAddressFoundMessage %}
-    <div class="panel govuk-panel govuk-panel--confirmation">
-        <div class="govuk-panel__body custom-panel">
-            <p class="govuk-body"><strong>{{ emailAddress }}</strong>{{ i18n[emailAddressFoundMessage] }}</p>
+        {% if emailAddressFoundMessage == "email_address_not_found_message"%}
+            {% set panelError = "error" %}
+        {% endif %}
+        <div class="panel govuk-panel govuk-panel--confirmation {{panelError}}">
+            <div class="govuk-panel__body custom-panel">
+                <p class="govuk-body"><strong>{{ emailAddress }}</strong>{{ i18n[emailAddressFoundMessage] }}</p>
+            </div>
         </div>
-    </div>
     {% endif %}
 
   <div class="govuk-grid-row">

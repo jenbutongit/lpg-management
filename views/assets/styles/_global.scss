@@ -95,6 +95,10 @@ ul {
 		background-color: $govuk-link-colour;
 	}
 
+    &.error {
+      background-color: $error-message;
+    }
+
 	.govuk-heading-s {
 		color: $white;
 		margin-bottom: 0;
