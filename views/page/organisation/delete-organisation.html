@@ -1,0 +1,29 @@
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n.audience.pageTitle.deleteAudience }} - {{ i18n.proposition_name }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/organisation-overview/{{organisation.id}}" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+            <h1 class="govuk-heading-m govuk-!-font-size-36">Remove an organisation</h1>
+            <p class="govuk-body">Are you sure you want to remove <strong>{{organisaion.name}} ({{organisation.abbreviation}})</strong>?</p>
+            <p class="govuk-body">If you remove this organisation, it will be permanently deleted from the service.</p>
+            <form action="/content-management/organisations/{{organisation.id}}/delete" method="post">
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Remove organisation",
+                        classes: "button-red"
+                    }) }}
+                </div>
+            </form>
+            <a class="cancel-button govuk-body govuk-link" href="/content-management/organisations">Cancel</a>
+        </div>
+    </div>
+
+{% endblock %}
