@@ -14,7 +14,7 @@ export class InviteFactory {
 		let invite: Invite = new Invite()
 
 		invite.id = data.id
-		invite.event = this.eventFactory.create(data.event)
+		invite.event = data.event
 		invite.learnerEmail = data.learnerEmail
 
 		return invite

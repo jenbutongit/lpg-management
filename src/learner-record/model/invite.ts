@@ -1,7 +1,5 @@
-import {LearnerRecordEvent} from './learnerRecordEvent'
-
 export class Invite {
 	id: number
-	event: LearnerRecordEvent
+	event: string
 	learnerEmail: string
 }

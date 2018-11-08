@@ -475,12 +475,9 @@ export class EventController {
 					emailAddress: emailAddress,
 				}
 			} else {
-				data.event = {
-					eventUid: req.params.eventId,
-					path: `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
-						req.params.moduleId
-					}/events/${req.params.eventId}`,
-				}
+				data.event = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
+					req.params.moduleId
+				}/events/${req.params.eventId}`
 
 				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
 
