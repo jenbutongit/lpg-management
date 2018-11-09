@@ -20,12 +20,14 @@ describe('Invite factory tests', () => {
 	it('should be create invite from data', () => {
 		const data = {
 			id: 'test-id',
+			event: 'test/path/to/event',
 			learnerEmail: 'test@email.com',
 		}
 
 		const invite = inviteFactory.create(data)
 
 		expect(invite.id).to.equal('test-id')
+		expect(invite.event).to.equal('test/path/to/event')
 		expect(invite.learnerEmail).to.equal('test@email.com')
 	})
 })

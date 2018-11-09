@@ -23,4 +23,9 @@ describe('Invite tests', () => {
 		invite.learnerEmail = 'test@test.com'
 		expect(invite.learnerEmail).to.equal('test@test.com')
 	})
+
+	it('should be able to set event', () => {
+		invite.event = 'test/path/to/event'
+		expect(invite.event).to.equal('test/path/to/event')
+	})
 })

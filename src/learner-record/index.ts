@@ -17,12 +17,7 @@ export class LearnerRecord {
 	async getEventInvitees(eventId: string) {
 		const data = await this._restService.get(`/event/${eventId}/invitee`)
 
-		let invites = []
-
-		for (const invite of data) {
-			invites.push(this._inviteFactory.create(invite))
-		}
-
+		const invites = (data || []).map(this._inviteFactory.create)
 		return invites
 	}
 
