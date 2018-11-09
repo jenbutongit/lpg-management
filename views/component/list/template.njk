@@ -15,7 +15,9 @@
                 {% block status %}
                     {{ status(Course.status) }}
                 {% endblock %}
-                <a class="govuk-link list-link list-padding" href="/content-management/courses/{{ Course.id }}/preview">Edit</a> 
+                {% if Course.status !== "Archived" %}
+                    <a class="govuk-link list-link list-padding" href="/content-management/courses/{{ Course.id }}/preview">Edit</a> 
+                {% endif %}
             </div>
         </li>
     {% endfor %}

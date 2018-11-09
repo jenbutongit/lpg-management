@@ -47,7 +47,9 @@
         <div class="section">
             <div class="title-container"> 
                 <h3 class="govuk-heading-m">Course audiences</h3>
-                <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audiences/">Add an audience</a>
+                {% if course.status !== "Archived" %}
+                    <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audiences/">Add an audience</a>
+                {% endif %}
             </div>
             {% block audiences %}
                 {{ audiences(course) }}
