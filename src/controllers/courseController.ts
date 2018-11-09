@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import { Request, Response, Router } from 'express'
-import { CourseFactory } from '../learning-catalogue/model/factory/courseFactory'
-import { LearningCatalogue } from '../learning-catalogue'
-import { Course } from '../learning-catalogue/model/course'
-import { Validator } from '../learning-catalogue/validator/validator'
-import { Module } from '../learning-catalogue/model/module'
-import { CourseService } from '../lib/courseService'
-import { CsrsService } from '../csrs/service/csrsService'
-import { Audience } from '../learning-catalogue/model/audience'
-import { DateTime } from '../lib/dateTime'
-import { Validate } from './formValidator'
-import { FormController } from './formController'
-=======
 import {NextFunction, Request, Response, Router} from 'express'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import {LearningCatalogue} from '../learning-catalogue'
@@ -25,7 +11,6 @@ import {DateTime} from '../lib/dateTime'
 import {Validate} from './formValidator'
 import {FormController} from './formController'
 import * as asyncHandler from 'express-async-handler'
->>>>>>> origin
 
 export class CourseController implements FormController {
 	learningCatalogue: LearningCatalogue
@@ -148,7 +133,7 @@ export class CourseController implements FormController {
 	createCourseTitle() {
 		return async (request: Request, response: Response) => {
 			const course = this.courseFactory.create(request.body)
-			request.session!.sessionFlash = { course }
+			request.session!.sessionFlash = {course}
 			request.session!.save(() => {
 				response.redirect('/content-management/courses/details')
 			})
@@ -170,7 +155,7 @@ export class CourseController implements FormController {
 			const course = this.courseFactory.create(req.body)
 			const savedCourse = await this.learningCatalogue.createCourse(course)
 
-			req.session!.sessionFlash = { courseAddedSuccessMessage: 'course_added_success_message' }
+			req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
 			req.session!.save(() => {
 				res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
 			})
