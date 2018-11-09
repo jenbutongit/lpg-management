@@ -24,6 +24,7 @@
             <p class="govuk-body">The event will be labelled as cancelled.</p>
             <p class="govuk-body">This cannot be undone</p>
             <form action="" method="post">
+                <input type="hidden" value="{{event.id}}" name="id">
                 {{ govukSelect({
                 id: "sort",
                 name: "sort",

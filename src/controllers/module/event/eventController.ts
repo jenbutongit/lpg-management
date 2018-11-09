@@ -85,16 +85,16 @@ export class EventController {
 			}
 		})
 
-		this.router.param('eventId', async (req, res, next, eventId) => {
-			const invitees = await this.learnerRecord.getEventInvitees(eventId)
-
-			if (invitees) {
-				res.locals.invitees = invitees
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
+		// this.router.param('eventId', async (req, res, next, eventId) => {
+		// 	const invitees = await this.learnerRecord.getEventInvitees(eventId)
+		//
+		// 	if (invitees) {
+		// 		res.locals.invitees = invitees
+		// 		next()
+		// 	} else {
+		// 		res.sendStatus(404)
+		// 	}
+		// })
 
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const date = new Date(Date.now())
@@ -504,7 +504,16 @@ export class EventController {
 
 	public setCancelEvent() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events-overview')
+			await this.learnerRecord.cancelEvent(request.body.id)
+
+
+			request.session!.sessionFlash = {
+				eventCancelledMessage: 'event_cancelled_message',
+			}
+			return request.session!.save(() => {
+				//
+				response.redirect(`/content-management/courses/${request.params.courseId}/modules/${request.params.moduleId}/events-overview/${request.params.eventId}`)
+			})
 		}
 	}
 }
