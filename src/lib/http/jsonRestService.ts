@@ -63,7 +63,7 @@ export class JsonRestService {
 
 	async patch(path: string, resource: any) {
 		try {
-			return await this._http.patch(path, resource)
+			return await this._http.patch(path, resource, this.getHeaders())
 		} catch (e) {
 			throw new Error(`Error with PATCH request: ${e} when patching ${this.config.url}${path}`)
 		}
