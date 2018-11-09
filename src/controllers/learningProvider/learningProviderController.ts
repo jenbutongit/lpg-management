@@ -6,7 +6,7 @@ import {LearningProviderFactory} from '../../learning-catalogue/model/factory/le
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
 import {Validator} from '../../learning-catalogue/validator/validator'
-import * as asyncHandler from "express-async-handler"
+import * as asyncHandler from 'express-async-handler'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 

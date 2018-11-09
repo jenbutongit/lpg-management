@@ -11,7 +11,7 @@ import * as bodyParser from 'body-parser'
 import {AppConfig} from './config/appConfig'
 import moment = require('moment')
 import {DateTime} from './lib/dateTime'
-import * as asyncHandler from "express-async-handler"
+import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 
 Properties.initialize()

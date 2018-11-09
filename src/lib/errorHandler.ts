@@ -3,21 +3,9 @@ import * as log4js from 'log4js'
 
 const logger = log4js.getLogger('controllers/home')
 
-export async function handleError(
-	error: Error,
-	request: Request,
-	response: Response,
-	next: NextFunction
-) {
+export async function handleError(error: Error, request: Request, response: Response, next: NextFunction) {
 	try {
-		logger.error(
-			'Error handling request for',
-			request.method,
-			request.url,
-			request.body,
-			'\n',
-			error.stack
-		)
+		logger.error('Error handling request for', request.method, request.url, request.body, '\n', error.stack)
 
 		response.status(500)
 
