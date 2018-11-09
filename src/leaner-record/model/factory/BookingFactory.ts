@@ -18,10 +18,13 @@ export class BookingFactory {
 
 		booking.id = data.id
 		booking.bookingTime = data.bookingTime
-		booking.event = this.eventFactory.create(data.event)
+		booking.learner = data.learner
+		booking.learnerEmail = data.learnerEmail
+		booking.event = data.event
 		booking.paymentDetails = data.paymentDetails
-		booking.learner = this.learnerFactory.create(data.learner)
-		booking.status = Booking.Status[data.status as keyof typeof Booking.Status]
+		booking.learner = data.learner
+		booking.status = Booking.Status[data.status.toUpperCase() as keyof typeof Booking.Status]
+		//booking.status = data.status
 
 		return booking
 	}

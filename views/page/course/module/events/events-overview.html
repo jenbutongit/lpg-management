@@ -115,13 +115,13 @@
                 <ul class="attendees list">
                   {% for booking in bookings %}
                       {% if booking.status === 0 %}
-                        {% set payment = "Booked" %}
+                        {% set payment = "Pending" %}
                       {% elif booking.status === 1 %}
-                        {% set payment = "Cancelled" %}
+                        {% set payment = "Booked" %}
                       {% elif booking.status === 2 %}
-                         {% set payment = "Pending" %}
+                         {% set payment = "Cancelled" %}
                       {% endif %}
-                      <li class="list-details"><p class="govuk-body title">{{ booking.learner.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
+                      <li class="list-details"><p class="govuk-body title">{{ booking.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
                   {% endfor %}
                 </ul>
               {% else %}

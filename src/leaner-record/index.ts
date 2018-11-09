@@ -3,7 +3,6 @@ import {LearnerRecordConfig} from './learnerRecordConfig'
 import {Auth} from '../identity/auth'
 import {Booking} from './model/Booking'
 import {BookingFactory} from './model/factory/BookingFactory'
-import {Learner} from './model/Learner'
 
 export class LearnerRecord {
 	private _restService: OauthRestService
@@ -15,14 +14,10 @@ export class LearnerRecord {
 	}
 
 	async createTestBooking(eventId: string) {
-		let learner: Learner = new Learner()
-		learner.uid = 'test-id'
-		learner.learnerEmail = 'test@test.com'
-
 		let data = {
 			id: null,
-			learner: learner.uid,
-			learnerEmail: learner.learnerEmail,
+			learner: 'test-id',
+			learnerEmail: 'test@test.com',
 			event:
 				'http://localhost:9001/course/uh9jCzkhR5Wnlf7Br4Q2iQ/module/HV68AKO8R6-L0lg6QFVEow/event/CsrUCsx0SIqVMHfMSMbWFg',
 			status: 'Requested',
@@ -49,7 +44,7 @@ export class LearnerRecord {
 	}
 
 	async updateBooking(eventId: string, booking: Booking) {
-		await this._restService.patch(`/event/${eventId}/booking/${booking.id}`, booking.status)
+		await this._restService.patch(`/event/${eventId}/booking/${booking.id}`, {status: 'Confirmed'})
 	}
 
 	set restService(value: OauthRestService) {

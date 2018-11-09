@@ -1,10 +1,8 @@
-import {Learner} from './Learner'
-import {Event} from './Event'
-
 export class Booking {
 	id: number
-	learner: Learner
-	event: Event
+	learner: string
+	learnerEmail: string
+	event: string
 	paymentDetails: string
 	status: Booking.Status
 	bookingTime: Date
