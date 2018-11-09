@@ -11,6 +11,8 @@ import * as bodyParser from 'body-parser'
 import {AppConfig} from './config/appConfig'
 import moment = require('moment')
 import {DateTime} from './lib/dateTime'
+import * as asyncHandler from 'express-async-handler'
+import * as errorController from './lib/errorHandler'
 
 Properties.initialize()
 
@@ -113,6 +115,8 @@ app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
-app.get('/content-management', ctx.homeController.index())
+app.get('/content-management', asyncHandler(ctx.homeController.index()))
+
+app.use(errorController.handleError)
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
