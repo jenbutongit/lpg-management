@@ -1,9 +1,15 @@
 import {Request, Response, Router} from 'express'
-export class organisationController {
-	router: Router
+import {OrganisationalUnit} from './model/organisationalUnit'
+import {Csrs} from '../../csrs'
+import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 
-	constructor() {
+export class OrganisationController {
+	router: Router
+	csrs: Csrs
+
+	constructor(csrs: Csrs) {
 		this.router = Router()
+		this.csrs = csrs
 
 		this.setRouterPaths()
 	}
@@ -16,7 +22,11 @@ export class organisationController {
 
 	public getOrganisations() {
 		return async (request: Request, response: Response) => {
-			response.render('page/organisation/organisations')
+			const organisationalUnits: DefaultPageResults<
+				OrganisationalUnit
+			> = await this.csrs.listOrganisationalUnits()
+
+			response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
 		}
 	}
 

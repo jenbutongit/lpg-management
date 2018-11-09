@@ -74,7 +74,14 @@
 			"cancel": "Cancel event"
 		}
 	},
-	"blended": "Blended",
+	"organisations": {
+		"title": {
+			"manageOrganisations": "Manage organisations"
+		},
+        "headers": {
+          "organisationName": "Organisation name"
+        }
+	},
 
 	"module": {
 		"validation": {
@@ -96,7 +103,7 @@
 		"file": "File",
 		"blended": "Blended"
 	},
-
+	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",

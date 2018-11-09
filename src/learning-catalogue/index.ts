@@ -56,7 +56,7 @@ export class LearningCatalogue {
 	}
 
 	async listCourses(page: number = 0, size: number = 10): Promise<DefaultPageResults<Course>> {
-		return await this._courseService.listAll(
+		return await this._courseService.listAllWithPagination(
 			`/courses?status=Draft&status=Published&status=Archived&page=${page}&size=${size}`
 		)
 	}
@@ -106,7 +106,9 @@ export class LearningCatalogue {
 	}
 
 	async listLearningProviders(page: number = 0, size: number = 10): Promise<DefaultPageResults<LearningProvider>> {
-		return await this._learningProviderService.listAll(`/learning-providers?page=${page}&size=${size}`)
+		return await this._learningProviderService.listAllWithPagination(
+			`/learning-providers?page=${page}&size=${size}`
+		)
 	}
 
 	async getLearningProvider(learningProviderId: string): Promise<LearningProvider> {

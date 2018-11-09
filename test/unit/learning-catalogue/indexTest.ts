@@ -68,10 +68,10 @@ describe('Learning Catalogue tests', () => {
 	})
 
 	it('should call courseService when listing courses', async () => {
-		courseService.listAll = sinon.stub()
+		courseService.listAllWithPagination = sinon.stub()
 
 		await learningCatalogue.listCourses()
-		return expect(courseService.listAll).to.have.been.calledOnceWith(
+		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(
 			'/courses?status=Draft&status=Published&status=Archived&page=0&size=10'
 		)
 	})
@@ -116,10 +116,10 @@ describe('Learning Catalogue tests', () => {
 	})
 
 	it('should call learningProviderService when listing learning providers', async () => {
-		learningProviderService.listAll = sinon.stub()
+		learningProviderService.listAllWithPagination = sinon.stub()
 
 		await learningCatalogue.listLearningProviders()
-		return expect(learningProviderService.listAll).to.have.been.calledOnce
+		return expect(learningProviderService.listAllWithPagination).to.have.been.calledOnce
 	})
 
 	it('should call cancellationPolicyService when creating a cancellation policy', async () => {

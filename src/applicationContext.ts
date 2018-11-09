@@ -49,7 +49,9 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
-import {organisationController} from './controllers/organisation/organisationController'
+import {OrganisationController} from './controllers/organisation/organisationController'
+import {Csrs} from './csrs'
+import {HttpConfig} from './lib/http/httpConfig'
 
 log4js.configure(config.LOGGING)
 
@@ -97,7 +99,9 @@ export class ApplicationContext {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
-	organisationController: organisationController
+	organisationController: OrganisationController
+	csrs: Csrs
+	httpConfig: HttpConfig
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -124,8 +128,6 @@ export class ApplicationContext {
 		)
 
 		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url)
-
-		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
@@ -217,8 +219,6 @@ export class ApplicationContext {
 			this.moduleFactory
 		)
 
-		this.organisationController = new organisationController()
-
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 
 		this.dateRangeCommandFactory = new DateRangeCommandFactory()
@@ -243,6 +243,10 @@ export class ApplicationContext {
 			this.courseService,
 			this.csrsService
 		)
+
+		this.httpConfig = new HttpConfig(config.REGISTRY_SERVICE_URL.url)
+		this.csrs = new Csrs(this.httpConfig, this.auth)
+		this.organisationController = new OrganisationController(this.csrs)
 	}
 
 	addToResponseLocals() {
