@@ -2,6 +2,7 @@ import {Request, Response, Router} from 'express'
 import {OrganisationalUnit} from './model/organisationalUnit'
 import {Csrs} from '../../csrs'
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
+import * as asyncHandler from 'express-async-handler'
 
 export class OrganisationController {
 	router: Router
@@ -16,8 +17,8 @@ export class OrganisationController {
 
 	/* istanbul ignore next */
 	private setRouterPaths() {
-		this.router.get('/content-management/organisations', this.getOrganisations())
-		this.router.get('/content-management/add-organisation', this.addOrganisation())
+		this.router.get('/content-management/organisations', asyncHandler(this.getOrganisations()))
+		this.router.get('/content-management/add-organisation', asyncHandler(this.addOrganisation()))
 	}
 
 	public getOrganisations() {
