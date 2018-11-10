@@ -15,7 +15,7 @@ export class Csrs {
 		this._organisationalUnitService = new EntityService<OrganisationalUnit>(this._restService, new OrganisationalUnitFactory())
 	}
 
-	async listOrganisationalUnits(page: number = 0, size: number = 10): Promise<DefaultPageResults<OrganisationalUnit>> {
+	async listOrganisationalUnits(): Promise<DefaultPageResults<OrganisationalUnit>> {
 		return await this._organisationalUnitService.listAll(`/organisationalUnits/tree`)
 	}
 
