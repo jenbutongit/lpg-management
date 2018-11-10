@@ -4,24 +4,22 @@ import {OauthRestService} from '../lib/http/oauthRestService'
 import {Auth} from '../identity/auth'
 import {OrganisationalUnitFactory} from '../controllers/organisation/model/organisationalUnitFactory'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
-import {HttpConfig} from '../lib/http/httpConfig'
+import {CsrsConfig} from './csrsConfig'
 
 export class Csrs {
 	private _organisationalUnitService: EntityService<OrganisationalUnit>
 	private _restService: OauthRestService
 
-	constructor(config: HttpConfig, auth: Auth) {
+	constructor(config: CsrsConfig, auth: Auth) {
 		this._restService = new OauthRestService(config, auth)
-		this._organisationalUnitService = new EntityService<OrganisationalUnit>(
-			this._restService,
-			new OrganisationalUnitFactory()
-		)
+		this._organisationalUnitService = new EntityService<OrganisationalUnit>(this._restService, new OrganisationalUnitFactory())
 	}
 
-	async listOrganisationalUnits(
-		page: number = 0,
-		size: number = 10
-	): Promise<DefaultPageResults<OrganisationalUnit>> {
+	async listOrganisationalUnits(page: number = 0, size: number = 10): Promise<DefaultPageResults<OrganisationalUnit>> {
 		return await this._organisationalUnitService.listAll(`/organisationalUnits/tree`)
+	}
+
+	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
+		this._organisationalUnitService = value
 	}
 }
