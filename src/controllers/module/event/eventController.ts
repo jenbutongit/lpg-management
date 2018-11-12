@@ -8,8 +8,8 @@ import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 import {DateTime} from '../../../lib/dateTime'
-import {LearnerRecord} from '../../../leaner-record'
-import {Booking} from '../../../leaner-record/model/Booking'
+import {LearnerRecord} from '../../../learner-record'
+import {Booking} from '../../../learner-record/model/Booking'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue

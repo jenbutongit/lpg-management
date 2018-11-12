@@ -31,7 +31,7 @@ export class LearnerRecord {
 	}
 
 	async getEventBookings(eventId: string) {
-		//await this.createTestBooking(eventId)
+		// await this.createTestBooking(eventId)
 
 		const data = await this._restService.get(`/event/${eventId}/booking`)
 
@@ -44,7 +44,7 @@ export class LearnerRecord {
 	}
 
 	async updateBooking(eventId: string, booking: Booking) {
-		await this._restService.patch(`/event/${eventId}/booking/${booking.id}`, {status: 'Confirmed'})
+		await this._restService.patch(`/event/${eventId}/booking/${booking.id}`, {status: booking.status})
 	}
 
 	set restService(value: OauthRestService) {

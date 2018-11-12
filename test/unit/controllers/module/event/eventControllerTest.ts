@@ -14,8 +14,7 @@ import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
-import {LearnerRecord} from '../../../../../src/leaner-record'
-import {EventRecord} from '../../../../../src/leaner-record/model/eventRecord'
+import {LearnerRecord} from '../../../../../src/learner-record'
 
 chai.use(sinonChai)
 
@@ -382,9 +381,6 @@ describe('EventController', function() {
 	})
 
 	it('should render attendee details page', async function() {
-		const eventRecord: EventRecord = new EventRecord()
-		eventRecord.bookingReference = 'test-ref'
-
 		const date: string = '2020-02-01'
 		const dateRange = new DateRange()
 		dateRange.date = date
@@ -397,7 +393,6 @@ describe('EventController', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		response.locals.eventRecord = [eventRecord]
 		response.locals.event = event
 
 		request.params.bookingReference = 'test-ref'
@@ -406,15 +401,10 @@ describe('EventController', function() {
 	})
 
 	it('should change event record state to approved and redirect to attendee page', async function() {
-		const eventRecord: EventRecord = new EventRecord()
-		eventRecord.status = EventRecord.Status.REQUESTED
-
 		const registerLearner: (request: Request, response: Response) => void = eventController.registerLearner()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
-
-		response.locals.eventRecord = [eventRecord]
 
 		request.params.courseId = 'courseId'
 		request.params.moduleId = 'moduleId'
@@ -425,23 +415,16 @@ describe('EventController', function() {
 
 		await registerLearner(request, response)
 
-		expect(eventRecord.status).to.equal(EventRecord.Status.APPROVED)
-		expect(learnerRecord.updateBooking).to.have.been.calledOnceWith(eventRecord)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
 		)
 	})
 
 	it('should change event record state to requested and redirect to attendee page', async function() {
-		const eventRecord: EventRecord = new EventRecord()
-		eventRecord.status = EventRecord.Status.APPROVED
-
 		const unregisterLearner: (request: Request, response: Response) => void = eventController.unregisterLearner()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
-
-		response.locals.eventRecord = [eventRecord]
 
 		request.params.courseId = 'courseId'
 		request.params.moduleId = 'moduleId'
@@ -452,8 +435,6 @@ describe('EventController', function() {
 
 		await unregisterLearner(request, response)
 
-		expect(eventRecord.status).to.equal(EventRecord.Status.REQUESTED)
-		expect(learnerRecord.updateBooking).to.have.been.calledOnceWith(eventRecord)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/bookingReference`
 		)

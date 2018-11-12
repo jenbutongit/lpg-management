@@ -3,7 +3,7 @@ import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as sinonChai from 'sinon-chai'
 import {beforeEach} from 'mocha'
-import {LearnerRecordConfig} from '../../../src/leaner-record/learnerRecordConfig'
+import {LearnerRecordConfig} from '../../../src/learner-record/learnerRecordConfig'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)

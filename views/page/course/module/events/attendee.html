@@ -21,21 +21,21 @@
                             <span class="list-details span-view">
                                 <p class="govuk-body"><strong>Booking status</strong></p>
                                 <p class="govuk-body">
-                                    {% if booking.status === 0 %}
+                                    {% if booking.status === "Requested" %}
                                         Pending
-                                    {% elif booking.status === 1 %}
+                                    {% elif booking.status === "Confirmed" %}
                                         Booked
-                                    {% elif booking.status === 2 %}
+                                    {% elif booking.status === "Cancelled" %}
                                         Cancelled
                                     {% endif %}
                                 </p>
                             </span>
-                            {% if booking.status === 0 %}
+                            {% if booking.status === "Requested" %}
                                 <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/register" method="post" class="attendee-button">
                                     <button type="submit" class="linkish-button">Change to booked</button>
                                 <form>
                             {% endif %}
-                            {% if booking.status === 1 %}
+                            {% if booking.status === "Confirmed" %}
                                 <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/unregister" method="post" class="attendee-button">
                                     <button type="submit" class="linkish-button">Change to pending</button>
                                 <form>

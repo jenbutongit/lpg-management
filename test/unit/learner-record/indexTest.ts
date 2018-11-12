@@ -1,12 +1,12 @@
-import {LearnerRecord} from '../../../src/leaner-record'
-import {LearnerRecordConfig} from '../../../src/leaner-record/learnerRecordConfig'
+import {LearnerRecord} from '../../../src/learner-record'
+import {LearnerRecordConfig} from '../../../src/learner-record/learnerRecordConfig'
 import {beforeEach} from 'mocha'
 import {Auth} from '../../../src/identity/auth'
 import * as sinonChai from 'sinon-chai'
 import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {OauthRestService} from 'lib/http/oauthRestService'
-import {BookingFactory} from '../../../src/leaner-record/model/factory/BookingFactory'
+import {BookingFactory} from '../../../src/learner-record/model/factory/BookingFactory'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)

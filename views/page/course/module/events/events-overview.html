@@ -114,12 +114,10 @@
                 </ul>
                 <ul class="attendees list">
                   {% for booking in bookings %}
-                      {% if booking.status === 0 %}
+                      {% if booking.status === "Requested" %}
                         {% set payment = "Pending" %}
-                      {% elif booking.status === 1 %}
+                      {% elif booking.status === "Confirmed" %}
                         {% set payment = "Booked" %}
-                      {% elif booking.status === 2 %}
-                         {% set payment = "Cancelled" %}
                       {% endif %}
                       <li class="list-details"><p class="govuk-body title">{{ booking.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
                   {% endfor %}
