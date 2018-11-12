@@ -8,8 +8,8 @@ import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {OauthRestService} from 'lib/http/oauthRestService'
-import {BookingFactory} from '../../../src/learner-record/model/factory/BookingFactory'
-import {Booking} from '../../../src/learner-record/model/Booking'
+import {BookingFactory} from '../../../src/learner-record/model/factory/bookingFactory'
+import {Booking} from '../../../src/learner-record/model/booking'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)

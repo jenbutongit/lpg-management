@@ -1,8 +1,8 @@
 import {OauthRestService} from '../lib/http/oauthRestService'
 import {LearnerRecordConfig} from './learnerRecordConfig'
 import {Auth} from '../identity/auth'
-import {Booking} from './model/Booking'
-import {BookingFactory} from './model/factory/BookingFactory'
+import {Booking} from './model/booking'
+import {BookingFactory} from './model/factory/bookingFactory'
 
 export class LearnerRecord {
 	private _restService: OauthRestService

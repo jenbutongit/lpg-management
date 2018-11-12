@@ -51,7 +51,7 @@ import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
-import {BookingFactory} from './learner-record/model/factory/BookingFactory'
+import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 
 log4js.configure(config.LOGGING)
 

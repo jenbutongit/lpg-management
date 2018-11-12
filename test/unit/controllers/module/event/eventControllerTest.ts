@@ -15,7 +15,7 @@ import {DateRangeCommand} from '../../../../../src/controllers/command/dateRange
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/learner-record'
-import {Booking} from '../../../../../src/learner-record/model/Booking'
+import {Booking} from '../../../../../src/learner-record/model/booking'
 
 chai.use(sinonChai)
 
