@@ -1,4 +1,5 @@
 {% from "../../component/menu/macro.njk" import menu %}
+{% from "../../component/recursiveList/macro.njk" import recursiveList %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -18,17 +19,12 @@
         <h2 class="govuk-heading-m">{{ i18n.organisations.headers.organisationName }}</h2>
         {% if organisationalUnits %}
             <ul class="list organisations-list">
-                {% for organisationalUnit in organisationalUnits %}
-                    <li class="list-item organisation-item u--border--bgrey"><p class="govuk-body flex-container no-margin"><span>{{ organisationalUnit.name }}</span><a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
-                    {% if organisationalUnit.subOrgs %}
-                        <li class="list-item organisation-item u--border--bgrey">
-                            <ul class="list sub-list">
-                                {% for child in organisationalUnit.subOrgs %}
-                                    <li class="list-item organisation-item u--border--bgrey"><p class="govuk-body flex-container no-margin"><span>{{ child.name }}</span><a href="/content-management/{{child.id}}/organisation-overview">View</a></p></li>
-                                {% endfor %}
-                            </ul>
-                        </li>
+                {% for org in organisationalUnits %}
+                    <li class="list-item organisation-item"><p class="govuk-body flex-container no-margin u--border--bgrey"><span>{{ org.name }}</span><a href="/content-management/{{org.id}}/organisation-overview">View</a></p>
+                    {% if org.subOrgs %} 
+                        {{ recursiveList(org) }}
                     {% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

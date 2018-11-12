@@ -17,6 +17,7 @@ export class ModuleFactory {
 		this.create = this.create.bind(this)
 	}
 
+	// prettier-ignore
 	private static defaultCreate(module: VideoModule | LinkModule | FileModule | FaceToFaceModule | ELearningModule, data: any) {
 		module.id = data.id
 		module.type = data.type
@@ -65,6 +66,7 @@ export class ModuleFactory {
 			module.events = (data.events || []).map(this.eventFactory.create)
 			module.productCode = data.productCode
 
+			// prettier-ignore
 			module.events.sort((event1: Event, event2: Event) => {
 				return !event1.dateRanges[0] ? 1 : !event2.dateRanges[0] ? -1 : DateTime.sortDateRanges(event1.dateRanges[0], event2.dateRanges[0])
 			})
