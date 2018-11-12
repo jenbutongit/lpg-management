@@ -3,10 +3,10 @@
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['add_organisation'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/learning-providers" %}
+{% set backButton = "/content-management/" %}
 
 {% block content %}
     <div class="govuk-grid-row">

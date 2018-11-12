@@ -3,13 +3,14 @@
 @import './_global';
 @import './_forms';
 
-@import './page/_add-module';
-@import './page/_add-organisation.scss';
-@import './page/_configure-audience';
-@import './page/_course-overview';
-@import './page/_course-preview';
-@import './page/_events';
-@import './page/_events-preview';
+@import './page/add-module';
+@import './page/add-organisation.scss';
+@import './page/configure-audience';
+@import './page/course-overview';
+@import './page/course-preview';
+@import './page/events';
+@import './page/events-preview';
+@import './page/organisations';
 @import '../../component/audiences/styles';
 @import '../../component/courseDetails/styles';
 @import '../../component/courseModules/styles';

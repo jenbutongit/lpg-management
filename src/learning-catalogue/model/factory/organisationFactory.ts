@@ -1,5 +1,5 @@
-import { Organisation } from '../organisation'
-import { Factory } from './factory'
+import {Organisation} from '../organisation'
+import {Factory} from './factory'
 
 export class OrganisationFactory extends Factory<Organisation> {
 	create(data: any) {

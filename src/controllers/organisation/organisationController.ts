@@ -1,58 +1,37 @@
-import { Request, Response, Router } from 'express'
-import { OrganisationFactory } from '../../learning-catalogue/model/factory/organisationFactory'
-import { Validator } from '../../learning-catalogue/validator/validator'
-import { Organisation } from '../../learning-catalogue/model/organisation'
-import { Csrs } from '../../csrs/'
+import {Request, Response, Router} from 'express'
+import {OrganisationalUnit} from './model/organisationalUnit'
+import {Csrs} from '../../csrs'
+import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
+import * as asyncHandler from 'express-async-handler'
 
 export class OrganisationController {
-    organisationFactory: OrganisationFactory
-    organisationValidator: Validator<Organisation>
-    csrs: Csrs
-    router: Router
+	router: Router
+	csrs: Csrs
 
-    constructor(
-        organisationFactory: OrganisationFactory,
-        organisationValidator: Validator<Organisation>,
-        csrs: Csrs
-    ) {
-        this.organisationFactory = organisationFactory
-        this.organisationValidator = organisationValidator
-        this.csrs = csrs
+	constructor(csrs: Csrs) {
+		this.router = Router()
+		this.csrs = csrs
 
-        this.router = Router()
-        this.setRouterPaths()
-    }
+		this.setRouterPaths()
+	}
 
-    /* istanbul ignore next */
-    private setRouterPaths() {
-        this.router.get('/content-management/add-organisation', this.addOrganisation())
-        this.router.post('/content-management/add-organisation', this.setOrganisation())
-    }
+	/* istanbul ignore next */
+	private setRouterPaths() {
+		this.router.get('/content-management/organisations', asyncHandler(this.getOrganisations()))
+		this.router.get('/content-management/add-organisation', asyncHandler(this.addOrganisation()))
+	}
 
-    public addOrganisation() {
+	public getOrganisations() {
+		return async (request: Request, response: Response) => {
+			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnits()
 
-        return async (request: Request, response: Response) => {
+			response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
+		}
+	}
 
-            response.render('page/organisation/add-organisation')
-        }
-    }
-
-    public setOrganisation() {
-        return async (req: Request, res: Response) => {
-            const data = { ...req.body }
-            const organisation = this.organisationFactory.create(data)
-            const errors = await this.organisationValidator.check(req.body, ['name'])
-
-            if (errors.size) {
-                req.session!.sessionFlash = { errors: errors }
-                req.session!.save(() => {
-                    res.redirect('/content-management/add-organisation')
-                })
-            } else {
-                const newOrganisation = await this.csrs.createOrganisation(organisation)
-                res.redirect('/content-management/organisation-overview/' + newOrganisation.id)
-            }
-        }
-    }
-
+	public addOrganisation() {
+		return async (request: Request, response: Response) => {
+			response.render('page/organisation/add-organisation')
+		}
+	}
 }

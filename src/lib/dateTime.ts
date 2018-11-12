@@ -4,9 +4,7 @@ import {DateRange} from '../learning-catalogue/model/dateRange'
 export class DateTime {
 	private static readonly numberToMonthName = require('number-to-date-month-name')
 	private static readonly convert = require('convert-seconds')
-	private static readonly isoRegex = new RegExp(
-		'^(-)?P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?' + '(T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$'
-	)
+	private static readonly isoRegex = new RegExp('^(-)?P(?:(\\d+)Y)?(?:(\\d+)M)?(?:(\\d+)D)?' + '(T(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+(?:\\.\\d+)?)S)?)?$')
 
 	static parseDuration(isoDuration: string): number | undefined {
 		const parts = isoDuration.match(this.isoRegex)
@@ -55,9 +53,9 @@ export class DateTime {
 			}
 			if (duration.hours > 0 && duration.hours % 24 != 0) {
 				if (duration.hours % 24 == 1) {
-					formattedDuration = (duration.hours % 24) + ' hour ' + formattedDuration
+					formattedDuration = duration.hours % 24 + ' hour ' + formattedDuration
 				} else {
-					formattedDuration = (duration.hours % 24) + ' hours ' + formattedDuration
+					formattedDuration = duration.hours % 24 + ' hours ' + formattedDuration
 				}
 			}
 			if (duration.hours > 23) {
