@@ -71,7 +71,9 @@ describe('Learning Catalogue tests', () => {
 		courseService.listAll = sinon.stub()
 
 		await learningCatalogue.listCourses()
-		return expect(courseService.listAll).to.have.been.calledOnce
+		return expect(courseService.listAll).to.have.been.calledOnceWith(
+			'/courses?status=Draft&status=Published&status=Archived&page=0&size=10'
+		)
 	})
 
 	it('should call moduleService when creating a module', async () => {
@@ -90,6 +92,15 @@ describe('Learning Catalogue tests', () => {
 
 		await learningCatalogue.getModule(courseId, moduleId)
 		return expect(moduleService.get).to.have.been.calledOnceWith(`/courses/${courseId}/modules/${moduleId}`)
+	})
+
+	it('should call moduleService when deleting a module', async () => {
+		const courseId: string = 'course-id'
+		const moduleId: string = 'module-id'
+		moduleService.delete = sinon.stub()
+
+		await learningCatalogue.deleteModule(courseId, moduleId)
+		return expect(moduleService.delete).to.have.been.calledOnceWith(`/courses/${courseId}/modules/${moduleId}`)
 	})
 
 	it('should call learningProviderService when creating a learning provider', async () => {

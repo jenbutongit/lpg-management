@@ -152,6 +152,10 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update',
 			this.updateBooking()
 		)
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
+			this.cancelEvent()
+		)
 	}
 
 	public getDateTime() {
@@ -489,6 +493,12 @@ export class EventController {
 					req.params.eventId
 				}/attendee/${req.params.bookingId}`
 			)
+		}
+	}
+
+	public cancelEvent() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/cancel')
 		}
 	}
 }
