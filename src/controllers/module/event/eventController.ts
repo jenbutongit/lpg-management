@@ -149,13 +149,8 @@ export class EventController {
 		)
 
 		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/register',
-			this.registerLearner()
-		)
-
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/unregister',
-			this.unregisterLearner()
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update',
+			this.updateBooking()
 		)
 	}
 
@@ -473,7 +468,7 @@ export class EventController {
 		}
 	}
 
-	public registerLearner() {
+	public updateBooking() {
 		return async (req: Request, res: Response) => {
 			const bookings = res.locals.bookings
 			const bookingId = req.params.bookingId
@@ -481,27 +476,11 @@ export class EventController {
 				return booking.id == bookingId
 			})
 
-			booking.status = Booking.Status.CONFIRMED
-
-			this.learnerRecord.updateBooking(req.params.eventId, booking)
-
-			res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
-					req.params.eventId
-				}/attendee/${req.params.bookingId}`
-			)
-		}
-	}
-
-	public unregisterLearner() {
-		return async (req: Request, res: Response) => {
-			const bookings = res.locals.bookings
-			const bookingId = req.params.bookingId
-			const booking = bookings.find(function(booking: Booking) {
-				return booking.id == bookingId
-			})
-
-			booking.status = Booking.Status.REQUESTED
+			if (req.body.type == 'unregister') {
+				booking.status = Booking.Status.REQUESTED
+			} else {
+				booking.status = Booking.Status.CONFIRMED
+			}
 
 			this.learnerRecord.updateBooking(req.params.eventId, booking)
 

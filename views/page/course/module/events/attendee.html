@@ -31,14 +31,16 @@
                                 </p>
                             </span>
                             {% if booking.status === "Requested" %}
-                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/register" method="post" class="attendee-button">
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/update" method="post" class="attendee-button">
+                                    <input type="hidden" name="type" value="register">
                                     <button type="submit" class="linkish-button">Change to booked</button>
-                                <form>
+                                </form>
                             {% endif %}
                             {% if booking.status === "Confirmed" %}
-                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/unregister" method="post" class="attendee-button">
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/update" method="post" class="attendee-button">
+                                    <input type="hidden" name="type" value="unregister">
                                     <button type="submit" class="linkish-button">Change to pending</button>
-                                <form>
+                                </form>
                             {% endif %}
                         </li>
                     </ul>

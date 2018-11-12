@@ -406,12 +406,12 @@ describe('EventController', function() {
 		await getAttendeeDetails(request, response)
 	})
 
-	it('should change event record state to approved and redirect to attendee page', async function() {
+	it('should change event record state to confirmed and redirect to attendee page', async function() {
 		const booking: Booking = new Booking()
 		booking.id = 99
 		const bookings = [booking]
 
-		const registerLearner: (request: Request, response: Response) => void = eventController.registerLearner()
+		const registerLearner: (request: Request, response: Response) => void = eventController.updateBooking()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
@@ -422,6 +422,8 @@ describe('EventController', function() {
 		request.params.moduleId = 'moduleId'
 		request.params.eventId = 'eventId'
 		request.params.bookingId = 99
+
+		request.body.type = 'register'
 
 		learnerRecord.updateBooking = sinon.stub()
 
@@ -430,6 +432,7 @@ describe('EventController', function() {
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`
 		)
+		expect(booking.status).to.be.equal(Booking.Status.CONFIRMED)
 	})
 
 	it('should change event record state to requested and redirect to attendee page', async function() {
@@ -437,7 +440,7 @@ describe('EventController', function() {
 		booking.id = 99
 		const bookings = [booking]
 
-		const unregisterLearner: (request: Request, response: Response) => void = eventController.unregisterLearner()
+		const registerLearner: (request: Request, response: Response) => void = eventController.updateBooking()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
@@ -449,13 +452,16 @@ describe('EventController', function() {
 		request.params.eventId = 'eventId'
 		request.params.bookingId = 99
 
+		request.body.type = 'unregister'
+
 		learnerRecord.updateBooking = sinon.stub()
 
-		await unregisterLearner(request, response)
+		await registerLearner(request, response)
 
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`
 		)
+		expect(booking.status).to.be.equal(Booking.Status.REQUESTED)
 	})
 
 	describe('Edit and update DateRange', () => {
