@@ -2,43 +2,56 @@
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['organisations_page_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n.organisations.title.manageOrganisations }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/learning-providers" %}
+{% set backButton = "/content-management/" %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l">Manage organisations</h1>
-        </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l">{{ i18n.organisations.title.manageOrganisations }}</h1>
     </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-m">Organisation name</h2>
-            <ul class="list organisations-list">
-                <li class="list-item organisation-item u--border--bgrey">
-                    <p class="govuk-body flex-container no-margin"><span>Cabinet Office</span><a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
-                    <ul class="list sub-list">
-                        <li class="list-item organisation-item u--border--bgrey"><p class="no-margin govuk-body flex-container">Business Partnerships<a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
-                        <li class="list-item organisation-item u--border--bgrey"><p class="govuk-body no-margin  flex-container">Cabinet Office HR<a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
-                    </ul>
-                </li>    
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">{{ i18n.organisations.headers.organisationName }}</h2>
+        {% for organisationalUnit in organisationalUnits %}
+            {{ organisationalUnit.name }}
+            {{ organisationalUnit.code }}
+            {{ organisationalUnit.id }}
+            {% for child in organisationalUnit.subOrgs %}
+                {{ child.name }}
+                {{ child.code }}
+                {% for c in child.subOrgs %}
+                    {{ child.name }}
+                    {{ child.code }}
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+        <ul class="list organisations-list">
+            <li class="list-item organisation-item u--border--bgrey">
+                <p class="govuk-body flex-container no-margin"><span>Cabinet Office</span><a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
+            <ul class="list sub-list">
+                <li class="list-item organisation-item u--border--bgrey"><p class="no-margin govuk-body flex-container">Business Partnerships<a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
+                <li class="list-item organisation-item u--border--bgrey"><p class="govuk-body no-margin  flex-container">Cabinet Office HR<a href="/content-management/{{organisationalUnit.id}}/organisation-overview">View</a></p></li>
             </ul>
-            <a class="govuk-body govuk-link cancel" href="/content-management">&lt; Back to dashboard</a>
-        </div>
-        <div class="govuk-grid-column-one-third">
-            <div class="right-menu">
-                {% block menu %}
-                {% set actions = [
-                        {
-                            link: '/content-management/add-organisation',
-                            text: 'Add a new organisation'
-                        }
-                    ] %}
-                    {{ menu("Actions", actions) }}
-                {% endblock %}
-            </div>
+            </li>
+        </ul>
+        <a class="govuk-body govuk-link cancel" href="/content-management">&lt; Back to dashboard</a>
+    </div>
+    <div class="govuk-grid-column-one-third">
+        <div class="right-menu">
+            {% block menu %}
+            {% set actions = [
+            {
+            link: '/content-management/add-organisation',
+            text: 'Add a new organisation'
+            }
+            ] %}
+            {{ menu("Actions", actions) }}
+            {% endblock %}
         </div>
     </div>
+</div>
 {% endblock %}
