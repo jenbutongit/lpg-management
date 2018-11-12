@@ -2,11 +2,14 @@ import {LearnerRecord} from '../../../src/learner-record'
 import {LearnerRecordConfig} from '../../../src/learner-record/learnerRecordConfig'
 import {beforeEach} from 'mocha'
 import {Auth} from '../../../src/identity/auth'
+import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
 import * as chai from 'chai'
+import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {OauthRestService} from 'lib/http/oauthRestService'
 import {BookingFactory} from '../../../src/learner-record/model/factory/BookingFactory'
+import {Booking} from '../../../src/learner-record/model/Booking'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -24,5 +27,32 @@ describe('Leaner Record Tests', () => {
 
 		learnerRecord = new LearnerRecord(config, {} as Auth, bookingFactory)
 		learnerRecord.restService = restService
+	})
+
+	it('should get event bookings', async () => {
+		const eventId = 'test-event-id'
+		const data = [new Booking(), new Booking()]
+
+		restService.get = sinon.stub().returns(data)
+		bookingFactory.create = sinon.stub()
+
+		await learnerRecord.getEventBookings(eventId)
+
+		expect(restService.get).to.have.been.calledOnceWith(`/event/test-event-id/booking`)
+		expect(bookingFactory.create).to.have.been.calledTwice
+	})
+
+	it('should update booking', async () => {
+		const eventId = 'test-event-id'
+		const booking: Booking = new Booking()
+		booking.id = 99
+		booking.status = Booking.Status.REQUESTED
+
+		restService.patch = sinon.stub()
+		await learnerRecord.updateBooking(eventId, booking)
+
+		expect(restService.patch).to.have.been.calledOnceWith('/event/test-event-id/booking/99', {
+			status: booking.status,
+		})
 	})
 })
