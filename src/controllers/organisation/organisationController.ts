@@ -31,7 +31,9 @@ export class OrganisationController {
 
 	public addOrganisation() {
 		return async (request: Request, response: Response) => {
-			response.render('page/organisation/add-organisation')
+			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnitsForTypehead()
+
+			response.render('page/organisation/add-organisation', {organisationalUnits: organisationalUnits})
 		}
 	}
 }

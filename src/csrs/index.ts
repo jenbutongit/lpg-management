@@ -19,6 +19,10 @@ export class Csrs {
 		return await this._organisationalUnitService.listAll(`/organisationalUnits/tree`)
 	}
 
+	async listOrganisationalUnitsForTypehead(): Promise<DefaultPageResults<OrganisationalUnit>> {
+		return await this._organisationalUnitService.listAllAsRawData(`/organisationalUnits/flat`)
+	}
+
 	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
 		this._organisationalUnitService = value
 	}

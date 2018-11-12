@@ -34,6 +34,12 @@ export class EntityService<T> {
 		return data.results
 	}
 
+	async listAllAsRawData(path: string): Promise<DefaultPageResults<T>> {
+		const data = await this._restService.get(path)
+
+		return data
+	}
+
 	async create(path: string, entity: any): Promise<T> {
 		const data = await this._restService.post(path, entity)
 		return this._factory.create(data)

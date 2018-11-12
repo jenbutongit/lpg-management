@@ -52,8 +52,20 @@ describe('Organisation Controller Tests', function() {
 		expect(res.render).to.have.been.calledOnceWith('page/organisation/manage-organisations', {organisationalUnits: pageResults})
 	})
 
-	it('should call add organisations page', async function() {
+	it('should call add organisations page with organisations typeahead list', async function() {
+		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+
+		const pageResults: PageResults<OrganisationalUnit> = {
+			page: 0,
+			size: 10,
+			totalResults: 10,
+			results: [organisationalUnit],
+		} as PageResults<OrganisationalUnit>
+
 		const addOrganisation: (request: Request, response: Response) => void = organisationController.addOrganisation()
+
+		let listOrganisationalUnitsForTypehead = sinon.stub().returns(Promise.resolve(pageResults))
+		csrs.listOrganisationalUnitsForTypehead = listOrganisationalUnitsForTypehead
 
 		await addOrganisation(req, res)
 
