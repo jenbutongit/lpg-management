@@ -123,11 +123,27 @@
                 ]
               }) }}
             </div>
+            <div class="add-attendee">
+                <h3 class="govuk-heading-m">Invite learners</h3>
+                <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
+                    <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>
+                    <div class="input-with-button">
+                        {{ govukInput({
+                        id: "learnerEmail",
+                        name: "learnerEmail"
+                        }) }}
+                        {{ govukButton({
+                        text: "Invite",
+                        classes: "button-blue"
+                        }) }}
+                    </div>
+                </form>
+            </div>
             <div class="course-attendees">
-              <h3 class="govuk-heading-m">Course attendees</h3>
+              <h3 class="govuk-heading-m">Event attendees</h3>
               {% if eventRecord.length > 0 %}
                 <ul class="attendees headers">
-                  <li class="list-headers"><p class="govuk-body header title"><strong>Name</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><span class="button-header"></span></li>
+                  <li class="list-headers"><p class="govuk-body header title"><strong>Email Address</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><span class="button-header"></span></li>
                 </ul>
                 <ul class="attendees list">
                   {% for attendee in eventRecord %}
@@ -142,14 +158,14 @@
                   {% endfor %}
                 </ul>
               {% else %}
-                <p class="govuk-body">This course doesn't have any attendees yet.</p>
+                <p class="govuk-body">This event doesn't have any attendees yet.</p>
               {% endif %}
             </div>
             {% if invitees.length > 0 %}
             <div class="course-invitees">
-                <h3 class="govuk-heading-m">Course invitees</h3>
+                <h3 class="govuk-heading-m">Event invitees</h3>
                 <ul class="attendees headers">
-                    <li class="list-headers"><p class="govuk-body header title"><strong>Name</strong></p></li>
+                    <li class="list-headers"><p class="govuk-body header title"><strong>Email address</strong></p></li>
                 </ul>
                 <ul class="attendees list">
                     {% for invitee in invitees %}
@@ -158,21 +174,6 @@
                 </ul>
             </div>
             {% endif %}
-            <div class="add-attendee">
-              <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
-                <p class="govuk-body no-margin"><strong>Add an attendee with their email address</strong></p>
-                <div class="input-with-button">
-                  {{ govukInput({
-                    id: "learnerEmail",
-                    name: "learnerEmail"
-                  }) }}
-                  {{ govukButton({
-                    text: "Search for user",
-                    classes: "button-blue"
-                  }) }}
-                  </div>
-              </form>
-            </div>
         </div>
         <div class="govuk-grid-column-one-third">
           <div class="right-menu">
