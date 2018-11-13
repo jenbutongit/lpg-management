@@ -105,7 +105,8 @@ export class ApplicationContext {
 	inviteFactory: InviteFactory
 	learnerRecordEventFactory: LearnerRecordEventFactory
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
