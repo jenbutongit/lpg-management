@@ -230,7 +230,7 @@ export class ApplicationContext {
 
 		this.bookingFactory = new BookingFactory()
 
-		this.learnerRecordConfig = new LearnerRecordConfig('http://localhost:9000')
+		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
 		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory)
 
 		this.eventController = new EventController(
