@@ -480,11 +480,7 @@ export class EventController {
 				return booking.id == bookingId
 			})
 
-			if (req.body.type == 'unregister') {
-				booking.status = Booking.Status.REQUESTED
-			} else {
-				booking.status = Booking.Status.CONFIRMED
-			}
+			booking.status = Booking.Status.CONFIRMED
 
 			this.learnerRecord.updateBooking(req.params.eventId, booking)
 
