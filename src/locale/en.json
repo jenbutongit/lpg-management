@@ -79,9 +79,9 @@
 			"manageOrganisations": "Manage organisations",
 			"addANewOrganisation": "Add a new organisation"
 		},
-        "headers": {
-          "organisationName": "Organisation name"
-        }
+		"headers": {
+			"organisationName": "Organisation name"
+		}
 	},
 
 	"module": {
@@ -142,6 +142,8 @@
 	"module_link_add_title": "Add a link",
 	"module_youtube_add_title": "Add a YouTube video",
 	"module_face_to_face_add": "Add a classroom module",
+	"organisations_code_empty": "A valid code is required",
+	"organisations_new_name_empty": "Name is required",
 	"organisations_page_title": "Manage organisations",
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
