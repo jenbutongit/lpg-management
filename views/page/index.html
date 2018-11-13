@@ -1,5 +1,6 @@
 {% from "../component/list/macro.njk" import list with context %}
 {% from "../component/menu/macro.njk" import menu %}
+{% from "../component/search/macro.njk" import search %}
 
 {% extends "../component/Page.njk" %}
 
@@ -11,6 +12,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-l">Content management</h1>
+            {{ search() }}
         </div>
     </div>
 
