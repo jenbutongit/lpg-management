@@ -3,10 +3,10 @@
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['add_organisation'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/learning-providers" %}
+{% set backButton = "/content-management/" %}
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -94,8 +94,8 @@
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
     <script type="text/javascript" src="/js/add-organisation.js"></script>
     {% set orgs = [] %}
-    {% for organisation in organisations._embedded.organisationalUnits %}
-        {% set orgName = orgs.push(organisation.name)%}
+    {% for key, item in organisationalUnits %}
+        {% set orgName = orgs.push(item + '|')%}
     {% endfor %}
     <script orgs='{{orgs}}' src="/js/orgs.js"></script>
 {% endblock %}

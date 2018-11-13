@@ -50,8 +50,6 @@ import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCo
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
 import {OrganisationController} from './controllers/organisation/organisationController'
-import {OrganisationFactory} from './learning-catalogue/model/factory/organisationFactory'
-import {Organisation} from './learning-catalogue/model/organisation'
 import {Csrs} from './csrs'
 
 log4js.configure(config.LOGGING)
@@ -73,7 +71,6 @@ export class ApplicationContext {
 	learningProviderValidator: Validator<LearningProvider>
 	cancellationPolicyValidator: Validator<CancellationPolicy>
 	termsAndConditionsValidator: Validator<TermsAndConditions>
-	organisationValidator: Validator<Organisation>
 	learningProviderController: LearningProviderController
 	cancellationPolicyController: CancellationPolicyController
 	termsAndConditionsController: TermsAndConditionsController
@@ -102,11 +99,9 @@ export class ApplicationContext {
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
 	organisationController: OrganisationController
-	organisationFactory: OrganisationFactory
 	csrs: Csrs
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -131,8 +126,6 @@ export class ApplicationContext {
 		)
 
 		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url)
-
-		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
@@ -149,13 +142,7 @@ export class ApplicationContext {
 
 		this.courseValidator = new Validator<Course>(this.courseFactory)
 		this.courseService = new CourseService(this.learningCatalogue)
-		this.courseController = new CourseController(
-			this.learningCatalogue,
-			this.courseValidator,
-			this.courseFactory,
-			this.courseService,
-			this.csrsService
-		)
+		this.courseController = new CourseController(this.learningCatalogue, this.courseValidator, this.courseFactory, this.courseService, this.csrsService)
 
 		this.homeController = new HomeController(this.learningCatalogue, this.pagination)
 		this.learningProviderFactory = new LearningProviderFactory()
@@ -167,68 +154,31 @@ export class ApplicationContext {
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory()
 		this.moduleValidator = new Validator<Module>(this.moduleFactory)
-		this.youtubeModuleController = new YoutubeModuleController(
-			this.learningCatalogue,
-			this.moduleValidator,
-			this.moduleFactory,
-			this.youtubeService
-		)
+		this.youtubeModuleController = new YoutubeModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.youtubeService)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
+		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
 		this.cancellationPolicyValidator = new Validator<CancellationPolicy>(this.cancellationPolicyFactory)
 		this.termsAndConditionsValidator = new Validator<TermsAndConditions>(this.termsAndConditionsFactory)
 
-		this.learningProviderController = new LearningProviderController(
-			this.learningCatalogue,
-			this.learningProviderFactory,
-			this.learningProviderValidator,
-			this.pagination
-		)
+		this.learningProviderController = new LearningProviderController(this.learningCatalogue, this.learningProviderFactory, this.learningProviderValidator, this.pagination)
 
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
-		this.cancellationPolicyController = new CancellationPolicyController(
-			this.learningCatalogue,
-			this.cancellationPolicyFactory,
-			this.cancellationPolicyValidator
-		)
+		this.cancellationPolicyController = new CancellationPolicyController(this.learningCatalogue, this.cancellationPolicyFactory, this.cancellationPolicyValidator)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 
-		this.termsAndConditionsController = new TermsAndConditionsController(
-			this.learningCatalogue,
-			this.termsAndConditionsFactory,
-			this.termsAndConditionsValidator
-		)
+		this.termsAndConditionsController = new TermsAndConditionsController(this.learningCatalogue, this.termsAndConditionsFactory, this.termsAndConditionsValidator)
 
 		this.mediaConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url + '/media')
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
-		this.fileController = new FileController(
-			this.learningCatalogue,
-			this.moduleValidator,
-			this.moduleFactory,
-			new OauthRestService(this.mediaConfig, this.auth)
-		)
-		this.linkModuleController = new LinkModuleController(
-			this.learningCatalogue,
-			this.moduleFactory,
-			this.moduleValidator
-		)
+		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, new OauthRestService(this.mediaConfig, this.auth))
+		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory, this.moduleValidator)
 
-		this.faceToFaceController = new FaceToFaceModuleController(
-			this.learningCatalogue,
-			this.moduleValidator,
-			this.moduleFactory
-		)
-
-		this.organisationValidator = new Validator<Organisation>(this.organisationFactory)
-		this.organisationController = new OrganisationController(
-			this.organisationFactory,
-			this.organisationValidator,
-			this.csrs
-		)
+		this.faceToFaceController = new FaceToFaceModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 
@@ -247,13 +197,10 @@ export class ApplicationContext {
 		)
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
-		this.audienceController = new AudienceController(
-			this.learningCatalogue,
-			this.audienceValidator,
-			this.audienceFactory,
-			this.courseService,
-			this.csrsService
-		)
+		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
+
+		this.csrs = new Csrs(this.csrsConfig, this.auth)
+		this.organisationController = new OrganisationController(this.csrs)
 	}
 
 	addToResponseLocals() {
