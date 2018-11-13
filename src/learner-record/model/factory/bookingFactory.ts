@@ -1,4 +1,4 @@
-import {Booking} from '../Booking'
+import {Booking} from '../booking'
 
 export class BookingFactory {
 	constructor() {
