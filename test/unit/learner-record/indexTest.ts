@@ -34,12 +34,22 @@ describe('Leaner Record Tests', () => {
 		const data = [new Booking(), new Booking()]
 
 		restService.get = sinon.stub().returns(data)
-		bookingFactory.create = sinon.stub()
+		bookingFactory.create = sinon.stub().returns(data)
 
 		await learnerRecord.getEventBookings(eventId)
 
 		expect(restService.get).to.have.been.calledOnceWith(`/event/test-event-id/booking`)
 		expect(bookingFactory.create).to.have.been.calledTwice
+	})
+
+	it('should throw error if error occurs in GET request', async () => {
+		const eventId = 'test-event-id'
+
+		restService.get = sinon.stub().throws(new Error(`An error occurred when GETTING`))
+
+		expect(learnerRecord.getEventBookings(eventId)).to.be.rejectedWith(
+			`An error occurred when trying to get event bookings: An error occurred when GETTING`
+		)
 	})
 
 	it('should update booking', async () => {
@@ -54,5 +64,16 @@ describe('Leaner Record Tests', () => {
 		expect(restService.patch).to.have.been.calledOnceWith('/event/test-event-id/booking/99', {
 			status: booking.status,
 		})
+	})
+
+	it('should throw error if error occurs with PATCH request', async () => {
+		const eventId = 'eventId'
+		const booking = new Booking()
+
+		restService.patch = sinon.stub().throws(new Error(`An error occurred when PATCHING`))
+
+		expect(learnerRecord.updateBooking(eventId, booking)).to.be.rejectedWith(
+			'An error occurred when trying to update booking: An error occurred when PATCHING'
+		)
 	})
 })

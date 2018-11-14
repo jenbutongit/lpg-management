@@ -16,6 +16,7 @@ import {DateRangeCommandFactory} from '../../../../../src/controllers/command/fa
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/learner-record'
 import {Booking} from '../../../../../src/learner-record/model/booking'
+import {DateTime} from '../../../../../src/lib/dateTime'
 
 chai.use(sinonChai)
 
@@ -376,8 +377,11 @@ describe('EventController', function() {
 
 		response.locals.event = event
 
+		learnerRecord.getEventBookings = sinon.stub()
+
 		await getEventOverview(request, response)
 
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith(event.id)
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
 	})
 
@@ -389,6 +393,8 @@ describe('EventController', function() {
 		const event: Event = new Event()
 		event.dateRanges = [dateRange]
 
+		const eventDateWithMonthAsText = DateTime.convertDate(event.dateRanges[0].date)
+
 		const booking: Booking = new Booking()
 		booking.id = 99
 		const bookings = [booking]
@@ -399,11 +405,18 @@ describe('EventController', function() {
 		const response: Response = mockRes()
 
 		response.locals.event = event
-		response.locals.bookings = bookings
 
 		request.params.bookingId = 99
 
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
 		await getAttendeeDetails(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith(event.id)
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/attendee', {
+			booking,
+			eventDateWithMonthAsText,
+		})
 	})
 
 	it('should change event record state to confirmed and redirect to attendee page', async function() {
@@ -416,8 +429,6 @@ describe('EventController', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		response.locals.bookings = bookings
-
 		request.params.courseId = 'courseId'
 		request.params.moduleId = 'moduleId'
 		request.params.eventId = 'eventId'
@@ -426,9 +437,11 @@ describe('EventController', function() {
 		request.body.type = 'register'
 
 		learnerRecord.updateBooking = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
 
 		await registerLearner(request, response)
 
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`
 		)

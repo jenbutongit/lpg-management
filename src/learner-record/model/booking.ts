@@ -12,5 +12,6 @@ export namespace Booking {
 	export enum Status {
 		REQUESTED = 'Requested',
 		CONFIRMED = 'Confirmed',
+		CANCELLED = 'Cancelled',
 	}
 }

@@ -77,17 +77,6 @@ export class EventController {
 			}
 		})
 
-		this.router.param('eventId', async (req, res, next, eventId) => {
-			const bookings = await this.learnerRecord.getEventBookings(eventId)
-
-			if (bookings) {
-				res.locals.bookings = bookings
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
-
 		this.router.param('courseId', async (req, res, next, courseId) => {
 			const date = new Date(Date.now())
 			res.locals.exampleYear = date.getFullYear() + 1
@@ -453,20 +442,21 @@ export class EventController {
 		return async (req: Request, res: Response) => {
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
-			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+
+			res.render('page/course/module/events/events-overview', {bookings, eventDateWithMonthAsText})
 		}
 	}
 
 	public getAttendeeDetails() {
 		return async (req: Request, res: Response) => {
-			const bookings = res.locals.bookings
-			const bookingId = req.params.bookingId
-			const booking = bookings.find(function(booking: Booking) {
-				return booking.id == bookingId
-			})
-
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
 
 			res.render('page/course/module/events/attendee', {booking, eventDateWithMonthAsText})
 		}
@@ -474,11 +464,9 @@ export class EventController {
 
 	public updateBooking() {
 		return async (req: Request, res: Response) => {
-			const bookings = res.locals.bookings
+			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
 			const bookingId = req.params.bookingId
-			const booking = bookings.find(function(booking: Booking) {
-				return booking.id == bookingId
-			})
+			const booking = this.findBooking(bookings, bookingId)
 
 			booking.status = Booking.Status.CONFIRMED
 
@@ -496,5 +484,11 @@ export class EventController {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/cancel')
 		}
+	}
+
+	private findBooking(bookings: any, bookingId: number): Booking {
+		return bookings.find(function(booking: Booking) {
+			return booking.id == bookingId
+		})
 	}
 }
