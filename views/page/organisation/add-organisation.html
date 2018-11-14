@@ -22,27 +22,19 @@
             {{ errorSummary(errors.fields) }}
             
               <form action="/content-management/organisations/organisation" method="post">
-                {% if errors.fields %}
-                    {% set classNames = "govuk-fieldset govuk-form-group--error" %}
-                    {% set message = "govuk-error-message" %}
-                {% else %}
-                    {% set classNames = "govuk-fieldset" %}
-                    {% set message = "no-errors" %}
-                {% endif %}
 
-                <div class="{{classNames}}">
-                    <p class="{{message}}">Select which organisations are included</p>
-
-                    <label for="last-location">What was the last location you visited?</label>
+                <div class="govuk-form-group">
+                    <h2 class="govuk-heading-s no-margin">Parent organisation</h2>
+                    <p class="govuk-body custom-margin">If your new organisation has an existing parent, find them in the list below.</p>
+                    <p for="organisationalUnit no-margin" class="govuk-body hint custom-margin">Start typing to find your organisation name</p>
                     <div class="autocomplete-wrapper">
-                        <select name="last-location" id="last-location">
+                        <select name="organisationalUnit" id="organisationalUnit">
+                            <option value=""></option>
                             {% for key, item in organisationalUnits %}
                                 <option value={{ key }}>{{ item }}</option>
                             {% endfor %}
                         </select>
                     </div>
-
-
                 </div>
                 {% if errors.fields.newName %}
                     {{ govukInput({
@@ -111,19 +103,5 @@
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-    <script type="text/javascript">
-        var selectEl = document.querySelector('#last-location')
-        accessibleAutocomplete.enhanceSelectElement({
-            selectElement: selectEl
-        })
-
-        var queryStringParameters = window.location.search
-        var previouslySubmitted = queryStringParameters.length > 0
-        if (previouslySubmitted) {
-            var submittedEl = document.querySelector('.submitted')
-            submittedEl.classList.remove('submitted--hidden')
-            var params = new URLSearchParams(document.location.search.split('?')[1])
-            document.querySelector('.submitted__last-location').innerHTML = params.get('last-location')
-        }
-    </script>
+    <script type="text/javascript" src="/js/manage-orgs.js"></script>
 {% endblock %}
