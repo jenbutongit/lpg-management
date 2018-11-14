@@ -22,7 +22,11 @@ export class LearnerRecord {
 	}
 
 	async inviteLearner(eventId: string, invite: Invite) {
-		return await this._restService.post(`/event/${eventId}/invitee`, invite)
+		try {
+			return await this._restService.post(`/event/${eventId}/invitee`, invite)
+		} catch (e) {
+			return null
+		}
 	}
 
 	set restService(value: OauthRestService) {

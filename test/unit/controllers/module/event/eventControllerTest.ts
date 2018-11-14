@@ -17,6 +17,7 @@ import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/learner-record'
 import {IdentityService} from '../../../../../src/identity/identityService'
 import {InviteFactory} from '../../../../../src/learner-record/model/factory/inviteFactory'
+import {Invite} from '../../../../../src/learner-record/model/invite'
 
 chai.use(sinonChai)
 
@@ -343,7 +344,7 @@ describe('EventController', function() {
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
 	})
 
-	it('Should check email address and redirect to event overview with success message', async () => {
+	it('Should invite user and redirect to event overview with success message', async () => {
 		const request = mockReq()
 		const response = mockRes()
 
@@ -359,28 +360,19 @@ describe('EventController', function() {
 		const dateRanges: DateRange[] = [dateRange]
 		response.locals.event = {dateRanges}
 
-		eventController.identityService.getDetailsByEmail = sinon
-			.stub()
-			.withArgs('test@test.com', 'test-token')
-			.returns({test: 'test'})
-
-		learnerRecord.inviteLearner = sinon.stub()
+		learnerRecord.inviteLearner = sinon.stub().returns(new Invite())
 
 		inviteFactory.create = sinon.stub()
 
 		await eventController.inviteLearner()(request, response)
 
-		expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
-			'test@test.com',
-			'test-token'
-		)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
 		)
 		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_found_message')
 	})
 
-	it('Should check email address and redirect to event overview with not found message', async () => {
+	it('Should fail to invite user and redirect to event overview with not found message', async () => {
 		const request = mockReq()
 		const response = mockRes()
 
@@ -396,14 +388,12 @@ describe('EventController', function() {
 		const dateRanges: DateRange[] = [dateRange]
 		response.locals.event = {dateRanges}
 
-		eventController.identityService.getDetailsByEmail = sinon.stub().returns(null)
+		learnerRecord.inviteLearner = sinon.stub().returns(null)
+
+		inviteFactory.create = sinon.stub()
 
 		await eventController.inviteLearner()(request, response)
 
-		expect(eventController.identityService.getDetailsByEmail).to.have.been.calledOnceWith(
-			'test@test.com',
-			'test-token'
-		)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
 		)

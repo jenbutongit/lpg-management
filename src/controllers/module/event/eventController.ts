@@ -489,22 +489,21 @@ export class EventController {
 			}
 
 			const emailAddress = data.learnerEmail
-			const identityDetails = await this.identityService.getDetailsByEmail(emailAddress, req.user!.accessToken)
 
-			if (!identityDetails) {
+			data.event = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
+				req.params.moduleId
+			}/events/${req.params.eventId}`
+
+			const response = await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
+
+			if (response) {
 				req.session!.sessionFlash = {
-					emailAddressFoundMessage: 'email_address_not_found_message',
+					emailAddressFoundMessage: 'email_address_found_message',
 					emailAddress: emailAddress,
 				}
 			} else {
-				data.event = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${
-					req.params.moduleId
-				}/events/${req.params.eventId}`
-
-				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
-
 				req.session!.sessionFlash = {
-					emailAddressFoundMessage: 'email_address_found_message',
+					emailAddressFoundMessage: 'email_address_not_found_message',
 					emailAddress: emailAddress,
 				}
 			}
