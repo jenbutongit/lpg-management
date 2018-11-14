@@ -8,4 +8,6 @@ export class OrganisationalUnit {
 	paymentMethods: string[]
 
 	subOrgs: OrganisationalUnit[]
+
+	parent: OrganisationalUnit
 }

@@ -9,20 +9,22 @@ import {OrganisationController} from '../../../../src/controllers/organisation/o
 import {Csrs} from '../../../../src/csrs'
 import {OrganisationalUnit} from '../../../../src/controllers/organisation/model/organisationalUnit'
 import {PageResults} from '../../../../src/learning-catalogue/model/pageResults'
+import {OrganisationalUnitFactory} from '../../../../src/controllers/organisation/model/organisationalUnitFactory'
 
 chai.use(sinonChai)
 
 describe('Organisation Controller Tests', function() {
 	let organisationController: OrganisationController
 	let csrs: Csrs
+	let organisationalUnitFactory: OrganisationalUnitFactory
 
 	let req: Request
 	let res: Response
 
 	beforeEach(() => {
 		csrs = <Csrs>{}
-
-		organisationController = new OrganisationController(csrs)
+		organisationalUnitFactory: <OrganisationalUnitFactory>{}
+		organisationController = new OrganisationController(csrs, organisationalUnitFactory)
 
 		req = mockReq()
 		res = mockRes()
@@ -70,5 +72,13 @@ describe('Organisation Controller Tests', function() {
 		await addOrganisation(req, res)
 
 		expect(res.render).to.have.been.calledOnceWith('page/organisation/add-organisation')
+	})
+
+	it('should call redirect to manage organisations when an organisation is created', async function() {
+		const createOrganisation: (request: Request, response: Response) => void = organisationController.createOrganisation()
+
+		await createOrganisation(req, res)
+
+		expect(res.redirect).to.have.been.calledOnceWith('/content-management/organisations')
 	})
 })

@@ -21,7 +21,7 @@
 
             {{ errorSummary(errors.fields) }}
             
-              <form action="/content-management/add-organisation" method="post">
+              <form action="/content-management/organisations/organisation" method="post">
                 {% if errors.fields %}
                     {% set classNames = "govuk-fieldset govuk-form-group--error" %}
                     {% set message = "govuk-error-message" %}
@@ -32,22 +32,25 @@
 
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
-                  
-                        <div class="typeahead-container govuk-form-group">
-                            <label class="govuk-body no-margin" for="autocomplete"><strong>Parent organisation</strong></label>
-                            <p class="govuk-body no-margin">If your new organisation has an existing parent, find them in the list below.</p>
-                            <p class="govuk-hint no-margin govuk-body">Start typing to find your organisation name</p>
-                            <div id="autocomplete-container"></div>
-                        </div>
-               
+
+                    <label for="last-location">What was the last location you visited?</label>
+                    <div class="autocomplete-wrapper">
+                        <select name="last-location" id="last-location">
+                            {% for key, item in organisationalUnits %}
+                                <option value={{ key }}>{{ item }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
                 </div>
                 {% if errors.fields.newName %}
                     {{ govukInput({
                         label: {
-                            text: "New organisation name"
+                            text: "Organisation name"
                         },
-                        id: "new-name",
-                        name: "newName",
+                        id: "name",
+                        name: "name",
                         errorMessage: {
                             text: i18n['organistaion_new_name_empty']
                         }
@@ -55,10 +58,10 @@
                 {% else %}
                     {{ govukInput({
                         label: {
-                            text: "New organisation name"
+                            text: "Organisation name"
                         },
-                        id: "new-name",
-                        name: "newName"
+                        id: "name",
+                        name: "name"
                     }) }}
                 {% endif %}
                 {% if errors.fields.code %}
@@ -88,7 +91,7 @@
                         text: "Abbreviation"
                     },
                     classes: "govuk-input--width-10",
-                    id: "abbr",
+                    id: "abbreviation",
                     name: "abbr"
                 }) }}
                 <div class="button-container">
@@ -108,10 +111,19 @@
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-    <script type="text/javascript" src="/js/add-organisation.js"></script>
-    {% set orgs = [] %}
-    {% for key, item in organisationalUnits %}
-        {% set orgName = orgs.push(item + '|')%}
-    {% endfor %}
-    <script orgs='{{orgs}}' src="/js/orgs.js"></script>
+    <script type="text/javascript">
+        var selectEl = document.querySelector('#last-location')
+        accessibleAutocomplete.enhanceSelectElement({
+            selectElement: selectEl
+        })
+
+        var queryStringParameters = window.location.search
+        var previouslySubmitted = queryStringParameters.length > 0
+        if (previouslySubmitted) {
+            var submittedEl = document.querySelector('.submitted')
+            submittedEl.classList.remove('submitted--hidden')
+            var params = new URLSearchParams(document.location.search.split('?')[1])
+            document.querySelector('.submitted__last-location').innerHTML = params.get('last-location')
+        }
+    </script>
 {% endblock %}

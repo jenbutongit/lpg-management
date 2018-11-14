@@ -51,6 +51,7 @@ import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
 import {OrganisationController} from './controllers/organisation/organisationController'
 import {Csrs} from './csrs'
+import {OrganisationalUnitFactory} from './controllers/organisation/model/organisationalUnitFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -100,6 +101,7 @@ export class ApplicationContext {
 	dateRangeValidator: Validator<DateRange>
 	organisationController: OrganisationController
 	csrs: Csrs
+	organisationalUnitFactory: OrganisationalUnitFactory
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -200,7 +202,8 @@ export class ApplicationContext {
 		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
 
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
-		this.organisationController = new OrganisationController(this.csrs)
+		this.organisationalUnitFactory = new OrganisationalUnitFactory()
+		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory)
 	}
 
 	addToResponseLocals() {
