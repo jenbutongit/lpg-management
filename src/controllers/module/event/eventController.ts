@@ -492,9 +492,9 @@ export class EventController {
 				)
 			} else {
 				return res.redirect(
-					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
-						req.params.eventId
-					}/overview`
+					`/content-management/courses/${req.params.courseId}/modules/${
+						req.params.moduleId
+					}/events-overview/${req.params.eventId}`
 				)
 			}
 		}

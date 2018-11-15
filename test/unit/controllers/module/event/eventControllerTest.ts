@@ -74,9 +74,6 @@ describe('EventController', function() {
 			req.params.courseId = 'abc'
 			req.params.moduleId = 'def'
 
-			// const event: Event = new Event()
-			// event.dateRanges = [new DateRange()]
-
 			const dateRange = <DateRange>{}
 			const dateRangeCommand = <DateRangeCommand>{}
 			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
@@ -419,7 +416,7 @@ describe('EventController', function() {
 		})
 	})
 
-	it('should change event record state to confirmed and redirect to attendee page', async function() {
+	it('should change booking status to confirmed and redirect to attendee page', async function() {
 		const booking: Booking = new Booking()
 		booking.id = 99
 		const bookings = [booking]
@@ -434,7 +431,7 @@ describe('EventController', function() {
 		request.params.eventId = 'eventId'
 		request.params.bookingId = 99
 
-		request.body.type = 'register'
+		request.body.action = 'register'
 
 		learnerRecord.updateBooking = sinon.stub()
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
@@ -446,6 +443,66 @@ describe('EventController', function() {
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`
 		)
 		expect(booking.status).to.be.equal(Booking.Status.CONFIRMED)
+	})
+
+	it('should change booking status to cancelled and redirect to event overview page', async function() {
+		const booking: Booking = new Booking()
+		booking.id = 99
+		const bookings = [booking]
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.updateBooking()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingId = 99
+
+		request.body.action = 'cancel'
+
+		learnerRecord.updateBooking = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
+		await registerLearner(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
+		)
+		expect(booking.status).to.be.equal(Booking.Status.CANCELLED)
+	})
+
+	it('should render cancel attendee page', async function() {
+		let dateRange: DateRange = new DateRange()
+		dateRange.date = '2018-01-02'
+
+		const event: Event = new Event()
+		event.id = 'eventId'
+		event.dateRanges = [dateRange]
+
+		const booking: Booking = new Booking()
+		booking.id = 99
+
+		const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+		const getCancelAttendee: (request: Request, response: Response) => void = eventController.getCancelAttendee()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.event = event
+		request.params.bookingId = 99
+
+		learnerRecord.getEventBookings = sinon.stub().returns([booking])
+
+		await getCancelAttendee(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/cancel-attendee', {
+			booking: booking,
+			eventDateWithMonthAsText: eventDateWithMonthAsText,
+		})
 	})
 
 	describe('Edit and update DateRange', () => {
