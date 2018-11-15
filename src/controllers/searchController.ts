@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import {Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
@@ -6,27 +6,34 @@ import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults
 import * as log4js from 'log4js'
 import {Pagination} from 'lib/pagination'
 
-export class HomeController {
-	logger = log4js.getLogger('controllers/homeController')
+export class SearchController {
+	logger = log4js.getLogger('controllers/searchController')
+	router: Router
 	learningCatalogue: LearningCatalogue
 	pagination: Pagination
 
 	constructor(learningCatalogue: LearningCatalogue, pagination: Pagination) {
 		this.learningCatalogue = learningCatalogue
 		this.pagination = pagination
+		this.router = Router()
+		this.configureRouterPaths()
 	}
 
-	public index() {
+	private configureRouterPaths() {
+		this.router.post('/content-management/course/:query?', this.searchCourse())
+	}
+
+	searchCourse() {
 		const self = this
 
-		//TODO: Return empty list of results here if learning catalogue is down?
 		return async (request: Request, response: Response) => {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
+			let query = request.body.query
 
 			// prettier-ignore
-			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.listCourses(page, size)
+			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.searchCourses(query, page, size)
 
-			response.render('page/index', {
+			response.render('page/search-results', {
 				pageResults,
 			})
 		}

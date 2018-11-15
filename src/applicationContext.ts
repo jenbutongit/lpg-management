@@ -49,6 +49,7 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {SearchController} from './controllers/searchController'
 
 log4js.configure(config.LOGGING)
 
@@ -96,8 +97,10 @@ export class ApplicationContext {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
+	searchController: SearchController
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -238,6 +241,8 @@ export class ApplicationContext {
 			this.courseService,
 			this.csrsService
 		)
+
+		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 	}
 
 	addToResponseLocals() {
