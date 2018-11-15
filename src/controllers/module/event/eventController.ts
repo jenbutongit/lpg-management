@@ -149,10 +149,6 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
 			this.getCancelAttendee()
 		)
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
-			this.cancelAttendee()
-		)
 	}
 
 	public getDateTime() {
@@ -476,15 +472,31 @@ export class EventController {
 			const bookingId = req.params.bookingId
 			const booking = this.findBooking(bookings, bookingId)
 
-			booking.status = Booking.Status.CONFIRMED
+			const data = {
+				...req.body,
+			}
+
+			if (data.action == 'register') {
+				booking.status = Booking.Status.CONFIRMED
+			} else if (data.action == 'cancel') {
+				booking.status = Booking.Status.CANCELLED
+			}
 
 			this.learnerRecord.updateBooking(req.params.eventId, booking)
 
-			res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
-					req.params.eventId
-				}/attendee/${req.params.bookingId}`
-			)
+			if (data.action == 'register') {
+				return res.redirect(
+					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+						req.params.eventId
+					}/attendee/${req.params.bookingId}`
+				)
+			} else {
+				return res.redirect(
+					`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+						req.params.eventId
+					}/overview`
+				)
+			}
 		}
 	}
 
@@ -507,16 +519,6 @@ export class EventController {
 				booking: booking,
 				eventDateWithMonthAsText: eventDateWithMonthAsText,
 			})
-		}
-	}
-
-	public cancelAttendee() {
-		return async (req: Request, res: Response) => {
-			res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
-					req.params.eventId
-				}`
-			)
 		}
 	}
 
