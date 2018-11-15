@@ -113,14 +113,16 @@
                   <li class="list-headers"><p class="govuk-body header title"><strong>Name</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><span class="button-header"></span></li>
                 </ul>
                 <ul class="attendees list">
-                  {% for booking in bookings %}
-                      {% if booking.status === "Requested" %}
-                        {% set payment = "Pending" %}
-                      {% elif booking.status === "Confirmed" %}
-                        {% set payment = "Booked" %}
-                      {% endif %}
-                      <li class="list-details"><p class="govuk-body title">{{ booking.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
-                  {% endfor %}
+                    {% for booking in bookings %}
+                        {% if booking.status != "Cancelled" %}
+                          {% if booking.status === "Requested" %}
+                            {% set payment = "Pending" %}
+                          {% elif booking.status === "Confirmed" %}
+                            {% set payment = "Booked" %}
+                          {% endif %}
+                          <li class="list-details"><p class="govuk-body title">{{ booking.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
               {% else %}
                 <p class="govuk-body">This course doesn't have any attendees yet.</p>

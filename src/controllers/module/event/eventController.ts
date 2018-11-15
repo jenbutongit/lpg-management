@@ -496,11 +496,17 @@ export class EventController {
 
 	public getCancelAttendee() {
 		return async (req: Request, res: Response) => {
-			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
 			const bookingId = req.params.bookingId
 			const booking = this.findBooking(bookings, bookingId)
 
-			res.render('page/course/module/events/cancel-attendee', {booking: booking})
+			res.render('page/course/module/events/cancel-attendee', {
+				booking: booking,
+				eventDateWithMonthAsText: eventDateWithMonthAsText,
+			})
 		}
 	}
 

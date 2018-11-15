@@ -153,5 +153,6 @@
 	"validation_module_event_dateRanges_past": "Start date must be in the future",
 	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
-	"validation_module_mediaId_empty": "File is required"
+	"validation_module_mediaId_empty": "File is required",
+    "validation_cancellation_reason_empty": "A reason for cancellation is required"
 }
