@@ -1,0 +1,71 @@
+{% extends "../../../../component/Page.njk" %}
+
+{% from "select/macro.njk" import govukSelect %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ i18n['cancel_attendee'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id + "/attendee/" + attendeeEventRecord[0].bookingReference %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="gov-uk-heading-l">Cancel attendee</h1>
+        <div class="event-overview">
+            <h2 class="govuk-heading-m">{{eventDateWithMonthAsText}}, {{event.venue.location}}</h2>
+            <p class="govuk-body">This event is for the <strong>{{module.title}}</strong> module on the <strong>{{course.title}}</strong> course.</p>
+            <h3 class="govuk-heading-m">Attendee</h3>
+            <div class="attendee-details">
+                <ul class="attendees list">
+                    <li class="list-details view"><p class="govuk-body"><strong>Email</strong></p><p class="govuk-body">{{ attendeeEventRecord[0].delegateEmailAddress }}</p></li>
+                    <li class="list-details column-view">
+                            <span class="list-details span-view">
+                                <p class="govuk-body"><strong>Booking status</strong></p>
+                                <p class="govuk-body">
+                                    {% if attendeeEventRecord[0].status === 0 %}
+                                        Booked
+                                    {% elif attendeeEventRecord[0].status === 1 %}
+                                        Cancelled
+                                    {% elif attendeeEventRecord[0].status === 2 %}
+                                        Pending
+                                    {% endif %}
+                                </p>
+                            </span>
+                    </li>
+                </ul>
+            </div>
+            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{ attendeeEventRecord[0].delegateEmailAddress }}/cancel" method="post">
+                {{ govukSelect({
+                id: "sort",
+                name: "sort",
+                label: {
+                text: "Cancellation reason"
+                },
+                items: [
+                {
+                value: "",
+                text: "Choose a cancellation reason",
+                selected: true
+                },
+                {
+                value: "reason1",
+                text: "The booking has not been paid"
+                },
+                {
+                value: "reason2",
+                text: "The learner has requested that the booking be cancelled"
+                }
+                ]
+                }) }}
+                <div class="button-container">
+                    {{ govukButton({
+                    text: "Cancel Attendee",
+                    classes: "button-red"
+                    }) }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock%}

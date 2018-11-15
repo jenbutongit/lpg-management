@@ -41,6 +41,19 @@
                 </div>
             </div>
         </div>
+        <div class="govuk-grid-column-one-third">
+            <div class="right-menu">
+                {% block menu %}
+                {% set actions = [
+                {
+                link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
+                text: 'Cancel Attendee'
+                }
+                ] %}
+                {{ menu("Actions", actions) }}
+                {% endblock %}
+            </div>
+        </div>
         <div class="govuk-grid-column-oneo-third">
         </div>
     </div>

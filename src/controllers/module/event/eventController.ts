@@ -145,6 +145,14 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
 			this.cancelEvent()
 		)
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
+			this.getCancelAttendee()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
+			this.cancelAttendee()
+		)
 	}
 
 	public getDateTime() {
@@ -481,8 +489,24 @@ export class EventController {
 	}
 
 	public cancelEvent() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/module/events/cancel')
+		}
+	}
+
+	public getCancelAttendee() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/cancel')
+			response.render('page/course/module/events/cancel-attendee')
+		}
+	}
+
+	public cancelAttendee() {
+		return async (req: Request, res: Response) => {
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
+					req.params.eventId
+				}`
+			)
 		}
 	}
 
