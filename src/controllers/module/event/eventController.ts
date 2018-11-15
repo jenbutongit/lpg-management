@@ -495,8 +495,12 @@ export class EventController {
 	}
 
 	public getCancelAttendee() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/cancel-attendee')
+		return async (req: Request, res: Response) => {
+			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			res.render('page/course/module/events/cancel-attendee', {booking: booking})
 		}
 	}
 

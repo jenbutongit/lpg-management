@@ -35,7 +35,7 @@
                     </li>
                 </ul>
             </div>
-            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{ attendeeEventRecord[0].delegateEmailAddress }}/cancel" method="post">
+            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}/cancel" method="post">
                 {{ govukSelect({
                 id: "sort",
                 name: "sort",
