@@ -4,16 +4,21 @@ import {Csrs} from '../../csrs'
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import * as asyncHandler from 'express-async-handler'
 import {OrganisationalUnitFactory} from './model/organisationalUnitFactory'
+import {FormController} from '../formController'
+import {Validator} from '../../learning-catalogue/validator/validator'
+import {Validate} from '../formValidator'
 
-export class OrganisationController {
+export class OrganisationController implements FormController {
 	router: Router
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
+	validator: Validator<OrganisationalUnit>
 
-	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory) {
+	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, validator: Validator<OrganisationalUnit>) {
 		this.router = Router()
 		this.csrs = csrs
 		this.organisationalUnitFactory = organisationalUnitFactory
+		this.validator = validator
 
 		this.setRouterPaths()
 	}
@@ -47,7 +52,10 @@ export class OrganisationController {
 			response.render('page/organisation/add-organisation', {organisationalUnits: organisationalUnits})
 		}
 	}
-
+	@Validate({
+		fields: ['all'],
+		redirect: '/content-management/add-organisation',
+	})
 	public createOrganisation() {
 		return async (request: Request, response: Response) => {
 			const organisationalUnit = this.organisationalUnitFactory.create(request.body)

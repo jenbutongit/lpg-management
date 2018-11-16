@@ -10,6 +10,7 @@ import {Csrs} from '../../../../src/csrs'
 import {OrganisationalUnit} from '../../../../src/controllers/organisation/model/organisationalUnit'
 import {PageResults} from '../../../../src/learning-catalogue/model/pageResults'
 import {OrganisationalUnitFactory} from '../../../../src/controllers/organisation/model/organisationalUnitFactory'
+import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)
 
@@ -17,6 +18,7 @@ describe('Organisation Controller Tests', function() {
 	let organisationController: OrganisationController
 	let csrs: Csrs
 	let organisationalUnitFactory: OrganisationalUnitFactory
+	let validator: Validator<OrganisationalUnit>
 
 	let req: Request
 	let res: Response
@@ -24,7 +26,8 @@ describe('Organisation Controller Tests', function() {
 	beforeEach(() => {
 		csrs = <Csrs>{}
 		organisationalUnitFactory = <OrganisationalUnitFactory>{}
-		organisationController = new OrganisationController(csrs, organisationalUnitFactory)
+		validator = <Validator<OrganisationalUnit>>{}
+		organisationController = new OrganisationController(csrs, organisationalUnitFactory, validator)
 
 		req = mockReq()
 		res = mockRes()
@@ -74,18 +77,40 @@ describe('Organisation Controller Tests', function() {
 		expect(res.render).to.have.been.calledOnceWith('page/organisation/add-organisation')
 	})
 
-	it('should call redirect to manage organisations when an organisation is created', async function() {
-		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+	it('should check for organisation errors and redirect to manage organisation page if no errors', async function() {
+		const errors = {fields: [], size: 0}
+		const organisation = new OrganisationalUnit()
+		organisation.name = 'New organisation'
 
-		const createOrganisation: (request: Request, response: Response) => void = organisationController.createOrganisation()
+		organisationalUnitFactory.create = sinon.stub().returns(organisation)
+		validator.check = sinon.stub().returns({fields: [], size: 0})
+		csrs.createOrganisationalUnit = sinon.stub().returns('123')
 
-		organisationalUnitFactory.create = sinon.stub().returns(organisationalUnit)
-
-		let createOrganisationalUnit = sinon.stub().returns(Promise.resolve(organisationalUnit))
-		csrs.createOrganisationalUnit = createOrganisationalUnit
-
+		const createOrganisation = organisationController.createOrganisation()
 		await createOrganisation(req, res)
 
-		expect(res.redirect).to.have.been.calledOnceWith('/content-management/organisations')
+		expect(validator.check).to.have.been.calledWith(req.body, ['all'])
+		expect(validator.check).to.have.returned(errors)
+		expect(res.redirect).to.have.been.calledWith('/content-management/organisations')
+	})
+
+	it('should check for organisation errors and redirect to add organisation page if errors', async function() {
+		const errors = {
+			fields: ['validation.organisations.name.empty'],
+			size: 1,
+		}
+		const organisation = new OrganisationalUnit()
+		organisation.name = 'New organisation'
+
+		organisationalUnitFactory.create = sinon.stub().returns(organisation)
+		validator.check = sinon.stub().returns(errors)
+		csrs.createOrganisationalUnit = sinon.stub().returns('123')
+
+		const createOrganisation = organisationController.createOrganisation()
+		await createOrganisation(req, res)
+
+		expect(validator.check).to.have.been.calledWith(req.body, ['all'])
+		expect(validator.check).to.have.returned(errors)
+		expect(res.redirect).to.have.been.calledWith('/content-management/add-organisation')
 	})
 })

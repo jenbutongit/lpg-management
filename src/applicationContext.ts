@@ -55,6 +55,7 @@ import {OrganisationalUnitFactory} from './controllers/organisation/model/organi
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
+import {OrganisationalUnit} from './controllers/organisation/model/organisationalUnit'
 
 log4js.configure(config.LOGGING)
 
@@ -108,6 +109,7 @@ export class ApplicationContext {
 	organisationController: OrganisationController
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
+	organisationalUnitValidator: Validator<OrganisationalUnit>
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -216,7 +218,8 @@ export class ApplicationContext {
 
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
-		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory)
+		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
+		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
 	}
 
 	addToResponseLocals() {

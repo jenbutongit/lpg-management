@@ -75,12 +75,26 @@
 		}
 	},
 	"organisations": {
+		"headers": {
+			"organisationName": "Organisation name"
+		},
+		"text": {
+			"code": "Organisation code",
+			"name": "Organisation name",
+			"abbreviation": "Organisation abbreviation",
+			"parent": "Parent"
+		},
 		"title": {
 			"manageOrganisations": "Manage organisations",
 			"addANewOrganisation": "Add a new organisation"
 		},
-		"headers": {
-			"organisationName": "Organisation name"
+		"validation": {
+			"name": {
+				"empty": "Organisation name is required"
+			},
+			"code": {
+				"empty": "Organisation code is required"
+			}
 		}
 	},
 
