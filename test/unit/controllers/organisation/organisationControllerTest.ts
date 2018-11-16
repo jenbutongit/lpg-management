@@ -23,7 +23,7 @@ describe('Organisation Controller Tests', function() {
 
 	beforeEach(() => {
 		csrs = <Csrs>{}
-		organisationalUnitFactory: <OrganisationalUnitFactory>{}
+		organisationalUnitFactory = <OrganisationalUnitFactory>{}
 		organisationController = new OrganisationController(csrs, organisationalUnitFactory)
 
 		req = mockReq()
@@ -75,7 +75,14 @@ describe('Organisation Controller Tests', function() {
 	})
 
 	it('should call redirect to manage organisations when an organisation is created', async function() {
+		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+
 		const createOrganisation: (request: Request, response: Response) => void = organisationController.createOrganisation()
+
+		organisationalUnitFactory.create = sinon.stub().returns(organisationalUnit)
+
+		let createOrganisationalUnit = sinon.stub().returns(Promise.resolve(organisationalUnit))
+		csrs.createOrganisationalUnit = createOrganisationalUnit
 
 		await createOrganisation(req, res)
 
