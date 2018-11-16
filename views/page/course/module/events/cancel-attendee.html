@@ -6,7 +6,7 @@
 {% block pageTitle %}{{ i18n['cancel_attendee'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id + "/attendee/" + attendeeEventRecord[0].bookingReference %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events/" + event.id + "/attendee/" + attendeeEventRecord[0].bookingReference %}
 
 {% block content %}
 
