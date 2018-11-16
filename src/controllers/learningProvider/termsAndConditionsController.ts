@@ -1,25 +1,20 @@
 import {Request, Response, Router} from 'express'
-import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {TermsAndConditionsFactory} from '../../learning-catalogue/model/factory/termsAndConditionsFactory'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {TermsAndConditions} from '../../learning-catalogue/model/termsAndConditions'
+import {FormController} from '../formController'
+import {Validate} from '../formValidator'
 
-const logger = log4js.getLogger('controllers/learningProviderController')
-
-export class TermsAndConditionsController {
+export class TermsAndConditionsController implements FormController {
 	learningCatalogue: LearningCatalogue
-	termsAndConditionsValidator: Validator<TermsAndConditions>
+	validator: Validator<TermsAndConditions>
 	termsAndConditionsFactory: TermsAndConditionsFactory
 	router: Router
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		termsAndConditionsFactory: TermsAndConditionsFactory,
-		termsAndConditionsValidator: Validator<TermsAndConditions>
-	) {
+	constructor(learningCatalogue: LearningCatalogue, termsAndConditionsFactory: TermsAndConditionsFactory, termsAndConditionsValidator: Validator<TermsAndConditions>) {
 		this.learningCatalogue = learningCatalogue
-		this.termsAndConditionsValidator = termsAndConditionsValidator
+		this.validator = termsAndConditionsValidator
 		this.termsAndConditionsFactory = termsAndConditionsFactory
 
 		this.router = Router()
@@ -32,10 +27,7 @@ export class TermsAndConditionsController {
 		this.router.param('termsAndConditionsId', async (req, res, next, termsAndConditionsId) => {
 			const learningProviderId = req.params.learningProviderId
 
-			const termsAndConditions = await this.learningCatalogue.getTermsAndConditions(
-				learningProviderId,
-				termsAndConditionsId
-			)
+			const termsAndConditions = await this.learningCatalogue.getTermsAndConditions(learningProviderId, termsAndConditionsId)
 
 			if (termsAndConditions) {
 				res.locals.termsAndConditions = termsAndConditions
@@ -56,56 +48,40 @@ export class TermsAndConditionsController {
 			}
 		})
 
-		this.router.get(
-			'/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId?',
-			this.getTermsAndConditions()
-		)
+		this.router.get('/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId?', this.getTermsAndConditions())
 
-		this.router.post(
-			'/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId?',
-			this.setTermsAndConditions()
-		)
+		this.router.post('/content-management/learning-providers/:learningProviderId/terms-and-conditions/', this.createTermsAndConditions())
+		this.router.post('/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId', this.updateTermsAndConditions())
 
-		this.router.get(
-			'/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId?/delete',
-			this.deleteTermsAndConditions()
-		)
+		this.router.get('/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId?/delete', this.deleteTermsAndConditions())
 	}
 
 	public getTermsAndConditions() {
-		logger.debug('Getting terms and conditions')
-		return async (request: Request, response: Response) => {
-			response.render('page/learning-provider/terms-and-conditions')
+		return async (req: Request, res: Response) => {
+			res.render('page/learning-provider/terms-and-conditions')
 		}
 	}
 
-	public setTermsAndConditions() {
-		return async (request: Request, response: Response) => {
-			const learningProviderId: string = request.params.learningProviderId
+	@Validate({
+		fields: ['name', 'content'],
+		redirect: '/content-management/learning-providers/:learningProviderId/terms-and-conditions/',
+	})
+	public createTermsAndConditions() {
+		return async (req: Request, res: Response) => {
+			const termsAndConditions = this.termsAndConditionsFactory.create(req.body)
+			await this.learningCatalogue.createTermsAndConditions(req.params.learningProviderId, termsAndConditions)
+			res.redirect(`/content-management/learning-providers/${req.params.learningProviderId}`)
+		}
+	}
 
-			const data = {
-				...request.body,
-			}
-
-			const termsAndConditions = this.termsAndConditionsFactory.create(data)
-
-			const errors = await this.termsAndConditionsValidator.check(request.body, ['name', 'content'])
-			if (errors.size) {
-				return response.render('page/learning-provider/terms-and-conditions', {
-					errors: errors,
-					termsAndConditions: termsAndConditions,
-				})
-			}
-
-			if (request.params.termsAndConditionsId) {
-				await this.editTermsAndConditions(request, response)
-
-				return response.redirect(`/content-management/learning-providers/${learningProviderId}`)
-			}
-
-			await this.learningCatalogue.createTermsAndConditions(learningProviderId, termsAndConditions)
-
-			response.redirect(`/content-management/learning-providers/${learningProviderId}`)
+	@Validate({
+		fields: ['name', 'content'],
+		redirect: '/content-management/learning-providers/:learningProviderId/terms-and-conditions/:termsAndConditionsId',
+	})
+	public updateTermsAndConditions() {
+		return async (req: Request, res: Response) => {
+			await this.editTermsAndConditions(req, res)
+			res.redirect(`/content-management/learning-providers/${req.params.learningProviderId}`)
 		}
 	}
 

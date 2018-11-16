@@ -87,8 +87,7 @@ describe('JsonRestService tests', () => {
 
 	it('should throw error if problem with GET request', async () => {
 		const path = '/courses/course-id'
-		const errorMessage =
-			'Error with GET request: Error: Error thrown from test when getting http://example.org/courses/course-id'
+		const errorMessage = 'Error with GET request: Error: Error thrown from test when getting http://example.org/courses/course-id'
 
 		http.get = sinon
 			.stub()
@@ -100,8 +99,7 @@ describe('JsonRestService tests', () => {
 
 	it('should throw error if problem with POST request', async () => {
 		const path = '/courses/course-id'
-		const errorMessage =
-			'Error with POST request: Error: Error thrown from test when posting {"id":"course-id"} to http://example.org/courses/course-id'
+		const errorMessage = 'Error with POST request: Error: Error thrown from test when posting {"id":"course-id"} to http://example.org/courses/course-id'
 		const course = <Course>{
 			id: 'course-id',
 		}
@@ -139,8 +137,7 @@ describe('JsonRestService tests', () => {
 
 	it('should throw error if problem with PUT request', async () => {
 		const path = '/courses/course-id'
-		const errorMessage =
-			'Error with PUT request: Error: Error thrown from test when putting {"id":"course-id"} to http://example.org/courses/course-id'
+		const errorMessage = 'Error with PUT request: Error: Error thrown from test when putting {"id":"course-id"} to http://example.org/courses/course-id'
 
 		const course = <Course>{
 			id: 'course-id',
@@ -166,8 +163,7 @@ describe('JsonRestService tests', () => {
 
 	it('should throw error if problem with DELETE request', async () => {
 		const path = '/courses/course-id'
-		const errorMessage =
-			'Error with DELETE request: Error: Error thrown from test when deleting http://example.org/courses/course-id'
+		const errorMessage = 'Error with DELETE request: Error: Error thrown from test when deleting http://example.org/courses/course-id'
 
 		http.delete = sinon
 			.stub()
@@ -175,5 +171,41 @@ describe('JsonRestService tests', () => {
 			.throws(new Error('Error thrown from test'))
 
 		return expect(restService.delete(path)).to.be.rejectedWith(errorMessage)
+	})
+
+	it('should return data from PATCH request', async () => {
+		const path = '/courses/course-id'
+		const course = <Course>{
+			id: 'course-id',
+		}
+		const patchResponse = {
+			data: {
+				id: 'course-id',
+			},
+		}
+
+		http.patch = sinon
+			.stub()
+			.withArgs(path)
+			.returns(patchResponse)
+
+		const data = await restService.patch(path, course)
+
+		return expect(data).to.be.equal(patchResponse.data)
+	})
+
+	it('should throw error if problem with PATCH request', async () => {
+		const path = '/courses/course-id'
+		const course = <Course>{
+			id: 'course-id',
+		}
+		const errorMessage = 'Error with PATCH request: Error: Error thrown from test when patching http://example.org/courses/course-id'
+
+		http.patch = sinon
+			.stub()
+			.withArgs(path)
+			.throws(new Error('Error thrown from test'))
+
+		return expect(restService.patch(path, course)).to.be.rejectedWith(errorMessage)
 	})
 })
