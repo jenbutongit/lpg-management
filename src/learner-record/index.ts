@@ -38,10 +38,14 @@ export class LearnerRecord {
 	}
 
 	async getEventInvitees(eventId: string) {
-		const data = await this._restService.get(`/event/${eventId}/invitee`)
+		try {
+			const data = await this._restService.get(`/event/${eventId}/invitee`)
 
-		const invites = (data || []).map(this._inviteFactory.create)
-		return invites
+			const invites = (data || []).map(this._inviteFactory.create)
+			return invites
+		} catch (e) {
+			throw new Error(`An error occurred when trying to get event invitees: ${e}`)
+		}
 	}
 
 	async inviteLearner(eventId: string, invite: Invite) {
