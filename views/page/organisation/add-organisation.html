@@ -10,8 +10,6 @@
 
 {% block content %}
 {% set form = sessionFlash.form %}
-
-    {{ errorSummary(errors.fields) }}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-l">Add a new organisation</h1>
@@ -75,7 +73,7 @@
                 {% else %}
                     {{ govukInput({
                         label: {
-                            text: i18n.organisations.text.abbreviation
+                            text: i18n.organisations.text.code
                         },
                         classes: "govuk-input--width-10",
                         id: "code",

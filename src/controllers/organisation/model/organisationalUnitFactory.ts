@@ -12,7 +12,7 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.name = data.name
 		organisationalUnit.code = data.code
 		organisationalUnit.paymentMethods = data.paymentMethods
-		organisationalUnit.subOrgs = data.subOrgs
+		organisationalUnit.subOrgs = (data.subOrgs || []).map(this.create)
 		organisationalUnit.parent = data.organisationalUnit
 		organisationalUnit.abbreviation = data.abbreviation
 
