@@ -27,7 +27,7 @@ export class OrganisationController implements FormController {
 	private setRouterPaths() {
 		this.router.get('/content-management/organisations', asyncHandler(this.getOrganisations()))
 		this.router.get('/content-management/add-organisation', asyncHandler(this.addOrganisation()))
-		this.router.get('/content-management/organisations/organisation/:organisationId?', asyncHandler(this.getOrganisation()))
+		this.router.get('/content-management/organisations/:organisationId/overview', asyncHandler(this.getOrganisation()))
 		this.router.post('/content-management/organisations/organisation', asyncHandler(this.createOrganisation()))
 	}
 
