@@ -31,6 +31,6 @@ describe('OrganisationalUnitFactory tests', () => {
 		expect(result.name).to.eql(name)
 		expect(result.code).to.eql(code)
 		expect(result.paymentMethods).to.eql(paymentMethods)
-		expect(result.subOrgs).to.eql(subOrgs)
+		expect(result.subOrgs[0].name).to.eql(subOrgs[0].name)
 	})
 })
