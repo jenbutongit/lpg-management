@@ -80,18 +80,19 @@ describe('Organisation Controller Tests', function() {
 	it('should check for organisation errors and redirect to manage organisation page if no errors', async function() {
 		const errors = {fields: [], size: 0}
 		const organisation = new OrganisationalUnit()
+		organisation.id = 'id-123'
 		organisation.name = 'New organisation'
 
 		organisationalUnitFactory.create = sinon.stub().returns(organisation)
 		validator.check = sinon.stub().returns({fields: [], size: 0})
-		csrs.createOrganisationalUnit = sinon.stub().returns('123')
+		csrs.createOrganisationalUnit = sinon.stub().returns(organisation)
 
 		const createOrganisation = organisationController.createOrganisation()
 		await createOrganisation(req, res)
 
 		expect(validator.check).to.have.been.calledWith(req.body, ['all'])
 		expect(validator.check).to.have.returned(errors)
-		expect(res.redirect).to.have.been.calledWith('/content-management/organisations')
+		expect(res.redirect).to.have.been.calledWith(`/content-management/organisations/${organisation.id}/overview`)
 	})
 
 	it('should check for organisation errors and redirect to add organisation page if errors', async function() {
