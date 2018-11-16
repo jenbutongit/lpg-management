@@ -128,23 +128,23 @@
             </div>
         </div>
         <div class="govuk-grid-column-one-third">
-          <div class="right-menu">
-              {% if course.status !== "Archived" %}
-                {% block menu %}
+          {% if course.status !== "Archived" %}
+            <div class="right-menu">
+              {% block menu %}
                 {% set actions = [
-                        {
-                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
-                            text: 'Edit time and date'
-                        },
-                        {
-                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
-                            text: 'Edit location and capacity'
-                        }
-                    ] %}
-                    {{ menu("Actions", actions) }}
-                {% endblock %}
-              {% endif %}
+                  {
+                      link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
+                      text: 'Edit time and date'
+                  },
+                  {
+                      link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
+                      text: 'Edit location and capacity'
+                  }
+                ] %}
+                {{ menu("Actions", actions) }}
+              {% endblock %}
             </div>
+          {% endif %}
         </div>
      </div>
   </div>
