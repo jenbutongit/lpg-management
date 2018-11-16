@@ -67,7 +67,7 @@
                         }
                     ]
                 %}
-                {% if identity.hasRole('ORGANISATION_MANAGER') %}
+                {% if identity.isOrganisationManager() %}
                     {% set action = actions.push({
                         link: '/content-management/organisations',
                         text: 'Manage organisations'
