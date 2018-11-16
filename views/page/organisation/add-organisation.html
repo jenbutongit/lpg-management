@@ -33,9 +33,9 @@
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
 
-                    <label for="last-location">What was the last location you visited?</label>
+                    <label for="orgHref">What was the last location you visited?</label>
                     <div class="autocomplete-wrapper">
-                        <select name="last-location" id="last-location">
+                        <select name="orgHref" id="orgHref">
                             {% for key, item in organisationalUnits %}
                                 <option value={{ key }}>{{ item }}</option>
                             {% endfor %}
@@ -92,7 +92,7 @@
                     },
                     classes: "govuk-input--width-10",
                     id: "abbreviation",
-                    name: "abbr"
+                    name: "abbreviation"
                 }) }}
                 <div class="button-container">
                     {{ govukButton({
@@ -112,7 +112,7 @@
     <script>window.GOVUKFrontend.initAll()</script>
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
     <script type="text/javascript">
-        var selectEl = document.querySelector('#last-location')
+        var selectEl = document.querySelector('#orgHref')
         accessibleAutocomplete.enhanceSelectElement({
             selectElement: selectEl
         })
@@ -123,7 +123,7 @@
             var submittedEl = document.querySelector('.submitted')
             submittedEl.classList.remove('submitted--hidden')
             var params = new URLSearchParams(document.location.search.split('?')[1])
-            document.querySelector('.submitted__last-location').innerHTML = params.get('last-location')
+            document.querySelector('.submitted__orgHref').innerHTML = params.get('orgHref')
         }
     </script>
 {% endblock %}

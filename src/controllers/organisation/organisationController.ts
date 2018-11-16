@@ -50,14 +50,11 @@ export class OrganisationController {
 
 	public createOrganisation() {
 		return async (request: Request, response: Response) => {
-			const parentOrganisationalUnit = await this.csrs.getOrganisationalUnitByCode(request.body['last-location'])
+			const organisationalUnit = this.organisationalUnitFactory.create(request.body)
 
-			const data = {...request.body, parent: parentOrganisationalUnit}
+			await this.csrs.createOrganisationalUnit(organisationalUnit)
 
-			const organisationalUnit = this.organisationalUnitFactory.create(data)
-			const savedOrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
-
-			response.redirect(`/content-management/organisations/organisation/${savedOrganisationalUnit.id}`)
+			response.redirect(`/content-management/organisations`)
 		}
 	}
 }

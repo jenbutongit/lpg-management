@@ -5,6 +5,8 @@ export class OrganisationalUnit {
 
 	code: string
 
+	abbreviation: string
+
 	paymentMethods: string[]
 
 	subOrgs: OrganisationalUnit[]

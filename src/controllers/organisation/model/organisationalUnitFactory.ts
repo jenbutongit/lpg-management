@@ -13,7 +13,8 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.code = data.code
 		organisationalUnit.paymentMethods = data.paymentMethods
 		organisationalUnit.subOrgs = data.subOrgs
-		organisationalUnit.parent = data.parent
+		organisationalUnit.parent = data.orgHref
+		organisationalUnit.abbreviation = data.abbreviation
 
 		return organisationalUnit
 	}

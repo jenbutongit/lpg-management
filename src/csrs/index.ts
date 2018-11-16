@@ -27,10 +27,6 @@ export class Csrs {
 		return await this._organisationalUnitService.create(`/organisationalUnits/`, organisationalUnit)
 	}
 
-	async getOrganisationalUnitByCode(code: String): Promise<OrganisationalUnit> {
-		return await this._organisationalUnitService.get(`/organisationalUnits/search/findByCode?code=${code}`)
-	}
-
 	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
 		this._organisationalUnitService = value
 	}
