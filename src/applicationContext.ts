@@ -52,6 +52,9 @@ import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFact
 import {OrganisationController} from './controllers/organisation/organisationController'
 import {Csrs} from './csrs'
 import {OrganisationalUnitFactory} from './controllers/organisation/model/organisationalUnitFactory'
+import {LearnerRecord} from './learner-record'
+import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
+import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -99,6 +102,9 @@ export class ApplicationContext {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
+	learnerRecord: LearnerRecord
+	learnerRecordConfig: LearnerRecordConfig
+	bookingFactory: BookingFactory
 	organisationController: OrganisationController
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
@@ -128,6 +134,7 @@ export class ApplicationContext {
 		)
 
 		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url)
+
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
@@ -189,8 +196,14 @@ export class ApplicationContext {
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
+		this.bookingFactory = new BookingFactory()
+
+		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
+		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory)
+
 		this.eventController = new EventController(
 			this.learningCatalogue,
+			this.learnerRecord,
 			this.eventValidator,
 			this.eventFactory,
 			this.dateRangeCommandValidator,

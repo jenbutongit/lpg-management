@@ -57,6 +57,14 @@ export class JsonRestService {
 		}
 	}
 
+	async patch(path: string, resource: any) {
+		try {
+			return (await this._http.patch(path, resource, this.getHeaders())).data
+		} catch (e) {
+			throw new Error(`Error with PATCH request: ${e} when patching ${this.config.url}${path}`)
+		}
+	}
+
 	set http(value: AxiosInstance) {
 		this._http = value
 	}
