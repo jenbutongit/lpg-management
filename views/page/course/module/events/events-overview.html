@@ -129,6 +129,7 @@
         </div>
         <div class="govuk-grid-column-one-third">
           <div class="right-menu">
+              {% if course.status !== "Archived" %}
                 {% block menu %}
                 {% set actions = [
                         {
@@ -142,6 +143,7 @@
                     ] %}
                     {{ menu("Actions", actions) }}
                 {% endblock %}
+                {% endif %}
             </div>
         </div>
      </div>
