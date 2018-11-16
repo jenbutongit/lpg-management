@@ -18,6 +18,8 @@ import {LearnerRecord} from '../../../../../src/learner-record'
 import {IdentityService} from '../../../../../src/identity/identityService'
 import {InviteFactory} from '../../../../../src/learner-record/model/factory/inviteFactory'
 import {Invite} from '../../../../../src/learner-record/model/invite'
+import {Booking} from '../../../../../src/learner-record/model/booking'
+import {DateTime} from '../../../../../src/lib/dateTime'
 
 chai.use(sinonChai)
 
@@ -81,9 +83,6 @@ describe('EventController', function() {
 			req.params.courseId = 'abc'
 			req.params.moduleId = 'def'
 
-			// const event: Event = new Event()
-			// event.dateRanges = [new DateRange()]
-
 			const dateRange = <DateRange>{}
 			const dateRangeCommand = <DateRangeCommand>{}
 			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
@@ -127,6 +126,40 @@ describe('EventController', function() {
 				errors: errors,
 				event: event,
 				eventJson: JSON.stringify(event),
+			})
+		})
+
+		it('should render errors in DateRange', async function() {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.body = {
+				day: '',
+				month: '1',
+				year: '2019',
+				startTime: ['07', '00'],
+				endTime: ['06', '00'],
+			}
+
+			dateRangeCommandValidator.check = sinon.stub().returns({})
+
+			const event = new Event()
+			eventFactory.create = sinon.stub().returns(event)
+
+			const errors = {fields: {day: ['error']}, size: 1}
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			const dateRangeCommand = new DateRangeCommand()
+			dateRangeCommand.startTime = ['09:00']
+			dateRangeCommand.endTime = ['17:00']
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+
+			await eventController.setDateTime()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events', {
+				event: event,
+				eventJson: JSON.stringify(event),
+				errors: errors,
 			})
 		})
 
@@ -328,8 +361,19 @@ describe('EventController', function() {
 		})
 	})
 
+	it('should render edit location page', async function() {
+		const editLocation: (request: Request, response: Response) => void = eventController.editLocation()
+
+		const request = mockReq()
+		const response = mockRes()
+
+		await editLocation(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
+	})
+
 	it('should render event overview page', async function() {
-		let event: Event = new Event()
+		const event: Event = new Event()
 		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
 
 		const getEventOverview: (request: Request, response: Response) => void = eventController.getEventOverview()
@@ -339,8 +383,11 @@ describe('EventController', function() {
 
 		response.locals.event = event
 
+		learnerRecord.getEventBookings = sinon.stub()
+
 		await getEventOverview(request, response)
 
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith(event.id)
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
 	})
 
@@ -398,6 +445,69 @@ describe('EventController', function() {
 			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
 		)
 		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_not_found_message')
+	})
+
+	it('should render attendee details page', async function() {
+		const date: string = '2020-02-01'
+		const dateRange = new DateRange()
+		dateRange.date = date
+
+		const event: Event = new Event()
+		event.dateRanges = [dateRange]
+
+		const eventDateWithMonthAsText = DateTime.convertDate(event.dateRanges[0].date)
+
+		const booking: Booking = new Booking()
+		booking.id = 99
+		const bookings = [booking]
+
+		const getAttendeeDetails: (request: Request, response: Response) => void = eventController.getAttendeeDetails()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.event = event
+
+		request.params.bookingId = 99
+
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
+		await getAttendeeDetails(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith(event.id)
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/attendee', {
+			booking,
+			eventDateWithMonthAsText,
+		})
+	})
+
+	it('should change event record state to confirmed and redirect to attendee page', async function() {
+		const booking: Booking = new Booking()
+		booking.id = 99
+		const bookings = [booking]
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.updateBooking()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingId = 99
+
+		request.body.type = 'register'
+
+		learnerRecord.updateBooking = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
+		await registerLearner(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`
+		)
+		expect(booking.status).to.be.equal(Booking.Status.CONFIRMED)
 	})
 
 	describe('Edit and update DateRange', () => {

@@ -176,4 +176,41 @@ describe('JsonRestService tests', () => {
 
 		return expect(restService.delete(path)).to.be.rejectedWith(errorMessage)
 	})
+
+	it('should return data from PATCH request', async () => {
+		const path = '/courses/course-id'
+		const course = <Course>{
+			id: 'course-id',
+		}
+		const patchResponse = {
+			data: {
+				id: 'course-id',
+			},
+		}
+
+		http.patch = sinon
+			.stub()
+			.withArgs(path)
+			.returns(patchResponse)
+
+		const data = await restService.patch(path, course)
+
+		return expect(data).to.be.equal(patchResponse.data)
+	})
+
+	it('should throw error if problem with PATCH request', async () => {
+		const path = '/courses/course-id'
+		const course = <Course>{
+			id: 'course-id',
+		}
+		const errorMessage =
+			'Error with PATCH request: Error: Error thrown from test when patching http://example.org/courses/course-id'
+
+		http.patch = sinon
+			.stub()
+			.withArgs(path)
+			.throws(new Error('Error thrown from test'))
+
+		return expect(restService.patch(path, course)).to.be.rejectedWith(errorMessage)
+	})
 })

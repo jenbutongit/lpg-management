@@ -294,6 +294,12 @@
 	font-size: $font-mobile;
 	text-decoration: underline;
 	color: $link;
+
+	&:focus {
+		background-color: $focus;
+		outline: 3px solid $focus;
+		outline-offset: 0;
+	}
 }
 
 @media screen and (min-width: $tablet-small) {

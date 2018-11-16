@@ -1,0 +1,47 @@
+{% extends "../../../../component/Page.njk" %}
+{% from "button/macro.njk" import govukButton %}
+
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id %}
+
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="gov-uk-heading-l">Attendee details</h1>
+            <div class="event-overview">
+                <h2 class="govuk-heading-m">{{eventDateWithMonthAsText}}, {{event.venue.location}}</h3>
+                <p class="govuk-body">This event is for the <strong>{{module.title}}</strong> module on the <strong>{{course.title}}</strong> course.</p>
+                <h3 class="govuk-heading-m">Attendee</h3>
+                <div class="attendee-details">
+                    <ul class="attendees list">
+                        <li class="list-details view"><p class="govuk-body"><strong>Email</strong></p><p class="govuk-body">{{ booking.learnerEmail }}</p></li>
+                        <li class="list-details column-view">
+                            <span class="list-details span-view">
+                                <p class="govuk-body"><strong>Booking status</strong></p>
+                                <p class="govuk-body">
+                                    {% if booking.status === "Requested" %}
+                                        Pending
+                                    {% elif booking.status === "Confirmed" %}
+                                        Booked
+                                    {% elif booking.status === "Cancelled" %}
+                                        Cancelled
+                                    {% endif %}
+                                </p>
+                            </span>
+                            {% if booking.status === "Requested" %}
+                                <form action="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/{{ event.id }}/attendee/{{ booking.id }}/update" method="post" class="attendee-button">
+                                    <input type="hidden" name="type" value="register">
+                                    <button type="submit" class="linkish-button">Change to booked</button>
+                                </form>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="govuk-grid-column-oneo-third">
+        </div>
+    </div>
+{% endblock %}

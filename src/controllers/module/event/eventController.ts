@@ -13,6 +13,7 @@ import {LearnerRecord} from '../../../learner-record'
 import {InviteFactory} from '../../../learner-record/model/factory/inviteFactory'
 import * as config from '../../../config'
 import * as asyncHandler from 'express-async-handler'
+import {Booking} from '../../../learner-record/model/booking'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -171,6 +172,16 @@ export class EventController {
 		this.router.post(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			asyncHandler(this.updateDateRange())
+		)
+
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId',
+			asyncHandler(this.getAttendeeDetails())
+		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update',
+			asyncHandler(this.updateBooking())
 		)
 		this.router.get(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
@@ -478,7 +489,10 @@ export class EventController {
 		return async (req: Request, res: Response) => {
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
-			res.render('page/course/module/events/events-overview', {eventDateWithMonthAsText})
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+
+			res.render('page/course/module/events/events-overview', {bookings, eventDateWithMonthAsText})
 		}
 	}
 
@@ -520,5 +534,42 @@ export class EventController {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/cancel')
 		}
+	}
+
+	public getAttendeeDetails() {
+		return async (req: Request, res: Response) => {
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			res.render('page/course/module/events/attendee', {booking, eventDateWithMonthAsText})
+		}
+	}
+
+	public updateBooking() {
+		return async (req: Request, res: Response) => {
+			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			booking.status = Booking.Status.CONFIRMED
+
+			this.learnerRecord.updateBooking(req.params.eventId, booking)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+					req.params.eventId
+				}/attendee/${req.params.bookingId}`
+			)
+		}
+	}
+
+	private findBooking(bookings: any, bookingId: number): Booking {
+		return bookings.find(function(booking: Booking) {
+			return booking.id == bookingId
+		})
 	}
 }
