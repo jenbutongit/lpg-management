@@ -521,7 +521,7 @@ describe('EventController', function() {
 
 		const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
-		const getCancelAttendee: (request: Request, response: Response) => void = eventController.getCancelAttendee()
+		const getCancelAttendee: (request: Request, response: Response) => void = eventController.getCancelBooking()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()

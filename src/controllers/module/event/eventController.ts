@@ -169,7 +169,7 @@ export class EventController {
 		)
 		this.router.get(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
-			asyncHandler(this.getCancelAttendee())
+			asyncHandler(this.getCancelBooking())
 		)
 		this.router.post(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
@@ -483,6 +483,12 @@ export class EventController {
 		}
 	}
 
+	public cancelEvent() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/module/events/cancel')
+		}
+	}
+
 	public getAttendeeDetails() {
 		return async (req: Request, res: Response) => {
 			const event = res.locals.event
@@ -513,13 +519,7 @@ export class EventController {
 		}
 	}
 
-	public cancelEvent() {
-		return async (req: Request, res: Response) => {
-			res.render('page/course/module/events/cancel')
-		}
-	}
-
-	public getCancelAttendee() {
+	public getCancelBooking() {
 		return async (req: Request, res: Response) => {
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
