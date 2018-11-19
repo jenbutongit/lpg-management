@@ -53,7 +53,7 @@
                       text: "Number of spaces"
                     },
                     {
-                      text: event.venue.capacity,
+                      text: (event.venue.capacity - bookings.length) + " of " + event.venue.capacity + " available",
                       format: "numeric"
                     }
                   ],
