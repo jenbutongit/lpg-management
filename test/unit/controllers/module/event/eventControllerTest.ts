@@ -460,7 +460,7 @@ describe('EventController', function() {
 		request.params.eventId = 'eventId'
 		request.params.bookingId = 99
 
-		request.body.action = 'cancel'
+		request.body.reason = 'cancel'
 
 		learnerRecord.updateBooking = sinon.stub()
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
@@ -472,6 +472,40 @@ describe('EventController', function() {
 			`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`
 		)
 		expect(booking.status).to.be.equal(Booking.Status.CANCELLED)
+	})
+
+	it('should redirect to cancel attendee page if cancellation reason is not selected', async function() {
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
+		const booking: Booking = new Booking()
+		booking.id = 99
+		booking.status = Booking.Status.REQUESTED
+		const bookings = [booking]
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.cancelBooking()
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingId = 99
+
+		request.body.reason = ''
+
+		learnerRecord.updateBooking = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
+		await registerLearner(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
+		expect(booking.status).to.equal(Booking.Status.REQUESTED)
+		expect(response.redirect).to.have.been.calledOnceWith(
+			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99/cancel`
+		)
 	})
 
 	it('should render cancel attendee page', async function() {
