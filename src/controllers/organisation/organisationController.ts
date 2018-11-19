@@ -64,11 +64,13 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnit = this.organisationalUnitFactory.create(request.body)
 
-			const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
+			// const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
+			await this.csrs.createOrganisationalUnit(organisationalUnit)
 
 			request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
 
-			response.redirect(`/content-management/organisations/${newOrganisationalUnit.id}/overview`)
+			response.redirect(`/content-management/organisations/`)
+			// response.redirect(`/content-management/organisations/${newOrganisationalUnit.id}/overview`)
 		}
 	}
 }
