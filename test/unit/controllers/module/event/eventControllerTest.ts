@@ -374,7 +374,7 @@ describe('EventController', function() {
 
 		response.locals.event = event
 
-		learnerRecord.getEventBookings = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns([new Booking()])
 
 		await getEventOverview(request, response)
 
@@ -450,7 +450,7 @@ describe('EventController', function() {
 		booking.id = 99
 		const bookings = [booking]
 
-		const registerLearner: (request: Request, response: Response) => void = eventController.updateBooking()
+		const registerLearner: (request: Request, response: Response) => void = eventController.cancelBooking()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
