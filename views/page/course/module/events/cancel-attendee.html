@@ -40,7 +40,6 @@
                 </ul>
             </div>
             <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}/cancel" method="post">
-                <input type="hidden" name="action" value="cancel">
                 {% if errors.fields.reason %}
                     {{ govukSelect({
                     id: "reason",

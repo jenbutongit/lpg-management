@@ -503,7 +503,7 @@ export class EventController {
 			const booking = this.findBooking(bookings, bookingId)
 
 			booking.status = Booking.Status.CONFIRMED
-			this.learnerRecord.updateBooking(req.params.eventId, booking, '')
+			await this.learnerRecord.updateBooking(req.params.eventId, booking, '')
 
 			return res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
@@ -559,7 +559,7 @@ export class EventController {
 			}
 
 			booking.status = Booking.Status.CANCELLED
-			this.learnerRecord.updateBooking(req.params.eventId, booking, data.reason)
+			await this.learnerRecord.updateBooking(req.params.eventId, booking, data.reason)
 
 			return res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
