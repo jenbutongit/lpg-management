@@ -10,6 +10,7 @@ import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFac
 import {DateTime} from '../../../lib/dateTime'
 import {LearnerRecord} from '../../../learner-record'
 import {Booking} from '../../../learner-record/model/booking'
+import {RecordEvent} from '../../../learner-record/model/recordEvent'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -444,8 +445,9 @@ export class EventController {
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
 			const bookings = await this.learnerRecord.getEventBookings(event.id)
+			const recordEvent: RecordEvent = await this.learnerRecord.getEventBookings(event.id)
 
-			res.render('page/course/module/events/events-overview', {bookings, eventDateWithMonthAsText})
+			res.render('page/course/module/events/events-overview', {recordEvent, bookings, eventDateWithMonthAsText})
 		}
 	}
 
