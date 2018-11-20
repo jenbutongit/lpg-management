@@ -11,6 +11,8 @@ import * as bodyParser from 'body-parser'
 import {AppConfig} from './config/appConfig'
 import moment = require('moment')
 import {DateTime} from './lib/dateTime'
+import * as asyncHandler from 'express-async-handler'
+import * as errorController from './lib/errorHandler'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -116,16 +118,8 @@ app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
-app.get('/content-management', ctx.homeController.index())
+app.get('/content-management', asyncHandler(ctx.homeController.index()))
 
-app.get(
-	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
-	ctx.termsAndConditionsController.getTermsAndConditions()
-)
-
-app.post(
-	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
-	ctx.termsAndConditionsController.setTermsAndConditions()
-)
+app.use(errorController.handleError)
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
