@@ -28,7 +28,17 @@ const i18n = require('i18n-express')
 const authorisedRole = 'COURSE_MANAGER'
 
 const appInsights = require('applicationinsights')
-appInsights.setup(config.INSTRUMENTATION_KEY).start()
+
+appInsights
+	.setup(config.INSTRUMENTATION_KEY)
+	.setAutoDependencyCorrelation(true)
+	.setAutoCollectRequests(true)
+	.setAutoCollectPerformance(true)
+	.setAutoCollectExceptions(true)
+	.setAutoCollectDependencies(true)
+	.setAutoCollectConsole(true)
+	.setUseDiskRetryCaching(true)
+	.start()
 
 app.use(
 	i18n({
