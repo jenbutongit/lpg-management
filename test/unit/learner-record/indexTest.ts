@@ -55,6 +55,16 @@ describe('Leaner Record Tests', () => {
 		expect(restService.post).to.have.been.calledOnceWith('/event/eventId/invitee', invite)
 	})
 
+	it('should cancel event', async () => {
+		const eventId = 'eventId'
+
+		restService.delete = sinon.stub()
+
+		await learnerRecord.cancelEvent(eventId)
+
+		expect(restService.delete).to.have.been.calledOnceWith('/event/eventId')
+	})
+
 	it('should get event bookings', async () => {
 		const eventId = 'test-event-id'
 		const data = [new Booking(), new Booking()]

@@ -183,9 +183,14 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update',
 			asyncHandler(this.updateBooking())
 		)
+
 		this.router.get(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
-			asyncHandler(this.cancelEvent())
+			this.getCancelEvent()
+		)
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
+			this.setCancelEvent()
 		)
 
 		this.router.post(
@@ -530,9 +535,27 @@ export class EventController {
 		}
 	}
 
-	public cancelEvent() {
+	public getCancelEvent() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/cancel')
+		}
+	}
+
+	public setCancelEvent() {
+		return async (request: Request, response: Response) => {
+			await this.learnerRecord.cancelEvent(request.body.id)
+
+			request.session!.sessionFlash = {
+				eventCancelledMessage: 'event_cancelled_message',
+			}
+			return request.session!.save(() => {
+				//
+				response.redirect(
+					`/content-management/courses/${request.params.courseId}/modules/${
+						request.params.moduleId
+					}/events-overview/${request.params.eventId}`
+				)
+			})
 		}
 	}
 

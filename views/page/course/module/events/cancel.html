@@ -1,4 +1,5 @@
-{% from "input/macro.njk" import govukInput %}
+{% from "select/macro.njk" import govukSelect %}
+{% from "button/macro.njk" import govukButton %}
 
 {% extends "../../../../component/Page.njk" %}
 
@@ -10,7 +11,6 @@
 {% else %}
     {% set backButton = "/content-management/courses/" + course.id + "/overview" %}
 {% endif %}
-
 
 {% block content %}
 
@@ -24,15 +24,39 @@
             <p class="govuk-body">The event will be labelled as cancelled.</p>
             <p class="govuk-body">This cannot be undone</p>
             <form action="" method="post">
-                {{ govukInput({
-                    label: {
-                        text: "Two-thirds width",
-                        classes: "govuk-!-width-two-thirds"
+                <input type="hidden" value="{{event.id}}" name="id">
+                {{ govukSelect({
+                id: "sort",
+                name: "sort",
+                label: {
+                    text: "Cancellation reason"
+                },
+                items: [
+                    {
+                    value: "",
+                    text: "Choose a cancellation reason",
+                    selected: true
                     },
-                    classes: "govuk-!-width-two-thirds",
-                    id: "cancel",
-                    name: "cancel"
+                    {
+                    value: "reason1",
+                    text: "Hard coded Reason 1"
+                    },
+                    {
+                    value: "reason2",
+                    text: "Hard coded Reason 2"
+                    },
+                    {
+                    value: "reason3",
+                    text: "Hard coded Reason 3"
+                    }
+                ]
                 }) }}
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Cancel event",
+                        classes: "button-red"
+                    }) }}
+                </div>
             </form>
         </div>
     </div>

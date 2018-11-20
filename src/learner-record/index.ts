@@ -3,10 +3,13 @@ import {LearnerRecordConfig} from './learnerRecordConfig'
 import {Auth} from '../identity/auth'
 import {Invite} from './model/invite'
 import {InviteFactory} from './model/factory/inviteFactory'
+import * as log4js from 'log4js'
 import {Booking} from './model/booking'
 import {BookingFactory} from './model/factory/bookingFactory'
 
 export class LearnerRecord {
+	private static LOG = log4js.getLogger('learner-record')
+
 	private _restService: OauthRestService
 	private _inviteFactory: InviteFactory
 	private _bookingFactory: BookingFactory
@@ -53,6 +56,14 @@ export class LearnerRecord {
 			return await this._restService.post(`/event/${eventId}/invitee`, invite)
 		} catch (e) {
 			return null
+		}
+	}
+
+	async cancelEvent(eventId: string) {
+		try {
+			return await this._restService.delete(`/event/${eventId}`)
+		} catch (error) {
+			LearnerRecord.LOG.error(`Unable to cancel event: ${error}`)
 		}
 	}
 
