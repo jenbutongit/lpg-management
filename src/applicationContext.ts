@@ -232,6 +232,8 @@ export class ApplicationContext {
 
 		this.bookingFactory = new BookingFactory()
 
+		this.recordEventFactory = new RecordEventFactory()
+
 		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
 		this.learnerRecord = new LearnerRecord(
 			this.learnerRecordConfig,

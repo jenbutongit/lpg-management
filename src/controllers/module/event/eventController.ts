@@ -10,7 +10,6 @@ import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFac
 import {DateTime} from '../../../lib/dateTime'
 import {LearnerRecord} from '../../../learner-record'
 import {Booking} from '../../../learner-record/model/booking'
-import {RecordEvent} from '../../../learner-record/model/recordEvent'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
@@ -71,6 +70,13 @@ export class EventController {
 			const event = await this.learningCatalogue.getEvent(res.locals.course.id, res.locals.module.id, eventId)
 
 			if (event) {
+				const eventRecord = await this.learnerRecord.getEvent(event.id)
+				if (eventRecord) {
+					event.venue.availability = eventRecord.availability
+				} else {
+					res.sendStatus(404)
+				}
+
 				res.locals.event = event
 				next()
 			} else {
@@ -402,6 +408,7 @@ export class EventController {
 					address: req.body.address,
 					capacity: parseInt(req.body.capacity, 10),
 					minCapacity: parseInt(req.body.minCapacity, 10),
+					availability: parseInt(req.body.capacity, 10),
 				},
 			}
 
@@ -445,9 +452,8 @@ export class EventController {
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
 			const bookings = await this.learnerRecord.getEventBookings(event.id)
-			const recordEvent: RecordEvent = await this.learnerRecord.getEventBookings(event.id)
 
-			res.render('page/course/module/events/events-overview', {recordEvent, bookings, eventDateWithMonthAsText})
+			res.render('page/course/module/events/events-overview', {bookings, eventDateWithMonthAsText})
 		}
 	}
 

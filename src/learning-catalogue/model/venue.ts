@@ -28,4 +28,6 @@ export class Venue {
 		message: 'validation.module.event.venue.minCapacity.positive',
 	})
 	minCapacity: number
+
+	availability: number
 }

@@ -60,7 +60,7 @@ export class LearnerRecord {
 
 	async getEvent(eventId: string) {
 		try {
-			const data = (await this._restService.get(`/event/${eventId}`)).data
+			const data = await this._restService.get(`/event/${eventId}`)
 			return this._recordEventFactory.create(data)
 		} catch (e) {
 			throw new Error(`An error occured when trying to get event: ${e}`)
