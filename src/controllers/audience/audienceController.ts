@@ -153,6 +153,7 @@ export class AudienceController {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
 			const errors = await this.audienceValidator.check(data, ['audience.type'])
+
 			const audienceFromData = this.audienceFactory.create(data)
 
 			if (errors.size > 0) {

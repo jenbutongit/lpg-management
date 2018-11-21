@@ -16,8 +16,10 @@
     {% set emailAddress = sessionFlash.emailAddress %}
 
     {% if emailAddressFoundMessage %}
-        {% if emailAddressFoundMessage == "email_address_not_found_message"%}
+        {% if emailAddressFoundMessage == "email_address_not_found_message" %}
             {% set panelError = "error" %}
+        {% elif emailAddressFoundMessage == "email_address_already_invited_message" %}
+            {% set panelError = "warning" %}
         {% endif %}
         <div class="panel govuk-panel govuk-panel--confirmation {{panelError}}">
             <div class="govuk-panel__body custom-panel">
@@ -123,7 +125,7 @@
                 ]
               }) }}
             </div>
-            <div class="add-attendee">
+            <div class="add-invitee">
                 <h3 class="govuk-heading-m">Invite learners</h3>
                 <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
                     <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>

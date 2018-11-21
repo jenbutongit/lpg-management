@@ -508,17 +508,24 @@ export class EventController {
 				req.params.moduleId
 			}/events/${req.params.eventId}`
 
-			const response = await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
+			try {
+				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
 
-			if (response) {
 				req.session!.sessionFlash = {
 					emailAddressFoundMessage: 'email_address_found_message',
 					emailAddress: emailAddress,
 				}
-			} else {
-				req.session!.sessionFlash = {
-					emailAddressFoundMessage: 'email_address_not_found_message',
-					emailAddress: emailAddress,
+			} catch (e) {
+				if (e.toString().indexOf('409') >= 0) {
+					req.session!.sessionFlash = {
+						emailAddressFoundMessage: 'email_address_already_invited_message',
+						emailAddress: emailAddress,
+					}
+				} else {
+					req.session!.sessionFlash = {
+						emailAddressFoundMessage: 'email_address_not_found_message',
+						emailAddress: emailAddress,
+					}
 				}
 			}
 

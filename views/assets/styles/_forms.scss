@@ -49,9 +49,12 @@
 
 .audience-form,
 .module-form,
-.course-form,
-.attendee-form {
+.course-form {
 	padding-top: 50px;
+}
+
+.attendee-form {
+  padding-top: 10px;
 }
 
 .no-errors {
