@@ -1,0 +1,23 @@
+.attendees {
+	margin-bottom: 30px;
+
+	.list-details {
+		&.view {
+			justify-content: space-between;
+		}
+
+		&.column-view {
+			flex-direction: column;
+		}
+
+		&.span-view {
+			justify-content: space-between;
+			padding: 0;
+			border: none;
+		}
+	}
+}
+
+.attendee-button {
+	align-self: flex-end;
+}
