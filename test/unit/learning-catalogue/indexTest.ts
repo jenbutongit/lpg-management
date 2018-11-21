@@ -240,4 +240,14 @@ describe('Learning Catalogue tests', () => {
 			`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`
 		)
 	})
+
+	it('should call courseService when searching courses', async () => {
+		courseService.listAll = sinon.stub()
+
+		await learningCatalogue.searchCourses("test", 0, 10)
+
+		return expect(courseService.listAll).to.have.been.calledOnceWith(
+			`/search/courses/?query=test&page=0&size=10`
+		)
+	})
 })

@@ -20,15 +20,15 @@ export class SearchController {
 	}
 
 	private configureRouterPaths() {
-		this.router.post('/content-management/course/:query?', this.searchCourse())
+		this.router.post('/content-management/search', this.searchCourses())
 	}
 
-	searchCourse() {
+	searchCourses() {
 		const self = this
 
 		return async (request: Request, response: Response) => {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
-			let query = request.body.query
+			const query = request.body.query
 
 			// prettier-ignore
 			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.searchCourses(query, page, size)

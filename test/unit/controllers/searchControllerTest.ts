@@ -40,7 +40,7 @@ describe('Search Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.searchCourses = listAll
 
-		const index: (request: Request, response: Response) => void = searchController.searchCourse()
+		const index: (request: Request, response: Response) => void = searchController.searchCourses()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
