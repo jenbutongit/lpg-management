@@ -247,7 +247,7 @@ describe('Learning Catalogue tests', () => {
 		await learningCatalogue.searchCourses("test", 0, 10)
 
 		return expect(courseService.listAll).to.have.been.calledOnceWith(
-			`/search/courses/?query=test&page=0&size=10`
+			`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`
 		)
 	})
 })
