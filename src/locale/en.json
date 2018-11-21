@@ -28,7 +28,8 @@
 				"empty": "Audience type is required"
 			},
 			"requiredBy": {
-				"invalidDate": "Enter a valid deadline date"
+				"invalidDate": "Enter a valid deadline date",
+				"dateIsNotInFuture": "Deadline date needs to be in the future"
 			}
 		},
 		"type": {
@@ -62,10 +63,56 @@
 			"description": {
 				"empty": "Description is required",
 				"maxLength": "Description is too long"
+			},
+			"status": {
+				"invalid": "Status needs to be 'Draft', 'Published' or 'Archived'"
 			}
 		}
 	},
+	"event": {
+		"title": {
+			"cancel": "Cancel event"
+		}
+	},
 	"blended": "Blended",
+
+	"module": {
+		"validation": {
+			"cost": {
+				"positive": "Module cost must be a positive number"
+			}
+		},
+
+		"text": {
+			"cost": "Cost £ (ex VAT)"
+		}
+	},
+
+	"termsAndConditions": {
+		"text": {
+			"addNew": "Add new terms and conditions",
+			"edit": "Edit terms and conditions"
+		},
+
+		"validation": {
+			"name": {
+				"empty": "Name is required"
+			},
+			"content": {
+				"empty": "Content is required"
+			}
+		}
+	},
+
+	"courseType": {
+		"face-to-face": "Face to Face",
+		"link": "Link",
+		"elearning": "E-learning",
+		"video": "Video",
+		"file": "File",
+		"blended": "Blended"
+	},
+	"error": "There is a problem with the service",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
@@ -75,11 +122,6 @@
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
-	"face-to-face": "Face to Face",
-	"link": "Link",
-	"elearning": "e-learning",
-	"video": "Video",
-	"file": "File",
 	"learning_provider_add_title": "Add learning provider",
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",
@@ -100,8 +142,6 @@
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
-	"validation.termsAndConditions.name.empty": "Name is required",
-	"validation.termsAndConditions.content.empty": "Content is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
 	"validation_module_url_invalid": "A URL should include a protocol and be a top level domain",

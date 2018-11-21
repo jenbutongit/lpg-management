@@ -49,6 +49,9 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {LearnerRecord} from './learner-record'
+import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
+import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -96,6 +99,9 @@ export class ApplicationContext {
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeFactory: DateRangeFactory
 	dateRangeValidator: Validator<DateRange>
+	learnerRecord: LearnerRecord
+	learnerRecordConfig: LearnerRecordConfig
+	bookingFactory: BookingFactory
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -222,8 +228,14 @@ export class ApplicationContext {
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
+		this.bookingFactory = new BookingFactory()
+
+		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
+		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory)
+
 		this.eventController = new EventController(
 			this.learningCatalogue,
+			this.learnerRecord,
 			this.eventValidator,
 			this.eventFactory,
 			this.dateRangeCommandValidator,

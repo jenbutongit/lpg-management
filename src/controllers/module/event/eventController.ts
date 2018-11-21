@@ -7,9 +7,13 @@ import * as moment from 'moment'
 import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
+import {DateTime} from '../../../lib/dateTime'
+import {LearnerRecord} from '../../../learner-record'
+import {Booking} from '../../../learner-record/model/booking'
 
 export class EventController {
 	learningCatalogue: LearningCatalogue
+	learnerRecord: LearnerRecord
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -19,6 +23,7 @@ export class EventController {
 
 	constructor(
 		learningCatalogue: LearningCatalogue,
+		learnerRecord: LearnerRecord,
 		eventValidator: Validator<Event>,
 		eventFactory: EventFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
@@ -26,6 +31,7 @@ export class EventController {
 		dateRangeCommandFactory: DateRangeCommandFactory
 	) {
 		this.learningCatalogue = learningCatalogue
+		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
 		this.eventFactory = eventFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
@@ -124,6 +130,20 @@ export class EventController {
 		this.router.post(
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
 			this.updateDateRange()
+		)
+
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId',
+			this.getAttendeeDetails()
+		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update',
+			this.updateBooking()
+		)
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
+			this.cancelEvent()
 		)
 	}
 
@@ -420,7 +440,55 @@ export class EventController {
 
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/module/events/events-overview')
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+
+			res.render('page/course/module/events/events-overview', {bookings, eventDateWithMonthAsText})
 		}
+	}
+
+	public getAttendeeDetails() {
+		return async (req: Request, res: Response) => {
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			res.render('page/course/module/events/attendee', {booking, eventDateWithMonthAsText})
+		}
+	}
+
+	public updateBooking() {
+		return async (req: Request, res: Response) => {
+			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			booking.status = Booking.Status.CONFIRMED
+
+			this.learnerRecord.updateBooking(req.params.eventId, booking)
+
+			res.redirect(
+				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
+					req.params.eventId
+				}/attendee/${req.params.bookingId}`
+			)
+		}
+	}
+
+	public cancelEvent() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/cancel')
+		}
+	}
+
+	private findBooking(bookings: any, bookingId: number): Booking {
+		return bookings.find(function(booking: Booking) {
+			return booking.id == bookingId
+		})
 	}
 }

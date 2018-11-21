@@ -6,6 +6,7 @@ import {LearningProviderFactory} from '../../learning-catalogue/model/factory/le
 import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 import {LearningProvider} from '../../learning-catalogue/model/learningProvider'
 import {Validator} from '../../learning-catalogue/validator/validator'
+import * as asyncHandler from 'express-async-handler'
 
 const logger = log4js.getLogger('controllers/learningProviderController')
 
@@ -45,7 +46,7 @@ export class LearningProviderController {
 			}
 		})
 
-		this.router.get('/content-management/learning-providers', this.index())
+		this.router.get('/content-management/learning-providers', asyncHandler(this.index()))
 		this.router.get('/content-management/learning-providers/learning-provider', this.getLearningProvider())
 		this.router.post('/content-management/learning-providers/learning-provider', this.setLearningProvider())
 		this.router.get(
@@ -79,22 +80,20 @@ export class LearningProviderController {
 	}
 
 	public setLearningProvider() {
-		return async (request: Request, response: Response) => {
-			const data = {
-				...request.body,
-			}
-
+		return async (req: Request, res: Response) => {
+			const data = {...req.body}
 			const learningProvider = this.learningProviderFactory.create(data)
+			const errors = await this.learningProviderValidator.check(req.body, ['name'])
 
-			const errors = await this.learningProviderValidator.check(request.body, ['name'])
 			if (errors.size) {
-				request.session!.sessionFlash = {errors: errors}
-				return response.redirect('/content-management/learning-providers/learning-provider')
+				req.session!.sessionFlash = {errors: errors}
+				req.session!.save(() => {
+					res.redirect('/content-management/learning-providers/learning-provider')
+				})
+			} else {
+				const newLearningProvider = await this.learningCatalogue.createLearningProvider(learningProvider)
+				res.redirect('/content-management/learning-providers/' + newLearningProvider.id)
 			}
-
-			const newLearningProvider = await this.learningCatalogue.createLearningProvider(learningProvider)
-
-			response.redirect('/content-management/learning-providers/' + newLearningProvider.id)
 		}
 	}
 }
