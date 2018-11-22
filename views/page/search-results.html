@@ -20,12 +20,17 @@
     </div>
 
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
+        <div class="govuk-grid-column-full search-results-row">
         {% if pageResults %}
             {% if pageResults.totalResults !== 0 %}
-                <p class="">
+                {% if pageResults.totalResults > 2 %}
+                    {% set multiple = 's' %}
+                {% else  %}
+                    {% set multiple = '' %}
+                {% endif %}
+                {% set listTitle =  pageResults.totalResults + ' result' + multiple + ' found'  %}
                 {% block list %}
-                    {{ list("Courses", pageResults) }}
+                    {{ list(listTitle, pageResults) }}
                 {% endblock %}
             {% else %}
                 <p class="govuk-body">There are currently no courses</p>
