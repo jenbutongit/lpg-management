@@ -31,7 +31,8 @@
                 <p class="govuk-body">There are currently no courses</p>
             {% endif %}
         {% endif %}
-        {{ pagination()}}
+        {% set paginationBaseUrl = '/content-management/search' %}
+        {{ pagination(paginationBaseUrl) }}
         </div>
     </div>
 {% endblock %}
