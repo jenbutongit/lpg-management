@@ -38,18 +38,19 @@ describe('Search Controller Tests', function() {
 		} as PageResults<Course>
 
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
-		learningCatalogue.searchCourses = listAll
 
+		learningCatalogue.searchCourses = listAll
 		const index: (request: Request, response: Response) => void = searchController.searchCourses()
 
 		const request: Request = mockReq()
+
 		const response: Response = mockRes()
-		request.body.query = 'test'
+		request.query.q = "test"
 
 		await index(request, response)
 
 		expect(learningCatalogue.searchCourses).to.have.been.calledWith('test', 0, 10)
 
-		expect(response.render).to.have.been.calledOnceWith('page/search-results')
+		expect(response.render).to.have.been.calledOnceWith('page/search-results', {pageResults: pageResults, query: "test"})
 	})
 })
