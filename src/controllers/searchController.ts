@@ -4,6 +4,7 @@ import {Course} from '../learning-catalogue/model/course'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 
 import * as log4js from 'log4js'
+import * as striptags from 'striptags'
 import {Pagination} from 'lib/pagination'
 
 export class SearchController {
@@ -29,13 +30,16 @@ export class SearchController {
 
 		return async (request: Request, response: Response) => {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
-			const query = request.body.query
-
+			let query = ""
+			if (request.query.q) {
+				query = striptags(request.query.q)
+			}
 			// prettier-ignore
 			const pageResults: DefaultPageResults<Course> = await self.learningCatalogue.searchCourses(query, page, size)
 
 			response.render('page/search-results', {
-				pageResults,
+				pageResults: pageResults,
+				query: query
 			})
 		}
 	}

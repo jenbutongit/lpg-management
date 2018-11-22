@@ -32,7 +32,8 @@
             {% endif %}
         {% endif %}
         {% set paginationBaseUrl = '/content-management/search' %}
-        {{ pagination(paginationBaseUrl) }}
+        {% set query = '&q=' + query %}
+        {{ pagination(paginationBaseUrl, query) }}
         </div>
     </div>
 {% endblock %}
