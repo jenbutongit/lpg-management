@@ -1,0 +1,34 @@
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block pageTitle %}
+    {{ i18n.course.pageTitle.editCourseDetails if course else i18n.course.pageTitle.addCourseDetails }} - {{ i18n.proposition_name }}
+{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/overview" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Confirmation of archiving</h1>
+            <p class="govuk-body">By archiving, you will no longer be able to amend this course in any way. Nor can it be searched, booked or completed.</p>
+            <p class="govuk-body">Learners that have started or completed the course will still be able to see and access the course in their learner records.</p>
+            <form method="post" action="/content-management/courses/{{course.id}}/status">
+                <p class="govuk-body"><strong>Archiving a course is irreversible<strong></p>
+                <input type="hidden" name="status" value="Archived" />
+                {{ govukButton({
+                    text: "Archive this course",
+                    classes: "red-button"
+                }) }}
+            </form>
+            <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/overview">Cancel</a>
+        </div>
+        <div class="govuk-grid-column-one-third">
+        </div>
+    </div>
+
+{% endblock %}
