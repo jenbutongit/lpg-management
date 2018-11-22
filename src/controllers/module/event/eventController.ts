@@ -11,10 +11,13 @@ import {DateTime} from '../../../lib/dateTime'
 import {LearnerRecord} from '../../../learner-record'
 import {Booking} from '../../../learner-record/model/booking'
 import * as asyncHandler from 'express-async-handler'
+import {Validate} from '../../formValidator'
+import {FormController} from '../../formController'
 
-export class EventController {
+export class EventController implements FormController {
 	learningCatalogue: LearningCatalogue
 	learnerRecord: LearnerRecord
+	validator: Validator<Booking>
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -26,6 +29,7 @@ export class EventController {
 		learningCatalogue: LearningCatalogue,
 		learnerRecord: LearnerRecord,
 		eventValidator: Validator<Event>,
+		bookingValidator: Validator<Booking>,
 		eventFactory: EventFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
 		dateRangeValidator: Validator<DateRange>,
@@ -34,6 +38,7 @@ export class EventController {
 		this.learningCatalogue = learningCatalogue
 		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
+		this.validator = bookingValidator
 		this.eventFactory = eventFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
 		this.dateRangeValidator = dateRangeValidator
@@ -509,7 +514,7 @@ export class EventController {
 			const booking = this.findBooking(bookings, bookingId)
 
 			booking.status = Booking.Status.CONFIRMED
-			await this.learnerRecord.updateBooking(req.params.eventId, booking, '')
+			await this.learnerRecord.updateBooking(req.params.eventId, booking)
 
 			return res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
@@ -535,6 +540,10 @@ export class EventController {
 		}
 	}
 
+	@Validate({
+		fields: ['reason'],
+		redirect: `/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel`,
+	})
 	public cancelBooking() {
 		return async (req: Request, res: Response) => {
 			const data = {
@@ -545,21 +554,9 @@ export class EventController {
 			const bookingId = req.params.bookingId
 			const booking = this.findBooking(bookings, bookingId)
 
-			if (data.reason == '') {
-				const errors = {fields: {reason: ['validation_cancellation_reason_empty']}, size: 1}
-				req.session!.sessionFlash = {errors: errors}
-
-				return req.session!.save(() => {
-					return res.redirect(
-						`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
-							req.params.eventId
-						}/attendee/${bookingId}/cancel`
-					)
-				})
-			}
-
 			booking.status = Booking.Status.CANCELLED
-			await this.learnerRecord.updateBooking(req.params.eventId, booking, data.reason)
+			booking.cancellationReason = data.cancellationReason
+			await this.learnerRecord.updateBooking(req.params.eventId, booking)
 
 			return res.redirect(
 				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${

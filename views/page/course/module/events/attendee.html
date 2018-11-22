@@ -2,10 +2,8 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "../../../../component/menu/macro.njk" import menu %}
 
-
 {% set banner = true %}
 {% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id %}
-
 
 {% block content %}
     <div class="govuk-grid-row">
@@ -23,11 +21,11 @@
                                 <p class="govuk-body"><strong>Booking status</strong></p>
                                 <p class="govuk-body">
                                     {% if booking.status === "Requested" %}
-                                        Pending
+                                        {{i18n.attendee.status.Requested}}
                                     {% elif booking.status === "Confirmed" %}
-                                        Confirmed
+                                        {{i18n.attendee.status.Confirmed}}
                                     {% elif booking.status === "Cancelled" %}
-                                        Cancelled
+                                        {{i18n.attendee.status.Cancelled}}
                                     {% endif %}
                                 </p>
                             </span>
@@ -44,13 +42,13 @@
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
                 {% block menu %}
-                {% set actions = [
-                {
-                link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
-                text: 'Cancel Attendee'
-                }
-                ] %}
-                {{ menu("Actions", actions) }}
+                    {% set actions = [
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
+                            text: 'Cancel Attendee'
+                        }
+                    ] %}
+                    {{ menu("Actions", actions) }}
                 {% endblock %}
             </div>
         </div>

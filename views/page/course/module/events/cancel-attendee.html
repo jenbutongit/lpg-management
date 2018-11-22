@@ -3,10 +3,10 @@
 {% from "select/macro.njk" import govukSelect %}
 {% from "button/macro.njk" import govukButton %}
 
-{% block pageTitle %}{{ i18n['cancel_attendee'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n.attendee.title.cancel }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events/" + event.id + "/attendee/" + attendeeEventRecord[0].bookingReference %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events/" + event.id + "/attendee/" + booking.id %}
 
 {% block content %}
 
@@ -15,7 +15,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="gov-uk-heading-l">Cancel attendee</h1>
+        <h1 class="gov-uk-heading-l">{{i18n.attendee.title.cancel}}</h1>
         <div class="event-overview">
             <h2 class="govuk-heading-m">{{eventDateWithMonthAsText}}, {{event.venue.location}}</h2>
             <p class="govuk-body">This event is for the <strong>{{module.title}}</strong> module on the <strong>{{course.title}}</strong> course.</p>
@@ -28,11 +28,11 @@
                                 <p class="govuk-body"><strong>Booking status</strong></p>
                                 <p class="govuk-body">
                                     {% if booking.status === "Requested" %}
-                                        Pending
+                                        {{i18n.attendee.status.Requested}}
                                     {% elif booking.status === "Confirmed" %}
-                                        Confirmed
+                                        {{i18n.attendee.status.Confirmed}}
                                     {% elif booking.status === "Cancelled" %}
-                                        Cancelled
+                                        {{i18n.attendee.status.Cancelled}}
                                     {% endif %}
                                 </p>
                             </span>
@@ -40,60 +40,60 @@
                 </ul>
             </div>
             <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}/cancel" method="post">
-                {% if errors.fields.reason %}
+                {% if errors.fields.cancellationReason %}
                     {{ govukSelect({
-                    id: "reason",
-                    name: "reason",
-                    errorMessage: {
-                    text: "Please select a reason"
-                    },
-                    label: {
-                    text: "Cancellation reason"
-                    },
-                    items: [
-                    {
-                    value: "",
-                    text: "Choose a cancellation reason",
-                    selected: true
-                    },
-                    {
-                    value: "reason1",
-                    text: "The booking has not been paid"
-                    },
-                    {
-                    value: "reason2",
-                    text: "The learner has requested that the booking be cancelled"
-                    }
-                    ]
+                        id: "cancellationReason",
+                        name: "cancellationReason",
+                        errorMessage: {
+                            text: "Please select a reason"
+                        },
+                        label: {
+                            text: "Cancellation reason"
+                        },
+                        items: [
+                            {
+                                value: "",
+                                text: "Choose a cancellation reason",
+                                selected: true
+                            },
+                            {
+                                value: "reason1",
+                                text: "The booking has not been paid"
+                            },
+                            {
+                                value: "reason2",
+                                text: "The learner has requested that the booking be cancelled"
+                            }
+                        ]
                     }) }}
                 {% else %}
                     {{ govukSelect({
-                    id: "reason",
-                    name: "reason",
-                    label: {
-                    text: "Cancellation reason"
-                    },
-                    items: [
-                    {
-                    value: "",
-                    text: "Choose a cancellation reason",
-                    selected: true
-                    },
-                    {
-                    value: "reason1",
-                    text: "The booking has not been paid"
-                    },
-                    {
-                    value: "reason2",
-                    text: "The learner has requested that the booking be cancelled"
-                    }
-                    ]
+                        id: "cancellationReason",
+                        name: "cancellationReason",
+                        label: {
+                            text: "Cancellation reason"
+                        },
+                        items: [
+                        {
+                            value: "",
+                            text: "Choose a cancellation reason",
+                            selected: true
+                        },
+                        {
+                            value: "reason1",
+                            text: "The booking has not been paid"
+                        },
+                        {
+                            value: "reason2",
+                            text: "The learner has requested that the booking be cancelled"
+                        }
+                        ]
                     }) }}
                 {% endif %}
                 <div class="button-container">
                     {{ govukButton({
-                    text: "Cancel Attendee",
-                    classes: "button-red"
+                        text: "Cancel Attendee",
+                        classes: "button-red"
                     }) }}
                 </div>
             </form>

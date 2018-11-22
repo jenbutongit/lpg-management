@@ -24,6 +24,7 @@ describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
 	let learnerRecord: LearnerRecord
+	let validator: Validator<Booking>
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -34,6 +35,7 @@ describe('EventController', function() {
 		learningCatalogue = <LearningCatalogue>{}
 		learnerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
+		validator = <Validator<Booking>>{}
 		eventFactory = <EventFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
 		dateRangeValidator = <Validator<DateRange>>{}
@@ -43,6 +45,7 @@ describe('EventController', function() {
 			learningCatalogue,
 			learnerRecord,
 			eventValidator,
+			validator,
 			eventFactory,
 			dateRangeCommandValidator,
 			dateRangeValidator,
@@ -464,6 +467,7 @@ describe('EventController', function() {
 
 		learnerRecord.updateBooking = sinon.stub()
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+		validator.check = sinon.stub().returns({})
 
 		await registerLearner(request, response)
 
@@ -482,11 +486,6 @@ describe('EventController', function() {
 			callback(undefined)
 		}
 
-		const booking: Booking = new Booking()
-		booking.id = 99
-		booking.status = Booking.Status.REQUESTED
-		const bookings = [booking]
-
 		const registerLearner: (request: Request, response: Response) => void = eventController.cancelBooking()
 
 		request.params.courseId = 'courseId'
@@ -496,13 +495,10 @@ describe('EventController', function() {
 
 		request.body.reason = ''
 
-		learnerRecord.updateBooking = sinon.stub()
-		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+		validator.check = sinon.stub().returns({fields: {reason: 'reason missing'}, size: 1})
 
 		await registerLearner(request, response)
 
-		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
-		expect(booking.status).to.equal(Booking.Status.REQUESTED)
 		expect(response.redirect).to.have.been.calledOnceWith(
 			`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99/cancel`
 		)

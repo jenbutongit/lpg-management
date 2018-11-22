@@ -59,11 +59,11 @@ describe('Leaner Record Tests', () => {
 		booking.status = Booking.Status.REQUESTED
 
 		restService.patch = sinon.stub()
-		await learnerRecord.updateBooking(eventId, booking, '')
+		await learnerRecord.updateBooking(eventId, booking)
 
 		expect(restService.patch).to.have.been.calledOnceWith('/event/test-event-id/booking/99', {
 			status: booking.status,
-			cancellationReason: '',
+			cancellationReason: undefined,
 		})
 	})
 
@@ -73,7 +73,7 @@ describe('Leaner Record Tests', () => {
 
 		restService.patch = sinon.stub().throws(new Error(`An error occurred when PATCHING`))
 
-		expect(learnerRecord.updateBooking(eventId, booking, '')).to.be.rejectedWith(
+		expect(learnerRecord.updateBooking(eventId, booking)).to.be.rejectedWith(
 			'An error occurred when trying to update booking: An error occurred when PATCHING'
 		)
 	})
