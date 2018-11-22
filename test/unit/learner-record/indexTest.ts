@@ -33,28 +33,6 @@ describe('Leaner Record Tests', () => {
 		learnerRecord.restService = restService
 	})
 
-	it('Should call rest service when getting invitees', async () => {
-		const eventId = 'eventId'
-		restService.get = sinon.stub().returns([{learnerEmail: 'test1@test.com'}])
-		inviteFactory.create = sinon.stub()
-
-		await learnerRecord.getEventInvitees(eventId)
-
-		expect(restService.get).to.have.been.calledOnceWith('/event/eventId/invitee')
-		expect(inviteFactory.create).to.have.been.calledOnceWith({learnerEmail: 'test1@test.com'})
-	})
-
-	it('Should call rest service when posting learner', async () => {
-		const eventId = 'eventId'
-		const invite: Invite = new Invite()
-
-		restService.post = sinon.stub()
-
-		await learnerRecord.inviteLearner(eventId, invite)
-
-		expect(restService.post).to.have.been.calledOnceWith('/event/eventId/invitee', invite)
-	})
-
 	it('should get event bookings', async () => {
 		const eventId = 'test-event-id'
 		const data = [new Booking(), new Booking()]
@@ -101,5 +79,57 @@ describe('Leaner Record Tests', () => {
 		expect(learnerRecord.updateBooking(eventId, booking)).to.be.rejectedWith(
 			'An error occurred when trying to update booking: An error occurred when PATCHING'
 		)
+	})
+
+	it('should call rest service when getting invitees', async () => {
+		const eventId = 'eventId'
+		restService.get = sinon.stub().returns([{learnerEmail: 'test1@test.com'}])
+		inviteFactory.create = sinon.stub()
+
+		await learnerRecord.getEventInvitees(eventId)
+
+		expect(restService.get).to.have.been.calledOnceWith('/event/eventId/invitee')
+		expect(inviteFactory.create).to.have.been.calledOnceWith({learnerEmail: 'test1@test.com'})
+	})
+
+	it('should throw error is getting invitee throws error', async () => {
+		const eventId = 'eventId'
+
+		restService.get = sinon.stub().throws(new Error('Test Error'))
+
+		expect(learnerRecord.getEventInvitees(eventId)).to.be.rejectedWith(
+			`An error occurred when trying to get event invitees: Test Error`
+		)
+	})
+
+	it('should call rest service when posting invitee', async () => {
+		const eventId = 'eventId'
+		const invite: Invite = new Invite()
+
+		restService.post = sinon.stub()
+
+		await learnerRecord.inviteLearner(eventId, invite)
+
+		expect(restService.post).to.have.been.calledOnceWith('/event/eventId/invitee', invite)
+	})
+
+	it('should throw 409 error if learner already invited', async () => {
+		const eventId = 'eventId'
+		const invite: Invite = new Invite()
+
+		restService.post = sinon.stub().throws(new Error('409'))
+
+		expect(learnerRecord.inviteLearner(eventId, invite)).to.be.rejectedWith(
+			`Learner has already been invite to course: 409`
+		)
+	})
+
+	it('should throw 404 error if learner doesn not exist', async () => {
+		const eventId = 'eventId'
+		const invite: Invite = new Invite()
+
+		restService.post = sinon.stub().throws(new Error('404'))
+
+		expect(learnerRecord.inviteLearner(eventId, invite)).to.be.rejectedWith(`Email address not registered: 404`)
 	})
 })

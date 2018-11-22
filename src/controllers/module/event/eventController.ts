@@ -529,11 +529,13 @@ export class EventController {
 				}
 			}
 
-			return res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
-					req.params.eventId
-				}`
-			)
+			return req.session!.save(() => {
+				res.redirect(
+					`/content-management/courses/${req.params.courseId}/modules/${
+						req.params.moduleId
+					}/events-overview/${req.params.eventId}`
+				)
+			})
 		}
 	}
 

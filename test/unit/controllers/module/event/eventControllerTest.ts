@@ -395,6 +395,10 @@ describe('EventController', function() {
 		const request = mockReq()
 		const response = mockRes()
 
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
 		request.body.learnerEmail = 'test@test.com'
 		request.user = {accessToken: 'test-token'}
 
@@ -423,6 +427,10 @@ describe('EventController', function() {
 		const request = mockReq()
 		const response = mockRes()
 
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
 		request.body.learnerEmail = 'test@test.com'
 		request.user = {accessToken: 'test-token'}
 
@@ -450,6 +458,10 @@ describe('EventController', function() {
 	it('Should fail to invite user and redirect to event overview with not already added', async () => {
 		const request = mockReq()
 		const response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
 
 		request.body.learnerEmail = 'test@test.com'
 		request.user = {accessToken: 'test-token'}
