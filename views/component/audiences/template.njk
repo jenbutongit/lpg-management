@@ -6,7 +6,9 @@
             <li class="list-item">
                 <div class="title-container">
                     <h3 class="govuk-heading-s">{{ audience.name | default("Audience", true) }}</h3>
-                    <a class="govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Edit</a>
+                    {% if course.status !== "Archived" %}
+                        <a class="govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Edit</a>
+                    {% endif %}
                 </div>
                 {% set audienceHTML = '<ul class="list audience">
                     <li class="audience-item u--border--bgrey"><span class="audience-header">Audience type</span><span class="audience-info">'
