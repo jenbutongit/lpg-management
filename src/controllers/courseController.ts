@@ -60,7 +60,7 @@ export class CourseController implements FormController {
 		this.router.post('/content-management/courses/details/:courseId', this.updateCourseDetails())
 
 		this.router.get('/content-management/courses/:courseId/sort-modules', this.sortModules())
-
+		this.router.get('/content-management/courses/:courseId/archive', this.archiveCourse())
 		this.router.post('/content-management/courses/:courseId/status', this.setStatus())
 		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules', this.sortModules())
 	}
@@ -192,6 +192,12 @@ export class CourseController implements FormController {
 			request.session!.save(() => {
 				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 			})
+		}
+	}
+
+	archiveCourse() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/archive')
 		}
 	}
 }
