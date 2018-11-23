@@ -1,6 +1,7 @@
 {% from "../../component/list/macro.njk" import list %}
 {% from "../../component/menu/macro.njk" import menu %}
 {% from "../../component/statusWithLabel/macro.njk" import statusWithLabel with context %}
+{% from "../../component/changeStatus/macro.njk" import changeStatus with context %}
 {% from "../../component/courseDetails/macro.njk" import courseDetails with context %}
 {% from "../../component/courseEvents/macro.njk" import courseEvents with context %}
 {% from "../../component/audiences/macro.njk" import audiences with context %}
@@ -46,7 +47,9 @@
         <div class="section">
             <div class="title-container"> 
                 <h3 class="govuk-heading-m">Course audiences</h3>
-                <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audiences/">Add an audience</a>
+                {% if course.status !== "Archived" %}
+                    <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audiences/">Add an audience</a>
+                {% endif %}
             </div>
             {% block audiences %}
                 {{ audiences(course) }}
@@ -58,15 +61,20 @@
             {% block statusWithLabel %}
                 {{ statusWithLabel(course.status) }}
             {% endblock %}
-            {% block menu %}
-                {% set actions = [
-                    {
-                        link: '/content-management/courses/' + course.id + "/preview",
-                        text: 'Preview and edit'
-                    }
-                ] %}
-                {{ menu("Actions", actions) }}
+            {% block changeStatus %}
+                {{ changeStatus(course.status) }}
             {% endblock %}
+            {% if course.status !== "Archived" %}
+                {% block menu %}
+                    {% set actions = [
+                        {
+                            link: '/content-management/courses/' + course.id + "/preview",
+                            text: 'Preview and edit'
+                        }
+                    ] %}
+                    {{ menu("Actions", actions) }}
+                {% endblock %}
+            {% endif %}
         </div>
     </div>
 </div>
