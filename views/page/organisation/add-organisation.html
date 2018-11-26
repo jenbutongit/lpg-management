@@ -29,7 +29,7 @@
                     <p class="govuk-body custom-margin">If your new organisation has an existing parent, find them in the list below.</p>
                     <p for="organisationalUnit no-margin" class="govuk-body hint custom-margin">Start typing to find your organisation name</p>
                     <div class="autocomplete-wrapper">
-                        <select name="organisationalUnit" id="organisationalUnit">
+                        <select name="parent" id="parent">
                             <option value=""></option>
                             {% for key, item in organisationalUnits %}
                                 <option value={{ key }}>{{ item }}</option>
