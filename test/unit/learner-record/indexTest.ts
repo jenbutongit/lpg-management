@@ -10,7 +10,6 @@ import * as chaiAsPromised from 'chai-as-promised'
 import {OauthRestService} from 'lib/http/oauthRestService'
 import {BookingFactory} from '../../../src/learner-record/model/factory/bookingFactory'
 import {Booking} from '../../../src/learner-record/model/booking'
-import {RecordEventFactory} from '../../../src/learner-record/model/factory/recordEventFactory'
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -18,7 +17,6 @@ chai.use(sinonChai)
 describe('Leaner Record Tests', () => {
 	let learnerRecord: LearnerRecord
 	let bookingFactory: BookingFactory
-	let recordEvent: RecordEventFactory
 	let restService: OauthRestService
 
 	const config = new LearnerRecordConfig('http://example.org')
@@ -26,9 +24,8 @@ describe('Leaner Record Tests', () => {
 	beforeEach(() => {
 		bookingFactory = <BookingFactory>{}
 		restService = <OauthRestService>{}
-		recordEvent = <RecordEventFactory>{}
 
-		learnerRecord = new LearnerRecord(config, {} as Auth, bookingFactory, recordEvent)
+		learnerRecord = new LearnerRecord(config, {} as Auth, bookingFactory)
 		learnerRecord.restService = restService
 	})
 

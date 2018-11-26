@@ -70,13 +70,6 @@ export class EventController {
 			const event = await this.learningCatalogue.getEvent(res.locals.course.id, res.locals.module.id, eventId)
 
 			if (event) {
-				const eventRecord = await this.learnerRecord.getEvent(event.id)
-				if (eventRecord) {
-					event.venue.availability = eventRecord.availability
-				} else {
-					res.sendStatus(404)
-				}
-
 				res.locals.event = event
 				next()
 			} else {
