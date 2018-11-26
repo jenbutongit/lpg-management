@@ -1,0 +1,40 @@
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+{% extends "../../../../../component/Page.njk" %}
+{% block pageTitle %}{{ i18n['event_assign_learning_provider'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id %}
+{% block content %}
+    {% set errors = sessionFlash.errors %}
+    {{ errorSummary(errors.fields) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-body form-header govuk-!-font-size-24">Add a new event</h1>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Learning providers</h2>
+            
+            <h3 class="govuk-heading-s">Add the learning provider and their policies</h3>
+            
+            <form class="govuk-form course-form" action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location/{{event.id}}" method="post">
+                
+                {{ govukInput({
+                    label: {
+                        text: "Learning providers"
+                    },
+                    id: "provider",
+                    name: "provider",
+                    value: event.learningProvider,
+                }) }} 
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
+            </form>
+            <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
+        </div>
+        <div class="govuk-column-width-one-third">
+        </div>
+    </div>
+{% endblock%}

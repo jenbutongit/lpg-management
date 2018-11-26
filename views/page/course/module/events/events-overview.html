@@ -18,7 +18,7 @@
         <div class="govuk-grid-column-two-thirds">
           <p class="govuk-body">This event is for the <strong>{{module.title | default("Module title", true)}}</strong> module on the <a href="/content-management/courses/{{course.id}}/overview" class="govuk-link">{{course.title}}</a> course</p>
           <div class="event-overview">
-            <h3 class="govuk-heading-m">Event overview</h3>
+            <h2 class="govuk-heading-m">Event overview</h2>
 
             {% set dateList = [] %}
               {% for dateRange in event.dateRanges %}
@@ -107,7 +107,7 @@
               }) }}
             </div>
             <div class="course-attendees">
-              <h3 class="govuk-heading-m">Course attendees</h3>
+              <h2 class="govuk-heading-m">Course attendees</h2>
               {% if bookings.length > 0 %}
                 <ul class="attendees headers">
                   <li class="list-headers"><p class="govuk-body header title"><strong>Name</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><span class="button-header"></span></li>

@@ -1,0 +1,50 @@
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+{% extends "../../../../../component/Page.njk" %}
+{% block pageTitle %}{{ i18n['event_learning_provider'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id %}
+{% block content %}
+    {% set errors = sessionFlash.errors %}
+    {{ errorSummary(errors.fields) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-body form-header govuk-!-font-size-24">Add a new event</h1>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Learning providers</h2>
+            <form class="govuk-form course-form" action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location/{{event.id}}" method="post">
+                {{ govukRadios({
+                classes: "govuk-radios--inline",
+                idPrefix: "provider",
+                name: "provider",
+                fieldset: {
+                    legend: {
+                    text: "Do you want to add a learning provider to this event?",
+                    isPageHeading: true,
+                    classes: "govuk-fieldset__legend--s"
+                    }
+                },
+                items: [
+                    {
+                    value: "yes",
+                    text: "Yes"
+                    },
+                    {
+                    value: "no",
+                    text: "No"
+                    }
+                ]
+                }) }}
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
+            </form>
+            <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
+        </div>
+        <div class="govuk-column-width-one-third">
+        </div>
+    </div>
+{% endblock%}

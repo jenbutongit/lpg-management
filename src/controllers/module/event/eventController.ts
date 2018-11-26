@@ -145,8 +145,17 @@ export class EventController {
 			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
 			this.cancelEvent()
 		)
-	}
 
+		this.router.get(
+			'/content-management/courses/:courseId/modules/:moduleId/learning-provider/:savedEventId',
+			this.getLearningProvider()
+		)
+
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/learning-provider/:savedEventId',
+			this.setLearningProvider()
+		)
+	}
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events')
@@ -381,7 +390,7 @@ export class EventController {
 				res.redirect(
 					`/content-management/courses/${req.params.courseId}/modules/${
 						req.params.moduleId
-					}/events-overview/${savedEvent.id}`
+					}/learning-provider/${savedEvent.id}`
 				)
 			}
 		}
@@ -477,6 +486,18 @@ export class EventController {
 					req.params.eventId
 				}/attendee/${req.params.bookingId}`
 			)
+		}
+	}
+
+	getLearningProvider() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/learning-provider/index')
+		}
+	}
+
+	setLearningProvider() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/learning-provider/assign-learner-provider')
 		}
 	}
 

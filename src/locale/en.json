@@ -69,11 +69,6 @@
 			}
 		}
 	},
-	"event": {
-		"title": {
-			"cancel": "Cancel event"
-		}
-	},
 	"blended": "Blended",
 
 	"module": {
@@ -120,6 +115,9 @@
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
 	"event_add_title": "Add event date & time",
+	"event_assign_learning_provider": "Assign learning providers",
+	"event_cancel": "Cancel event",
+	"event_learning_provider": "Learning providers",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
 	"learning_provider_add_title": "Add learning provider",
