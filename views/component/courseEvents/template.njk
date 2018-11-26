@@ -10,7 +10,9 @@
     <div class="module-container-small">
         <div class="title-container">
             <p class="govuk-body no-margin"><strong>{{ module.title | default(course.title, true) }}</strong></p>
-             <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/">Add new event</a>               
+            {% if course.status !== "Archived" %}
+                <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/modules/{{ module.id }}/events/">Add new event</a>               
+            {% endif %}
         </div>
         {% if module.events.length > 0 %}
             <h3 class="govuk-heading-s no-margin">Event details</h3>
