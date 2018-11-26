@@ -6,7 +6,7 @@ import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import {EntityService} from '../../../src/learning-catalogue/service/entityService'
 import {Auth} from '../../../src/identity/auth'
-import {OrganisationalUnit} from '../../../src/controllers/organisation/model/organisationalUnit'
+import {OrganisationalUnit} from '../../../src/csrs/model/organisationalUnit'
 import {Csrs} from '../../../src/csrs'
 import {CsrsConfig} from '../../../src/csrs/csrsConfig'
 

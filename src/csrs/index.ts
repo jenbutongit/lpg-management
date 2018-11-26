@@ -1,8 +1,8 @@
 import {EntityService} from '../learning-catalogue/service/entityService'
-import {OrganisationalUnit} from '../controllers/organisation/model/organisationalUnit'
+import {OrganisationalUnit} from './model/organisationalUnit'
 import {OauthRestService} from '../lib/http/oauthRestService'
 import {Auth} from '../identity/auth'
-import {OrganisationalUnitFactory} from '../controllers/organisation/model/organisationalUnitFactory'
+import {OrganisationalUnitFactory} from './model/organisationalUnitFactory'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {CsrsConfig} from './csrsConfig'
 
