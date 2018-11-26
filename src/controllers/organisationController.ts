@@ -1,12 +1,12 @@
 import {Request, Response, Router} from 'express'
-import {OrganisationalUnit} from './model/organisationalUnit'
-import {Csrs} from '../../csrs'
-import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
+import {OrganisationalUnit} from '../csrs/model/organisationalUnit'
+import {Csrs} from '../csrs/index'
+import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import * as asyncHandler from 'express-async-handler'
-import {OrganisationalUnitFactory} from './model/organisationalUnitFactory'
-import {FormController} from '../formController'
-import {Validator} from '../../learning-catalogue/validator/validator'
-import {Validate} from '../formValidator'
+import {OrganisationalUnitFactory} from '../csrs/model/organisationalUnitFactory'
+import {FormController} from './formController'
+import {Validator} from '../learning-catalogue/validator/validator'
+import {Validate} from './formValidator'
 
 export class OrganisationController implements FormController {
 	router: Router

@@ -49,13 +49,13 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
-import {OrganisationController} from './controllers/organisation/organisationController'
+import {OrganisationController} from './controllers/organisationController'
 import {Csrs} from './csrs'
-import {OrganisationalUnitFactory} from './controllers/organisation/model/organisationalUnitFactory'
+import {OrganisationalUnitFactory} from './csrs/model/organisationalUnitFactory'
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
-import {OrganisationalUnit} from './controllers/organisation/model/organisationalUnit'
+import {OrganisationalUnit} from './csrs/model/organisationalUnit'
 
 log4js.configure(config.LOGGING)
 

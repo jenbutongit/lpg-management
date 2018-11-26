@@ -5,12 +5,12 @@ import {expect} from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {Request, Response} from 'express'
 import * as sinon from 'sinon'
-import {OrganisationController} from '../../../../src/controllers/organisation/organisationController'
-import {Csrs} from '../../../../src/csrs'
-import {OrganisationalUnit} from '../../../../src/controllers/organisation/model/organisationalUnit'
-import {PageResults} from '../../../../src/learning-catalogue/model/pageResults'
-import {OrganisationalUnitFactory} from '../../../../src/controllers/organisation/model/organisationalUnitFactory'
-import {Validator} from '../../../../src/learning-catalogue/validator/validator'
+import {OrganisationController} from '../../../src/controllers/organisationController'
+import {Csrs} from '../../../src/csrs/index'
+import {OrganisationalUnit} from '../../../src/csrs/model/organisationalUnit'
+import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
+import {OrganisationalUnitFactory} from '../../../src/csrs/model/organisationalUnitFactory'
+import {Validator} from '../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)
 
