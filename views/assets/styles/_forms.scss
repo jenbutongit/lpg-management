@@ -96,6 +96,10 @@
 	}
 }
 
+.provider-input {
+	width: 100%;
+}
+
 .date-set {
 	label {
 		font-weight: normal;
@@ -300,6 +304,10 @@
 
 	.small-input {
 		width: 130px;
+	}
+
+	.provider-input {
+		width: 75%;
 	}
 
 	.audience-fieldset {

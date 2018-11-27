@@ -147,17 +147,17 @@ export class EventController {
 		)
 
 		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/learning-provider/',
+			'/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId',
 			this.getLearningProvider()
 		)
 
 		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/learning-provider/',
+			'/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId',
 			this.setLearningProvider()
 		)
 
-		this.router.get(
-			'/content-management/courses/{{course.id}}/modules/{{module.id}}/learning-provider/assign',
+		this.router.post(
+			'/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId/policies',
 			this.getPolicies()
 		)
 	}
@@ -387,16 +387,15 @@ export class EventController {
 				let event = JSON.parse(req.body.eventJson || '{}')
 				event.venue = data.venue
 
-				// const savedEvent = await this.learningCatalogue.createEvent(
-				// 	req.params.courseId,
-				// 	req.params.moduleId,
-				// 	event
-				// )
+				const savedEvent = await this.learningCatalogue.createEvent(
+					req.params.courseId,
+					req.params.moduleId,
+					event
+				)
 				res.redirect(
 					`/content-management/courses/${req.params.courseId}/modules/${
 						req.params.moduleId
-					}/learning-provider/`
-					//${savedEvent.id}`
+					}/learning-provider/${savedEvent.id}`
 				)
 			}
 		}
@@ -495,19 +494,19 @@ export class EventController {
 		}
 	}
 
-	getLearningProvider() {
+	public getLearningProvider() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/learning-provider/index')
 		}
 	}
 
-	setLearningProvider() {
+	public setLearningProvider() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/learning-provider/assign-learner-provider')
+			response.render('page/course/module/events/learning-provider/assign-learning-provider')
 		}
 	}
 
-	getPolicies() {
+	public getPolicies() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/learning-provider/assign-policies')
 		}
