@@ -13,6 +13,8 @@ import {Booking} from '../../../learner-record/model/booking'
 import * as asyncHandler from 'express-async-handler'
 import {Validate} from '../../formValidator'
 import {FormController} from '../../formController'
+import {Course} from '../../../learning-catalogue/model/course'
+import {Module} from '../../../learning-catalogue/model/module'
 
 export class EventController implements FormController {
 	learningCatalogue: LearningCatalogue
@@ -51,40 +53,14 @@ export class EventController implements FormController {
 	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param(
-			'courseId',
-			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
-				const course = await this.learningCatalogue.getCourse(courseId)
-
-				if (course) {
-					res.locals.course = course
-					next()
-				} else {
-					res.sendStatus(404)
-				}
-			})
-		)
-
-		this.router.param(
-			'moduleId',
-			asyncHandler(async (req: Request, res: Response, next: NextFunction, moduleId: string) => {
-				const module = await this.learningCatalogue.getModule(res.locals.course.id, moduleId)
-
-				if (module) {
-					res.locals.module = module
-					next()
-				} else {
-					res.sendStatus(404)
-				}
-			})
-		)
-
-		this.router.param(
 			'eventId',
 			asyncHandler(async (req: Request, res: Response, next: NextFunction, eventId: string) => {
-				const event = await this.learningCatalogue.getEvent(res.locals.course.id, res.locals.module.id, eventId)
+				const event = await this.learningCatalogue.getEvent(req.params.courseId, req.params.moduleId, eventId)
 
 				if (event) {
 					res.locals.event = event
+					res.locals.courseId = req.params.courseId
+					res.locals.moduleId = req.params.moduleId
 					next()
 				} else {
 					res.sendStatus(404)
@@ -372,8 +348,11 @@ export class EventController implements FormController {
 	}
 
 	public getDatePreview() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events-preview')
+		return async (req: Request, res: Response) => {
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+
+			res.render('page/course/module/events/events-preview', {course: course, module: module})
 		}
 	}
 
@@ -475,6 +454,9 @@ export class EventController implements FormController {
 
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
@@ -484,6 +466,8 @@ export class EventController implements FormController {
 			res.render('page/course/module/events/events-overview', {
 				bookings: activeBookings,
 				eventDateWithMonthAsText,
+				course: course,
+				module: module,
 			})
 		}
 	}
@@ -496,6 +480,9 @@ export class EventController implements FormController {
 
 	public getAttendeeDetails() {
 		return async (req: Request, res: Response) => {
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
@@ -503,7 +490,12 @@ export class EventController implements FormController {
 			const bookingId = req.params.bookingId
 			const booking = this.findBooking(bookings, bookingId)
 
-			res.render('page/course/module/events/attendee', {booking, eventDateWithMonthAsText})
+			res.render('page/course/module/events/attendee', {
+				booking,
+				eventDateWithMonthAsText,
+				course: course,
+				module: module,
+			})
 		}
 	}
 

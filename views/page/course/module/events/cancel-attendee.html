@@ -6,7 +6,7 @@
 {% block pageTitle %}{{ i18n.attendee.title.cancel }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events/" + event.id + "/attendee/" + booking.id %}
+{% set backButton = "/content-management/courses/" + courseId + "/modules/" + moduleId + "/events/" + event.id + "/attendee/" + booking.id %}
 
 {% block content %}
 
@@ -39,7 +39,7 @@
                     </li>
                 </ul>
             </div>
-            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}/cancel" method="post">
+            <form action="/content-management/courses/{{courseId}}/modules/{{moduleId}}/events/{{event.id}}/attendee/{{booking.id}}/cancel" method="post">
                 {% if errors.fields.cancellationReason %}
                     {{ govukSelect({
                         id: "cancellationReason",

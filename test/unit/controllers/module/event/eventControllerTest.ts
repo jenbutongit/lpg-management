@@ -17,6 +17,8 @@ import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/learner-record'
 import {Booking} from '../../../../../src/learner-record/model/booking'
 import {DateTime} from '../../../../../src/lib/dateTime'
+import {Course} from '../../../../../src/learning-catalogue/model/course'
+import {Module} from '../../../../../src/learning-catalogue/model/module'
 
 chai.use(sinonChai)
 
@@ -159,6 +161,12 @@ describe('EventController', function() {
 
 		it('should render event preview page', async function() {
 			const response: Response = mockRes()
+
+			const course: Course = new Course()
+			const module: Module = new Module()
+
+			learningCatalogue.getCourse = sinon.stub().returns(course)
+			learningCatalogue.getModule = sinon.stub().returns(module)
 
 			await eventController.getDatePreview()(mockReq(), response)
 
@@ -370,6 +378,9 @@ describe('EventController', function() {
 		const event: Event = new Event()
 		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
 
+		const course: Course = new Course()
+		const module: Module = new Module()
+
 		const getEventOverview: (request: Request, response: Response) => void = eventController.getEventOverview()
 
 		const request: Request = mockReq()
@@ -378,6 +389,8 @@ describe('EventController', function() {
 		response.locals.event = event
 
 		learnerRecord.getEventBookings = sinon.stub().returns([new Booking()])
+		learningCatalogue.getCourse = sinon.stub().returns(course)
+		learningCatalogue.getModule = sinon.stub().returns(module)
 
 		await getEventOverview(request, response)
 
@@ -392,6 +405,9 @@ describe('EventController', function() {
 
 		const event: Event = new Event()
 		event.dateRanges = [dateRange]
+
+		const course: Course = new Course()
+		const module: Module = new Module()
 
 		const eventDateWithMonthAsText = DateTime.convertDate(event.dateRanges[0].date)
 
@@ -409,6 +425,8 @@ describe('EventController', function() {
 		request.params.bookingId = 99
 
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+		learningCatalogue.getCourse = sinon.stub().returns(course)
+		learningCatalogue.getModule = sinon.stub().returns(module)
 
 		await getAttendeeDetails(request, response)
 
@@ -416,6 +434,8 @@ describe('EventController', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/attendee', {
 			booking,
 			eventDateWithMonthAsText,
+			course,
+			module,
 		})
 	})
 
