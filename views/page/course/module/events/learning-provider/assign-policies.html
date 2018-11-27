@@ -16,24 +16,45 @@
             <form class="govuk-form" action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/learning-provider/" method="post">
                 <fieldset class="govuk-fieldset">
                     <legend>
-                        <h3 class="govuk-heading-s">Select a learning provider</h3>
+                        <h3 class="govuk-heading-s">Select a cancellation policy</h3>
                     </legend>
-                    {% set options = [{
-                        text: "Select a learning provider",
+                    {% set policies = [{
+                        text: "Select a cancellation policy",
                         value: "",
                         selected: true,
                         disabled: true
                     }] %}
-                    {% for provider in providers %}
-                       {% set prov = options.push({
+                    {% for policy in provider.cancellationPolicy %}
+                       {% set policy = policies.push({
                             text: provider.name,
                             value: provider.name
                        }) %}
                     {% endfor %}
                     {{ govukSelect({
-                        id: "learning-providers",
-                        name: "learning-providers",
-                        classes: "govuk-input",
+                        id: "cancellation-policy",
+                        name: "cancellation-policy",
+                        items: options
+                    }) }}
+                </fieldset>
+                <fieldset class="govuk-fieldset">
+                    <legend>
+                        <h3 class="govuk-heading-s">Select terms and conditions</h3>
+                    </legend>
+                    {% set options = [{
+                        text: "Select terms and conditions",
+                        value: "",
+                        selected: true,
+                        disabled: true
+                    }] %}
+                    {% for terms in provider.termsandconditions %}
+                       {% set prov = options.push({
+                            text: terms.name,
+                            value: terms.name
+                       }) %}
+                    {% endfor %}
+                    {{ govukSelect({
+                        id: "cancellation-policy",
+                        name: "cancellation-policy",
                         items: options
                     }) }}
                 </fieldset>
