@@ -30,7 +30,8 @@ export class JsonRestService {
 			return this.get(url.parse(response.headers.location).path!)
 		} catch (e) {
 			throw new Error(
-				`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${this.config.url}${path}`
+				//prettier-ignore
+				`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${this.config.url}${path} - ${e.response.data.errors}`
 			)
 		}
 	}

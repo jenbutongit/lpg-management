@@ -52,10 +52,10 @@ export class LearnerRecord {
 		try {
 			return await this._restService.post(`/event/${eventId}/invitee`, invite)
 		} catch (e) {
-			if (e.toString().indexOf('409') >= 0) {
-				throw new Error(`Learner has already been invite to course: ${e}`)
-			} else {
+			if (e.toString().indexOf('learnerEmail: The learner must be registered') >= 0) {
 				throw new Error(`Email address not registered: ${e}`)
+			} else {
+				throw new Error(`Learner has already been invite to course: ${e}`)
 			}
 		}
 	}

@@ -516,14 +516,14 @@ export class EventController {
 					emailAddress: emailAddress,
 				}
 			} catch (e) {
-				if (e.toString().indexOf('409') >= 0) {
+				if (e.toString().indexOf('learnerEmail: The learner must be registered') >= 0) {
 					req.session!.sessionFlash = {
-						emailAddressFoundMessage: 'email_address_already_invited_message',
+						emailAddressFoundMessage: 'email_address_not_found_message',
 						emailAddress: emailAddress,
 					}
 				} else {
 					req.session!.sessionFlash = {
-						emailAddressFoundMessage: 'email_address_not_found_message',
+						emailAddressFoundMessage: 'email_address_already_invited_message',
 						emailAddress: emailAddress,
 					}
 				}
