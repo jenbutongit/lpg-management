@@ -443,7 +443,7 @@ describe('EventController', function() {
 		const dateRanges: DateRange[] = [dateRange]
 		response.locals.event = {dateRanges}
 
-		learnerRecord.inviteLearner = sinon.stub().throws(new Error('404'))
+		learnerRecord.inviteLearner = sinon.stub().throws(new Error('learnerEmail: The learner must be registered'))
 
 		inviteFactory.create = sinon.stub()
 
@@ -475,7 +475,7 @@ describe('EventController', function() {
 		const dateRanges: DateRange[] = [dateRange]
 		response.locals.event = {dateRanges}
 
-		learnerRecord.inviteLearner = sinon.stub().throws(new Error('409'))
+		learnerRecord.inviteLearner = sinon.stub().throws(new Error('learnerEmail: The learner has already booked'))
 
 		inviteFactory.create = sinon.stub()
 
