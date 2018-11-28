@@ -51,9 +51,7 @@ export class JsonRestService {
 		try {
 			return (await this._http.put(path, resource, this.getHeaders())).data
 		} catch (e) {
-			throw new Error(
-				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`
-			)
+			throw new Error(`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`)
 		}
 	}
 
