@@ -32,9 +32,9 @@
                 {% block list %}
                     {{ list(listTitle, pageResults) }}
                 {% endblock %}
-            {% else %}
-                <p class="govuk-body">0 results found</p>
             {% endif %}
+        {% else %}
+            <p class="govuk-body">0 results found</p>
         {% endif %}
         {% set paginationBaseUrl = '/content-management/search' %}
         {% set query = '&q=' + query %}
