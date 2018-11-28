@@ -15,8 +15,8 @@ import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 
 Properties.initialize()
-
 const logger = log4js.getLogger('server')
+
 const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')
 const appRoot = require('app-root-path')
@@ -26,6 +26,19 @@ const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const authorisedRole = 'COURSE_MANAGER'
+
+const appInsights = require('applicationinsights')
+
+appInsights
+	.setup(config.INSTRUMENTATION_KEY)
+	.setAutoDependencyCorrelation(true)
+	.setAutoCollectRequests(true)
+	.setAutoCollectPerformance(true)
+	.setAutoCollectExceptions(true)
+	.setAutoCollectDependencies(true)
+	.setAutoCollectConsole(true)
+	.setUseDiskRetryCaching(true)
+	.start()
 
 app.use(
 	i18n({
