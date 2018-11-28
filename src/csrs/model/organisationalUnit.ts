@@ -22,4 +22,6 @@ export class OrganisationalUnit {
 	subOrgs: OrganisationalUnit[] // should be string[]
 
 	parent: string
+
+	links: any
 }

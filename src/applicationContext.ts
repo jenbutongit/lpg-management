@@ -56,6 +56,8 @@ import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {HalService} from './lib/halService'
+import {OrganisationalUnitService} from "./csrs/service/organisationalUnitService"
 
 log4js.configure(config.LOGGING)
 
@@ -110,6 +112,8 @@ export class ApplicationContext {
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
+	halService: HalService
+	organisationalUnitService: OrganisationalUnitService
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -216,10 +220,13 @@ export class ApplicationContext {
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
 
+		this.halService = new HalService(this.csrsConfig)
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
+		this.organisationalUnitService = new OrganisationalUnitService(this.halService, this.organisationalUnitFactory)
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
-		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
+
+		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
 	}
 
 	addToResponseLocals() {

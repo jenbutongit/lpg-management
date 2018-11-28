@@ -7,18 +7,21 @@ import {OrganisationalUnitFactory} from '../csrs/model/organisationalUnitFactory
 import {FormController} from './formController'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Validate} from './formValidator'
+import {OrganisationalUnitService} from "../csrs/service/organisationalUnitService"
 
 export class OrganisationController implements FormController {
 	router: Router
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 	validator: Validator<OrganisationalUnit>
+	organisationalUnitService: OrganisationalUnitService
 
-	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, validator: Validator<OrganisationalUnit>) {
+	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, validator: Validator<OrganisationalUnit>, organisationalUnitService: OrganisationalUnitService) {
 		this.router = Router()
 		this.csrs = csrs
 		this.organisationalUnitFactory = organisationalUnitFactory
 		this.validator = validator
+		this.organisationalUnitService = organisationalUnitService
 
 		this.setRouterPaths()
 	}
@@ -43,7 +46,7 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnitId = request.params.organisationId
 
-			const organisationalUnit: OrganisationalUnit = await this.csrs.getOrganisationalUnit(organisationalUnitId)
+			const organisationalUnit: OrganisationalUnit = await this.organisationalUnitService.getOrganisationalUnit(`organisationalUnits/${organisationalUnitId}`)
 
 			response.render('page/organisation/organisation-overview', {organisationalUnit: organisationalUnit})
 		}
