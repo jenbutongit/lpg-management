@@ -21,7 +21,6 @@ export class SearchController {
 	}
 
 	private configureRouterPaths() {
-		this.router.post('/content-management/search', this.searchCourses())
 		this.router.get('/content-management/search', this.searchCourses())
 	}
 
