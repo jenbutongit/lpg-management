@@ -144,6 +144,7 @@
 	"course_preview_title": "Course preview",
 	"event_add_title": "Add event date & time",
 	"event_assign_learning_provider": "Assign learning providers",
+	"event_assign_policies": "Assign cancellation policy and terms",
 	"event_cancel": "Cancel event",
 	"event_learning_provider": "Learning providers",
 	"event_overview": "Event overview",
