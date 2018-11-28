@@ -496,12 +496,6 @@ export class EventController {
 		}
 	}
 
-	public cancelEvent() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/cancel')
-		}
-	}
-
 	private findBooking(bookings: any, bookingId: number): Booking {
 		return bookings.find(function(booking: Booking) {
 			return booking.id == bookingId
