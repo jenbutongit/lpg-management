@@ -58,6 +58,7 @@ import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
 import {HalService} from './lib/halService'
 import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
+import {createClient} from "hal-rest-client";
 
 log4js.configure(config.LOGGING)
 
@@ -220,7 +221,7 @@ export class ApplicationContext {
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
 
-		this.halService = new HalService(this.csrsConfig)
+		this.halService = new HalService(createClient(config.REGISTRY_SERVICE_URL.url))
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitService = new OrganisationalUnitService(this.halService, this.organisationalUnitFactory)

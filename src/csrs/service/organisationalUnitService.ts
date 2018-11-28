@@ -33,7 +33,7 @@ export class OrganisationalUnitService{
 
 	async getParentFromResource(resource: HalResource){
 		let parent
-		const parentResource = await this.halService.getLink(resource, "parent")
+		const parentResource = await this.halService.getLink(resource, 'parent')
 
 		if(parentResource){
 			parent = this.organisationalUnitFactory.create(parentResource.props)

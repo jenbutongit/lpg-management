@@ -1,15 +1,11 @@
-import {CsrsConfig} from "../csrs/csrsConfig"
-import {createClient, HalResource} from "hal-rest-client";
+import {HalResource, HalRestClient} from "hal-rest-client";
 
 export class HalService {
 
-	private config: CsrsConfig
 	private client: any
 
-	constructor(config: CsrsConfig) {
-		this.config = config
-
-		this.client = createClient(this.config.url);
+	constructor(client: HalRestClient) {
+		this.client = client;
 	}
 
 	async getResource(uri: String) {

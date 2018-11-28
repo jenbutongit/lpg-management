@@ -4,158 +4,84 @@ import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
-import {CsrsService} from '../../../../src/csrs/service/csrsService'
-import {OauthRestService} from '../../../../src/lib/http/oauthRestService'
-import {CacheService} from '../../../../src/lib/cacheService'
+import {HalService} from "lib/halService"
+import {OrganisationalUnitFactory} from "../../../../src/csrs/model/organisationalUnitFactory"
+import {OrganisationalUnit} from "../../../../src/csrs/model/organisationalUnit"
+import {OrganisationalUnitService} from "../../../../src/csrs/service/organisationalUnitService"
 
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
-describe('CsrsService tests', () => {
-	let csrsService: CsrsService
-	let restService: OauthRestService
-
+describe('OrganisationalUnitService tests', () => {
+	let halService: HalService
+	let organisationalUnitFactory: OrganisationalUnitFactory
+	let organisationalUnitService: OrganisationalUnitService
 	beforeEach(() => {
-		restService = <OauthRestService>{}
-		csrsService = new CsrsService(restService, new CacheService())
+		halService = <HalService>{}
+		organisationalUnitFactory = <OrganisationalUnitFactory>{}
+		organisationalUnitService = new OrganisationalUnitService(halService, organisationalUnitFactory)
+
 	})
 
-	describe('#getOrganisations', () => {
-		it('should get organisation data', async () => {
-			const data = [
-				{
-					code: 'co',
-					name: 'Cabinet Office',
-				},
-				{
-					code: 'dh',
-					name: 'Department of Health & Social Care',
-				},
-			]
+	it('should get organisation', async () => {
+		const resource: any = {}
+		resource.props = {}
+		resource.props.id = ''
+		resource.props.name = 'name'
+		resource.props.code = 'code'
+		resource.props.abbreviation = 'abbr'
+		resource.props.paymentMethods = []
+		resource.props.subOrgs = []
+		resource.links = {}
+		resource.props.parent = new OrganisationalUnit()
 
-			restService.get = sinon.stub().returns(data)
-
-			const result = await csrsService.getOrganisations()
-
-			expect(restService.get).to.have.been.calledOnceWith('/organisationalUnits')
-			expect(result).to.eql(data)
-		})
-	})
-
-	describe('areas of work', () => {
-		const areasOfWork = {
-			_embedded: {professions: [{name: 'Analysis'}, {name: 'Commercial'}, {name: 'Corporate finance'}]},
+		const orgUnit = resource.props
+		const data = {
+			id: orgUnit.id,
+			name: orgUnit.name,
+			code: orgUnit.code,
+			abbreviation: orgUnit.abbreviation,
+			paymentMethods: orgUnit.paymentMethods,
+			subOrgs: orgUnit.subOrgs,
+			links: {},
+			parent: orgUnit.parent
 		}
 
-		beforeEach(() => {
-			restService.get = sinon
-				.stub()
-				.withArgs('professions')
-				.returns(areasOfWork)
-		})
+		const expectedOrganisationalUnit: OrganisationalUnit= new OrganisationalUnit()
 
-		describe('#getAreasOfWork', () => {
-			it('should get areas of work data', async () => {
-				const result = await csrsService.getAreasOfWork()
+		halService.getResource = sinon.stub().returns(resource)
+		halService.getLink = sinon.stub().returns(resource)
+		organisationalUnitFactory.create = sinon.stub().returns(expectedOrganisationalUnit)
 
-				expect(restService.get).to.have.been.calledOnceWith('/professions')
-				expect(result).to.eql(areasOfWork)
-			})
-		})
+		const result = await organisationalUnitService.getOrganisationalUnit('organisationalUnits/1')
 
-		describe('#isAreaOfWorkValid', () => {
-			it('should return true if area of work is found in areas of work list', async () => {
-				expect(await csrsService.isAreaOfWorkValid('Analysis')).to.be.true
-			})
-
-			it('should return false if area of work is not found in areas of work list', async () => {
-				expect(await csrsService.isAreaOfWorkValid('not a valid area of work')).to.be.false
-			})
-		})
+		expect(organisationalUnitFactory.create).to.have.been.calledWith(data)
+		expect(result).to.eql(expectedOrganisationalUnit)
 	})
 
-	describe('#getInterests', () => {
-		it('should get interest data', async () => {
-			const data = [
-				{
-					name: 'Contract management',
-				},
-			]
+	it('should get parent from resource if parent exists', async () => {
+		const resource: any = {}
+		const parentResource: any = {}
 
-			restService.get = sinon
-				.stub()
-				.withArgs('interests')
-				.returns(data)
+		halService.getLink = sinon.stub().returns(parentResource)
 
-			const result = await csrsService.getCoreLearning()
+		const expectedOrganisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+		organisationalUnitFactory.create = sinon.stub().returns(expectedOrganisationalUnit)
 
-			expect(restService.get).to.have.been.calledOnceWith('/interests')
-			expect(result).to.eql(data)
-		})
+		const result = await organisationalUnitService.getParentFromResource(resource)
+
+		expect(halService.getLink).to.have.been.calledWith(resource, 'parent')
+		expect(result).to.eql(expectedOrganisationalUnit)
 	})
 
-	describe('grades', () => {
-		const grades = {
-			_embedded: {
-				grades: [{code: 'AA', name: 'Administrative Assistant'}, {code: 'EO', name: 'Executive Officer'}],
-			},
-		}
+	it('should return undefined if parent does not exist', async () => {
+		const resource: any = {}
 
-		beforeEach(() => {
-			restService.get = sinon
-				.stub()
-				.withArgs('grades')
-				.returns(grades)
-		})
+		halService.getLink = sinon.stub().returns(undefined)
 
-		describe('#getGrades', () => {
-			it('should return grades names and codes', async () => {
-				expect(await csrsService.getGrades()).to.be.equal(grades)
-			})
-		})
+		const result = await organisationalUnitService.getParentFromResource(resource)
 
-		describe('#isGradeCodeValid', () => {
-			it('should return true if grade code is found in grades list', async () => {
-				expect(await csrsService.isGradeCodeValid('AA')).to.be.true
-			})
-
-			it('should return false if grade code is not found in grades list', async () => {
-				expect(await csrsService.isGradeCodeValid('not a valid grade code')).to.be.false
-			})
-		})
-	})
-
-	describe('#getDepartmentCodeToNameMapping', () => {
-		it('should return a map from department code to name', async () => {
-			const hmrcName = 'HM Revenue & Customs'
-			const dwpName = 'Department for Work & Pensions'
-
-			csrsService.getOrganisations = sinon.stub().returns({
-				_embedded: {
-					organisationalUnits: [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}],
-				},
-			})
-			expect(await csrsService.getDepartmentCodeToNameMapping()).to.be.deep.equal({
-				hmrc: hmrcName,
-				dwp: dwpName,
-			})
-		})
-	})
-
-	describe('#getGradeCodeToNameMapping', () => {
-		it('should return a map from grade code to name', async () => {
-			const admAsstName = 'Administrative Assistant'
-			const eoName = 'Executive Officer'
-
-			csrsService.getGrades = sinon.stub().returns({
-				_embedded: {
-					grades: [{code: 'AA', name: admAsstName}, {code: 'EO', name: eoName}],
-				},
-			})
-			expect(await csrsService.getGradeCodeToNameMapping()).to.be.deep.equal({
-				AA: admAsstName,
-				EO: eoName,
-			})
-		})
+		expect(halService.getLink).to.have.been.calledWith(resource, 'parent')
+		expect(result).to.eql(undefined)
 	})
 })
