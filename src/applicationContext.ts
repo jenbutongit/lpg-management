@@ -222,6 +222,8 @@ export class ApplicationContext {
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
+
+		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 	}
 
 	addToResponseLocals() {
