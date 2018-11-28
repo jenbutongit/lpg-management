@@ -1,5 +1,4 @@
 import {HalService} from "lib/halService"
-import {OrganisationalUnit} from "../model/organisationalUnit"
 import {OrganisationalUnitFactory} from "../model/organisationalUnitFactory"
 import {HalResource} from "hal-rest-client"
 
@@ -29,9 +28,7 @@ export class OrganisationalUnitService{
 			parent: parent
 		}
 
-		const organisationalUnit: OrganisationalUnit = this.organisationalUnitFactory.create(data)
-
-		return organisationalUnit
+		return this.organisationalUnitFactory.create(data)
 	}
 
 	async getParentFromResource(resource: HalResource){

@@ -57,7 +57,7 @@ import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
 import {HalService} from './lib/halService'
-import {OrganisationalUnitService} from "./csrs/service/organisationalUnitService"
+import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
 
 log4js.configure(config.LOGGING)
 

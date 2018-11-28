@@ -60,6 +60,19 @@ describe('Organisation Controller Tests', function() {
 		expect(res.render).to.have.been.calledOnceWith('page/organisation/manage-organisations', {organisationalUnits: pageResults})
 	})
 
+	it('should call organisation overview page with organisation', async function() {
+		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+
+		const getOrganisation: (request: Request, response: Response) => void = organisationController.getOrganisation()
+
+		let getOrganisationalUnit = sinon.stub().returns(Promise.resolve(organisationalUnit))
+		organisationalUnitService.getOrganisationalUnit = getOrganisationalUnit
+
+		await getOrganisation(req, res)
+
+		expect(res.render).to.have.been.calledOnceWith('page/organisation/organisation-overview', {organisationalUnit: organisationalUnit})
+	})
+
 	it('should call add organisations page with organisations typeahead list', async function() {
 		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
 
