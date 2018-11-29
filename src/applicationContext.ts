@@ -49,6 +49,7 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {SearchController} from './controllers/searchController'
 import {OrganisationController} from './controllers/organisationController'
 import {Csrs} from './csrs'
 import {OrganisationalUnitFactory} from './csrs/model/organisationalUnitFactory'
@@ -112,6 +113,7 @@ export class ApplicationContext {
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
+	searchController: SearchController
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -226,6 +228,8 @@ export class ApplicationContext {
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
+
+		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 	}
 
 	addToResponseLocals() {
