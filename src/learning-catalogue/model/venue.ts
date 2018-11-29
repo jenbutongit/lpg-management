@@ -9,24 +9,24 @@ export class Venue {
 
 	address: string
 
-	@IsPositive({
-		groups: ['all', 'event.all', 'event.location'],
-		message: 'venue.validation.capacity.positive',
-	})
 	@IsNotEmpty({
 		groups: ['all', 'event.all', 'event.location'],
 		message: 'venue.validation.capacity.empty',
 	})
+	@IsPositive({
+                groups: ['all', 'event.all', 'event.location'],
+                message: 'venue.validation.capacity.positive',
+        })
 	capacity: number
 
-	@IsPositive({
-		groups: ['all', 'event.all', 'event.location'],
-		message: 'venue.validation.minCapacity.positive',
-	})
 	@IsNotEmpty({
 		groups: ['all', 'event.all', 'event.location'],
 		message: 'venue.validation.minCapacity.empty',
 	})
+	@IsPositive({
+                groups: ['all', 'event.all', 'event.location'],
+                message: 'venue.validation.minCapacity.positive',
+        })
 	minCapacity: number
 
 	availability: number
