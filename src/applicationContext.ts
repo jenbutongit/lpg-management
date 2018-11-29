@@ -52,11 +52,14 @@ import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFact
 import {SearchController} from './controllers/searchController'
 import {OrganisationController} from './controllers/organisationController'
 import {Csrs} from './csrs'
-import {OrganisationalUnitFactory} from './csrs/model/organisationalUnitFactory'
+import {OrganisationalUnitFactory} from './csrs/model/factory/organisationalUnitFactory'
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {ProfessionController} from './controllers/professionController'
+import {ProfessionFactory} from './csrs/model/factory/professionFactory'
+import {Profession} from './csrs/model/profession'
 
 log4js.configure(config.LOGGING)
 
@@ -111,6 +114,11 @@ export class ApplicationContext {
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
+
+	professionController: ProfessionController
+	professionFactory: ProfessionFactory
+	professionValidator: Validator<Profession>
+
 	searchController: SearchController
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
@@ -222,6 +230,10 @@ export class ApplicationContext {
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
+
+		this.professionFactory = new ProfessionFactory()
+		this.professionValidator = new Validator<Profession>(this.professionFactory)
+		this.professionController = new ProfessionController(this.csrs, this.professionFactory, this.professionValidator)
 
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 	}

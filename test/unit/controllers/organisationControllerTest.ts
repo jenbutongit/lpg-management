@@ -9,7 +9,7 @@ import {OrganisationController} from '../../../src/controllers/organisationContr
 import {Csrs} from '../../../src/csrs/index'
 import {OrganisationalUnit} from '../../../src/csrs/model/organisationalUnit'
 import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
-import {OrganisationalUnitFactory} from '../../../src/csrs/model/organisationalUnitFactory'
+import {OrganisationalUnitFactory} from '../../../src/csrs/model/factory/organisationalUnitFactory'
 import {Validator} from '../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)

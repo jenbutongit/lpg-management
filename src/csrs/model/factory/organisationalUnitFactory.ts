@@ -1,4 +1,4 @@
-import {OrganisationalUnit} from './organisationalUnit'
+import {OrganisationalUnit} from '../organisationalUnit'
 
 export class OrganisationalUnitFactory {
 	constructor() {

@@ -115,6 +115,7 @@ app.use(ctx.linkModuleController.router)
 app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
+app.use(ctx.professionController.router)
 app.use(ctx.searchController.router)
 
 app.get('/', function(req, res) {

@@ -1,7 +1,7 @@
 import {expect} from 'chai'
 import {describe, it} from 'mocha'
-import {OrganisationalUnitFactory} from '../../../../src/csrs/model/organisationalUnitFactory'
-import {OrganisationalUnit} from '../../../../src/csrs/model/organisationalUnit'
+import {OrganisationalUnitFactory} from '../../../../../src/csrs/model/factory/organisationalUnitFactory'
+import {OrganisationalUnit} from '../../../../../src/csrs/model/organisationalUnit'
 
 describe('OrganisationalUnitFactory tests', () => {
 	const organisationalUnitFactory: OrganisationalUnitFactory = new OrganisationalUnitFactory()
