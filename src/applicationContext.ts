@@ -55,7 +55,6 @@ import {OrganisationalUnitFactory} from './csrs/model/organisationalUnitFactory'
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {InviteFactory} from './learner-record/model/factory/inviteFactory'
-import {LearnerRecordEventFactory} from './learner-record/model/factory/learnerRecordEventFactory'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
 
@@ -108,7 +107,6 @@ export class ApplicationContext {
 	learnerRecord: LearnerRecord
 	learnerRecordConfig: LearnerRecordConfig
 	inviteFactory: InviteFactory
-	learnerRecordEventFactory: LearnerRecordEventFactory
 	bookingFactory: BookingFactory
 	organisationController: OrganisationController
 	csrs: Csrs
@@ -204,8 +202,7 @@ export class ApplicationContext {
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
 		this.bookingFactory = new BookingFactory()
-		this.learnerRecordEventFactory = new LearnerRecordEventFactory()
-		this.inviteFactory = new InviteFactory(this.learnerRecordEventFactory)
+		this.inviteFactory = new InviteFactory()
 
 		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
 		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory, this.inviteFactory)

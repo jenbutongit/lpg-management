@@ -1,12 +1,7 @@
 import {Invite} from '../invite'
-import {LearnerRecordEventFactory} from './learnerRecordEventFactory'
 
 export class InviteFactory {
-	eventFactory: LearnerRecordEventFactory
-
-	constructor(eventFactory: LearnerRecordEventFactory) {
-		this.eventFactory = eventFactory
-
+	constructor() {
 		this.create = this.create.bind(this)
 	}
 
