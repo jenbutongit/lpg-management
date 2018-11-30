@@ -77,85 +77,34 @@ export class EventController implements FormController {
 			})
 		)
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/location/create',
-			asyncHandler(this.getLocation())
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/create', asyncHandler(this.getLocation()))
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location',
-			asyncHandler(this.editLocation())
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', asyncHandler(this.editLocation()))
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/location/',
-			asyncHandler(this.setLocation())
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/', asyncHandler(this.setLocation()))
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId',
-			asyncHandler(this.updateLocation())
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId', asyncHandler(this.updateLocation()))
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?',
-			asyncHandler(this.getDatePreview())
-		)
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId',
-			asyncHandler(this.getEventOverview())
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?', asyncHandler(this.getDatePreview()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId', asyncHandler(this.getEventOverview()))
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/',
-			asyncHandler(this.getDateTime())
-		)
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/',
-			asyncHandler(this.setDateTime())
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', asyncHandler(this.getDateTime()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', asyncHandler(this.setDateTime()))
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
-			asyncHandler(this.editDateRange())
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', asyncHandler(this.editDateRange()))
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
-			asyncHandler(this.dateRangeOverview())
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', asyncHandler(this.dateRangeOverview()))
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/',
-			asyncHandler(this.addDateRange())
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', asyncHandler(this.addDateRange()))
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex',
-			asyncHandler(this.updateDateRange())
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', asyncHandler(this.updateDateRange()))
 
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId',
-			asyncHandler(this.getAttendeeDetails())
-		)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', asyncHandler(this.getAttendeeDetails()))
 
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update',
-			asyncHandler(this.updateBooking())
-		)
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel',
-			asyncHandler(this.cancelEvent())
-		)
-		this.router.get(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
-			asyncHandler(this.getCancelBooking())
-		)
-		this.router.post(
-			'/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel',
-			asyncHandler(this.cancelBooking())
-		)
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', asyncHandler(this.updateBooking()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.cancelEvent()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
 	}
 
 	public getDateTime() {
@@ -282,9 +231,7 @@ export class EventController implements FormController {
 
 					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 
-					response.redirect(
-						`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`
-					)
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 				}
 			}
 		}
@@ -339,9 +286,7 @@ export class EventController implements FormController {
 
 					await this.learningCatalogue.updateEvent(courseId, moduleId, eventId, event)
 
-					response.redirect(
-						`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`
-					)
+					response.redirect(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 				}
 			}
 		}
@@ -387,16 +332,8 @@ export class EventController implements FormController {
 				let event = JSON.parse(req.body.eventJson || '{}')
 				event.venue = data.venue
 
-				const savedEvent = await this.learningCatalogue.createEvent(
-					req.params.courseId,
-					req.params.moduleId,
-					event
-				)
-				res.redirect(
-					`/content-management/courses/${req.params.courseId}/modules/${
-						req.params.moduleId
-					}/events-overview/${savedEvent.id}`
-				)
+				const savedEvent = await this.learningCatalogue.createEvent(req.params.courseId, req.params.moduleId, event)
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
 			}
 		}
 	}
@@ -429,25 +366,12 @@ export class EventController implements FormController {
 					errors: errors,
 				})
 			} else {
-				let event = await this.learningCatalogue.getEvent(
-					req.params.courseId,
-					req.params.moduleId,
-					req.params.eventId
-				)
+				let event = await this.learningCatalogue.getEvent(req.params.courseId, req.params.moduleId, req.params.eventId)
 
 				event.venue = data.venue
 
-				await this.learningCatalogue.updateEvent(
-					req.params.courseId,
-					req.params.moduleId,
-					req.params.eventId,
-					event
-				)
-				res.redirect(
-					`/content-management/courses/${req.params.courseId}/modules/${
-						req.params.moduleId
-					}/events-overview/${req.params.eventId}`
-				)
+				await this.learningCatalogue.updateEvent(req.params.courseId, req.params.moduleId, req.params.eventId, event)
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 			}
 		}
 	}
@@ -508,11 +432,7 @@ export class EventController implements FormController {
 			booking.status = Booking.Status.CONFIRMED
 			await this.learnerRecord.updateBooking(req.params.eventId, booking)
 
-			return res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${
-					req.params.eventId
-				}/attendee/${req.params.bookingId}`
-			)
+			return res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${req.params.eventId}/attendee/${req.params.bookingId}`)
 		}
 	}
 
@@ -550,11 +470,7 @@ export class EventController implements FormController {
 			booking.cancellationReason = data.cancellationReason
 			await this.learnerRecord.updateBooking(req.params.eventId, booking)
 
-			return res.redirect(
-				`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${
-					req.params.eventId
-				}`
-			)
+			return res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 		}
 	}
 
