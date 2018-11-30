@@ -31,10 +31,6 @@ export class Csrs {
 		return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
 	}
 
-	async getParent(organisationalUnitId: string): Promise<OrganisationalUnit> {
-		return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
-	}
-
 	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
 		this._organisationalUnitService = value
 	}

@@ -52,4 +52,15 @@ describe('CSRS tests', () => {
 
 		return expect(organisationalUnitService.create).to.have.been.calledOnceWith(`/organisationalUnits/`, organsationalUnit)
 	})
+
+	it('should call organisationalUnitService when getting an organisational unit', async () => {
+		const organsationalUnit: OrganisationalUnit = new OrganisationalUnit()
+		organsationalUnit.id = 'id123'
+
+		organisationalUnitService.get = sinon.stub()
+
+		await csrs.getOrganisationalUnit(organsationalUnit.id)
+
+		return expect(organisationalUnitService.get).to.have.been.calledOnceWith(`/organisationalUnits/${organsationalUnit.id}`	)
+	})
 })
