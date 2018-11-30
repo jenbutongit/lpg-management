@@ -14,12 +14,16 @@ import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
+import {LearnerRecord} from '../../../../../src/learner-record'
+import {Booking} from '../../../../../src/learner-record/model/booking'
+import {DateTime} from '../../../../../src/lib/dateTime'
 
 chai.use(sinonChai)
 
 describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
+	let learnerRecord: LearnerRecord
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -28,6 +32,7 @@ describe('EventController', function() {
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
+		learnerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
 		eventFactory = <EventFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
@@ -36,6 +41,7 @@ describe('EventController', function() {
 
 		eventController = new EventController(
 			learningCatalogue,
+			learnerRecord,
 			eventValidator,
 			eventFactory,
 			dateRangeCommandValidator,
@@ -117,6 +123,40 @@ describe('EventController', function() {
 			})
 		})
 
+		it('should render errors in DateRange', async function() {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.body = {
+				day: '',
+				month: '1',
+				year: '2019',
+				startTime: ['07', '00'],
+				endTime: ['06', '00'],
+			}
+
+			dateRangeCommandValidator.check = sinon.stub().returns({})
+
+			const event = new Event()
+			eventFactory.create = sinon.stub().returns(event)
+
+			const errors = {fields: {day: ['error']}, size: 1}
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			const dateRangeCommand = new DateRangeCommand()
+			dateRangeCommand.startTime = ['09:00']
+			dateRangeCommand.endTime = ['17:00']
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+
+			await eventController.setDateTime()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events', {
+				event: event,
+				eventJson: JSON.stringify(event),
+				errors: errors,
+			})
+		})
+
 		it('should render event preview page', async function() {
 			const response: Response = mockRes()
 
@@ -179,14 +219,8 @@ describe('EventController', function() {
 
 			await eventController.setLocation()(req, res)
 
-			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(
-				req.params.courseId,
-				req.params.moduleId,
-				event
-			)
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/course-id/modules/module-id/events-overview/event-id`
-			)
+			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
 		})
 
 		it('should update event and redirect to events overview page if no errors', async function() {
@@ -236,20 +270,9 @@ describe('EventController', function() {
 
 			await eventController.updateLocation()(req, res)
 
-			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(
-				req.params.courseId,
-				req.params.moduleId,
-				req.params.eventId
-			)
-			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(
-				req.params.courseId,
-				req.params.moduleId,
-				req.params.eventId,
-				event
-			)
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/course-id/modules/module-id/events-overview/event-id`
-			)
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, req.params.eventId)
+			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, req.params.eventId, event)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
 		})
 
 		it('should redirect back to location page if errors on create', async function() {
@@ -315,13 +338,20 @@ describe('EventController', function() {
 		})
 	})
 
+	it('should render edit location page', async function() {
+		const editLocation: (request: Request, response: Response) => void = eventController.editLocation()
+
+		const request = mockReq()
+		const response = mockRes()
+
+		await editLocation(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
+	})
+
 	it('should render event overview page', async function() {
-		let event: Event = new Event()
-		let dateRange: DateRange = new DateRange()
-		dateRange.date = '2019-02-01'
-		dateRange.startTime = '9:00:00'
-		dateRange.endTime = '17:00:00'
-		event.dateRanges = [dateRange]
+		const event: Event = new Event()
+		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
 
 		const getEventOverview: (request: Request, response: Response) => void = eventController.getEventOverview()
 
@@ -330,9 +360,73 @@ describe('EventController', function() {
 
 		response.locals.event = event
 
+		learnerRecord.getEventBookings = sinon.stub()
+
 		await getEventOverview(request, response)
 
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith(event.id)
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
+	})
+
+	it('should render attendee details page', async function() {
+		const date: string = '2020-02-01'
+		const dateRange = new DateRange()
+		dateRange.date = date
+
+		const event: Event = new Event()
+		event.dateRanges = [dateRange]
+
+		const eventDateWithMonthAsText = DateTime.convertDate(event.dateRanges[0].date)
+
+		const booking: Booking = new Booking()
+		booking.id = 99
+		const bookings = [booking]
+
+		const getAttendeeDetails: (request: Request, response: Response) => void = eventController.getAttendeeDetails()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.event = event
+
+		request.params.bookingId = 99
+
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
+		await getAttendeeDetails(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith(event.id)
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/attendee', {
+			booking,
+			eventDateWithMonthAsText,
+		})
+	})
+
+	it('should change event record state to confirmed and redirect to attendee page', async function() {
+		const booking: Booking = new Booking()
+		booking.id = 99
+		const bookings = [booking]
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.updateBooking()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingId = 99
+
+		request.body.type = 'register'
+
+		learnerRecord.updateBooking = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+
+		await registerLearner(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`)
+		expect(booking.status).to.be.equal(Booking.Status.CONFIRMED)
 	})
 
 	describe('Edit and update DateRange', () => {
@@ -464,9 +558,7 @@ describe('EventController', function() {
 					},
 				],
 			})
-			expect(response.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`
-			)
+			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 		})
 
 		it('should display errors if form validation fails on update', async () => {
@@ -682,9 +774,7 @@ describe('EventController', function() {
 					},
 				],
 			})
-			expect(response.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`
-			)
+			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 		})
 
 		it('should display errors if form validation fails on add', async () => {

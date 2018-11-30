@@ -15,7 +15,7 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full module-container">
-            <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
+            <p class="govuk-body form-header govuk-!-font-size-24">Edit course modules</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36 page-title">Course modules</h2>
             {% set modules = course.modules %}
 
@@ -41,6 +41,7 @@
                             <li class="list-details u--border--bgrey draggable" id="{{ module.id }}" data-id={{counter}}>
                                 <p class="govuk-body title">{{ module.title | default("Module", true) }}</p>
                                 <p class="govuk-body type">{{ i18n.courseType[module.type] | default("Unknown Type", true) }}</p>
+                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/{{ module.id }}/delete">Delete</a></p>
                                 {% if module.type == 'link' %}
                                 <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-link/{{ module.id }}">Edit</a></p>
                                 {% elif module.type == 'face-to-face' %}

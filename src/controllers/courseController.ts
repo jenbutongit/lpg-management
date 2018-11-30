@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
@@ -10,6 +10,7 @@ import {Audience} from '../learning-catalogue/model/audience'
 import {DateTime} from '../lib/dateTime'
 import {Validate} from './formValidator'
 import {FormController} from './formController'
+import * as asyncHandler from 'express-async-handler'
 
 export class CourseController implements FormController {
 	learningCatalogue: LearningCatalogue
@@ -19,13 +20,7 @@ export class CourseController implements FormController {
 	courseService: CourseService
 	csrsService: CsrsService
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		courseValidator: Validator<Course>,
-		courseFactory: CourseFactory,
-		courseService: CourseService,
-		csrsService: CsrsService
-	) {
+	constructor(learningCatalogue: LearningCatalogue, courseValidator: Validator<Course>, courseFactory: CourseFactory, courseService: CourseService, csrsService: CsrsService) {
 		this.learningCatalogue = learningCatalogue
 		this.validator = courseValidator
 		this.courseFactory = courseFactory
@@ -37,22 +32,23 @@ export class CourseController implements FormController {
 
 		this.configureRouterPaths()
 	}
-
+	// prettier-ignore
 	private getCourseFromRouterParamAndSetOnLocals() {
-		this.router.param('courseId', async (req, res, next, courseId) => {
-			const course = await this.learningCatalogue.getCourse(courseId)
+		this.router.param('courseId', asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
+				const course = await this.learningCatalogue.getCourse(courseId)
 
-			if (course) {
-				res.locals.course = course
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
+				if (course) {
+					res.locals.course = course
+					next()
+				} else {
+					res.sendStatus(404)
+				}
+			})
+		)
 	}
 
 	private configureRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/overview', this.courseOverview())
+		this.router.get('/content-management/courses/:courseId/overview', asyncHandler(this.courseOverview()))
 		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
 
 		this.router.get('/content-management/courses/title/:courseId?', this.getCourseTitle())
@@ -64,16 +60,14 @@ export class CourseController implements FormController {
 		this.router.post('/content-management/courses/details/:courseId', this.updateCourseDetails())
 
 		this.router.get('/content-management/courses/:courseId/sort-modules', this.sortModules())
-
+		this.router.get('/content-management/courses/:courseId/archive', this.archiveCourse())
 		this.router.post('/content-management/courses/:courseId/status', this.setStatus())
 		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules', this.sortModules())
 	}
 
 	courseOverview() {
 		return async (req: Request, res: Response) => {
-			const faceToFaceModules = res.locals.course.modules.filter(
-				(module: Module) => module.type == Module.Type.FACE_TO_FACE
-			)
+			const faceToFaceModules = res.locals.course.modules.filter((module: Module) => module.type == Module.Type.FACE_TO_FACE)
 			const departmentCodeToName = await this.csrsService.getDepartmentCodeToNameMapping()
 			const gradeCodeToName = await this.csrsService.getGradeCodeToNameMapping()
 			const audienceIdToEvent = this.courseService.getAudienceIdToEventMapping(res.locals.course)
@@ -198,6 +192,12 @@ export class CourseController implements FormController {
 			request.session!.save(() => {
 				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
 			})
+		}
+	}
+
+	archiveCourse() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/archive')
 		}
 	}
 }

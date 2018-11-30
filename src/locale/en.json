@@ -74,7 +74,29 @@
 			"cancel": "Cancel event"
 		}
 	},
-	"blended": "Blended",
+	"organisations": {
+		"headers": {
+			"organisationName": "Organisation name"
+		},
+		"text": {
+			"code": "Organisation code",
+			"name": "Organisation name",
+			"abbreviation": "Organisation abbreviation",
+			"parent": "Parent"
+		},
+		"title": {
+			"manageOrganisations": "Manage organisations",
+			"addANewOrganisation": "Add a new organisation"
+		},
+		"validation": {
+			"name": {
+				"empty": "Organisation name is required"
+			},
+			"code": {
+				"empty": "Organisation code is required"
+			}
+		}
+	},
 
 	"module": {
 		"validation": {
@@ -115,6 +137,22 @@
 		}
 	},
 
+	"termsAndConditions": {
+		"text": {
+			"addNew": "Add new terms and conditions",
+			"edit": "Edit terms and conditions"
+		},
+
+		"validation": {
+			"name": {
+				"empty": "Name is required"
+			},
+			"content": {
+				"empty": "Content is required"
+			}
+		}
+	},
+
 	"courseType": {
 		"face-to-face": "Face to Face",
 		"link": "Link",
@@ -123,7 +161,8 @@
 		"file": "File",
 		"blended": "Blended"
 	},
-
+	"blended": "Blended",
+	"error": "There is a problem with the service",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
@@ -143,6 +182,9 @@
 	"module_add_title": "Add a module",
 	"module_youtube_add_title": "Add a YouTube video",
 	"module_face_to_face_add": "Add a classroom module",
+	"organisations_code_empty": "A valid code is required",
+	"organisations_new_name_empty": "Name is required",
+	"organisations_page_title": "Manage organisations",
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
@@ -150,8 +192,6 @@
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
-	"validation.termsAndConditions.name.empty": "Name is required",
-	"validation.termsAndConditions.content.empty": "Content is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
 	"validation_module_url_invalid": "A URL should include a protocol and be a top level domain",

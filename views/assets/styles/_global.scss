@@ -7,13 +7,8 @@
 	overflow-wrap: break-word;
 	word-wrap: break-word;
 	word-break: break-word;
-	-ms-hyphens: auto;
-	-moz-hyphens: auto;
-	-webkit-hyphens: auto;
-	hyphens: auto;
 }
 
-.app
 .pre {
 	white-space: pre-wrap; /* css-3 */
 	white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
@@ -89,6 +84,10 @@ ul {
 
 .font-light {
 	font-weight: 400;
+}
+
+.custom-margin {
+	margin: 5px 0;
 }
 
 .cancel-button {
@@ -219,7 +218,7 @@ ul {
 }
 
 .hidden {
-    display: none;
+	display: none;
 }
 
 @media screen and (min-width: $tablet-small) {

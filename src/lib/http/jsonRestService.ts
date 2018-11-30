@@ -29,9 +29,7 @@ export class JsonRestService {
 
 			return this.get(url.parse(response.headers.location).path!)
 		} catch (e) {
-			throw new Error(
-				`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${this.config.url}${path}`
-			)
+			throw new Error(`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${this.config.url}${path}`)
 		}
 	}
 
@@ -47,9 +45,7 @@ export class JsonRestService {
 		try {
 			return (await this._http.put(path, resource, this.getHeaders())).data
 		} catch (e) {
-			throw new Error(
-				`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`
-			)
+			throw new Error(`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`)
 		}
 	}
 
@@ -58,6 +54,14 @@ export class JsonRestService {
 			return await this._http.delete(path, this.getHeaders())
 		} catch (e) {
 			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${path}`)
+		}
+	}
+
+	async patch(path: string, resource: any) {
+		try {
+			return (await this._http.patch(path, resource, this.getHeaders())).data
+		} catch (e) {
+			throw new Error(`Error with PATCH request: ${e} when patching ${this.config.url}${path}`)
 		}
 	}
 

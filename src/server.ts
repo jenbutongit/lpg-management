@@ -11,6 +11,8 @@ import * as bodyParser from 'body-parser'
 import {AppConfig} from './config/appConfig'
 import moment = require('moment')
 import {DateTime} from './lib/dateTime'
+import * as asyncHandler from 'express-async-handler'
+import * as errorController from './lib/errorHandler'
 
 Properties.initialize()
 
@@ -25,6 +27,19 @@ const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const authorisedRole = 'COURSE_MANAGER'
 
+const appInsights = require('applicationinsights')
+
+appInsights
+	.setup(config.INSTRUMENTATION_KEY)
+	.setAutoDependencyCorrelation(true)
+	.setAutoCollectRequests(true)
+	.setAutoCollectPerformance(true)
+	.setAutoCollectExceptions(true)
+	.setAutoCollectDependencies(true)
+	.setAutoCollectConsole(true)
+	.setUseDiskRetryCaching(true)
+	.start()
+
 app.use(
 	i18n({
 		translationsPath: appRoot + '/src/locale',
@@ -34,21 +49,12 @@ app.use(
 )
 
 nunjucks
-	.configure(
-		[
-			appRoot + '/views',
-			appRoot + '/node_modules/govuk-frontend/',
-			appRoot + '/node_modules/govuk-frontend/components',
-		],
-		{
-			autoescape: true,
-			express: app,
-		}
-	)
+	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/', appRoot + '/node_modules/govuk-frontend/components'], {
+		autoescape: true,
+		express: app,
+	})
 	.addFilter('jsonpath', function(path: string | string[], map: any) {
-		return Object.is(path, undefined)
-			? undefined
-			: Array.isArray(path) ? path.map(pathElem => jsonpath.value(map, pathElem)) : jsonpath.value(map, path)
+		return Object.is(path, undefined) ? undefined : Array.isArray(path) ? path.map(pathElem => jsonpath.value(map, pathElem)) : jsonpath.value(map, path)
 	})
 	.addFilter('formatDate', function(date: Date) {
 		return date
@@ -108,21 +114,15 @@ app.use(ctx.youtubeModuleController.router)
 app.use(ctx.linkModuleController.router)
 app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
+app.use(ctx.organisationController.router)
+app.use(ctx.searchController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
-app.get('/content-management', ctx.homeController.index())
+app.get('/content-management', asyncHandler(ctx.homeController.index()))
 
-app.get(
-	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
-	ctx.termsAndConditionsController.getTermsAndConditions()
-)
-
-app.post(
-	'/content-management/learning-providers/:learningProviderId/add-terms-and-conditions',
-	ctx.termsAndConditionsController.setTermsAndConditions()
-)
+app.use(errorController.handleError)
 
 app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
