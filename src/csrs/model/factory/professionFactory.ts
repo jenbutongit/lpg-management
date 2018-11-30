@@ -15,6 +15,8 @@ export class ProfessionFactory {
 			profession.parent = this.create(data.parent)
 		}
 
+		profession.children = data.children
+
 		return profession
 	}
 }

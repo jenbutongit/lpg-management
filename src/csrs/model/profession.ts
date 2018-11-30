@@ -9,4 +9,5 @@ export class Profession {
 	})
 	name: string
 	parent: Profession
+	children: Profession[]
 }
