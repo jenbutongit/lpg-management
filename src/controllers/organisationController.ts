@@ -67,11 +67,20 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnit = this.organisationalUnitFactory.create(request.body)
 
-			const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
+			try {
+				const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
 
-			request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
+				request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
 
-			response.redirect(`/content-management/organisations/${newOrganisationalUnit.id}/overview`)
+				response.redirect(`/content-management/organisations/${newOrganisationalUnit.id}/overview`)
+			} catch (e) {
+				const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
+
+				request.session!.sessionFlash = {errors: errors}
+				return request.session!.save(() => {
+					response.redirect(`/content-management/add-organisation`)
+				})
+			}
 		}
 	}
 }

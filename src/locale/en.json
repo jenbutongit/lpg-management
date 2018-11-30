@@ -95,6 +95,9 @@
 			},
 			"code": {
 				"empty": "Organisation code is required"
+			},
+			"organisation":{
+				"alreadyExists": "An organisation with this name or code already exists"
 			}
 		}
 	},

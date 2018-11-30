@@ -1,5 +1,6 @@
 {% from "input/macro.njk" import govukInput with context%}
 {% from "button/macro.njk" import govukButton %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -7,22 +8,21 @@
 
 {% set banner = true %}
 {% set backButton = "/content-management/organisations" %}
-
 {% block content %}
+{% set errors = sessionFlash.errors %}
+{% set form = sessionFlash.form %}
+
+{{ errorSummary(errors.fields) }}
 {% set form = sessionFlash.form %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-l">Add a new organisation</h1>
         </div>
     </div>
-    <div class="govuk-grid-row">
+<div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {% set errors = sessionFlash.errors %}
 
-            {{ errorSummary(errors.fields) }}
-            
               <form action="/content-management/organisations/organisation" method="post">
-
 
                 <div class="govuk-form-group">
                     <h2 class="govuk-heading-s no-margin">{{ i18n.organisations.text.parent }}</h2>

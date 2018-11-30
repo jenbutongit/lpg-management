@@ -130,4 +130,22 @@ describe('Organisation Controller Tests', function() {
 		expect(validator.check).to.have.returned(errors)
 		expect(res.redirect).to.have.been.calledWith('/content-management/add-organisation')
 	})
+
+	it('should check for organisation errors and redirect to add organisation page if error caught', async function() {
+		const validationErrors = {fields: [], size: 0}
+		const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
+
+		const organisation = new OrganisationalUnit()
+		organisation.name = 'New organisation'
+
+		organisationalUnitFactory.create = sinon.stub().returns(organisation)
+		csrs.createOrganisationalUnit = sinon.stub().throwsException(new Error())
+		validator.check = sinon.stub().returns(validationErrors)
+
+		const createOrganisation = organisationController.createOrganisation()
+		await createOrganisation(req, res)
+
+		expect(req.session!.sessionFlash).to.eql({errors: errors})
+		expect(res.redirect).to.have.been.calledWith('/content-management/add-organisation')
+	})
 })

@@ -5,6 +5,7 @@
 {% from "../../component/courseEvents/macro.njk" import courseEvents with context %}
 {% from "../../component/audiences/macro.njk" import audiences with context %}
 {% from "back-link/macro.njk" import govukBackLink %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -12,6 +13,7 @@
 
 {% set banner = true %}
 {% set backButton = "/content-management/organisations" %}
+
 
 {% block content %}
 <div class="govuk-grid-row">
