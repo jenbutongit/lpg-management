@@ -23,7 +23,7 @@
 
             {% set module = sessionFlash.module %}
 
-            <form action="/content-management/courses/{{course.id}}/module-video" method="post" class="module-form">
+            <form action="/content-management/courses/{{course.id}}/module-video/{{module.id}}" method="post" class="module-form">
                 <input name="type" type="hidden" value="video">
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}
@@ -103,7 +103,7 @@
                 }}
                 <div class="button-container">
                     {{ govukButton({
-                    text: "Continue",
+                    text: "Edit" if module.id else "Continue",
                     type: "submit"
                     }) }}
                 </div>

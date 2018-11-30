@@ -41,16 +41,7 @@
                             <li class="list-details u--border--bgrey draggable" id="{{ module.id }}" data-id={{counter}}>
                                 <p class="govuk-body title">{{ module.title | default("Module", true) }}</p>
                                 <p class="govuk-body type">{{ i18n.courseType[module.type] | default("Unknown Type", true) }}</p>
-                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/{{ module.id }}/delete">Delete</a></p>
-                                {% if module.type == 'link' %}
-                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-link/{{ module.id }}">Edit</a></p>
-                                {% elif module.type == 'face-to-face' %}
-                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-face-to-face/{{ module.id }}">Edit</a></p>
-                                {% elif module.type == 'video' %}
-                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-mp4/{{ module.id }}">Edit</a></p>
-                                {% else %}
-                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-file/{{ module.id }}">Edit</a></p>
-                                {% endif %}
+                                <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-{{module.type}}/{{ module.id }}">Edit</a></p>
                                 <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/{{ module.id }}/delete">Delete</a></p>
                                 <span class="handle"></span>
                             </li>
@@ -82,7 +73,7 @@
                                     selected: true
                                     },
                                     {
-                                    value: "e-learning",
+                                    value: "elearning",
                                     text: "E-learning"
                                     },
                                     {

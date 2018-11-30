@@ -115,7 +115,8 @@ export class ApplicationContext {
 	organisationalUnitValidator: Validator<OrganisationalUnit>
 	searchController: SearchController
 
-	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -169,7 +170,7 @@ export class ApplicationContext {
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory()
 		this.moduleValidator = new Validator<Module>(this.moduleFactory)
-		this.youtubeModuleController = new YoutubeModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.youtubeService)
+		this.youtubeModuleController = new YoutubeModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.youtubeService, this.courseService)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
@@ -198,12 +199,7 @@ export class ApplicationContext {
 			this.courseService
 		)
 		this.linkModuleValidator = new Validator<LinkModule>(this.moduleFactory)
-		this.linkModuleController = new LinkModuleController(
-			this.learningCatalogue,
-			this.moduleFactory,
-			this.linkModuleValidator,
-			this.courseService
-		)
+		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory, this.linkModuleValidator, this.courseService)
 
 		this.faceToFaceController = new FaceToFaceModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
 

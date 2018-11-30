@@ -11,6 +11,7 @@ import {Request, Response} from 'express'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {YoutubeService} from '../../../../src/youtube/youtubeService'
+import {CourseService} from 'lib/courseService'
 
 chai.use(sinonChai)
 
@@ -20,6 +21,7 @@ describe('YoutubeService Module Controller Test', function() {
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
 	let youtubeService: YoutubeService
+	let courseService: CourseService
 
 	let youtubeResponse = {
 		status: 200,
@@ -44,13 +46,9 @@ describe('YoutubeService Module Controller Test', function() {
 		moduleValidator = <Validator<Module>>{}
 		moduleFactory = <ModuleFactory>{}
 		youtubeService = <YoutubeService>{}
+		courseService = <CourseService>{}
 
-		youtubeModuleController = new YoutubeModuleController(
-			learningCatalogue,
-			moduleValidator,
-			moduleFactory,
-			youtubeService
-		)
+		youtubeModuleController = new YoutubeModuleController(learningCatalogue, moduleValidator, moduleFactory, youtubeService, courseService)
 
 		req = mockReq()
 		res = mockRes()

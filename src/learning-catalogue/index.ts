@@ -73,12 +73,9 @@ export class LearningCatalogue {
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
 		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
 	}
+
 	async updateModule(courseId: string, module: Module): Promise<Module> {
 		return this._moduleService.update(`/courses/${courseId}/modules/${module.id}`, module)
-	}
-
-	async deleteModule(courseId: string, moduleId: string) {
-		return this._moduleService.delete(`/courses/${courseId}/modules/${moduleId}`)
 	}
 
 	async deleteModule(courseId: string, moduleId: string) {

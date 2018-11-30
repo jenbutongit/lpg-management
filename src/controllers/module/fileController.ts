@@ -67,14 +67,11 @@ export class FileController {
 			}
 		})
 		this.router.get('/content-management/courses/:courseId/module-file/:moduleId?', this.getFile('file'))
-		this.router.get('/content-management/courses/:courseId/module-e-learning/:moduleId?', this.getFile('elearning'))
+		this.router.get('/content-management/courses/:courseId/module-elearning/:moduleId?', this.getFile('elearning'))
 		this.router.get('/content-management/courses/:courseId/module-mp4/:moduleId?', this.getFile('video'))
 		this.router.post('/content-management/courses/:courseId/module-file', this.setFile())
 		this.router.post('/content-management/courses/:courseId/module-file/:moduleId?', this.updateMp4Module('file'))
-		this.router.post(
-			'/content-management/courses/:courseId/module-e-learning/:moduleId?',
-			this.updateMp4Module('elearning')
-		)
+		this.router.post('/content-management/courses/:courseId/module-e-learning/:moduleId?', this.updateMp4Module('elearning'))
 		this.router.post('/content-management/courses/:courseId/module-mp4/:moduleId?', this.updateMp4Module('video'))
 	}
 
