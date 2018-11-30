@@ -19,6 +19,14 @@ export class Csrs {
 		this._professionService = new EntityService<Profession>(this._restService, new ProfessionFactory())
 	}
 
+	set professionService(value: EntityService<Profession>) {
+		this._professionService = value
+	}
+
+	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
+		this._organisationalUnitService = value
+	}
+
 	async listOrganisationalUnits(): Promise<DefaultPageResults<OrganisationalUnit>> {
 		return await this._organisationalUnitService.listAll(`/organisationalUnits/tree`)
 	}
@@ -29,10 +37,6 @@ export class Csrs {
 
 	async createOrganisationalUnit(organisationalUnit: OrganisationalUnit): Promise<OrganisationalUnit> {
 		return await this._organisationalUnitService.create(`/organisationalUnits/`, organisationalUnit)
-	}
-
-	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
-		this._organisationalUnitService = value
 	}
 
 	async listProfessions(): Promise<DefaultPageResults<Profession>> {
@@ -47,8 +51,15 @@ export class Csrs {
 		return await this._professionService.create(`/professions/`, profession)
 	}
 
-	set professionService(value: EntityService<Profession>) {
-		this._professionService = value
+	async updateProfession(profession: Profession): Promise<Profession> {
+		return await this._professionService.update(`/professions/${profession.id}`, profession)
 	}
 
+	async deleteProfession(professionId: number): Promise<void> {
+		return await this._professionService.delete(`/professions/${professionId}`)
+	}
+
+	async getProfession(professionId: number): Promise<Profession> {
+		return await this._professionService.get(`/professions/${professionId}`)
+	}
 }

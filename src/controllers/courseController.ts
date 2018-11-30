@@ -32,7 +32,7 @@ export class CourseController implements FormController {
 
 		this.configureRouterPaths()
 	}
-	// prettier-ignore
+
 	private getCourseFromRouterParamAndSetOnLocals() {
 		this.router.param('courseId', asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
 				const course = await this.learningCatalogue.getCourse(courseId)

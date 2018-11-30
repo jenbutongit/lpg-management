@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {Profession} from '../csrs/model/profession'
 import {Csrs} from '../csrs'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
@@ -20,18 +20,37 @@ export class ProfessionController implements FormController {
 		this.professionFactory = professionFactory
 		this.validator = validator
 
+		this.getProfessionFromRouterParamAndSetOnLocals()
+
 		this.setRouterPaths()
 	}
 
 	/* istanbul ignore next */
 	private setRouterPaths() {
-		this.router.get('/content-management/professions', asyncHandler(this.getProfessions()))
+		this.router.get('/content-management/professions', asyncHandler(this.professionsOverview()))
 		this.router.get('/content-management/add-profession', asyncHandler(this.addProfession()))
-		this.router.get('/content-management/professions/:professionId/overview', asyncHandler(this.getProfession()))
-		this.router.post('/content-management/professions/profession', asyncHandler(this.createProfession()))
+		this.router.post('/content-management/professions/profession/create', asyncHandler(this.createProfession()))
+		this.router.get('/content-management/professions/:professionId/view', asyncHandler(this.viewProfession()))
+		this.router.get('/content-management/professions/:professionId/edit', asyncHandler(this.editProfession()))
+		this.router.post('/content-management/professions/:professionId/update', asyncHandler(this.updateProfession()))
+		this.router.post('/content-management/professions/:professionId/delete', asyncHandler(this.deleteProfession()))
 	}
 
-	public getProfessions() {
+	private getProfessionFromRouterParamAndSetOnLocals() {
+		this.router.param('professionId', asyncHandler(async (req: Request, res: Response, next: NextFunction, professionId: string) => {
+				const profession = await this.csrs.getProfession(Number.parseInt(professionId))
+
+				if (profession) {
+					res.locals.profession = profession
+					next()
+				} else {
+					res.sendStatus(404)
+				}
+			})
+		)
+	}
+
+	public professionsOverview() {
 		return async (request: Request, response: Response) => {
 			const professions: DefaultPageResults<Profession> = await this.csrs.listProfessions()
 
@@ -39,9 +58,9 @@ export class ProfessionController implements FormController {
 		}
 	}
 
-	public getProfession() {
+	public viewProfession() {
 		return async (request: Request, response: Response) => {
-			response.render('/content-management/professions')
+			response.render('/page/profession/view')
 		}
 	}
 
@@ -49,11 +68,20 @@ export class ProfessionController implements FormController {
 		return async (request: Request, response: Response) => {
 			const professions: DefaultPageResults<Profession> = await this.csrs.listProfessionsForTypehead()
 
-			response.render('page/profession/add-profession', {professions: professions})
+			response.render('page/profession/add', {professions: professions})
 		}
 	}
+
+	public editProfession() {
+		return async (request: Request, response: Response) => {
+			const professions: DefaultPageResults<Profession> = await this.csrs.listProfessionsForTypehead()
+
+			response.render('page/profession/edit', {professions})
+		}
+	}
+
 	@Validate({
-		fields: ['all'],
+		fields: ['name'],
 		redirect: '/content-management/add-profession',
 	})
 	public createProfession() {
@@ -61,6 +89,28 @@ export class ProfessionController implements FormController {
 			const profession = this.professionFactory.create(request.body)
 
 			await this.csrs.createProfession(profession)
+
+			response.redirect(`/content-management/professions`)
+		}
+	}
+
+	@Validate({
+		fields: ['name'],
+		redirect: '/content-management/professions/:professionId/edit',
+	})
+	public updateProfession() {
+		return async (request: Request, response: Response) => {
+			const profession = this.professionFactory.create(request.body)
+
+			await this.csrs.updateProfession(profession)
+
+			response.redirect(`/content-management/professions`)
+		}
+	}
+
+	public deleteProfession() {
+		return async (request: Request, response: Response) => {
+			await this.csrs.deleteProfession(request.body.professionId)
 
 			response.redirect(`/content-management/professions`)
 		}

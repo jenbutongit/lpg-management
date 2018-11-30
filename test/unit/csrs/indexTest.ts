@@ -82,4 +82,27 @@ describe('CSRS tests', () => {
 
 		return expect(professionService.create).to.have.been.calledOnceWith(`/professions/`, profession)
 	})
+
+	it('should call professionService when updating professions', async () => {
+		const profession: Profession = new Profession()
+		profession.id = 99
+
+		professionService.update = sinon.stub()
+
+		await csrs.updateProfession(profession)
+
+		return expect(professionService.update).to.have.been.calledOnceWith(`/professions/99`, profession)
+	})
+
+	it('should call professionService when deleting professions', async () => {
+		const professionId = 99
+
+		professionService.delete = sinon.stub()
+
+		await csrs.deleteProfession(professionId)
+
+		return expect(professionService.delete).to.have.been.calledOnceWith(`/professions/${professionId}`)
+	})
+
+
 })
