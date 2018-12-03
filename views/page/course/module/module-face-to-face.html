@@ -5,7 +5,16 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['module_face_to_face_add'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}
+
+{% if module.id %}
+    {{ i18n.module.title.face_to_face_edit }}
+{% else %}
+    {{ i18n.module.title.face_to_face_add }}
+{% endif %}
+     - {{ i18n['proposition_name'] }}
+
+{% endblock %}
 
 {% set banner = true %}
 {% set backButton = "/content-management/courses/" + course.id + "/overview" %}

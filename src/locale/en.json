@@ -130,10 +130,15 @@
 			"add": "Add",
 			"video": "a video",
 			"file": "a file",
-			"e-learning": "an e-learning",
+			"eLearning": "an e-learning",
+            "faceToFace": "a face to face",
 			"add": "Add",
 			"link_add": "Add a link",
-			"link_edit": "Edit a link"
+			"link_edit": "Edit a link",
+            "face_to_face_add" : "Add a face-to-face module",
+            "face_to_face_edit": "Edit a face-to-face module",
+            "youtube_add": "Add a youtube module",
+            "youtube_edit": "Edit a youtube module"
 		}
 	},
 
@@ -176,12 +181,7 @@
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",
 	"learning_providers_title": "Learning providers",
-	"module_add_file": "Add a file",
-	"module_add_video_mp4": "Add a Video (MP4)",
-	"module_add_scorm": "Add e-learning",
 	"module_add_title": "Add a module",
-	"module_youtube_add_title": "Add a YouTube video",
-	"module_face_to_face_add": "Add a classroom module",
 	"organisations_code_empty": "A valid code is required",
 	"organisations_new_name_empty": "Name is required",
 	"organisations_page_title": "Manage organisations",

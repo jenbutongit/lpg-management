@@ -5,7 +5,16 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['module_youtube_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}
+
+{% if module.id %}
+    {{ i18n.module.title.youtube_edit }}
+{% else %}
+    {{ i18n.module.title.youtube_add }}
+{% endif %}
+    - {{ i18n['proposition_name'] }}
+
+{% endblock %}
 
 {% set banner = true %}
 {% set backButton = "/content-management/courses/{{course.id}}/add-module" %}
