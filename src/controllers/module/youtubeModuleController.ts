@@ -64,8 +64,8 @@ export class YoutubeModuleController {
 			})
 		)
 
-		this.router.get('/content-management/courses/:courseId/module-video/:moduleId?', asyncHandler(this.getModule()))
-		this.router.post('/content-management/courses/:courseId/module-video/:moduleId?', asyncHandler(this.setModule()))
+		this.router.get('/content-management/courses/:courseId/module-youtube/:moduleId?', asyncHandler(this.getModule()))
+		this.router.post('/content-management/courses/:courseId/module-youtube/:moduleId?', asyncHandler(this.setModule()))
 	}
 
 	public getModule() {
@@ -98,7 +98,7 @@ export class YoutubeModuleController {
 			if (typeof duration !== 'number' || errors.size) {
 				req.session!.sessionFlash = {errors: errors, module: module}
 				return req.session!.save(() => {
-					res.redirect(`/content-management/courses/${course.id}/module-video/${req.params.moduleId || ''}`)
+					res.redirect(`/content-management/courses/${course.id}/module-youtube/${req.params.moduleId || ''}`)
 				})
 			} else if (req.params.moduleId) {
 				module.title = data.title

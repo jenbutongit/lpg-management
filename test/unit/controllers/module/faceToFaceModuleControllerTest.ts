@@ -10,6 +10,7 @@ import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {FaceToFaceModuleController} from '../../../../src/controllers/module/faceToFaceModuleController'
 import * as sinon from 'sinon'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import {CourseService} from 'lib/courseService'
 
 chai.use(sinonChai)
 
@@ -18,6 +19,7 @@ describe('Face-to-face module controller tests', function() {
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
+	let courseService: CourseService
 
 	let req: Request
 	let res: Response
@@ -26,8 +28,9 @@ describe('Face-to-face module controller tests', function() {
 		learningCatalogue = <LearningCatalogue>{}
 		moduleValidator = <Validator<Module>>{}
 		moduleFactory = <ModuleFactory>{}
+		courseService = <CourseService>{}
 
-		faceToFaceModuleController = new FaceToFaceModuleController(learningCatalogue, moduleValidator, moduleFactory)
+		faceToFaceModuleController = new FaceToFaceModuleController(learningCatalogue, moduleValidator, moduleFactory, courseService)
 
 		req = mockReq()
 		res = mockRes()

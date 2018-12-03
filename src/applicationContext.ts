@@ -201,7 +201,7 @@ export class ApplicationContext {
 		this.linkModuleValidator = new Validator<LinkModule>(this.moduleFactory)
 		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory, this.linkModuleValidator, this.courseService)
 
-		this.faceToFaceController = new FaceToFaceModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.faceToFaceController = new FaceToFaceModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.courseService)
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 
