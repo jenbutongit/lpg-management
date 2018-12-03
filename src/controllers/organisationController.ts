@@ -48,7 +48,7 @@ export class OrganisationController implements FormController {
 		this.router.get('/content-management/organisations', asyncHandler(this.getOrganisations()))
 		this.router.get('/content-management/add-organisation/:organisationalUnitId?', asyncHandler(this.addOrganisation()))
 		this.router.get('/content-management/organisations/:organisationalUnitId/overview', asyncHandler(this.getOrganisation()))
-		this.router.post('/content-management/organisations/organisation', asyncHandler(this.createOrganisation()))
+		this.router.post('/content-management/add-organisation/', asyncHandler(this.createOrganisation()))
 		this.router.post('/content-management/add-organisation/:organisationalUnitId', asyncHandler(this.updateOrganisation()))
 	}
 
@@ -110,7 +110,14 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			let organisationalUnit = response.locals.organisationalUnit
 
-			await this.csrs.updateOrganisationalUnit(organisationalUnit)
+			const data = {
+				name: request.body.name || organisationalUnit.name,
+				abbreviation: request.body.abbreviation || organisationalUnit.abbreviation,
+				code: request.body.code || organisationalUnit.code,
+				parent: request.body.parent,
+			}
+
+			await this.csrs.updateOrganisationalUnit(organisationalUnit.id, data)
 
 			response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 		}

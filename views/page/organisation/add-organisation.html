@@ -21,10 +21,7 @@
     </div>
 <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-
-              <form action="/content-management/organisations/organisation" method="post">
-                  {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
-                  <p>{{parent}} + foo</p>
+              <form action="/content-management/add-organisation/{{ organisationalUnit.id }}" method="post">
                 <div class="govuk-form-group">
                     <h2 class="govuk-heading-s no-margin">{{ i18n.organisations.text.parent }}</h2>
                     <p class="govuk-body custom-margin">If your new organisation has an existing parent, find them in the list below.</p>
@@ -32,6 +29,7 @@
                     <div class="autocomplete-wrapper">
                         <select name="parent" id="parent">
                             <option value=""></option>
+                            {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
                             {% for key, item in organisationalUnits %}
                                 {% if parent === key %}
                                     {% set selected='selected' %}

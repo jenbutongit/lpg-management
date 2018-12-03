@@ -31,8 +31,8 @@ export class Csrs {
 		return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
 	}
 
-	async updateOrganisationalUnit(organisationalUnit: OrganisationalUnit): Promise<OrganisationalUnit> {
-		return await this._organisationalUnitService.update(`/organisationalUnits/${organisationalUnit.id}`, organisationalUnit)
+	async updateOrganisationalUnit(organisationalUnitId: string, organisationalUnit: any): Promise<OrganisationalUnit> {
+		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
 	}
 
 	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
