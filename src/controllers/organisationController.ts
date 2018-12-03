@@ -8,6 +8,7 @@ import {FormController} from './formController'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Validate} from './formValidator'
 import {OrganisationalUnitService} from "../csrs/service/organisationalUnitService"
+import {OrganisationalService} from "../csrs/service/organisationService"
 
 export class OrganisationController implements FormController {
 	router: Router
@@ -15,23 +16,24 @@ export class OrganisationController implements FormController {
 	organisationalUnitFactory: OrganisationalUnitFactory
 	validator: Validator<OrganisationalUnit>
 	organisationalUnitService: OrganisationalUnitService
+	organisationalService: OrganisationalService
 
-	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, validator: Validator<OrganisationalUnit>, organisationalUnitService: OrganisationalUnitService) {
+	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, validator: Validator<OrganisationalUnit>, organisationalUnitService: OrganisationalUnitService, organisationalService: OrganisationalService) {
 		this.router = Router()
 		this.csrs = csrs
 		this.organisationalUnitFactory = organisationalUnitFactory
 		this.validator = validator
 		this.organisationalUnitService = organisationalUnitService
-
+		this.organisationalService = organisationalService
 		this.getOrganisationFromRouterParamAndSetOnLocals()
 
 		this.setRouterPaths()
 	}
 
 	// prettier-ignore
-	private getOrganisationFromRouterParamAndSetOnLocals() {
+	private async getOrganisationFromRouterParamAndSetOnLocals() {
 		this.router.param('organisationalUnitId', asyncHandler(async (req: Request, res: Response, next: NextFunction, organisationalUnitId: string) => {
-				const organisationalUnit: OrganisationalUnit = await this.organisationalUnitService.getOrganisationalUnit(`organisationalUnits/${organisationalUnitId}`)
+				const organisationalUnit: OrganisationalUnit = await this.organisationalService.getOrganisationalUnit(organisationalUnitId)
 
 				if (organisationalUnit) {
 					res.locals.organisationalUnit = organisationalUnit

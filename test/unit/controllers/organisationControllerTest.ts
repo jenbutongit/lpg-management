@@ -12,6 +12,7 @@ import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
 import {OrganisationalUnitFactory} from '../../../src/csrs/model/organisationalUnitFactory'
 import {Validator} from '../../../src/learning-catalogue/validator/validator'
 import {OrganisationalUnitService} from "../../../src/csrs/service/organisationalUnitService"
+import {OrganisationalService} from "../../../src/csrs/service/organisationService"
 
 chai.use(sinonChai)
 
@@ -21,6 +22,7 @@ describe('Organisation Controller Tests', function() {
 	let organisationalUnitFactory: OrganisationalUnitFactory
 	let validator: Validator<OrganisationalUnit>
 	let organisationalUnitService: OrganisationalUnitService
+	let organisationalService: OrganisationalService
 
 	let req: Request
 	let res: Response
@@ -30,7 +32,8 @@ describe('Organisation Controller Tests', function() {
 		organisationalUnitFactory = <OrganisationalUnitFactory>{}
 		validator = <Validator<OrganisationalUnit>>{}
 		organisationalUnitService = <OrganisationalUnitService>{}
-		organisationController = new OrganisationController(csrs, organisationalUnitFactory, validator, organisationalUnitService)
+		organisationalService = <OrganisationalService>{}
+		organisationController = new OrganisationController(csrs, organisationalUnitFactory, validator, organisationalUnitService, organisationalService)
 
 		req = mockReq()
 		res = mockRes()

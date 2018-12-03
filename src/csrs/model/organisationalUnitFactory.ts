@@ -1,4 +1,5 @@
 import {OrganisationalUnit} from './organisationalUnit'
+import * as config from '../../config/index'
 
 export class OrganisationalUnitFactory {
 	constructor() {
@@ -15,7 +16,7 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.subOrgs = (data.subOrgs || []).map(this.create)
 		organisationalUnit.parent = data.parent
 		organisationalUnit.abbreviation = data.abbreviation
-		organisationalUnit.uri = data.uri
+		organisationalUnit.uri = `${config.REGISTRY_SERVICE_URL.url}/organisationalUnits/${organisationalUnit.id}`
 
 		return organisationalUnit
 	}
