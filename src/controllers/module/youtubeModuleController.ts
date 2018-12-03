@@ -64,9 +64,8 @@ export class YoutubeModuleController {
 			})
 		)
 
-		this.router.get('/content-management/courses/:courseId/module-video/:moduleId?', this.getModule())
-		this.router.post('/content-management/courses/:courseId/module-video', this.setModule())
-		this.router.post('/content-management/courses/:courseId/module-video/:moduleId', this.updateModule())
+		this.router.get('/content-management/courses/:courseId/module-video/:moduleId?', asyncHandler(this.getModule()))
+		this.router.post('/content-management/courses/:courseId/module-video/:moduleId?', asyncHandler(this.setModule()))
 	}
 
 	public getModule() {
@@ -77,35 +76,38 @@ export class YoutubeModuleController {
 
 	public setModule() {
 		return async (req: Request, res: Response) => {
-			let data = {...req.body}
+			const data = {...req.body}
 
 			const course = res.locals.course
-			let module = await this.moduleFactory.create(data)
-			let errors = await this.moduleValidator.check(data, ['title', 'url'])
+			let module: VideoModule
 
-			let duration
-
-			const youtubeResponse = await this.youtube.getYoutubeResponse(data.url)
-
-			if (!youtubeResponse || !this.youtube.checkYoutubeResponse(youtubeResponse)) {
-				errors.fields.youtubeResponse = 'validation_module_video_notFound'
-				errors.size += 1
+			if (req.params.moduleId) {
+				module = res.locals.module
 			} else {
-				const info = this.youtube.getBasicYoutubeInfo(youtubeResponse)
-
-				duration = await this.youtube.getDuration(info.id)
-
-				if (!duration) {
-					errors.fields.youtubeDuration = 'validation_module_video_noDuration'
-					errors.size += 1
-				}
+				module = await this.moduleFactory.create(data)
 			}
 
-			if (errors.size) {
+			let errors = await this.moduleValidator.check(data, ['title', 'url'])
+
+			const duration = await this.getDuration(data)
+			if (typeof duration !== 'number') {
+				errors.fields.youtubeResponse = [duration]
+				errors.size += 1
+			}
+
+			if (typeof duration !== 'number' || errors.size) {
 				req.session!.sessionFlash = {errors: errors, module: module}
-				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${course.id}/module-video`)
+				return req.session!.save(() => {
+					res.redirect(`/content-management/courses/${course.id}/module-video/${req.params.moduleId || ''}`)
 				})
+			} else if (req.params.moduleId) {
+				module.title = data.title
+				module.description = data.description
+				module.optional = data.isOptional || false
+				module.url = data.url
+				module.duration = duration
+
+				await this.learningCatalogue.updateModule(course.id, module)
 			} else {
 				const newData = {
 					type: data.type || 'video',
@@ -115,56 +117,30 @@ export class YoutubeModuleController {
 					optional: data.isOptional || false,
 					url: data.url,
 				}
-
 				module = await this.moduleFactory.create(newData)
+
 				await this.learningCatalogue.createModule(course.id, module)
-				res.redirect(`/content-management/courses/${course.id}/preview`)
 			}
+
+			return res.redirect(`/content-management/courses/${course.id}/preview`)
 		}
 	}
 
-	public updateModule() {
-		return async (req: Request, res: Response) => {
-			let data = {...req.body}
+	private async getDuration(data: any) {
+		let duration
 
-			let course = res.locals.course
-			let module: VideoModule = res.locals.module
+		const youtubeResponse = await this.youtube.getYoutubeResponse(data.url)
+		if (!youtubeResponse || !this.youtube.checkYoutubeResponse(youtubeResponse)) {
+			return 'validation_module_video_notFound'
+		} else {
+			const info = this.youtube.getBasicYoutubeInfo(youtubeResponse)
+			duration = await this.youtube.getDuration(info.id)
 
-			let errors = await this.moduleValidator.check(data, ['title', 'url'])
-			let duration
-
-			const youtubeResponse = await this.youtube.getYoutubeResponse(data.url)
-
-			if (!youtubeResponse || !this.youtube.checkYoutubeResponse(youtubeResponse)) {
-				errors.fields.youtubeResponse = 'validation_module_video_notFound'
-				errors.size += 1
-			} else {
-				const info = this.youtube.getBasicYoutubeInfo(youtubeResponse)
-
-				duration = await this.youtube.getDuration(info.id)
-
-				if (!duration) {
-					errors.fields.youtubeDuration = 'validation_module_video_noDuration'
-					errors.size += 1
-				} else {
-					module.duration = duration
-				}
-			}
-
-			if (errors.size) {
-				req.session!.sessionFlash = {errors: errors, module: module}
-				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${course.id}/module-video`)
-				})
-			} else {
-				module.title = data.title
-				module.description = data.description
-				module.optional = data.isOptional || false
-				module.url = data.url
-
-				await this.learningCatalogue.updateModule(course.id, module)
-				res.redirect(`/content-management/courses/${course.id}/preview`)
+			if (!duration) {
+				return 'validation_module_video_noDuration'
 			}
 		}
+
+		return duration
 	}
 }

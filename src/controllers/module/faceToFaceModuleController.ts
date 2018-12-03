@@ -3,6 +3,7 @@ import {Validator} from '../../learning-catalogue/validator/validator'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {Request, Response, Router} from 'express'
 import {Module} from '../../learning-catalogue/model/module'
+import * as asyncHandler from 'express-async-handler'
 
 export class FaceToFaceModuleController {
 	learningCatalogue: LearningCatalogue
@@ -10,11 +11,7 @@ export class FaceToFaceModuleController {
 	moduleFactory: ModuleFactory
 	router: Router
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		moduleValidator: Validator<Module>,
-		moduleFactory: ModuleFactory
-	) {
+	constructor(learningCatalogue: LearningCatalogue, moduleValidator: Validator<Module>, moduleFactory: ModuleFactory) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory
@@ -35,8 +32,9 @@ export class FaceToFaceModuleController {
 			}
 		})
 
-		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId?', this.getModule())
-		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId?', this.setModule())
+		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId?', asyncHandler(this.getModule()))
+		this.router.post('/content-management/courses/:courseId/module-face-to-face/', asyncHandler(this.setModule()))
+		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId', asyncHandler(this.editModule()))
 	}
 
 	public getModule() {
@@ -64,6 +62,15 @@ export class FaceToFaceModuleController {
 			} else {
 				await this.learningCatalogue.createModule(course.id, module)
 				response.redirect(`/content-management/courses/${course.id}/preview`)
+			}
+		}
+	}
+
+	public editModule() {
+		return async (request: Request, response: Response) => {
+			const data = {...request.body}
+			if (!data.cost) {
+				delete data.cost
 			}
 		}
 	}
