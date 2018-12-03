@@ -24,4 +24,6 @@ export class OrganisationalUnit {
 	parent: string
 
 	links: any
+
+	uri: string
 }

@@ -12,7 +12,7 @@ export class HalService {
 		return await this.client.fetchResource(uri);
 	}
 
-	async getLink(resource: HalResource, link: string) {
+	async getLink(resource: HalResource, link: string): Promise<HalResource | void> {
 		const linkValue = resource.link(link);
 		return await linkValue.fetch().catch(function(error) {
 			console.log(error);

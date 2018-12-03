@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {OrganisationalUnit} from '../csrs/model/organisationalUnit'
 import {Csrs} from '../csrs/index'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
@@ -23,15 +23,33 @@ export class OrganisationController implements FormController {
 		this.validator = validator
 		this.organisationalUnitService = organisationalUnitService
 
+		this.getOrganisationFromRouterParamAndSetOnLocals()
+
 		this.setRouterPaths()
+	}
+
+	// prettier-ignore
+	private getOrganisationFromRouterParamAndSetOnLocals() {
+		this.router.param('organisationalUnitId', asyncHandler(async (req: Request, res: Response, next: NextFunction, organisationalUnitId: string) => {
+				const organisationalUnit: OrganisationalUnit = await this.organisationalUnitService.getOrganisationalUnit(`organisationalUnits/${organisationalUnitId}`)
+
+				if (organisationalUnit) {
+					res.locals.organisationalUnit = organisationalUnit
+					next()
+				} else {
+					res.sendStatus(404)
+				}
+			})
+		)
 	}
 
 	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.get('/content-management/organisations', asyncHandler(this.getOrganisations()))
-		this.router.get('/content-management/add-organisation', asyncHandler(this.addOrganisation()))
-		this.router.get('/content-management/organisations/:organisationId/overview', asyncHandler(this.getOrganisation()))
+		this.router.get('/content-management/add-organisation/:organisationalUnitId?', asyncHandler(this.addOrganisation()))
+		this.router.get('/content-management/organisations/:organisationalUnitId/overview', asyncHandler(this.getOrganisation()))
 		this.router.post('/content-management/organisations/organisation', asyncHandler(this.createOrganisation()))
+		this.router.post('/content-management/add-organisation/:organisationalUnitId', asyncHandler(this.updateOrganisation()))
 	}
 
 	public getOrganisations() {
@@ -44,9 +62,7 @@ export class OrganisationController implements FormController {
 
 	public getOrganisation() {
 		return async (request: Request, response: Response) => {
-			const organisationalUnitId = request.params.organisationId
-
-			const organisationalUnit: OrganisationalUnit = await this.organisationalUnitService.getOrganisationalUnit(`organisationalUnits/${organisationalUnitId}`)
+			const organisationalUnit = response.locals.organisationalUnit
 
 			response.render('page/organisation/organisation-overview', {organisationalUnit: organisationalUnit})
 		}
@@ -59,6 +75,7 @@ export class OrganisationController implements FormController {
 			response.render('page/organisation/add-organisation', {organisationalUnits: organisationalUnits})
 		}
 	}
+
 	@Validate({
 		fields: ['all'],
 		redirect: '/content-management/add-organisation',
@@ -77,10 +94,25 @@ export class OrganisationController implements FormController {
 				const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
 
 				request.session!.sessionFlash = {errors: errors}
+
 				return request.session!.save(() => {
 					response.redirect(`/content-management/add-organisation`)
 				})
 			}
+		}
+	}
+
+	@Validate({
+		fields: ['all'],
+		redirect: '/content-management/add-organisation/:organisationId',
+	})
+	public updateOrganisation(){
+		return async (request: Request, response: Response) => {
+			let organisationalUnit = response.locals.organisationalUnit
+
+			await this.csrs.updateOrganisationalUnit(organisationalUnit)
+
+			response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 		}
 	}
 }

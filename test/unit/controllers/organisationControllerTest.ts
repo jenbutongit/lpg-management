@@ -62,11 +62,14 @@ describe('Organisation Controller Tests', function() {
 
 	it('should call organisation overview page with organisation', async function() {
 		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+		organisationalUnit.id == ''
 
 		const getOrganisation: (request: Request, response: Response) => void = organisationController.getOrganisation()
 
 		let getOrganisationalUnit = sinon.stub().returns(Promise.resolve(organisationalUnit))
 		organisationalUnitService.getOrganisationalUnit = getOrganisationalUnit
+
+		res.locals.organisationalUnit = organisationalUnit
 
 		await getOrganisation(req, res)
 

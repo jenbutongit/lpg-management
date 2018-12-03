@@ -46,11 +46,11 @@
             {% block menu %}
                 {% set actions = [
                     {
-                        link: "/content-management/add-organisation/",
+                        link: "/content-management/add-organisation/" + organisationalUnit.id,
                         text: "Edit organisation"
                     },
                     {
-                        link: "/content-management/delete-organisation/",
+                        link: "/content-management/delete-organisation/" + organisationalUnit.id,
                         text: "Remove organisation"
                     }
                 ] %}

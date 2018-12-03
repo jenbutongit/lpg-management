@@ -15,7 +15,8 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.subOrgs = (data.subOrgs || []).map(this.create)
 		organisationalUnit.parent = data.parent
 		organisationalUnit.abbreviation = data.abbreviation
-		organisationalUnit.links = data._links
+		organisationalUnit.links = data.links
+		organisationalUnit.uri = data.uri
 
 		return organisationalUnit
 	}

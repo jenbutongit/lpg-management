@@ -23,7 +23,8 @@
         <div class="govuk-grid-column-two-thirds">
 
               <form action="/content-management/organisations/organisation" method="post">
-
+                  {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
+                  <p>{{parent}} + foo</p>
                 <div class="govuk-form-group">
                     <h2 class="govuk-heading-s no-margin">{{ i18n.organisations.text.parent }}</h2>
                     <p class="govuk-body custom-margin">If your new organisation has an existing parent, find them in the list below.</p>
@@ -32,7 +33,12 @@
                         <select name="parent" id="parent">
                             <option value=""></option>
                             {% for key, item in organisationalUnits %}
-                                <option value={{ key }}>{{ item }}</option>
+                                {% if parent === key %}
+                                    {% set selected='selected' %}
+                                {% else %}
+                                    {% set selected='' %}
+                            {% endif %}
+                                <option value={{ key }} {{ selected }}>{{ item }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -88,7 +94,7 @@
                     classes: "govuk-input--width-10",
                     id: "abbreviation",
                     name: "abbreviation",
-                    value: organisationalUnit.abbreviation
+                    value: form.abbreviation|default(organisationalUnit.abbreviation)
                 }) }}
                 <div class="button-container">
                     {{ govukButton({

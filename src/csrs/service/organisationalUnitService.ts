@@ -15,6 +15,7 @@ export class OrganisationalUnitService{
 	async getOrganisationalUnit(uri: String){
 		const resource = await this.halService.getResource(uri)
 		const parent = await this.getParentFromResource(resource)
+		const href = await this.getUri(resource)
 
 		const orgUnit = resource.props
 		const data = {
@@ -25,7 +26,8 @@ export class OrganisationalUnitService{
 			paymentMethods: orgUnit.paymentMethods,
 			subOrgs: orgUnit.subOrgs,
 			links: resource.links,
-			parent: parent
+			parent: parent,
+			uri: href
 		}
 
 		return this.organisationalUnitFactory.create(data)
@@ -34,11 +36,28 @@ export class OrganisationalUnitService{
 	async getParentFromResource(resource: HalResource){
 		let parent
 		const parentResource = await this.halService.getLink(resource, 'parent')
-
 		if(parentResource){
-			parent = this.organisationalUnitFactory.create(parentResource.props)
+			const href = await this.getUri(parentResource)
+
+			const orgUnit: any = parentResource.props
+			const data = {
+				id: orgUnit.id,
+				name: orgUnit.name,
+				code: orgUnit.code,
+				abbreviation: orgUnit.abbreviation,
+				paymentMethods: orgUnit.paymentMethods,
+				subOrgs: orgUnit.subOrgs,
+				links: resource.links,
+				uri: href
+			}
+
+			parent = this.organisationalUnitFactory.create(data)
 		}
 
 		return parent
+	}
+
+	async getUri(resource: HalResource){
+		return resource.uri.uri
 	}
 }
