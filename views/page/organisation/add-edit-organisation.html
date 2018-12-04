@@ -4,10 +4,16 @@
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}{% endblock %}
+{% block pageTitle %}
+{% if organisationalUnit.id %}
+    {{ i18n.organisations.title.editAnOrganisation }} - {{ i18n.proposition_name }}
+{% else %}
+    {{ i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}
+{% endif %}
+{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/organisations" %}
+{% set backButton = "/content-management/organisations/manage" %}
 {% block content %}
 {% set errors = sessionFlash.errors %}
 {% set form = sessionFlash.form %}
@@ -16,12 +22,16 @@
 {% set form = sessionFlash.form %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l">Add a new organisation</h1>
+            {% if organisationalUnit.id %}
+                <h1 class="govuk-heading-l">{{ i18n.organisations.title.editAnOrganisation }}</h1>
+            {% else %}
+                <h1 class="govuk-heading-l">{{ i18n.organisations.title.addANewOrganisation }}</h1>
+            {% endif %}
         </div>
     </div>
 <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-              <form action="/content-management/add-organisation/{{ organisationalUnit.id }}" method="post">
+              <form action="/content-management/organisations/{{ organisationalUnit.id }}" method="post">
                 <div class="govuk-form-group">
                     <h2 class="govuk-heading-s no-margin">{{ i18n.organisations.text.parent }}</h2>
                     <p class="govuk-body custom-margin">If your new organisation has an existing parent, find them in the list below.</p>
@@ -96,11 +106,11 @@
                 }) }}
                 <div class="button-container">
                     {{ govukButton({
-                        text: "Add organisation"
+                        text: "Update" if organisationalUnit.id else "Add a new organisation"
                     }) }}
                 </div>
             </form>
-            <a href="/content-management/organisations" class="govuk-link">Cancel</a>
+            <a href="/content-management/organisations/manage" class="govuk-link">Cancel</a>
         </div>
         <div class="govuk-grid-column-one-third">
         </div>

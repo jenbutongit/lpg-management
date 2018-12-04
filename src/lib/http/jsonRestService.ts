@@ -24,45 +24,25 @@ export class JsonRestService {
 	}
 
 	async post(path: string, resource: any) {
-		try {
-			const response: AxiosResponse = await this._http.post(path, resource, this.getHeaders())
+		const response: AxiosResponse = await this._http.post(path, resource, this.getHeaders())
 
-			return this.get(url.parse(response.headers.location).path!)
-		} catch (e) {
-			throw new Error(`Error with POST request: ${e} when posting ${JSON.stringify(resource)} to ${this.config.url}${path}`)
-		}
+		return this.get(url.parse(response.headers.location).path!)
 	}
 
 	async get(path: string) {
-		try {
-			return (await this._http.get(path, this.getHeaders())).data
-		} catch (e) {
-			throw e
-		}
+		return (await this._http.get(path, this.getHeaders())).data
 	}
 
 	async put(path: string, resource: any) {
-		try {
-			return (await this._http.put(path, resource, this.getHeaders())).data
-		} catch (e) {
-			throw new Error(`Error with PUT request: ${e} when putting ${JSON.stringify(resource)} to ${this.config.url}${path}`)
-		}
+		return (await this._http.put(path, resource, this.getHeaders())).data
 	}
 
 	async delete(path: string) {
-		try {
-			return await this._http.delete(path, this.getHeaders())
-		} catch (e) {
-			throw new Error(`Error with DELETE request: ${e} when deleting ${this.config.url}${path}`)
-		}
+		return await this._http.delete(path, this.getHeaders())
 	}
 
 	async patch(path: string, resource: any) {
-		try {
-			return (await this._http.patch(path, resource, this.getHeaders())).data
-		} catch (e) {
-			throw new Error(`Error with PATCH request: ${e} when patching ${this.config.url}${path}`)
-		}
+		return (await this._http.patch(path, resource, this.getHeaders())).data
 	}
 
 	set http(value: AxiosInstance) {

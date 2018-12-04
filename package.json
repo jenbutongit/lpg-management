@@ -40,7 +40,6 @@
 		"express-async-handler": "1.1.1",
 		"express-session": "1.15.6",
 		"govuk-frontend": "2.0.0",
-		"hal-rest-client": "0.3.4",
 		"i18n-express": "1.1.3",
 		"is-valid-date": "0.0.1",
 		"jsonpath": "1.0.0",

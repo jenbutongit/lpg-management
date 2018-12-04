@@ -6,7 +6,7 @@
 {% block pageTitle %}{{ i18n.organisations.title.manageOrganisations }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/organisations" %}
+{% set backButton = "/content-management" %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -34,10 +34,10 @@
         <div class="right-menu">
             {% block menu %}
             {% set actions = [
-            {
-            link: '/content-management/add-organisation',
-            text: 'Add a new organisation'
-            }
+                {
+                    link: '/content-management/organisations',
+                    text: 'Add a new organisation'
+                }
             ] %}
             {{ menu("Actions", actions) }}
             {% endblock %}

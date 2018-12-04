@@ -35,6 +35,10 @@ export class Csrs {
 		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
 	}
 
+	async deleteOrganisationalUnit(organisationalUnitId: string): Promise<void> {
+		return await this._organisationalUnitService.delete(`/organisationalUnits/${organisationalUnitId}`)
+	}
+
 	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
 		this._organisationalUnitService = value
 	}

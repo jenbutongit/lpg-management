@@ -12,7 +12,7 @@
 {% block pageTitle %}{{ i18n.organisations.title.organisationOverview }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/organisations" %}
+{% set backButton = "/content-management/organisations/manage" %}
 
 
 {% block content %}
@@ -46,11 +46,11 @@
             {% block menu %}
                 {% set actions = [
                     {
-                        link: "/content-management/add-organisation/" + organisationalUnit.id,
+                        link: "/content-management/organisations/" + organisationalUnit.id,
                         text: "Edit organisation"
                     },
                     {
-                        link: "/content-management/delete-organisation/" + organisationalUnit.id,
+                        link: "/content-management/organisations/" + organisationalUnit.id + "/confirm-delete",
                         text: "Remove organisation"
                     }
                 ] %}

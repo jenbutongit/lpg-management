@@ -1,56 +1,43 @@
-import {HalService} from "lib/halService"
 import {OrganisationalUnitFactory} from "../model/organisationalUnitFactory"
-import {HalResource} from "hal-rest-client"
+import {Csrs} from "../index"
+import * as log4js from "log4js"
+
+const logger = log4js.getLogger('csrs/service/OrganisationalUnitService')
 
 export class OrganisationalUnitService{
 
-	halService: HalService
+	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 
-	constructor(halService: HalService, organisationalUnitFactory: OrganisationalUnitFactory) {
-		this.halService = halService
+	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory) {
+		this.csrs = csrs
 		this.organisationalUnitFactory = organisationalUnitFactory
 	}
 
 	async getOrganisationalUnit(uri: string){
-		const resource = await this.halService.getResource(uri)
+		let organisationalUnit: any
+		let parent: any
 
-		const data: any = await this.getDataFromResource(resource)
-		data.parent = await this.getParentFromResource(resource)
+		organisationalUnit = await this.csrs.getOrganisationalUnit(uri).catch(error => {
+			throw error
+		})
+
+		parent = await this.csrs.getOrganisationalUnit(`${organisationalUnit.id}/parent`).catch(error => {
+			if (error.response.status == 404) {
+				logger.debug(`Organisation ${organisationalUnit.id} has no parent`);
+			} else {
+				throw error
+			}
+		})
+
+		const data = {
+			id: organisationalUnit.id,
+			name: organisationalUnit.name,
+			code: organisationalUnit.code,
+			abbreviation: organisationalUnit.abbreviation,
+			parent: parent
+		}
 
 		return this.organisationalUnitFactory.create(data)
-	}
-
-	async getParentFromResource(resource: HalResource){
-		let parent
-		const parentResource = await this.halService.getLink(resource, 'parent')
-		if (parentResource){
-			const data = await this.getDataFromResource(parentResource)
-
-			parent = this.organisationalUnitFactory.create(data)
-		}
-
-		return parent
-	}
-
-	async getDataFromResource(resource: HalResource){
-		const href = await this.getUri(resource)
-
-		const orgUnit: any = resource.props
-		const data = {
-			id: orgUnit.id,
-			name: orgUnit.name,
-			code: orgUnit.code,
-			abbreviation: orgUnit.abbreviation,
-			paymentMethods: orgUnit.paymentMethods,
-			subOrgs: orgUnit.subOrgs,
-			uri: href
-		}
-
-		return data
-	}
-
-	async getUri(resource: HalResource){
-		return resource.uri.uri
 	}
 }

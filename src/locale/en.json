@@ -87,6 +87,7 @@
 		"title": {
 			"manageOrganisations": "Manage organisations",
 			"addANewOrganisation": "Add a new organisation",
+			"editAnOrganisation": "Edit an organisation",
 			"organisationOverview": "Organisation overview"
 		},
 		"validation": {
