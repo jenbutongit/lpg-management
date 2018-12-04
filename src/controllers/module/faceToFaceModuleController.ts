@@ -25,6 +25,7 @@ export class FaceToFaceModuleController {
 		this.setRouterPaths()
 	}
 
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		let course: Course
 		this.router.param(

@@ -104,7 +104,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		expect(moduleFactory.create).to.have.been.calledOnce
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
-		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-video`)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
 	})
 
 	it('should get video duration and redirect to course preview page', async function() {
@@ -132,6 +132,6 @@ describe('YoutubeService Module Controller Test', function() {
 		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
 		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
 		expect(youtubeService.getDuration).to.have.been.calledOnce
-		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-video`)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
 	})
 })

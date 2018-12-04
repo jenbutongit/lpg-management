@@ -86,7 +86,13 @@ export class FileController {
 				})
 			} else if (request.params.moduleId) {
 				const module = response.locals.module
-				const media = await this.restService.get(`/${module.mediaId}`)
+				let mediaId = module.mediaId
+
+				if (module.type === Module.Type.VIDEO) {
+					const items = module.url.split('/')
+					mediaId = items[items.length - 2]
+				}
+				const media = await this.restService.get(`/${mediaId}`)
 
 				return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
 			}
@@ -192,7 +198,9 @@ export class FileController {
 			module.startPage = file.metadata.startPage
 
 			await this.learningCatalogue.updateModule(course.id, module)
-			response.redirect(`/content-management/courses/${course.id}/preview`)
+			return request.session!.save(() => {
+				response.redirect(`/content-management/courses/${course.id}/preview`)
+			})
 		}
 	}
 }
