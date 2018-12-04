@@ -241,7 +241,7 @@
                 }) }}
                 <div class="button-container">
                     {{ govukButton({
-                    text: "Continue",
+                    text: "Edit item" if module.id else "Add item",
                     type: "submit",
                     attributes: {id: "submitButton"}
                     }) }}

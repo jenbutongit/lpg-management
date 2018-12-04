@@ -70,9 +70,7 @@ export class FileController {
 		this.router.get('/content-management/courses/:courseId/module-elearning/:moduleId?', this.getFile('elearning'))
 		this.router.get('/content-management/courses/:courseId/module-mp4/:moduleId?', this.getFile('video'))
 		this.router.post('/content-management/courses/:courseId/module-file', this.setFile())
-		this.router.post('/content-management/courses/:courseId/module-file/:moduleId?', this.updateMp4Module('file'))
-		this.router.post('/content-management/courses/:courseId/module-e-learning/:moduleId?', this.updateMp4Module('elearning'))
-		this.router.post('/content-management/courses/:courseId/module-mp4/:moduleId?', this.updateMp4Module('video'))
+		this.router.post('/content-management/courses/:courseId/module-file/:moduleId', this.editFile())
 	}
 
 	public getFile(type: string) {
@@ -87,6 +85,11 @@ export class FileController {
 					media,
 					courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media',
 				})
+			} else if (request.params.moduleId) {
+				const module = response.locals.module
+				const media = await this.restService.get(`/${module.mediaId}`)
+
+				return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
 			}
 
 			return response.render('page/course/module/module-file', {
@@ -150,39 +153,47 @@ export class FileController {
 		}
 	}
 
-	public updateMp4Module(type: string) {
-		return async (req: Request, res: Response) => {
-			const course = res.locals.course
-			let file
-			if (req.body.mediaId) {
-				file = await this.restService.get(`/${req.body.mediaId}`)
+	public editFile() {
+		return async (request: Request, response: Response) => {
+			let data = {
+				...request.body,
 			}
-			let module: FileModule = res.locals.module
-			module.title = req.body.title
-			module.description = req.body.description
-			module.url = req.body.url
-			module.optional = req.body.optional
-			module.fileSize = file.fileSizeKB
-			module.mediaId = file.id
-			module.duration = moment
-				.duration({
-					hours: req.body.hours,
-					minutes: req.body.minutes,
-				})
-				.asSeconds()
 
-			const errors = await this.moduleValidator.check(module, ['title', 'description', 'mediaId'])
+			data.type = fileType.getFileModuleType(data.file)
+
+			const course = response.locals.course
+			let module = response.locals.module
+			let errors = await this.moduleValidator.check(data, ['title', 'description', 'mediaId'])
+
+			let file
+			if (data.mediaId) {
+				file = await this.restService.get(`/${data.mediaId}`)
+			}
 
 			if (errors.size) {
-				return res.render(`page/course/module/module-${type}`, {
-					module: module,
+				request.session!.sessionFlash = {
 					errors: errors,
+					module: module,
+					media: file,
+				}
+
+				return request.session!.save(() => {
+					response.redirect(`/content-management/courses/${course.id}/module-${data.fileType}`)
 				})
 			}
 
-			await this.learningCatalogue.updateModule(course.id, module)
+			module.type = data.type
+			module.title = data.title
+			module.description = data.description
+			module.optional = data.isOptional || false
+			module.duration = moment.duration({hours: data.hours, minutes: data.minutes}).asSeconds()
+			module.fileSize = file.fileSizeKB
+			module.mediaId = file.id
+			module.url = config.CONTENT_URL + '/' + file.path
+			module.startPage = file.metadata.startPage
 
-			res.redirect(`/content-management/courses/${course.id}/add-module`)
+			await this.learningCatalogue.updateModule(course.id, module)
+			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}
 	}
 }
