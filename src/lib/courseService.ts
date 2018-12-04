@@ -18,9 +18,7 @@ export class CourseService {
 		const course: Course = await this.learningCatalogue.getCourse(courseId)
 
 		if (course.modules.length !== moduleIds.length) {
-			throw new Error(
-				`Course modules length(${course.modules.length}) does not match module ids length(${moduleIds.length})`
-			)
+			throw new Error(`Course modules length(${course.modules.length}) does not match module ids length(${moduleIds.length})`)
 		}
 
 		let modules: Module[] = []
@@ -65,9 +63,7 @@ export class CourseService {
 	getAudienceIdToEventMapping(course: Course) {
 		const allEventsOnCourse = this.getAllEventsOnCourse(course)
 		return course.audiences.reduce((map: any, audience: Audience) => {
-			map[audience.id] = audience.eventId
-				? allEventsOnCourse.filter((event: Event) => event.id == audience.eventId)[0]
-				: null
+			map[audience.id] = audience.eventId ? allEventsOnCourse.filter((event: Event) => event.id == audience.eventId)[0] : null
 			return map
 		}, {})
 	}

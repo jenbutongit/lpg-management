@@ -93,8 +93,10 @@ describe('EventController', function() {
 
 			expect(dateRangeCommandValidator.check).to.have.been.calledOnceWith(req.body)
 			expect(res.render).to.have.been.calledWith('page/course/module/events/events', {
+				courseId: 'abc',
 				event: event,
 				eventJson: JSON.stringify(event),
+				moduleId: 'def',
 			})
 		})
 
@@ -119,9 +121,11 @@ describe('EventController', function() {
 			await eventController.setDateTime()(req, res)
 
 			expect(res.render).to.have.been.calledWith('page/course/module/events/events', {
+				courseId: undefined,
 				errors: errors,
 				event: event,
 				eventJson: JSON.stringify(event),
+				moduleId: undefined,
 			})
 		})
 
@@ -153,9 +157,11 @@ describe('EventController', function() {
 			await eventController.setDateTime()(req, res)
 
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events', {
+				courseId: undefined,
 				event: event,
 				eventJson: JSON.stringify(event),
 				errors: errors,
+				moduleId: undefined,
 			})
 		})
 
@@ -180,8 +186,10 @@ describe('EventController', function() {
 
 			await eventController.getLocation()(mockReq(), res)
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location', {
+				courseId: undefined,
 				event: {},
 				eventJson: undefined,
+				moduleId: undefined,
 			})
 		})
 
@@ -922,6 +930,7 @@ describe('EventController', function() {
 			expect(learningCatalogue.getEvent).to.have.not.been.called
 			expect(learningCatalogue.updateEvent).to.not.have.been.called
 			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				courseId: courseId,
 				errors: errors,
 				day: request.body.day,
 				month: request.body.month,
@@ -930,6 +939,7 @@ describe('EventController', function() {
 				startMinutes: request.body.startMinutes,
 				endHours: request.body.endHours,
 				endMinutes: request.body.endMinutes,
+				moduleId: moduleId,
 			})
 		})
 
@@ -985,6 +995,7 @@ describe('EventController', function() {
 			expect(dateRangeCommand.asDateRange).to.have.been.calledOnce
 			expect(dateRangeValidator.check).to.have.been.calledOnceWith(dateRange)
 			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				courseId: courseId,
 				errors: errors,
 				day: request.body.day,
 				month: request.body.month,
@@ -993,6 +1004,7 @@ describe('EventController', function() {
 				startMinutes: request.body.startMinutes,
 				endHours: request.body.endHours,
 				endMinutes: request.body.endMinutes,
+				moduleId: moduleId,
 			})
 		})
 	})

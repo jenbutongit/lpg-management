@@ -53,10 +53,18 @@ export class EventController implements FormController {
 	/* istanbul ignore next */
 	private setRouterPaths() {
 		this.router.param(
+			'courseId',
+			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
+				const date = new Date(Date.now())
+				res.locals.exampleYear = date.getFullYear() + 1
+				next()
+			})
+		)
+
+		this.router.param(
 			'eventId',
 			asyncHandler(async (req: Request, res: Response, next: NextFunction, eventId: string) => {
 				const event = await this.learningCatalogue.getEvent(req.params.courseId, req.params.moduleId, eventId)
-
 				if (event) {
 					res.locals.event = event
 					res.locals.courseId = req.params.courseId
@@ -65,15 +73,6 @@ export class EventController implements FormController {
 				} else {
 					res.sendStatus(404)
 				}
-			})
-		)
-
-		this.router.param(
-			'courseId',
-			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
-				const date = new Date(Date.now())
-				res.locals.exampleYear = date.getFullYear() + 1
-				next()
 			})
 		)
 
@@ -109,7 +108,7 @@ export class EventController implements FormController {
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events')
+			response.render('page/course/module/events/events', {courseId: request.params.courseId, moduleId: request.params.moduleId})
 		}
 	}
 
@@ -124,6 +123,8 @@ export class EventController implements FormController {
 			if (errors.size) {
 				response.render('page/course/module/events/events', {
 					event: event,
+					courseId: request.params.courseId,
+					moduleId: request.params.moduleId,
 					eventJson: JSON.stringify(event),
 					errors: errors,
 				})
@@ -137,6 +138,8 @@ export class EventController implements FormController {
 					const event = data.eventJson ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 					response.render('page/course/module/events/events', {
 						event: event,
+						courseId: request.params.courseId,
+						moduleId: request.params.moduleId,
 						eventJson: JSON.stringify(event),
 						errors: errors,
 					})
@@ -146,6 +149,8 @@ export class EventController implements FormController {
 
 					response.render('page/course/module/events/events', {
 						event: event,
+						courseId: request.params.courseId,
+						moduleId: request.params.moduleId,
 						eventJson: JSON.stringify(event),
 					})
 				}
@@ -207,6 +212,8 @@ export class EventController implements FormController {
 					startMinutes: request.body.startMinutes,
 					endHours: request.body.endHours,
 					endMinutes: request.body.endMinutes,
+					courseId: courseId,
+					moduleId: moduleId,
 				})
 			} else {
 				const dateRangeCommand = this.dateRangeCommandFactory.create(data)
@@ -223,6 +230,8 @@ export class EventController implements FormController {
 						startMinutes: request.body.startMinutes,
 						endHours: request.body.endHours,
 						endMinutes: request.body.endMinutes,
+						courseId: courseId,
+						moduleId: moduleId,
 					})
 				} else {
 					const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
@@ -306,6 +315,8 @@ export class EventController implements FormController {
 			res.render('page/course/module/events/event-location', {
 				event: JSON.parse(req.body.eventJson || '{}'),
 				eventJson: req.body.eventJson,
+				courseId: req.params.courseId,
+				moduleId: req.params.moduleId,
 			})
 		}
 	}
