@@ -192,7 +192,7 @@ describe('Organisation Controller Tests', function() {
 
 		expect(validator.check).to.have.been.calledWith(req.body, ['all'])
 		expect(validator.check).to.have.returned(errors)
-		expect(res.redirect).to.have.been.calledWith(`/content-management/organisation/${organisation.id}`)
+		expect(res.redirect).to.have.been.calledWith(`/content-management/organisations/:organisationalUnitId`)
 	})
 
 	it('should check for organisation errors when updating and redirect to add organisation page if error caught', async function() {
