@@ -9,6 +9,9 @@ import {Validator} from '../learning-catalogue/validator/validator'
 import {Validate} from './formValidator'
 import {OrganisationalUnitService} from "../csrs/service/organisationalUnitService"
 import {OrganisationalService} from "../csrs/service/organisationService"
+import * as log4js from "log4js"
+
+const logger = log4js.getLogger('controllers/OrganisationController')
 
 export class OrganisationController implements FormController {
 	router: Router
@@ -31,7 +34,7 @@ export class OrganisationController implements FormController {
 	}
 
 	// prettier-ignore
-	private async getOrganisationFromRouterParamAndSetOnLocals() {
+	private getOrganisationFromRouterParamAndSetOnLocals() {
 		this.router.param('organisationalUnitId', asyncHandler(async (req: Request, res: Response, next: NextFunction, organisationalUnitId: string) => {
 				const organisationalUnit: OrganisationalUnit = await this.organisationalService.getOrganisationalUnit(organisationalUnitId)
 
@@ -66,6 +69,8 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnit = response.locals.organisationalUnit
 
+			logger.debug(`Getting organisation: ${organisationalUnit.id}`)
+
 			response.render('page/organisation/organisation-overview', {organisationalUnit: organisationalUnit})
 		}
 	}
@@ -85,6 +90,8 @@ export class OrganisationController implements FormController {
 	public createOrganisation() {
 		return async (request: Request, response: Response) => {
 			const organisationalUnit = this.organisationalUnitFactory.create(request.body)
+
+			logger.debug(`Creating new organisation: ${organisationalUnit.name}`)
 
 			try {
 				const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
@@ -111,6 +118,8 @@ export class OrganisationController implements FormController {
 	public updateOrganisation(){
 		return async (request: Request, response: Response) => {
 			let organisationalUnit = response.locals.organisationalUnit
+
+			logger.debug(`Updating organisation: ${organisationalUnit.id}`)
 
 			const data = {
 				name: request.body.name || organisationalUnit.name,

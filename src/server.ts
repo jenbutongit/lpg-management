@@ -82,7 +82,13 @@ app.use(serveStatic(appRoot + '/dist/views/assets'))
 app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
 app.use('/sortablejs', serveStatic(appRoot + '/node_modules/sortablejs/'))
 
-log4js.configure(config.LOGGING)
+app.use(
+	log4js.connectLogger(logger, {
+		format: ':method :url',
+		level: 'trace',
+		nolog: '\\.js|\\.css|\\.gif|\\.jpg|\\.png|\\.ico$',
+	})
+)
 
 app.use(cookieParser())
 

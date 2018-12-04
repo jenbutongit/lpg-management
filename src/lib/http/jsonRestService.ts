@@ -37,7 +37,7 @@ export class JsonRestService {
 		try {
 			return (await this._http.get(path, this.getHeaders())).data
 		} catch (e) {
-			throw new Error(`Error with GET request: ${e} when getting ${this.config.url}${path}`)
+			throw e
 		}
 	}
 

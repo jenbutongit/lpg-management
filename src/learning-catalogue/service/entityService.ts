@@ -56,7 +56,7 @@ export class EntityService<T> {
 	}
 
 	async patch(path: string, entity: any): Promise<T> {
-		return await this._restService.put(path, entity)
+		return await this._restService.patch(path, entity)
 	}
 
 	async delete(path: string): Promise<void> {
