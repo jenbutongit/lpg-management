@@ -9,7 +9,6 @@ import * as config from '../../config'
 import * as fileType from '../../lib/fileType'
 import {OauthRestService} from 'lib/http/oauthRestService'
 import {CourseService} from 'lib/courseService'
-import {FileModule} from '../../learning-catalogue/model/fileModule'
 
 export class FileController {
 	learningCatalogue: LearningCatalogue

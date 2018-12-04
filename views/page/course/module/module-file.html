@@ -212,14 +212,12 @@
                     </strong>
                 </div>
 
-                {% if media is undefined %}
-                    {{ govukButton({
-                    attributes: {id: "uploadButton"},
-                    text: "Upload File",
-                    type: "input",
-                    classes: "button-blue left-aligned"
-                    }) }}
-                {% endif %}
+                {{ govukButton({
+                attributes: {id: "uploadButton"},
+                text: "Upload File",
+                type: "input",
+                classes: "button-blue left-aligned"
+                }) }}
 
                 {{ govukCheckboxes({
                 idPrefix: "isOptional",
