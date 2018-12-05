@@ -92,7 +92,7 @@ export class YoutubeModuleController {
 			if (errors.size) {
 				req.session!.sessionFlash = {errors: errors, module: module}
 				return req.session!.save(() => {
-					res.redirect(`/content-management/courses/${course.id}/module-youtube/${req.params.moduleId || ''}`)
+					res.redirect(`/content-management/courses/${course.id}/module-youtube/`)
 				})
 			}
 
@@ -130,7 +130,7 @@ export class YoutubeModuleController {
 			if (errors.size) {
 				req.session!.sessionFlash = {errors: errors, module: module}
 				return req.session!.save(() => {
-					res.redirect(`/content-management/courses/${course.id}/module-youtube/${req.params.moduleId || ''}`)
+					res.redirect(`/content-management/courses/${course.id}/module-youtube/${req.params.moduleId}`)
 				})
 			}
 

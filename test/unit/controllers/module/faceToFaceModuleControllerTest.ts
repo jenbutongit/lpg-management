@@ -122,11 +122,13 @@ describe('Face-to-face module controller tests', function() {
 		res.locals.course = course
 		res.locals.module = module
 
+		req.params.moduleId = 'def'
+
 		moduleValidator.check = sinon.stub().returns({size: 1})
 
 		await faceToFaceModuleController.editModule()(req, res)
 
 		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'description', 'cost'])
-		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-face-to-face`)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-face-to-face/def`)
 	})
 })

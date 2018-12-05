@@ -68,6 +68,7 @@ export class FileController {
 		this.router.get('/content-management/courses/:courseId/module-file/:moduleId?', this.getFile('file'))
 		this.router.get('/content-management/courses/:courseId/module-elearning/:moduleId?', this.getFile('elearning'))
 		this.router.get('/content-management/courses/:courseId/module-mp4/:moduleId?', this.getFile('video'))
+		this.router.get('/content-management/courses/:courseId/module-video/:moduleId?', this.getFile('video'))
 		this.router.post('/content-management/courses/:courseId/module-file', this.setFile())
 		this.router.post('/content-management/courses/:courseId/module-file/:moduleId', this.editFile())
 	}
@@ -91,7 +92,11 @@ export class FileController {
 				if (module.type === Module.Type.VIDEO) {
 					const items = module.url.split('/')
 					mediaId = items[items.length - 2]
+				} else if (module.type === Module.Type.E_LEARNING) {
+					const items = module.url.split('/')
+					mediaId = items[items.length - 1]
 				}
+
 				const media = await this.restService.get(`/${mediaId}`)
 
 				return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
@@ -183,7 +188,7 @@ export class FileController {
 				}
 
 				return request.session!.save(() => {
-					response.redirect(`/content-management/courses/${course.id}/module-${data.fileType}`)
+					response.redirect(`/content-management/courses/${course.id}/module-${data.fileType}/${request.params.moduleId}`)
 				})
 			}
 

@@ -108,7 +108,7 @@ export class FaceToFaceModuleController {
 			if (errors.size) {
 				request.session!.sessionFlash = {errors: errors, module: module}
 				request.session!.save(() => {
-					response.redirect(`/content-management/courses/${course.id}/module-face-to-face`)
+					response.redirect(`/content-management/courses/${course.id}/module-face-to-face/${request.params.moduleId}`)
 				})
 			} else {
 				module.title = data.title

@@ -15,7 +15,7 @@ import {CourseService} from 'lib/courseService'
 
 chai.use(sinonChai)
 
-describe('YoutubeService Module Controller Test', function() {
+describe('Youtube Module Controller Tests', function() {
 	let youtubeModuleController: YoutubeModuleController
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: Validator<Module>
@@ -176,6 +176,8 @@ describe('YoutubeService Module Controller Test', function() {
 		res.locals.course = course
 		res.locals.module = module
 
+		req.params.moduleId = 'def'
+
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 		learningCatalogue.updateModule = sinon.stub()
 		youtubeService.getYoutubeResponse = sinon.stub().returns(undefined)
@@ -184,7 +186,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'url'])
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
-		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/def`)
 	})
 
 	it('should check for errors, not update module and redirect to module youtube page', async function() {
@@ -194,6 +196,8 @@ describe('YoutubeService Module Controller Test', function() {
 		res.locals.course = course
 		res.locals.module = module
 
+		req.params.moduleId = 'def'
+
 		moduleValidator.check = sinon.stub().returns({fields: ['validation.course.title.empty'], size: 1})
 		youtubeService.getYoutubeResponse = sinon.stub().returns(undefined)
 
@@ -201,6 +205,6 @@ describe('YoutubeService Module Controller Test', function() {
 
 		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'url'])
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
-		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/def`)
 	})
 })
