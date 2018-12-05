@@ -131,7 +131,7 @@ describe('Organisation Controller Tests', function() {
 
 		expect(validator.check).to.have.been.calledWith(req.body, ['all'])
 		expect(validator.check).to.have.returned(errors)
-		expect(res.redirect).to.have.been.calledWith('/content-management/organisation')
+		expect(res.redirect).to.have.been.calledWith('/content-management/organisations')
 	})
 
 	it('should check for organisation errors and redirect to add organisation page if error caught', async function() {
@@ -149,7 +149,7 @@ describe('Organisation Controller Tests', function() {
 		await createOrganisation(req, res)
 
 		expect(req.session!.sessionFlash).to.eql({errors: errors})
-		expect(res.redirect).to.have.been.calledWith('/content-management/organisation')
+		expect(res.redirect).to.have.been.calledWith('/content-management/organisations')
 	})
 
 	//
@@ -213,7 +213,7 @@ describe('Organisation Controller Tests', function() {
 		await updateOrganisation(req, res)
 
 		expect(req.session!.sessionFlash).to.eql({errors: errors})
-		expect(res.redirect).to.have.been.calledWith(`/content-management/organisation/${organisation.id}`)
+		expect(res.redirect).to.have.been.calledWith(`/content-management/organisations/${organisation.id}`)
 	})
 
 	it('should check for render confirm delete page', async function() {

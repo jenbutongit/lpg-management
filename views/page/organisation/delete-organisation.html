@@ -8,16 +8,12 @@
 {% set backButton = "/content-management/organisations/" + organisationalUnit.id + "/overview" %}
 
 {% block content %}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-m govuk-!-font-size-36">Remove an organisation</h1>
-        {% if organisationalUnit.abbreviation %}
-            <p class="govuk-body">Are you sure you want to remove <strong>{{ organisationalUnit.name }} ({{ organisationalUnit.abbreviation }})</strong>?</p>
-        {% else %}
-            <p class="govuk-body">Are you sure you want to remove <strong>{{ organisationalUnit.name }}</strong>?</p>
-        {% endif %}
-        <p class="govuk-body">If you remove this organisation, it will be permanently deleted from the service.</p>
+        <h1 class="govuk-heading-m govuk-!-font-size-36">{{ i18n.organisations.title.removeAnOrganisation }}</h1>
+        <p class="govuk-body">Are you sure you want to remove <strong>{{ organisationalUnit.name }}{{ " (" + organisationalUnit.abbreviation + ")" if organisationalUnit.abbreviation else "" }}</strong>?</p>
+        <p class="govuk-body">By deleting this organisation, you will delete any sub-divisions which are associated to it.</p>
+        <p class="govuk-body">This action is irreversible.</p>
         <form action="/content-management/organisations/{{ organisationalUnit.id }}/delete" method="post">
             <fieldset class="govuk-fieldset">
                 {{ govukButton({
@@ -29,5 +25,4 @@
         <a class="cancel-button govuk-link" href="/content-management/organisations/{{ organisationalUnit.id }}/overview">Cancel</a>
     </div>
 </div>
-
 {% endblock %}

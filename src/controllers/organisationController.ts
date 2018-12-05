@@ -106,7 +106,7 @@ export class OrganisationController implements FormController {
 				request.session!.sessionFlash = {errors: errors}
 
 				return request.session!.save(() => {
-					response.redirect(`/content-management/organisation`)
+					response.redirect(`/content-management/organisations`)
 				})
 			}
 		}
@@ -137,7 +137,7 @@ export class OrganisationController implements FormController {
 				request.session!.sessionFlash = {errors: errors}
 
 				return request.session!.save(() => {
-					response.redirect(`/content-management/organisation/${request.params.organisationId}`)
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}`)
 				})
 			}
 
@@ -157,7 +157,7 @@ export class OrganisationController implements FormController {
 
 			await this.csrs.deleteOrganisationalUnit(organisationalUnit.id)
 
-			request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
+			request.session!.sessionFlash = {organisationRemovedMessage: 'organisationRemovedMessage', organisationalUnit: organisationalUnit}
 
 			response.redirect('/content-management/organisations/manage')
 		}

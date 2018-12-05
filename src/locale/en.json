@@ -88,7 +88,7 @@
 			"manageOrganisations": "Manage organisations",
 			"addANewOrganisation": "Add a new organisation",
 			"editAnOrganisation": "Edit an organisation",
-			"deleteAnOrganisation": "Remove an organisation",
+			"removeAnOrganisation": "Remove an organisation",
 			"organisationOverview": "Organisation overview"
 		},
 		"validation": {
