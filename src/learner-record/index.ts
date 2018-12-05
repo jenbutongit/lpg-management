@@ -31,7 +31,10 @@ export class LearnerRecord {
 
 	async updateBooking(eventId: string, booking: Booking) {
 		try {
-			await this._restService.patch(`/event/${eventId}/booking/${booking.id}`, {status: booking.status})
+			await this._restService.patch(`/event/${eventId}/booking/${booking.id}`, {
+				status: booking.status,
+				cancellationReason: booking.cancellationReason,
+			})
 		} catch (e) {
 			throw new Error(`An error occurred when trying to update booking: ${e}`)
 		}

@@ -45,12 +45,12 @@ describe('Search Controller Tests', function() {
 		const request: Request = mockReq()
 
 		const response: Response = mockRes()
-		request.query.q = "test"
+		request.query.q = 'test'
 
 		await index(request, response)
 
 		expect(learningCatalogue.searchCourses).to.have.been.calledWith('test', 0, 10)
 
-		expect(response.render).to.have.been.calledOnceWith('page/search-results', {pageResults: pageResults, query: "test"})
+		expect(response.render).to.have.been.calledOnceWith('page/search-results', {pageResults: pageResults, query: 'test'})
 	})
 })
