@@ -10,11 +10,7 @@ export class FaceToFaceModuleController {
 	moduleFactory: ModuleFactory
 	router: Router
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		moduleValidator: Validator<Module>,
-		moduleFactory: ModuleFactory
-	) {
+	constructor(learningCatalogue: LearningCatalogue, moduleValidator: Validator<Module>, moduleFactory: ModuleFactory) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory
