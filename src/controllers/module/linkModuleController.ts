@@ -30,6 +30,7 @@ export class LinkModuleController {
 		this.setRouterPaths()
 	}
 
+	/* istanbul ignore next */
 	private setRouterPaths() {
 		let course: any
 

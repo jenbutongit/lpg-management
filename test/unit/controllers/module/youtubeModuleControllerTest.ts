@@ -134,4 +134,73 @@ describe('YoutubeService Module Controller Test', function() {
 		expect(youtubeService.getDuration).to.have.been.calledOnce
 		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
 	})
+
+	it('should check for errors, update module and redirect to course preview page', async function() {
+		const url = 'https://www.youtubeService.com/example'
+		req.body.url = url
+
+		const courseId = 'abc'
+		const course: Course = new Course()
+		const module: Module = new Module()
+		course.id = courseId
+
+		res.locals.course = course
+		res.locals.module = module
+
+		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
+		learningCatalogue.updateModule = sinon.stub()
+		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
+		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
+		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse)
+		youtubeService.getDuration = sinon.stub().returns(1)
+
+		await youtubeModuleController.updateModule()(req, res)
+
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
+		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getDuration).to.have.been.calledOnce
+		expect(learningCatalogue.updateModule).to.have.been.calledWith(courseId, module)
+		expect(res.redirect).to.have.been.calledWith('/content-management/courses/abc/preview')
+	})
+
+	it('should get youtube response not update module and redirect to module youtube page', async function() {
+		const url = 'https://www.youtubeService.com/example'
+		req.body.url = url
+
+		const courseId = 'abc'
+		const course: Course = new Course()
+		const module: Module = new Module()
+		course.id = courseId
+
+		res.locals.course = course
+		res.locals.module = module
+
+		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
+		learningCatalogue.updateModule = sinon.stub()
+		youtubeService.getYoutubeResponse = sinon.stub().returns(undefined)
+
+		await youtubeModuleController.updateModule()(req, res)
+
+		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'url'])
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
+	})
+
+	it('should check for errors, not update module and redirect to module youtube page', async function() {
+		const course: Course = new Course()
+		const module: Module = new Module()
+		course.id = 'abc'
+		res.locals.course = course
+		res.locals.module = module
+
+		moduleValidator.check = sinon.stub().returns({fields: ['validation.course.title.empty'], size: 1})
+		youtubeService.getYoutubeResponse = sinon.stub().returns(undefined)
+
+		await youtubeModuleController.updateModule()(req, res)
+
+		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'url'])
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-youtube/`)
+	})
 })

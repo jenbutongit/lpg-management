@@ -9,7 +9,6 @@ import {expect} from 'chai'
 import sinon = require('sinon')
 import {CourseService} from 'lib/courseService'
 import {LinkModule} from '../../../../src/learning-catalogue/model/linkModule'
-import {Course} from "../../../../src/learning-catalogue/model/course";
 
 chai.use(sinonChai)
 
@@ -228,47 +227,4 @@ describe('LinkModuleController tests', () => {
 			errors: errors,
 		})
 	})
-
-	it('should update module and redirect to add module page', async () => {
-		const course = new Course()
-		course.id = 'courseId'
-
-		const module = new LinkModule()
-
-		const data = {
-			isOptional: true,
-			title: 'Module title',
-			description: 'Module description',
-			url: 'http://example.org',
-			hours: 1,
-			minutes: 30,
-		}
-
-		const request = mockReq({
-			body: data,
-		})
-		const response = mockRes({
-			locals: {
-				course: course,
-				module: module,
-			},
-		})
-
-		const errors = {size: 0, fields: []}
-
-		moduleValidator.check = sinon.stub().returns(errors)
-		learningCatalogue.updateModule = sinon.stub()
-
-		await controller.setLinkModule()(request, response)
-
-		expect(moduleValidator.check).to.have.been.calledOnceWith(
-			module,
-			['title', 'description', 'url', 'duration']
-		)
-
-		expect(learningCatalogue.updateModule).to.have.been.calledOnceWith(course.id, module)
-
-		expect(response.render).to.not.have.been.called
-
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
 })

@@ -4,7 +4,6 @@ import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactor
 import {Module} from '../../learning-catalogue/model/module'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {YoutubeService} from '../../youtube/youtubeService'
-import {VideoModule} from '../../learning-catalogue/model/videoModule'
 import * as asyncHandler from 'express-async-handler'
 import {CourseService} from 'lib/courseService'
 import moment = require('moment')
@@ -65,7 +64,8 @@ export class YoutubeModuleController {
 		)
 
 		this.router.get('/content-management/courses/:courseId/module-youtube/:moduleId?', asyncHandler(this.getModule()))
-		this.router.post('/content-management/courses/:courseId/module-youtube/:moduleId?', asyncHandler(this.setModule()))
+		this.router.post('/content-management/courses/:courseId/module-youtube/', asyncHandler(this.setModule()))
+		this.router.post('/content-management/courses/:courseId/module-youtube/:moduleId', asyncHandler(this.updateModule()))
 	}
 
 	public getModule() {
@@ -79,13 +79,7 @@ export class YoutubeModuleController {
 			const data = {...req.body}
 
 			const course = res.locals.course
-			let module: VideoModule
-
-			if (req.params.moduleId) {
-				module = res.locals.module
-			} else {
-				module = await this.moduleFactory.create(data)
-			}
+			let module = await this.moduleFactory.create(data)
 
 			let errors = await this.moduleValidator.check(data, ['title', 'url'])
 
@@ -95,32 +89,58 @@ export class YoutubeModuleController {
 				errors.size += 1
 			}
 
-			if (typeof duration !== 'number' || errors.size) {
+			if (errors.size) {
 				req.session!.sessionFlash = {errors: errors, module: module}
 				return req.session!.save(() => {
 					res.redirect(`/content-management/courses/${course.id}/module-youtube/${req.params.moduleId || ''}`)
 				})
-			} else if (req.params.moduleId) {
-				module.title = data.title
-				module.description = data.description
-				module.optional = data.isOptional || false
-				module.url = data.url
-				module.duration = duration
-
-				await this.learningCatalogue.updateModule(course.id, module)
-			} else {
-				const newData = {
-					type: data.type || 'video',
-					title: data.title,
-					description: data.description || 'No description',
-					duration: duration,
-					optional: data.isOptional || false,
-					url: data.url,
-				}
-				module = await this.moduleFactory.create(newData)
-
-				await this.learningCatalogue.createModule(course.id, module)
 			}
+
+			const newData = {
+				type: data.type || 'video',
+				title: data.title,
+				description: data.description || 'No description',
+				duration: duration,
+				optional: data.isOptional || false,
+				url: data.url,
+			}
+			module = await this.moduleFactory.create(newData)
+
+			await this.learningCatalogue.createModule(course.id, module)
+
+			return res.redirect(`/content-management/courses/${course.id}/preview`)
+		}
+	}
+
+	public updateModule() {
+		return async (req: Request, res: Response) => {
+			const data = {...req.body}
+
+			const course = res.locals.course
+			const module = res.locals.module
+
+			let errors = await this.moduleValidator.check(data, ['title', 'url'])
+
+			const duration = await this.getDuration(data)
+			if (typeof duration !== 'number') {
+				errors.fields.youtubeResponse = [duration]
+				errors.size += 1
+			}
+
+			if (errors.size) {
+				req.session!.sessionFlash = {errors: errors, module: module}
+				return req.session!.save(() => {
+					res.redirect(`/content-management/courses/${course.id}/module-youtube/${req.params.moduleId || ''}`)
+				})
+			}
+
+			module.title = data.title
+			module.description = data.description
+			module.optional = data.isOptional || false
+			module.url = data.url
+			module.duration = duration
+
+			await this.learningCatalogue.updateModule(course.id, module)
 
 			return res.redirect(`/content-management/courses/${course.id}/preview`)
 		}
