@@ -56,6 +56,7 @@ import {OrganisationalUnitFactory} from './csrs/model/organisationalUnitFactory'
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
+import {Booking} from './learner-record/model/booking'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
 
 log4js.configure(config.LOGGING)
@@ -107,6 +108,7 @@ export class ApplicationContext {
 	learnerRecord: LearnerRecord
 	learnerRecordConfig: LearnerRecordConfig
 	bookingFactory: BookingFactory
+	bookingValidator: Validator<Booking>
 	organisationController: OrganisationController
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
@@ -206,10 +208,13 @@ export class ApplicationContext {
 		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
 		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory)
 
+		this.bookingValidator = new Validator<Booking>(this.bookingFactory)
+
 		this.eventController = new EventController(
 			this.learningCatalogue,
 			this.learnerRecord,
 			this.eventValidator,
+			this.bookingValidator,
 			this.eventFactory,
 			this.dateRangeCommandValidator,
 			this.dateRangeValidator,

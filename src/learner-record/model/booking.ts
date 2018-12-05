@@ -1,3 +1,5 @@
+import {IsNotEmpty} from 'class-validator'
+
 export class Booking {
 	id: number
 	bookingTime: Date
@@ -6,6 +8,12 @@ export class Booking {
 	event: string
 	paymentDetails: string
 	status: Booking.Status
+
+	@IsNotEmpty({
+		groups: ['reason'],
+		message: 'attendee.validation.cancellationReason.empty',
+	})
+	cancellationReason: string
 }
 
 export namespace Booking {

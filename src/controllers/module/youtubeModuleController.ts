@@ -12,12 +12,7 @@ export class YoutubeModuleController {
 	router: Router
 	youtube: YoutubeService
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		moduleValidator: Validator<Module>,
-		moduleFactory: ModuleFactory,
-		youtube: YoutubeService
-	) {
+	constructor(learningCatalogue: LearningCatalogue, moduleValidator: Validator<Module>, moduleFactory: ModuleFactory, youtube: YoutubeService) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleValidator = moduleValidator
 		this.moduleFactory = moduleFactory

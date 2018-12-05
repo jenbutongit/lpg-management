@@ -89,6 +89,21 @@
           }
       }
   },
+    "attendee": {
+        "title": {
+            "cancel": "Cancel attendee"
+        },
+        "status": {
+            "Requested": "Pending",
+            "Confirmed": "Booked",
+            "Cancelled": "Cancelled"
+        },
+        "validation": {
+            "cancellationReason": {
+                "empty": "A reason for cancellation is required"
+            }
+        }
+    },
 	"blended": "Blended",
 	"organisations": {
 		"headers": {

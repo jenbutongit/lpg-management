@@ -17,6 +17,8 @@ import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/learner-record'
 import {Booking} from '../../../../../src/learner-record/model/booking'
 import {DateTime} from '../../../../../src/lib/dateTime'
+import {Course} from '../../../../../src/learning-catalogue/model/course'
+import {Module} from '../../../../../src/learning-catalogue/model/module'
 
 chai.use(sinonChai)
 
@@ -24,6 +26,7 @@ describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
 	let learnerRecord: LearnerRecord
+	let validator: Validator<Booking>
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -34,6 +37,7 @@ describe('EventController', function() {
 		learningCatalogue = <LearningCatalogue>{}
 		learnerRecord = <LearnerRecord>{}
 		eventValidator = <Validator<Event>>{}
+		validator = <Validator<Booking>>{}
 		eventFactory = <EventFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
 		dateRangeValidator = <Validator<DateRange>>{}
@@ -43,6 +47,7 @@ describe('EventController', function() {
 			learningCatalogue,
 			learnerRecord,
 			eventValidator,
+			validator,
 			eventFactory,
 			dateRangeCommandValidator,
 			dateRangeValidator,
@@ -74,9 +79,6 @@ describe('EventController', function() {
 			req.params.courseId = 'abc'
 			req.params.moduleId = 'def'
 
-			// const event: Event = new Event()
-			// event.dateRanges = [new DateRange()]
-
 			const dateRange = <DateRange>{}
 			const dateRangeCommand = <DateRangeCommand>{}
 			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
@@ -91,8 +93,10 @@ describe('EventController', function() {
 
 			expect(dateRangeCommandValidator.check).to.have.been.calledOnceWith(req.body)
 			expect(res.render).to.have.been.calledWith('page/course/module/events/events', {
+				courseId: 'abc',
 				event: event,
 				eventJson: JSON.stringify(event),
+				moduleId: 'def',
 			})
 		})
 
@@ -117,9 +121,11 @@ describe('EventController', function() {
 			await eventController.setDateTime()(req, res)
 
 			expect(res.render).to.have.been.calledWith('page/course/module/events/events', {
+				courseId: undefined,
 				errors: errors,
 				event: event,
 				eventJson: JSON.stringify(event),
+				moduleId: undefined,
 			})
 		})
 
@@ -151,14 +157,22 @@ describe('EventController', function() {
 			await eventController.setDateTime()(req, res)
 
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events', {
+				courseId: undefined,
 				event: event,
 				eventJson: JSON.stringify(event),
 				errors: errors,
+				moduleId: undefined,
 			})
 		})
 
 		it('should render event preview page', async function() {
 			const response: Response = mockRes()
+
+			const course: Course = new Course()
+			const module: Module = new Module()
+
+			learningCatalogue.getCourse = sinon.stub().returns(course)
+			learningCatalogue.getModule = sinon.stub().returns(module)
 
 			await eventController.getDatePreview()(mockReq(), response)
 
@@ -172,8 +186,10 @@ describe('EventController', function() {
 
 			await eventController.getLocation()(mockReq(), res)
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location', {
+				courseId: undefined,
 				event: {},
 				eventJson: undefined,
+				moduleId: undefined,
 			})
 		})
 
@@ -353,6 +369,9 @@ describe('EventController', function() {
 		const event: Event = new Event()
 		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
 
+		const course: Course = new Course()
+		const module: Module = new Module()
+
 		const getEventOverview: (request: Request, response: Response) => void = eventController.getEventOverview()
 
 		const request: Request = mockReq()
@@ -360,7 +379,9 @@ describe('EventController', function() {
 
 		response.locals.event = event
 
-		learnerRecord.getEventBookings = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns([new Booking()])
+		learningCatalogue.getCourse = sinon.stub().returns(course)
+		learningCatalogue.getModule = sinon.stub().returns(module)
 
 		await getEventOverview(request, response)
 
@@ -375,6 +396,9 @@ describe('EventController', function() {
 
 		const event: Event = new Event()
 		event.dateRanges = [dateRange]
+
+		const course: Course = new Course()
+		const module: Module = new Module()
 
 		const eventDateWithMonthAsText = DateTime.convertDate(event.dateRanges[0].date)
 
@@ -392,6 +416,8 @@ describe('EventController', function() {
 		request.params.bookingId = 99
 
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+		learningCatalogue.getCourse = sinon.stub().returns(course)
+		learningCatalogue.getModule = sinon.stub().returns(module)
 
 		await getAttendeeDetails(request, response)
 
@@ -399,10 +425,12 @@ describe('EventController', function() {
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/attendee', {
 			booking,
 			eventDateWithMonthAsText,
+			course,
+			module,
 		})
 	})
 
-	it('should change event record state to confirmed and redirect to attendee page', async function() {
+	it('should change booking status to confirmed and redirect to attendee page', async function() {
 		const booking: Booking = new Booking()
 		booking.id = 99
 		const bookings = [booking]
@@ -417,7 +445,7 @@ describe('EventController', function() {
 		request.params.eventId = 'eventId'
 		request.params.bookingId = 99
 
-		request.body.type = 'register'
+		request.body.action = 'register'
 
 		learnerRecord.updateBooking = sinon.stub()
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
@@ -427,6 +455,89 @@ describe('EventController', function() {
 		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99`)
 		expect(booking.status).to.be.equal(Booking.Status.CONFIRMED)
+	})
+
+	it('should change booking status to cancelled and redirect to event overview page', async function() {
+		const booking: Booking = new Booking()
+		booking.id = 99
+		const bookings = [booking]
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.cancelBooking()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingId = 99
+
+		request.body.reason = 'cancel'
+
+		learnerRecord.updateBooking = sinon.stub()
+		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
+		validator.check = sinon.stub().returns({})
+
+		await registerLearner(request, response)
+
+		expect(learnerRecord.getEventBookings).to.have.been.calledOnceWith('eventId')
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
+		expect(booking.status).to.be.equal(Booking.Status.CANCELLED)
+	})
+
+	it('should redirect to cancel attendee page if cancellation reason is not selected', async function() {
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
+		const registerLearner: (request: Request, response: Response) => void = eventController.cancelBooking()
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+		request.params.bookingId = 99
+
+		request.body.reason = ''
+
+		validator.check = sinon.stub().returns({fields: {reason: 'reason missing'}, size: 1})
+
+		await registerLearner(request, response)
+
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99/cancel`)
+	})
+
+	it('should render cancel attendee page', async function() {
+		let dateRange: DateRange = new DateRange()
+		dateRange.date = '2018-01-02'
+
+		const event: Event = new Event()
+		event.id = 'eventId'
+		event.dateRanges = [dateRange]
+
+		const booking: Booking = new Booking()
+		booking.id = 99
+
+		const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+		const getCancelAttendee: (request: Request, response: Response) => void = eventController.getCancelBooking()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.event = event
+		request.params.bookingId = 99
+
+		learnerRecord.getEventBookings = sinon.stub().returns([booking])
+
+		await getCancelAttendee(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/cancel-attendee', {
+			booking: booking,
+			eventDateWithMonthAsText: eventDateWithMonthAsText,
+		})
 	})
 
 	describe('Edit and update DateRange', () => {
@@ -821,6 +932,7 @@ describe('EventController', function() {
 			expect(learningCatalogue.getEvent).to.have.not.been.called
 			expect(learningCatalogue.updateEvent).to.not.have.been.called
 			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				courseId: courseId,
 				errors: errors,
 				day: request.body.day,
 				month: request.body.month,
@@ -829,6 +941,7 @@ describe('EventController', function() {
 				startMinutes: request.body.startMinutes,
 				endHours: request.body.endHours,
 				endMinutes: request.body.endMinutes,
+				moduleId: moduleId,
 			})
 		})
 
@@ -884,6 +997,7 @@ describe('EventController', function() {
 			expect(dateRangeCommand.asDateRange).to.have.been.calledOnce
 			expect(dateRangeValidator.check).to.have.been.calledOnceWith(dateRange)
 			expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-dateRange-edit', {
+				courseId: courseId,
 				errors: errors,
 				day: request.body.day,
 				month: request.body.month,
@@ -892,6 +1006,7 @@ describe('EventController', function() {
 				startMinutes: request.body.startMinutes,
 				endHours: request.body.endHours,
 				endMinutes: request.body.endMinutes,
+				moduleId: moduleId,
 			})
 		})
 	})
