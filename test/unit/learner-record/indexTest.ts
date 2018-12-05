@@ -61,6 +61,7 @@ describe('Leaner Record Tests', () => {
 
 		expect(restService.patch).to.have.been.calledOnceWith('/event/test-event-id/booking/99', {
 			status: booking.status,
+			cancellationReason: undefined,
 		})
 	})
 
