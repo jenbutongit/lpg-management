@@ -12,7 +12,6 @@ import {IdentityService} from '../../../identity/identityService'
 import {LearnerRecord} from '../../../learner-record'
 import {InviteFactory} from '../../../learner-record/model/factory/inviteFactory'
 import * as config from '../../../config'
-import * as asyncHandler from 'express-async-handler'
 import {Booking} from '../../../learner-record/model/booking'
 import * as asyncHandler from 'express-async-handler'
 import {Validate} from '../../formValidator'
@@ -62,15 +61,6 @@ export class EventController implements FormController {
 
 	/* istanbul ignore next */
 	private setRouterPaths() {
-		this.router.param(
-			'courseId',
-			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
-				const date = new Date(Date.now())
-				res.locals.exampleYear = date.getFullYear() + 1
-				next()
-			})
-		)
-
 		this.router.param(
 			'eventId',
 			asyncHandler(async (req: Request, res: Response, next: NextFunction, eventId: string) => {
@@ -137,7 +127,7 @@ export class EventController implements FormController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.cancelEvent()))
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
-    
+
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite', asyncHandler(this.inviteLearner()))
 	}
 
@@ -482,12 +472,6 @@ export class EventController implements FormController {
 			return req.session!.save(() => {
 				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 			})
-		}
-	}
-
-	public cancelEvent() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/cancel')
 		}
 	}
 
