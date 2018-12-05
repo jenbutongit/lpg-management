@@ -7,8 +7,8 @@ import {OrganisationalUnitFactory} from '../csrs/model/organisationalUnitFactory
 import {FormController} from './formController'
 import {Validator} from '../learning-catalogue/validator/validator'
 import {Validate} from './formValidator'
-import {OrganisationalUnitService} from "../csrs/service/organisationalUnitService"
-import * as log4js from "log4js"
+import {OrganisationalUnitService} from '../csrs/service/organisationalUnitService'
+import * as log4js from 'log4js'
 
 const logger = log4js.getLogger('controllers/OrganisationController')
 
@@ -86,7 +86,7 @@ export class OrganisationController implements FormController {
 
 	@Validate({
 		fields: ['all'],
-		redirect: '/content-management/organisation',
+		redirect: '/content-management/organisations',
 	})
 	public createOrganisation() {
 		return async (request: Request, response: Response) => {
@@ -116,7 +116,7 @@ export class OrganisationController implements FormController {
 		fields: ['all'],
 		redirect: '/content-management/organisations/:organisationalUnitId',
 	})
-	public updateOrganisation(){
+	public updateOrganisation() {
 		return async (request: Request, response: Response) => {
 			let organisationalUnit = response.locals.organisationalUnit
 
@@ -145,13 +145,13 @@ export class OrganisationController implements FormController {
 		}
 	}
 
-	public confirmDelete(){
+	public confirmDelete() {
 		return async (request: Request, response: Response) => {
 			response.render('page/organisation/delete-organisation')
 		}
 	}
 
-	public deleteOrganisation(){
+	public deleteOrganisation() {
 		return async (request: Request, response: Response) => {
 			const organisationalUnit = response.locals.organisationalUnit
 
@@ -159,7 +159,7 @@ export class OrganisationController implements FormController {
 
 			request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
 
-			response.redirect('/content-management/organisations')
+			response.redirect('/content-management/organisations/manage')
 		}
 	}
 }

@@ -5,11 +5,7 @@
 {% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}
-{% if organisationalUnit.id %}
-    {{ i18n.organisations.title.editAnOrganisation }} - {{ i18n.proposition_name }}
-{% else %}
-    {{ i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}
-{% endif %}
+    {{ i18n.organisations.title.editAnOrganisation if organisationalUnit else i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}
 {% endblock %}
 
 {% set banner = true %}
@@ -22,11 +18,7 @@
 {% set form = sessionFlash.form %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            {% if organisationalUnit.id %}
-                <h1 class="govuk-heading-l">{{ i18n.organisations.title.editAnOrganisation }}</h1>
-            {% else %}
-                <h1 class="govuk-heading-l">{{ i18n.organisations.title.addANewOrganisation }}</h1>
-            {% endif %}
+            <h1 class="govuk-heading-l">{{ i18n.organisations.title.editAnOrganisation if organisationalUnit else i18n.organisations.title.addANewOrganisation }}</h1>
         </div>
     </div>
 <div class="govuk-grid-row">
@@ -45,7 +37,7 @@
                                     {% set selected='selected' %}
                                 {% else %}
                                     {% set selected='' %}
-                            {% endif %}
+                                {% endif %}
                                 <option value={{ key }} {{ selected }}>{{ item }}</option>
                             {% endfor %}
                         </select>

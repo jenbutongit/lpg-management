@@ -11,7 +11,7 @@ import {OrganisationalUnit} from '../../../src/csrs/model/organisationalUnit'
 import {PageResults} from '../../../src/learning-catalogue/model/pageResults'
 import {OrganisationalUnitFactory} from '../../../src/csrs/model/organisationalUnitFactory'
 import {Validator} from '../../../src/learning-catalogue/validator/validator'
-import {OrganisationalUnitService} from "../../../src/csrs/service/organisationalUnitService"
+import {OrganisationalUnitService} from '../../../src/csrs/service/organisationalUnitService'
 
 chai.use(sinonChai)
 
@@ -240,6 +240,6 @@ describe('Organisation Controller Tests', function() {
 		await deleteOrganisation(req, res)
 
 		expect(csrs.deleteOrganisationalUnit).to.have.been.calledOnceWith(organisationalUnit.id)
-		expect(res.redirect).to.have.been.calledOnceWith('/content-management/organisations')
+		expect(res.redirect).to.have.been.calledOnceWith('/content-management/organisations/manage')
 	})
 })

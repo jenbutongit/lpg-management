@@ -2,10 +2,10 @@
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n.organisations.title.deleteAnOrganisation }} - {{ i18n.proposition_name }}{% endblock %}
+{% block pageTitle %}{{ i18n.organisations.title.removeAnOrganisation }} - {{ i18n.proposition_name }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/organisations/{{ organisationalUnit.id }}/overview" %}
+{% set backButton = "/content-management/organisations/" + organisationalUnit.id + "/overview" %}
 
 {% block content %}
 
@@ -19,14 +19,14 @@
         {% endif %}
         <p class="govuk-body">If you remove this organisation, it will be permanently deleted from the service.</p>
         <form action="/content-management/organisations/{{ organisationalUnit.id }}/delete" method="post">
-            <div class="button-container">
+            <fieldset class="govuk-fieldset">
                 {{ govukButton({
                     text: "Remove organisation",
                     classes: "button-red"
                 }) }}
-            </div>
+            </fieldset>
         </form>
-        <a class="cancel-button govuk-body govuk-link" href="/content-management/organisations/{{ organisationalUnit.id }}/overview">Cancel</a>
+        <a class="cancel-button govuk-link" href="/content-management/organisations/{{ organisationalUnit.id }}/overview">Cancel</a>
     </div>
 </div>
 
