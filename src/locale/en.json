@@ -74,6 +74,21 @@
 			"cancel": "Cancel event"
 		}
 	},
+  "venue": {
+      "validation": {
+          "minCapacity": {
+              "empty": "Minimum capacity is required",
+              "positive": "Minimum capacity must be positive"
+          },
+          "capacity": {
+              "empty": "Capacity is required",
+              "positive": "Capacity must be positive"
+          },
+          "location": {
+              "empty": "Location is required"
+          }
+      }
+  },
     "attendee": {
         "title": {
             "cancel": "Cancel attendee"

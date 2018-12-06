@@ -65,6 +65,7 @@ describe('ModuleFactory tests', () => {
 					address: 'SE1',
 					capacity: 99,
 					minCapacity: 10,
+					availability: 99,
 				},
 				dateRanges: [{date: '2019-01-01', startTime: '09:00:00', endTime: '17:00:00'}],
 			},
