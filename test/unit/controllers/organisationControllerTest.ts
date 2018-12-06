@@ -69,11 +69,9 @@ describe('Organisation Controller Tests', function() {
 		let getOrganisationalUnit = sinon.stub().returns(Promise.resolve(organisationalUnit))
 		organisationalService.getOrganisationalUnit = getOrganisationalUnit
 
-		res.locals.organisationalUnit = organisationalUnit
-
 		await getOrganisation(req, res)
 
-		expect(res.render).to.have.been.calledOnceWith('page/organisation/organisation-overview', {organisationalUnit: organisationalUnit})
+		expect(res.render).to.have.been.calledOnceWith('page/organisation/organisation-overview')
 	})
 
 	it('should call organisation page with organisations typeahead list', async function() {

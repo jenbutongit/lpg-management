@@ -153,8 +153,12 @@ export class AudienceController {
 
 	setOrganisation() {
 		return async (req: Request, res: Response) => {
-			res.locals.audience.departments = req.body['parent']
+			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : req.body['parent']
+
+			res.locals.audience.departments = departments
+
 			await this.learningCatalogue.updateCourse(res.locals.course)
+
 			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
 	}
@@ -165,6 +169,13 @@ export class AudienceController {
 			await this.learningCatalogue.updateCourse(res.locals.course)
 			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
+	}
+
+	private async getAllOrganisationCodes(): Promise<string[]> {
+		const organisations = await this.csrsService.getOrganisations()
+		return organisations._embedded.organisationalUnits.map((org: any) => {
+			return org.code
+		})
 	}
 
 	deleteAudienceConfirmation() {

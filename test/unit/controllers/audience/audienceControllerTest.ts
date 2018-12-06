@@ -175,7 +175,7 @@ describe('AudienceController', () => {
 
 	describe('#getOrganisation', () => {
 		it('should render add-organisation page', async function() {
-			csrsService.getOrganisations = sinon.stub()
+			csrs.listOrganisationalUnitsForTypehead = sinon.stub()
 			await audienceController.getOrganisation()(req, res)
 
 			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-organisation')
@@ -184,24 +184,28 @@ describe('AudienceController', () => {
 
 	describe('#setOrganisation', () => {
 		it('should update course audience with selected organisation code', async function() {
+			// res.locals.audience.departments = req.body['parent']
+			// await this.learningCatalogue.updateCourse(res.locals.course)
+			// res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+
 			req.params.audienceId = audienceId
 
 			const hmrcName = 'HM Revenue & Customs'
+			const hmrcCode = 'hmrc'
+
 			req.body = {organisation: 'selected', 'input-autocomplete': hmrcName}
 
-			const audience = {id: audienceId, departments: []}
-			res.locals.course = {audiences: [audience]}
+			const audience = {id: audienceId, departments: [hmrcCode]}
 			res.locals.audience = audience
 
-			const hmrcCode = 'hmrc'
-			csrsService.getOrganisations = sinon.stub().returns({_embedded: {organisationalUnits: [{code: hmrcCode, name: hmrcName}]}})
+			const course = {audiences: [audience]}
+			res.locals.course = course
+
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setOrganisation()(req, res)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, departments: [hmrcCode]}],
-			})
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
