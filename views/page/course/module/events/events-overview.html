@@ -13,6 +13,7 @@
 {% block content %}
 
     {% set emailAddressFoundMessage = sessionFlash.emailAddressFoundMessage %}
+    {% set eventCancelledMessage = sessionFlash.eventCancelledMessage %}
     {% set emailAddress = sessionFlash.emailAddress %}
 
     {% if emailAddressFoundMessage %}
@@ -24,6 +25,14 @@
         <div class="panel govuk-panel govuk-panel--confirmation {{panelError}}">
             <div class="govuk-panel__body custom-panel">
                 <p class="govuk-body"><strong>{{ emailAddress }}</strong>{{ i18n[emailAddressFoundMessage] }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if eventCancelledMessage %}
+        <div class="panel govuk-panel govuk-panel--confirmation">
+            <div class="govuk-panel__body custom-panel">
+                <p class="govuk-body">This event on <strong>{{(event.dateRanges[0].date) | dateWithMonthAsText}}</strong> for <strong>{{course.title}}</strong> has been cancelled</p>
             </div>
         </div>
     {% endif %}

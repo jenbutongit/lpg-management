@@ -447,9 +447,17 @@ export class EventController implements FormController {
 			let event = res.locals.event
 			event.status = Event.Status.CANCELLED
 
-			await this.learnerRecord.cancelEvent(req.params.eventId, event, req.body.cancellationReason)
+			try {
+				await this.learnerRecord.cancelEvent(req.params.eventId, event, req.body.cancellationReason)
+			} catch (e) {}
 
-			res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
+			req.session!.sessionFlash = {
+				eventCancelledMessage: 'event_cancelled_message',
+			}
+
+			return req.session!.save(() => {
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
+			})
 		}
 	}
 
