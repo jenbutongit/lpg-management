@@ -57,7 +57,7 @@ describe('Organisation Controller Tests', function() {
 
 		await getOrganisations(req, res)
 
-		expect(res.render).to.have.been.calledOnceWith('page/organisation/manage-organisations', {organisationalUnits: pageResults})
+		expect(res.render).to.have.been.calledOnceWith('page/organisation/manage-organisations', pageResults)
 	})
 
 	it('should call organisation overview page with organisation', async function() {
