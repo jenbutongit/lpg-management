@@ -57,7 +57,7 @@ import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
-import {OrganisationalUnitService} from "./csrs/service/organisationalUnitService"
+import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
 
 log4js.configure(config.LOGGING)
 
@@ -218,9 +218,9 @@ export class ApplicationContext {
 		)
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
-		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
-
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
+
+		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService, this.csrs)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
 		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory)

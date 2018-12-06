@@ -14,6 +14,7 @@ import {CourseService} from '../../../../src/lib/courseService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 import moment = require('moment')
+import {Csrs} from '../../../../src/csrs'
 
 chai.use(sinonChai)
 
@@ -24,6 +25,7 @@ describe('AudienceController', () => {
 	let csrsService: CsrsService
 	let learningCatalogue: LearningCatalogue
 	let courseService: CourseService
+	let csrs: Csrs
 	let req: Request
 	let res: Response
 
@@ -36,13 +38,8 @@ describe('AudienceController', () => {
 		courseService = new CourseService(learningCatalogue)
 		audienceFactory = new AudienceFactory()
 		audienceValidator = new Validator(audienceFactory)
-		audienceController = new AudienceController(
-			learningCatalogue,
-			audienceValidator,
-			audienceFactory,
-			courseService,
-			csrsService
-		)
+		csrs = <Csrs>{}
+		audienceController = new AudienceController(learningCatalogue, audienceValidator, audienceFactory, courseService, csrsService, csrs)
 
 		req = mockReq()
 		req.session!.save = callback => {
@@ -135,9 +132,7 @@ describe('AudienceController', () => {
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash).to.be.undefined
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
-			expect(res.redirect).to.have.been.calledWith(
-				`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`)
 		})
 	})
 
@@ -199,9 +194,7 @@ describe('AudienceController', () => {
 			res.locals.audience = audience
 
 			const hmrcCode = 'hmrc'
-			csrsService.getOrganisations = sinon
-				.stub()
-				.returns({_embedded: {organisationalUnits: [{code: hmrcCode, name: hmrcName}]}})
+			csrsService.getOrganisations = sinon.stub().returns({_embedded: {organisationalUnits: [{code: hmrcCode, name: hmrcName}]}})
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setOrganisation()(req, res)
@@ -209,9 +202,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, departments: [hmrcCode]}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should update course audience with all organisation codes if "all" is selected', async function() {
@@ -225,10 +216,7 @@ describe('AudienceController', () => {
 			const dwpCode = 'dwp'
 			csrsService.getOrganisations = sinon.stub().returns({
 				_embedded: {
-					organisationalUnits: [
-						{code: hmrcCode, name: 'HM Revenue & Customs'},
-						{code: dwpCode, name: 'Department for Work and Pensions'},
-					],
+					organisationalUnits: [{code: hmrcCode, name: 'HM Revenue & Customs'}, {code: dwpCode, name: 'Department for Work and Pensions'}],
 				},
 			})
 			learningCatalogue.updateCourse = sinon.stub()
@@ -238,9 +226,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, departments: [hmrcCode, dwpCode]}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -258,9 +244,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, departments: []}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -290,9 +274,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, areasOfWork: [aowHumanResources]}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -310,9 +292,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, areasOfWork: []}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -341,9 +321,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, grades: [gradeCode]}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -361,9 +339,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, grades: []}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -392,9 +368,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, interests: [interestCode]}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -412,9 +386,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, interests: []}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -440,9 +412,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, requiredBy: moment('2018-12-16').toDate()}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should error when deadline date is in the past', async () => {
@@ -455,9 +425,7 @@ describe('AudienceController', () => {
 			await audienceController.setDeadline()(req, res)
 
 			expect(req.session!.sessionFlash.errors).is.not.undefined
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/deadline`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/deadline`)
 		})
 	})
 
@@ -515,9 +483,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, eventId: eventId}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 
@@ -535,9 +501,7 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, eventId: undefined}],
 			})
-			expect(res.redirect).to.have.been.calledOnceWith(
-				`/content-management/courses/${courseId}/audiences/${audienceId}/configure`
-			)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 	})
 })

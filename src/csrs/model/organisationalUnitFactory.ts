@@ -13,7 +13,7 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.name = data.name
 		organisationalUnit.code = data.code
 		organisationalUnit.paymentMethods = data.paymentMethods
-		organisationalUnit.subOrgs = (data.subOrgs || []).map(this.create)
+		organisationalUnit.children = (data.children || []).map(this.create)
 		organisationalUnit.parent = data.parent
 		organisationalUnit.abbreviation = data.abbreviation
 		organisationalUnit.uri = `${config.REGISTRY_SERVICE_URL.url}/organisationalUnits/${organisationalUnit.id}`

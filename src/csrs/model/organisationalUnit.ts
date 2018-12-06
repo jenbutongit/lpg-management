@@ -19,7 +19,7 @@ export class OrganisationalUnit {
 
 	paymentMethods: string[]
 
-	subOrgs: OrganisationalUnit[]
+	children: OrganisationalUnit[]
 
 	parent: string
 

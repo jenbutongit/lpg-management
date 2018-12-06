@@ -68,11 +68,7 @@ export class OrganisationController implements FormController {
 
 	public organisationOverview() {
 		return async (request: Request, response: Response) => {
-			const organisationalUnit = response.locals.organisationalUnit
-
-			logger.debug(`Getting organisation: ${organisationalUnit.id}`)
-
-			response.render('page/organisation/organisation-overview', {organisationalUnit: organisationalUnit})
+			response.render('page/organisation/organisation-overview')
 		}
 	}
 

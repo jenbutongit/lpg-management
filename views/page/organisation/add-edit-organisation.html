@@ -32,13 +32,13 @@
                         <select name="parent" id="parent">
                             <option value=""></option>
                             {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
-                            {% for key, item in organisationalUnits %}
-                                {% if parent === key %}
+                            {% for key in organisationalUnits %}
+                                {% if parent === key.href %}
                                     {% set selected='selected' %}
                                 {% else %}
                                     {% set selected='' %}
                                 {% endif %}
-                                <option value={{ key }} {{ selected }}>{{ item }}</option>
+                            <option value={{ key.href }} {{ selected }}>{{ key.formattedName }}</option>
                             {% endfor %}
                         </select>
                     </div>
