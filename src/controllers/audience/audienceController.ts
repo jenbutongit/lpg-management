@@ -153,7 +153,7 @@ export class AudienceController {
 
 	setOrganisation() {
 		return async (req: Request, res: Response) => {
-			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : req.body['parent']
+			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : [req.body['parent']]
 
 			res.locals.audience.departments = departments
 
