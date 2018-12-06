@@ -124,7 +124,10 @@ export class EventController implements FormController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', asyncHandler(this.getAttendeeDetails()))
 
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', asyncHandler(this.updateBooking()))
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.cancelEvent()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.setCancelEvent()))
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
 
@@ -436,6 +439,17 @@ export class EventController implements FormController {
 	public cancelEvent() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/module/events/cancel')
+		}
+	}
+
+	public setCancelEvent() {
+		return async (req: Request, res: Response) => {
+			let event = res.locals.event
+			event.status = Event.Status.CANCELLED
+
+			await this.learnerRecord.cancelEvent(req.params.eventId, event, req.body.cancellationReason)
+
+			res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 		}
 	}
 

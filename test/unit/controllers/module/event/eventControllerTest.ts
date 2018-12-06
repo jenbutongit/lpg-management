@@ -240,6 +240,7 @@ describe('EventController', function() {
 				id: 'event-id',
 				venue: venue,
 				dateRanges: [],
+				status: Event.Status.ACTIVE,
 			})
 
 			await eventController.setLocation()(req, res)
@@ -746,6 +747,7 @@ describe('EventController', function() {
 					availability: 5,
 				},
 				dateRanges: [],
+				status: Event.Status.ACTIVE,
 			}
 			learningCatalogue.getEvent = sinon.stub().returns(event)
 			learningCatalogue.updateEvent = sinon.stub()
