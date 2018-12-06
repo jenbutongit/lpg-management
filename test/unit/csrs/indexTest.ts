@@ -61,7 +61,7 @@ describe('CSRS tests', () => {
 
 		await csrs.getOrganisationalUnit(organsationalUnit.id)
 
-		return expect(organisationalUnitService.get).to.have.been.calledOnceWith(`/organisationalUnits/${organsationalUnit.id}`	)
+		return expect(organisationalUnitService.get).to.have.been.calledOnceWith(`/organisationalUnits/${organsationalUnit.id}`)
 	})
 
 	it('should call organisationalUnitService when deleting an organisational unit', async () => {
@@ -72,6 +72,6 @@ describe('CSRS tests', () => {
 
 		await csrs.deleteOrganisationalUnit(organisationalUnit.id)
 
-		return expect(organisationalUnitService.delete).to.have.been.calledOnceWith(`/organisationalUnits/${organisationalUnit.id}`	)
+		return expect(organisationalUnitService.delete).to.have.been.calledOnceWith(`/organisationalUnits/${organisationalUnit.id}`)
 	})
 })

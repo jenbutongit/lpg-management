@@ -15,7 +15,6 @@ import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 
 Properties.initialize()
-
 const logger = log4js.getLogger('server')
 const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')

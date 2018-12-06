@@ -3,10 +3,10 @@ import * as sinonChai from 'sinon-chai'
 import * as sinon from 'sinon'
 import * as chai from 'chai'
 import {expect} from 'chai'
-import {Csrs} from "../../../../src/csrs"
-import {OrganisationalUnitFactory} from "../../../../src/csrs/model/organisationalUnitFactory"
-import {OrganisationalUnitService} from "../../../../src/csrs/service/organisationalUnitService"
-import {OrganisationalUnit} from "../../../../src/csrs/model/organisationalUnit"
+import {Csrs} from '../../../../src/csrs'
+import {OrganisationalUnitFactory} from '../../../../src/csrs/model/organisationalUnitFactory'
+import {OrganisationalUnitService} from '../../../../src/csrs/service/organisationalUnitService'
+import {OrganisationalUnit} from '../../../../src/csrs/model/organisationalUnit'
 
 chai.use(sinonChai)
 
@@ -29,17 +29,23 @@ describe('OrganisationalUnitService tests', () => {
 		const parent: OrganisationalUnit = new OrganisationalUnit()
 		parent.id = '2'
 
-		const organisation = sinon.stub().withArgs(uri).resolves(organisationalUnit)
+		const organisation = sinon
+			.stub()
+			.withArgs(uri)
+			.resolves(organisationalUnit)
 		csrs.getOrganisationalUnit = organisation
 
-		const parentOrg = sinon.stub().withArgs(`${uri}/parent`).resolves(parent)
+		const parentOrg = sinon
+			.stub()
+			.withArgs(`${uri}/parent`)
+			.resolves(parent)
 		csrs.getOrganisationalUnit = parentOrg
 
 		const getOrganisationalUnit = sinon.stub().returns(organisationalUnit)
 		organisationalUnitFactory.create = getOrganisationalUnit
 
 		const data = {
-			id: '1'
+			id: '1',
 		}
 
 		const result = await organisationalUnitService.getOrganisationalUnit(uri)

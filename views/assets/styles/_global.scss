@@ -105,6 +105,14 @@ ul {
 		background-color: $panel;
 	}
 
+    &.error {
+      background-color: $error-message;
+    }
+
+    &.warning {
+      background-color: govuk-colour("orange");
+    }
+
 	.govuk-heading-s {
 		color: $white;
 		margin-bottom: 0;

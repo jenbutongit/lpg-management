@@ -1,11 +1,10 @@
-import {OrganisationalUnitFactory} from "../model/organisationalUnitFactory"
-import {Csrs} from "../index"
-import * as log4js from "log4js"
+import {OrganisationalUnitFactory} from '../model/organisationalUnitFactory'
+import {Csrs} from '../index'
+import * as log4js from 'log4js'
 
 const logger = log4js.getLogger('csrs/service/OrganisationalUnitService')
 
-export class OrganisationalUnitService{
-
+export class OrganisationalUnitService {
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 
@@ -14,7 +13,7 @@ export class OrganisationalUnitService{
 		this.organisationalUnitFactory = organisationalUnitFactory
 	}
 
-	async getOrganisationalUnit(uri: string){
+	async getOrganisationalUnit(uri: string) {
 		let organisationalUnit: any
 		let parent: any
 
@@ -24,7 +23,7 @@ export class OrganisationalUnitService{
 
 		parent = await this.csrs.getOrganisationalUnit(`${organisationalUnit.id}/parent`).catch(error => {
 			if (error.response.status == 404) {
-				logger.debug(`Organisation ${organisationalUnit.id} has no parent`);
+				logger.debug(`Organisation ${organisationalUnit.id} has no parent`)
 			} else {
 				throw error
 			}
@@ -35,7 +34,7 @@ export class OrganisationalUnitService{
 			name: organisationalUnit.name,
 			code: organisationalUnit.code,
 			abbreviation: organisationalUnit.abbreviation,
-			parent: parent
+			parent: parent,
 		}
 
 		return this.organisationalUnitFactory.create(data)
