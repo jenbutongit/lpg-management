@@ -62,7 +62,7 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnits()
 
-			response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
+			response.render('page/organisation/manage-organisations', organisationalUnits)
 		}
 	}
 
@@ -76,7 +76,7 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnitsForTypehead()
 
-			response.render('page/organisation/add-edit-organisation', {organisationalUnits: organisationalUnits})
+			response.render('page/organisation/add-edit-organisation', organisationalUnits)
 		}
 	}
 
