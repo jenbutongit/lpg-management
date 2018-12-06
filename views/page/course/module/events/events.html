@@ -8,7 +8,7 @@
 {% block pageTitle %}{{ i18n['event_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/courses/" + course.id + "/overview" %}
+{% set backButton = "/content-management/courses/" + courseId + "/overview" %}
 
 {% block content %}
 
@@ -38,7 +38,7 @@
                 </div>
             {% endif %}
 
-            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}" method="post">
+            <form action="/content-management/courses/{{courseId}}/modules/{{moduleId}}/events/{{event.id}}" method="post">
                 <input type="hidden" name="eventJson" value="{{eventJson}}" />
                 {% if errors.fields.minDate or errors.fields.dateRanges or errors.fields.invalidDate %}
                     {{ govukDateInput({
@@ -118,17 +118,18 @@
             </form>
 
             {% if event.dateRanges and event.dateRanges.length > 0 %}
-            <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/location/create" method="post">
-                <input type="hidden" name="eventJson" value="{{eventJson}}" />
-                <div class="button-container">
-                    {{ govukButton({
-                    text: "Continue",
-                    classes: "govuk-button"
-                    }) }}
-                </div>
+            <form action="/content-management/courses/{{courseId}}/modules/{{moduleId}}/events/location/create" method="post">
+            <input type="hidden" name="eventJson" value="{{eventJson}}" />
+
+            <div class="button-container">
+                {{ govukButton({
+                text: "Continue",
+                classes: "govuk-button"
+                }) }}
+            </div>
             </form>
             {% endif %}
-            <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
+            <a href="/content-management/courses/{{courseId}}/overview">Cancel</a>
         </div>
     </div>
 {% endblock %}

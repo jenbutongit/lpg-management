@@ -45,12 +45,7 @@ describe('YoutubeService Module Controller Test', function() {
 		moduleFactory = <ModuleFactory>{}
 		youtubeService = <YoutubeService>{}
 
-		youtubeModuleController = new YoutubeModuleController(
-			learningCatalogue,
-			moduleValidator,
-			moduleFactory,
-			youtubeService
-		)
+		youtubeModuleController = new YoutubeModuleController(learningCatalogue, moduleValidator, moduleFactory, youtubeService)
 
 		req = mockReq()
 		res = mockRes()

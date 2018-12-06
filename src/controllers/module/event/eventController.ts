@@ -1,6 +1,6 @@
 import {LearningCatalogue} from '../../../learning-catalogue/index'
 import {Validator} from '../../../learning-catalogue/validator/validator'
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {EventFactory} from '../../../learning-catalogue/model/factory/eventFactory'
 import {Event} from '../../../learning-catalogue/model/event'
 import * as moment from 'moment'
@@ -10,10 +10,16 @@ import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFac
 import {DateTime} from '../../../lib/dateTime'
 import {LearnerRecord} from '../../../learner-record'
 import {Booking} from '../../../learner-record/model/booking'
+import * as asyncHandler from 'express-async-handler'
+import {Validate} from '../../formValidator'
+import {FormController} from '../../formController'
+import {Course} from '../../../learning-catalogue/model/course'
+import {Module} from '../../../learning-catalogue/model/module'
 
-export class EventController {
+export class EventController implements FormController {
 	learningCatalogue: LearningCatalogue
 	learnerRecord: LearnerRecord
+	validator: Validator<Booking>
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
@@ -25,6 +31,7 @@ export class EventController {
 		learningCatalogue: LearningCatalogue,
 		learnerRecord: LearnerRecord,
 		eventValidator: Validator<Event>,
+		bookingValidator: Validator<Booking>,
 		eventFactory: EventFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
 		dateRangeValidator: Validator<DateRange>,
@@ -33,6 +40,7 @@ export class EventController {
 		this.learningCatalogue = learningCatalogue
 		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
+		this.validator = bookingValidator
 		this.eventFactory = eventFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
 		this.dateRangeValidator = dateRangeValidator
@@ -44,79 +52,63 @@ export class EventController {
 
 	/* istanbul ignore next */
 	private setRouterPaths() {
-		this.router.param('courseId', async (req, res, next, courseId) => {
-			const course = await this.learningCatalogue.getCourse(courseId)
-
-			if (course) {
-				res.locals.course = course
+		this.router.param(
+			'courseId',
+			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
+				const date = new Date(Date.now())
+				res.locals.exampleYear = date.getFullYear() + 1
 				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
+			})
+		)
 
-		this.router.param('moduleId', async (req, res, next, moduleId) => {
-			const module = await this.learningCatalogue.getModule(res.locals.course.id, moduleId)
+		this.router.param(
+			'eventId',
+			asyncHandler(async (req: Request, res: Response, next: NextFunction, eventId: string) => {
+				const event = await this.learningCatalogue.getEvent(req.params.courseId, req.params.moduleId, eventId)
+				if (event) {
+					res.locals.event = event
+					res.locals.courseId = req.params.courseId
+					res.locals.moduleId = req.params.moduleId
+					next()
+				} else {
+					res.sendStatus(404)
+				}
+			})
+		)
 
-			if (module) {
-				res.locals.module = module
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/create', asyncHandler(this.getLocation()))
 
-		this.router.param('eventId', async (req, res, next, eventId) => {
-			const event = await this.learningCatalogue.getEvent(res.locals.course.id, res.locals.module.id, eventId)
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', asyncHandler(this.editLocation()))
 
-			if (event) {
-				res.locals.event = event
-				next()
-			} else {
-				res.sendStatus(404)
-			}
-		})
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/', asyncHandler(this.setLocation()))
 
-		this.router.param('courseId', async (req, res, next, courseId) => {
-			const date = new Date(Date.now())
-			res.locals.exampleYear = date.getFullYear() + 1
-			next()
-		})
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId', asyncHandler(this.updateLocation()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/create', this.getLocation())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?', asyncHandler(this.getDatePreview()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId', asyncHandler(this.getEventOverview()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', this.editLocation())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', asyncHandler(this.getDateTime()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', asyncHandler(this.setDateTime()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/', this.setLocation())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', asyncHandler(this.editDateRange()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId', this.updateLocation())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', asyncHandler(this.dateRangeOverview()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?', this.getDatePreview())
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId', this.getEventOverview())
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', asyncHandler(this.addDateRange()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', this.getDateTime())
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', this.setDateTime())
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', asyncHandler(this.updateDateRange()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', this.editDateRange())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', asyncHandler(this.getAttendeeDetails()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', this.dateRangeOverview())
-
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', this.addDateRange())
-
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', this.updateDateRange())
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.cancelEvent())
-
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', this.updateDateRange())
-
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', this.getAttendeeDetails())
-
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', this.updateBooking())
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.cancelEvent())
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', asyncHandler(this.updateBooking()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.cancelEvent()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
 	}
 
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events')
+			response.render('page/course/module/events/events', {courseId: request.params.courseId, moduleId: request.params.moduleId})
 		}
 	}
 
@@ -131,6 +123,8 @@ export class EventController {
 			if (errors.size) {
 				response.render('page/course/module/events/events', {
 					event: event,
+					courseId: request.params.courseId,
+					moduleId: request.params.moduleId,
 					eventJson: JSON.stringify(event),
 					errors: errors,
 				})
@@ -144,6 +138,8 @@ export class EventController {
 					const event = data.eventJson ? JSON.parse(data.eventJson) : this.eventFactory.create({})
 					response.render('page/course/module/events/events', {
 						event: event,
+						courseId: request.params.courseId,
+						moduleId: request.params.moduleId,
 						eventJson: JSON.stringify(event),
 						errors: errors,
 					})
@@ -153,6 +149,8 @@ export class EventController {
 
 					response.render('page/course/module/events/events', {
 						event: event,
+						courseId: request.params.courseId,
+						moduleId: request.params.moduleId,
 						eventJson: JSON.stringify(event),
 					})
 				}
@@ -214,6 +212,8 @@ export class EventController {
 					startMinutes: request.body.startMinutes,
 					endHours: request.body.endHours,
 					endMinutes: request.body.endMinutes,
+					courseId: courseId,
+					moduleId: moduleId,
 				})
 			} else {
 				const dateRangeCommand = this.dateRangeCommandFactory.create(data)
@@ -230,6 +230,8 @@ export class EventController {
 						startMinutes: request.body.startMinutes,
 						endHours: request.body.endHours,
 						endMinutes: request.body.endMinutes,
+						courseId: courseId,
+						moduleId: moduleId,
 					})
 				} else {
 					const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
@@ -300,8 +302,11 @@ export class EventController {
 	}
 
 	public getDatePreview() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/events-preview')
+		return async (req: Request, res: Response) => {
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+
+			res.render('page/course/module/events/events-preview', {course: course, module: module})
 		}
 	}
 
@@ -310,6 +315,8 @@ export class EventController {
 			res.render('page/course/module/events/event-location', {
 				event: JSON.parse(req.body.eventJson || '{}'),
 				eventJson: req.body.eventJson,
+				courseId: req.params.courseId,
+				moduleId: req.params.moduleId,
 			})
 		}
 	}
@@ -382,17 +389,35 @@ export class EventController {
 
 	public getEventOverview() {
 		return async (req: Request, res: Response) => {
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
 			const bookings = await this.learnerRecord.getEventBookings(event.id)
+			const activeBookings = bookings.filter((booking: Booking) => booking.status != Booking.Status.CANCELLED)
 
-			res.render('page/course/module/events/events-overview', {bookings, eventDateWithMonthAsText})
+			res.render('page/course/module/events/events-overview', {
+				bookings: activeBookings,
+				eventDateWithMonthAsText,
+				course: course,
+				module: module,
+			})
+		}
+	}
+
+	public cancelEvent() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/module/events/cancel')
 		}
 	}
 
 	public getAttendeeDetails() {
 		return async (req: Request, res: Response) => {
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+
 			const event = res.locals.event
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
@@ -400,7 +425,12 @@ export class EventController {
 			const bookingId = req.params.bookingId
 			const booking = this.findBooking(bookings, bookingId)
 
-			res.render('page/course/module/events/attendee', {booking, eventDateWithMonthAsText})
+			res.render('page/course/module/events/attendee', {
+				booking,
+				eventDateWithMonthAsText,
+				course: course,
+				module: module,
+			})
 		}
 	}
 
@@ -411,16 +441,47 @@ export class EventController {
 			const booking = this.findBooking(bookings, bookingId)
 
 			booking.status = Booking.Status.CONFIRMED
+			await this.learnerRecord.updateBooking(req.params.eventId, booking)
 
-			this.learnerRecord.updateBooking(req.params.eventId, booking)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${req.params.eventId}/attendee/${req.params.bookingId}`)
+			return res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${req.params.eventId}/attendee/${req.params.bookingId}`)
 		}
 	}
 
-	public cancelEvent() {
-		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/cancel')
+	public getCancelBooking() {
+		return async (req: Request, res: Response) => {
+			const event = res.locals.event
+			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
+
+			const bookings = await this.learnerRecord.getEventBookings(event.id)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			res.render('page/course/module/events/cancel-attendee', {
+				booking: booking,
+				eventDateWithMonthAsText: eventDateWithMonthAsText,
+			})
+		}
+	}
+
+	@Validate({
+		fields: ['reason'],
+		redirect: `/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel`,
+	})
+	public cancelBooking() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
+
+			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
+			const bookingId = req.params.bookingId
+			const booking = this.findBooking(bookings, bookingId)
+
+			booking.status = Booking.Status.CANCELLED
+			booking.cancellationReason = data.cancellationReason
+			await this.learnerRecord.updateBooking(req.params.eventId, booking)
+
+			return res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 		}
 	}
 
