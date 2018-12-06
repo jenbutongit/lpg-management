@@ -386,8 +386,9 @@ export class EventController implements FormController {
 				venue: {
 					location: req.body.location,
 					address: req.body.address,
-					capacity: parseInt(req.body.capacity, 10),
-					minCapacity: parseInt(req.body.minCapacity, 10),
+					capacity: parseInt(req.body.capacity),
+					minCapacity: parseInt(req.body.minCapacity),
+					availability: parseInt(req.body.capacity),
 				},
 			}
 
