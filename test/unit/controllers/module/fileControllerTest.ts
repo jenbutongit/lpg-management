@@ -111,12 +111,8 @@ describe('File Controller Test', function() {
 		request.params.mediaId = 'mediaId'
 		request.body.file = 'file.pdf'
 		request.body.type = 'file'
-		mediaRestService.get = sinon
-			.stub()
-			.returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
-		request.session!.save = sinon
-			.stub()
-			.returns(response.redirect(`/content-management/courses/${course.id}/module-file`))
+		mediaRestService.get = sinon.stub().returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
+		request.session!.save = sinon.stub().returns(response.redirect(`/content-management/courses/${course.id}/module-file`))
 
 		await setFile(request, response)
 
