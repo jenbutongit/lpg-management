@@ -18,8 +18,10 @@ import {Validate} from '../../formValidator'
 import {FormController} from '../../formController'
 import {Course} from '../../../learning-catalogue/model/course'
 import {Module} from '../../../learning-catalogue/model/module'
+import * as log4js from 'log4js'
 
 export class EventController implements FormController {
+	logger = log4js.getLogger('controllers/homeController')
 	learningCatalogue: LearningCatalogue
 	learnerRecord: LearnerRecord
 	validator: Validator<Booking>
@@ -449,7 +451,9 @@ export class EventController implements FormController {
 
 			try {
 				await this.learnerRecord.cancelEvent(req.params.eventId, event, req.body.cancellationReason)
-			} catch (e) {}
+			} catch (e) {
+				this.logger.info(`The event has no attendees: ${e}`)
+			}
 
 			req.session!.sessionFlash = {
 				eventCancelledMessage: 'event_cancelled_message',

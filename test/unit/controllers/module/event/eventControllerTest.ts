@@ -609,6 +609,40 @@ describe('EventController', function() {
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99/cancel`)
 	})
 
+	it('should render cancel event page', async function() {
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		await eventController.cancelEvent()(request, response)
+
+		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/cancel')
+	})
+
+	it('should cancel event and redirect to events overview page', async function() {
+		const event = new Event()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		request.body.cancellationReason = 'reason'
+
+		request.params.eventId = 'eventId'
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+
+		response.locals.event = event
+
+		learnerRecord.cancelEvent = sinon.stub()
+		request.session!.save = sinon
+			.stub()
+			.returns(response.redirect(`/content-management/courses/${request.params.courseId}/modules/${request.params.moduleId}/events-overview/${request.params.eventId}`))
+
+		await eventController.setCancelEvent()(request, response)
+
+		expect(learnerRecord.cancelEvent).to.have.been.calledOnceWith('eventId', event, 'reason')
+		expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/courseId/modules/moduleId/events-overview/eventId')
+	})
+
 	it('should render cancel attendee page', async function() {
 		let dateRange: DateRange = new DateRange()
 		dateRange.date = '2018-01-02'
@@ -771,6 +805,7 @@ describe('EventController', function() {
 						endTime: '12:30',
 					},
 				],
+				status: Event.Status.ACTIVE,
 			})
 			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 		})
