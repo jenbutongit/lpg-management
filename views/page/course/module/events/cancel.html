@@ -26,8 +26,8 @@
         <form action="{{'/content-management/courses/' + courseId + '/modules/' + moduleId + '/events/' + event.id + '/cancel'}}" method="post">
             <input type="hidden" value="{{event.id}}" name="id">
             {{ govukSelect({
-            id: "sort",
-            name: "sort",
+            id: "cancellationReason",
+            name: "cancellationReason",
             label: {
             text: "Cancellation reason"
             },
