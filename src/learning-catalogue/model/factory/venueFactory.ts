@@ -8,6 +8,7 @@ export class VenueFactory {
 			venue.address = data.address
 			venue.capacity = data.capacity
 			venue.minCapacity = data.minCapacity
+			venue.availability = data.availability
 		}
 		return venue
 	}

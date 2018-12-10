@@ -743,6 +743,7 @@ describe('EventController', function() {
 					location: 'London',
 					minCapacity: 5,
 					capacity: 5,
+					availability: 5,
 				},
 				dateRanges: [],
 			}
@@ -759,6 +760,7 @@ describe('EventController', function() {
 					location: 'London',
 					minCapacity: 5,
 					capacity: 5,
+					availability: 5,
 				},
 				dateRanges: [
 					{
