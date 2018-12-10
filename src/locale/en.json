@@ -74,37 +74,36 @@
 			"cancel": "Cancel event"
 		}
 	},
-  "venue": {
-      "validation": {
-          "minCapacity": {
-              "empty": "Minimum capacity is required",
-              "positive": "Minimum capacity must be positive"
-          },
-          "capacity": {
-              "empty": "Capacity is required",
-              "positive": "Capacity must be positive"
-          },
-          "location": {
-              "empty": "Location is required"
-          }
-      }
-  },
-    "attendee": {
-        "title": {
-            "cancel": "Cancel attendee"
-        },
-        "status": {
-            "Requested": "Pending",
-            "Confirmed": "Booked",
-            "Cancelled": "Cancelled"
-        },
-        "validation": {
-            "cancellationReason": {
-                "empty": "A reason for cancellation is required"
-            }
-        }
-    },
-	"blended": "Blended",
+	"venue": {
+		"validation": {
+			"minCapacity": {
+				"empty": "Minimum capacity is required",
+				"positive": "Minimum capacity must be positive"
+			},
+			"capacity": {
+				"empty": "Capacity is required",
+				"positive": "Capacity must be positive"
+			},
+			"location": {
+				"empty": "Location is required"
+			}
+		}
+	},
+	"attendee": {
+		"title": {
+			"cancel": "Cancel attendee"
+		},
+		"status": {
+			"Requested": "Pending",
+			"Confirmed": "Booked",
+			"Cancelled": "Cancelled"
+		},
+		"validation": {
+			"cancellationReason": {
+				"empty": "A reason for cancellation is required"
+			}
+		}
+	},
 	"organisations": {
 		"headers": {
 			"organisationName": "Organisation name"
@@ -142,11 +141,6 @@
 	},
 
 	"termsAndConditions": {
-		"text": {
-			"addNew": "Add new terms and conditions",
-			"edit": "Edit terms and conditions"
-		},
-
 		"validation": {
 			"name": {
 				"empty": "Name is required"
@@ -165,14 +159,15 @@
 		"file": "File",
 		"blended": "Blended"
 	},
+	"administration_pages_title": " My administration pages",
 	"blended": "Blended",
-	"error": "There is a problem with the service",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
+	"error": "There is a problem with the service",
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
@@ -193,9 +188,9 @@
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
-    "email_address_found_message": " has been invited to this event",
-    "email_address_not_found_message": " is not registered. Check the email address and try adding them again",
-    "email_address_already_invited_message": " has already been invited to this event",
+	"email_address_found_message": " has been invited to this event",
+	"email_address_not_found_message": " is not registered. Check the email address and try adding them again",
+	"email_address_already_invited_message": " has already been invited to this event",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",

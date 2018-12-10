@@ -115,6 +115,7 @@ app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
 app.use(ctx.searchController.router)
+app.use(ctx.miController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')

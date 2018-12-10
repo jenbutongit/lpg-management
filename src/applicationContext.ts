@@ -59,6 +59,7 @@ import {InviteFactory} from './learner-record/model/factory/inviteFactory'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {Booking} from './learner-record/model/booking'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {MiController} from './controllers/miController'
 
 log4js.configure(config.LOGGING)
 
@@ -116,6 +117,7 @@ export class ApplicationContext {
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
 	searchController: SearchController
+	miController: MiController
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -235,6 +237,8 @@ export class ApplicationContext {
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
 
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
+
+		this.miController = new MiController()
 	}
 
 	addToResponseLocals() {
