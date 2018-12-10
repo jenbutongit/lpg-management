@@ -25,36 +25,36 @@
         <p class="govuk-body">This cannot be undone</p>
         <form action="{{'/content-management/courses/' + courseId + '/modules/' + moduleId + '/events/' + event.id + '/cancel'}}" method="post">
             <input type="hidden" value="{{event.id}}" name="id">
-            {{ govukSelect({
-            id: "cancellationReason",
-            name: "cancellationReason",
-            label: {
-            text: "Cancellation reason"
-            },
-            items: [
-            {
-            value: "",
-            text: "Choose a cancellation reason",
-            selected: true
-            },
-            {
-            value: "reason1",
-            text: "Hard coded Reason 1"
-            },
-            {
-            value: "reason2",
-            text: "Hard coded Reason 2"
-            },
-            {
-            value: "reason3",
-            text: "Hard coded Reason 3"
-            }
-            ]
-            }) }}
+                {{ govukSelect({
+                    id: "cancellationReason",
+                    name: "cancellationReason",
+                    label: {
+                        text: "Cancellation reason"
+                    },
+                    items: [
+                    {
+                        value: "",
+                        text: "Choose a cancellation reason",
+                        selected: true
+                    },
+                    {
+                        value: "reason1",
+                        text: "Hard coded Reason 1"
+                    },
+                    {
+                        value: "reason2",
+                        text: "Hard coded Reason 2"
+                    },
+                    {
+                        value: "reason3",
+                        text: "Hard coded Reason 3"
+                    }
+                    ]
+                }) }}
             <div class="button-container">
                 {{ govukButton({
-                text: "Cancel event",
-                classes: "button-red"
+                    text: "Cancel event",
+                    classes: "button-red"
                 }) }}
             </div>
         </form>
