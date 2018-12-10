@@ -45,12 +45,7 @@ describe('YoutubeService Module Controller Test', function() {
 		moduleFactory = <ModuleFactory>{}
 		youtubeService = <YoutubeService>{}
 
-		youtubeModuleController = new YoutubeModuleController(
-			learningCatalogue,
-			moduleValidator,
-			moduleFactory,
-			youtubeService
-		)
+		youtubeModuleController = new YoutubeModuleController(learningCatalogue, moduleValidator, moduleFactory, youtubeService)
 
 		req = mockReq()
 		res = mockRes()
@@ -119,7 +114,6 @@ describe('YoutubeService Module Controller Test', function() {
 		req.body.url = url
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
-
 		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
 		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
 		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse.data)

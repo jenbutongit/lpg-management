@@ -15,12 +15,7 @@ export class FileController {
 	router: Router
 	restService: OauthRestService
 
-	constructor(
-		learningCatalogue: LearningCatalogue,
-		moduleValidator: Validator<Module>,
-		moduleFactory: ModuleFactory,
-		restService: OauthRestService
-	) {
+	constructor(learningCatalogue: LearningCatalogue, moduleValidator: Validator<Module>, moduleFactory: ModuleFactory, restService: OauthRestService) {
 		this.learningCatalogue = learningCatalogue
 		this.moduleFactory = moduleFactory
 		this.moduleValidator = moduleValidator

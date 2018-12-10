@@ -29,7 +29,7 @@ export class SearchController {
 
 		return async (request: Request, response: Response) => {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
-			let query = ""
+			let query = ''
 			if (request.query.q) {
 				query = striptags(request.query.q)
 			}
@@ -38,7 +38,7 @@ export class SearchController {
 
 			response.render('page/search-results', {
 				pageResults: pageResults,
-				query: query
+				query: query,
 			})
 		}
 	}

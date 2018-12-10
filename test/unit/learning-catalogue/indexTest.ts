@@ -221,10 +221,8 @@ describe('Learning Catalogue tests', () => {
 	it('should call courseService when searching courses', async () => {
 		courseService.listAllWithPagination = sinon.stub()
 
-		await learningCatalogue.searchCourses("test", 0, 10)
+		await learningCatalogue.searchCourses('test', 0, 10)
 
-		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(
-			`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`
-		)
+		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`)
 	})
 })

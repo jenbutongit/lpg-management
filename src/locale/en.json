@@ -74,6 +74,37 @@
 			"cancel": "Cancel event"
 		}
 	},
+  "venue": {
+      "validation": {
+          "minCapacity": {
+              "empty": "Minimum capacity is required",
+              "positive": "Minimum capacity must be positive"
+          },
+          "capacity": {
+              "empty": "Capacity is required",
+              "positive": "Capacity must be positive"
+          },
+          "location": {
+              "empty": "Location is required"
+          }
+      }
+  },
+    "attendee": {
+        "title": {
+            "cancel": "Cancel attendee"
+        },
+        "status": {
+            "Requested": "Pending",
+            "Confirmed": "Booked",
+            "Cancelled": "Cancelled"
+        },
+        "validation": {
+            "cancellationReason": {
+                "empty": "A reason for cancellation is required"
+            }
+        }
+    },
+	"blended": "Blended",
 	"organisations": {
 		"headers": {
 			"organisationName": "Organisation name"
@@ -162,6 +193,9 @@
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
+    "email_address_found_message": " has been invited to this event",
+    "email_address_not_found_message": " is not registered. Check the email address and try adding them again",
+    "email_address_already_invited_message": " has already been invited to this event",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
