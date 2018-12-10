@@ -1,4 +1,4 @@
-import {IsIn, IsNotEmpty, IsOptional, IsPositive} from 'class-validator'
+import {IsIn, IsNotEmpty, IsOptional, IsPositive, Min} from 'class-validator'
 
 export class Module {
 	id: string
@@ -41,7 +41,7 @@ export class Module {
 		groups: ['all', 'cost'],
 		message: 'module.validation.cost.positive',
 	})
-	@IsPositive({
+	@Min(0, {
 		groups: ['all', 'cost'],
 		message: 'module.validation.cost.positive',
 	})
