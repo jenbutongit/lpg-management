@@ -20,4 +20,8 @@ export class Identity {
 	isOrganisationManager() {
 		return this.hasRole('ORGANISATION_MANAGER')
 	}
+
+	isCshrReporter() {
+		return this.hasRole('CSHR_REPORTER')
+	}
 }
