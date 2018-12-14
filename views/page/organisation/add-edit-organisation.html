@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/organisations/manage" %}
+{% if organisationalUnit %}
+    {% set backButton = "/content-management/organisations/" + organisationalUnit.id + "/overview"%}
+{% else %}
+    {% set backButton = "/content-management/organisations/manage" %}
+{% endif %}
 {% block content %}
 {% set errors = sessionFlash.errors %}
 {% set form = sessionFlash.form %}
@@ -102,7 +106,11 @@
                     }) }}
                 </div>
             </form>
-            <a href="/content-management/organisations/manage" class="govuk-link">Cancel</a>
+            {% if organisationalUnit %}
+                <a href="/content-management/organisations/{{organisationalUnit.id}}/overview" class="govuk-link">Cancel</a>
+            {% else %}
+                <a href="/content-management/organisations/manage" class="govuk-link">Cancel</a>
+            {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">
         </div>
