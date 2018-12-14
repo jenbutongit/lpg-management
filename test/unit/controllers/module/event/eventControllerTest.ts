@@ -610,8 +610,14 @@ describe('EventController', function() {
 	})
 
 	it('should render cancel event page', async function() {
+		const course: Course = new Course()
+		const module: Module = new Module()
+
 		const request: Request = mockReq()
 		const response: Response = mockRes()
+
+		learningCatalogue.getCourse = sinon.stub().returns(course)
+		learningCatalogue.getModule = sinon.stub().returns(module)
 
 		await eventController.cancelEvent()(request, response)
 
