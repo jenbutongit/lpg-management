@@ -8,7 +8,10 @@ import {DateRangeCommand} from '../../command/dateRangeCommand'
 import {DateRange} from '../../../learning-catalogue/model/dateRange'
 import {DateRangeCommandFactory} from '../../command/factory/dateRangeCommandFactory'
 import {DateTime} from '../../../lib/dateTime'
+import {IdentityService} from '../../../identity/identityService'
 import {LearnerRecord} from '../../../learner-record'
+import {InviteFactory} from '../../../learner-record/model/factory/inviteFactory'
+import * as config from '../../../config'
 import {Booking} from '../../../learner-record/model/booking'
 import * as asyncHandler from 'express-async-handler'
 import {Validate} from '../../formValidator'
@@ -22,9 +25,11 @@ export class EventController implements FormController {
 	validator: Validator<Booking>
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
+	inviteFactory: InviteFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeValidator: Validator<DateRange>
 	dateRangeCommandFactory: DateRangeCommandFactory
+	identityService: IdentityService
 	router: Router
 
 	constructor(
@@ -33,18 +38,22 @@ export class EventController implements FormController {
 		eventValidator: Validator<Event>,
 		bookingValidator: Validator<Booking>,
 		eventFactory: EventFactory,
+		inviteFactory: InviteFactory,
 		dateRangeCommandValidator: Validator<DateRangeCommand>,
 		dateRangeValidator: Validator<DateRange>,
-		dateRangeCommandFactory: DateRangeCommandFactory
+		dateRangeCommandFactory: DateRangeCommandFactory,
+		identityService: IdentityService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.learnerRecord = learnerRecord
 		this.eventValidator = eventValidator
 		this.validator = bookingValidator
 		this.eventFactory = eventFactory
+		this.inviteFactory = inviteFactory
 		this.dateRangeCommandValidator = dateRangeCommandValidator
 		this.dateRangeValidator = dateRangeValidator
 		this.dateRangeCommandFactory = dateRangeCommandFactory
+		this.identityService = identityService
 		this.router = Router()
 
 		this.setRouterPaths()
@@ -52,15 +61,6 @@ export class EventController implements FormController {
 
 	/* istanbul ignore next */
 	private setRouterPaths() {
-		this.router.param(
-			'courseId',
-			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
-				const date = new Date(Date.now())
-				res.locals.exampleYear = date.getFullYear() + 1
-				next()
-			})
-		)
-
 		this.router.param(
 			'eventId',
 			asyncHandler(async (req: Request, res: Response, next: NextFunction, eventId: string) => {
@@ -73,6 +73,29 @@ export class EventController implements FormController {
 				} else {
 					res.sendStatus(404)
 				}
+			})
+		)
+
+		this.router.param(
+			'eventId',
+			asyncHandler(async (req: Request, res: Response, next: NextFunction, eventId: string) => {
+				const invitees = await this.learnerRecord.getEventInvitees(eventId)
+
+				if (invitees) {
+					res.locals.invitees = invitees
+					next()
+				} else {
+					res.sendStatus(404)
+				}
+			})
+		)
+
+		this.router.param(
+			'courseId',
+			asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
+				const date = new Date(Date.now())
+				res.locals.exampleYear = date.getFullYear() + 1
+				next()
 			})
 		)
 
@@ -104,6 +127,8 @@ export class EventController implements FormController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.cancelEvent()))
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
+
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite', asyncHandler(this.inviteLearner()))
 	}
 
 	public getDateTime() {
@@ -361,8 +386,9 @@ export class EventController implements FormController {
 				venue: {
 					location: req.body.location,
 					address: req.body.address,
-					capacity: parseInt(req.body.capacity, 10),
-					minCapacity: parseInt(req.body.minCapacity, 10),
+					capacity: parseInt(req.body.capacity),
+					minCapacity: parseInt(req.body.minCapacity),
+					availability: parseInt(req.body.capacity),
 				},
 			}
 
@@ -410,6 +436,43 @@ export class EventController implements FormController {
 	public cancelEvent() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/module/events/cancel')
+		}
+	}
+
+	public inviteLearner() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
+
+			const emailAddress = data.learnerEmail
+
+			data.event = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${req.params.eventId}`
+
+			try {
+				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
+
+				req.session!.sessionFlash = {
+					emailAddressFoundMessage: 'email_address_found_message',
+					emailAddress: emailAddress,
+				}
+			} catch (e) {
+				if (e.toString().indexOf('learnerEmail: The learner must be registered') >= 0) {
+					req.session!.sessionFlash = {
+						emailAddressFoundMessage: 'email_address_not_found_message',
+						emailAddress: emailAddress,
+					}
+				} else {
+					req.session!.sessionFlash = {
+						emailAddressFoundMessage: 'email_address_already_invited_message',
+						emailAddress: emailAddress,
+					}
+				}
+			}
+
+			return req.session!.save(() => {
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
+			})
 		}
 	}
 
@@ -484,7 +547,6 @@ export class EventController implements FormController {
 			return res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 		}
 	}
-
 	private findBooking(bookings: any, bookingId: number): Booking {
 		return bookings.find(function(booking: Booking) {
 			return booking.id == bookingId

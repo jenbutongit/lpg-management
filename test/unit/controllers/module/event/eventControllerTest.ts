@@ -15,6 +15,9 @@ import {DateRangeCommand} from '../../../../../src/controllers/command/dateRange
 import {DateRangeCommandFactory} from '../../../../../src/controllers/command/factory/dateRangeCommandFactory'
 import {Venue} from '../../../../../src/learning-catalogue/model/venue'
 import {LearnerRecord} from '../../../../../src/learner-record'
+import {IdentityService} from '../../../../../src/identity/identityService'
+import {InviteFactory} from '../../../../../src/learner-record/model/factory/inviteFactory'
+import {Invite} from '../../../../../src/learner-record/model/invite'
 import {Booking} from '../../../../../src/learner-record/model/booking'
 import {DateTime} from '../../../../../src/lib/dateTime'
 import {Course} from '../../../../../src/learning-catalogue/model/course'
@@ -29,9 +32,11 @@ describe('EventController', function() {
 	let validator: Validator<Booking>
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
+	let inviteFactory: InviteFactory
 	let dateRangeCommandValidator: Validator<DateRangeCommand>
 	let dateRangeValidator: Validator<DateRange>
 	let dateRangeCommandFactory: DateRangeCommandFactory
+	let identityService: IdentityService
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -39,9 +44,11 @@ describe('EventController', function() {
 		eventValidator = <Validator<Event>>{}
 		validator = <Validator<Booking>>{}
 		eventFactory = <EventFactory>{}
+		inviteFactory = <InviteFactory>{}
 		dateRangeCommandValidator = <Validator<DateRangeCommand>>{}
 		dateRangeValidator = <Validator<DateRange>>{}
 		dateRangeCommandFactory = <DateRangeCommandFactory>{}
+		identityService = <IdentityService>{}
 
 		eventController = new EventController(
 			learningCatalogue,
@@ -49,9 +56,11 @@ describe('EventController', function() {
 			eventValidator,
 			validator,
 			eventFactory,
+			inviteFactory,
 			dateRangeCommandValidator,
 			dateRangeValidator,
-			dateRangeCommandFactory
+			dateRangeCommandFactory,
+			identityService
 		)
 	})
 
@@ -389,6 +398,96 @@ describe('EventController', function() {
 		expect(response.render).to.have.been.calledWith('page/course/module/events/events-overview')
 	})
 
+	it('Should invite user and redirect to event overview with success message', async () => {
+		const request = mockReq()
+		const response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
+		request.body.learnerEmail = 'test@test.com'
+		request.user = {accessToken: 'test-token'}
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		const dateRange = new DateRange()
+		dateRange.date = '01-01-2020'
+		const dateRanges: DateRange[] = [dateRange]
+		response.locals.event = {dateRanges}
+
+		learnerRecord.inviteLearner = sinon.stub().returns(new Invite())
+
+		inviteFactory.create = sinon.stub()
+
+		await eventController.inviteLearner()(request, response)
+
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
+		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_found_message')
+	})
+
+	it('Should fail to invite user and redirect to event overview with not found message', async () => {
+		const request = mockReq()
+		const response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
+		request.body.learnerEmail = 'test@test.com'
+		request.user = {accessToken: 'test-token'}
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		const dateRange = new DateRange()
+		dateRange.date = '01-01-2020'
+		const dateRanges: DateRange[] = [dateRange]
+		response.locals.event = {dateRanges}
+
+		learnerRecord.inviteLearner = sinon.stub().throws(new Error('learnerEmail: The learner must be registered'))
+
+		inviteFactory.create = sinon.stub()
+
+		await eventController.inviteLearner()(request, response)
+
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
+		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_not_found_message')
+	})
+
+	it('Should fail to invite user and redirect to event overview with not already added', async () => {
+		const request = mockReq()
+		const response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
+		request.body.learnerEmail = 'test@test.com'
+		request.user = {accessToken: 'test-token'}
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		const dateRange = new DateRange()
+		dateRange.date = '01-01-2020'
+		const dateRanges: DateRange[] = [dateRange]
+		response.locals.event = {dateRanges}
+
+		learnerRecord.inviteLearner = sinon.stub().throws(new Error('learnerEmail: The learner has already booked'))
+
+		inviteFactory.create = sinon.stub()
+
+		await eventController.inviteLearner()(request, response)
+
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
+		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_already_invited_message')
+	})
+
 	it('should render attendee details page', async function() {
 		const date: string = '2020-02-01'
 		const dateRange = new DateRange()
@@ -644,6 +743,7 @@ describe('EventController', function() {
 					location: 'London',
 					minCapacity: 5,
 					capacity: 5,
+					availability: 5,
 				},
 				dateRanges: [],
 			}
@@ -660,6 +760,7 @@ describe('EventController', function() {
 					location: 'London',
 					minCapacity: 5,
 					capacity: 5,
+					availability: 5,
 				},
 				dateRanges: [
 					{
