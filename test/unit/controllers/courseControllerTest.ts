@@ -3,7 +3,7 @@ import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as sinonChai from 'sinon-chai'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
@@ -27,6 +27,7 @@ describe('Course Controller Tests', function() {
 
 	let req: Request
 	let res: Response
+	const next: NextFunction = sinon.stub()
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -39,7 +40,6 @@ describe('Course Controller Tests', function() {
 
 		req = mockReq()
 		res = mockRes()
-
 		req.session!.save = callback => {
 			callback(undefined)
 		}
@@ -169,19 +169,39 @@ describe('Course Controller Tests', function() {
 			learningOutcomes: 'outcomes',
 		}
 		const course = new Course()
+		course.id = '123'
 		const noErrors = {fields: [], size: 0}
 
-		learningCatalogue.createCourse = sinon.stub().returns('123')
+		learningCatalogue.createCourse = sinon.stub().returns(Promise.resolve(course))
 		courseFactory.create = sinon.stub().returns(course)
 		validator.check = sinon.stub().returns(noErrors)
 
-		await courseController.createCourseDetails()(req, res)
+		await courseController.createCourseDetails()(req, res, next)
 
 		expect(courseFactory.create).to.have.been.calledWith(req.body)
 		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
 		expect(validator.check).to.have.returned(noErrors)
 		expect(learningCatalogue.createCourse).to.have.been.calledWith(course)
 		expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${course.id}/overview`)
+	})
+
+	it('should try and create and pass to next if error thrown', async function() {
+		const error: any = new Error()
+		error.response = {status: 403}
+
+		const course = new Course()
+		course.id = '123'
+
+		const noErrors = {fields: [], size: 0}
+		validator.check = sinon.stub().returns(noErrors)
+
+		courseFactory.create = sinon.stub().returns(course)
+		learningCatalogue.createCourse = sinon.stub().returns(Promise.reject(error))
+
+		await courseController.createCourseDetails()(req, res, next)
+
+		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
+		expect(next).to.have.been.calledWith(error)
 	})
 
 	it('should check for description errors and render add-course-details if errors present', async function() {
@@ -201,7 +221,7 @@ describe('Course Controller Tests', function() {
 		courseFactory.create = sinon.stub().returns(course)
 		validator.check = sinon.stub().returns(errors)
 
-		await courseController.createCourseDetails()(req, res)
+		await courseController.createCourseDetails()(req, res, next)
 		expect(courseFactory.create).to.not.have.been.called
 		expect(learningCatalogue.createCourse).to.not.have.been.called
 
@@ -226,13 +246,13 @@ describe('Course Controller Tests', function() {
 		}
 
 		req.params.courseId = 'abc123'
-
-		res.locals.course = new Course()
+		const course: Course = new Course()
+		res.locals.course = course
 
 		validator.check = sinon.stub().returns({fields: [], size: 0})
-		learningCatalogue.updateCourse = sinon.stub()
+		learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(course))
 
-		await courseController.updateCourseDetails()(req, res)
+		await courseController.updateCourseDetails()(req, res, next)
 
 		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
 
@@ -242,6 +262,33 @@ describe('Course Controller Tests', function() {
 		expect(res.locals.course.description).to.equal(req.body.description)
 		expect(res.locals.course.learningOutcomes).to.equal(req.body.learningOutcomes)
 		expect(res.locals.course.preparation).to.equal(req.body.preparation)
+	})
+
+	it('should try and update and pass to next if error thrown', async function() {
+		const error: any = new Error()
+		error.response = {status: 403}
+
+		const course = new Course()
+		res.locals.course = course
+
+		req.body = {
+			id: 'abc123',
+			shortDescription: 'Updated short description',
+			description: 'Updated description',
+			learningOutcomes: 'Updated learning outcomes',
+			preparation: 'Updated preparation',
+		}
+
+		const noErrors = {fields: [], size: 0}
+		validator.check = sinon.stub().returns(noErrors)
+
+		courseFactory.create = sinon.stub().returns(course)
+		learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+
+		await courseController.updateCourseDetails()(req, res, next)
+
+		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
+		expect(next).to.have.been.calledWith(error)
 	})
 
 	it('should render validation errors on course details update', async function() {
@@ -271,7 +318,7 @@ describe('Course Controller Tests', function() {
 		validator.check = sinon.stub().returns(errors)
 		learningCatalogue.updateCourse = sinon.stub()
 
-		await courseController.updateCourseDetails()(req, res)
+		await courseController.updateCourseDetails()(req, res, next)
 
 		expect(validator.check).to.have.been.calledWith(req.body, ['shortDescription', 'description'])
 		expect(validator.check).to.have.returned(errors)
