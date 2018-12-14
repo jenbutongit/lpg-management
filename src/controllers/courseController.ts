@@ -110,11 +110,18 @@ export class CourseController implements FormController {
 		redirect: '/content-management/courses/title/:courseId',
 	})
 	updateCourseTitle() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			let course = response.locals.course
 			course.title = request.body.title
-			await this.learningCatalogue.updateCourse(course)
-			response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
+
+			await this.learningCatalogue
+				.updateCourse(course)
+				.then(() => {
+					response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -184,9 +191,15 @@ export class CourseController implements FormController {
 	}
 
 	sortModules() {
-		return async (request: Request, response: Response) => {
-			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
-			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
+		return async (request: Request, response: Response, next: NextFunction) => {
+			return await this.courseService
+				.sortModules(request.params.courseId, request.query.moduleIds)
+				.then(() => {
+					response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -195,14 +208,20 @@ export class CourseController implements FormController {
 		redirect: '/content-management/courses/:courseId/overview',
 	})
 	setStatus() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			let course = response.locals.course
 			course.status = request.body.status
 
-			await this.learningCatalogue.updateCourse(course)
-			request.session!.save(() => {
-				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
-			})
+			await this.learningCatalogue
+				.updateCourse(course)
+				.then(() => {
+					request.session!.save(() => {
+						response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 

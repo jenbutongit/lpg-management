@@ -1,7 +1,7 @@
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {Module} from '../../learning-catalogue/model/module'
 
 export class FaceToFaceModuleController {
@@ -42,7 +42,7 @@ export class FaceToFaceModuleController {
 	}
 
 	public setModule() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const data = {...request.body}
 			if (!data.cost) {
 				delete data.cost
@@ -58,8 +58,14 @@ export class FaceToFaceModuleController {
 					response.redirect(`/content-management/courses/${course.id}/module-face-to-face`)
 				})
 			} else {
-				await this.learningCatalogue.createModule(course.id, module)
-				response.redirect(`/content-management/courses/${course.id}/preview`)
+				await this.learningCatalogue
+					.createModule(course.id, module)
+					.then(() => {
+						response.redirect(`/content-management/courses/${course.id}/preview`)
+					})
+					.catch(error => {
+						next(error)
+					})
 			}
 		}
 	}
