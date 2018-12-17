@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {Module} from '../../learning-catalogue/model/module'
@@ -46,7 +46,7 @@ export class YoutubeModuleController {
 	}
 
 	public setModule() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			let data = {...req.body}
 
 			const course = res.locals.course
@@ -87,8 +87,14 @@ export class YoutubeModuleController {
 				}
 
 				module = await this.moduleFactory.create(newData)
-				await this.learningCatalogue.createModule(course.id, module)
-				res.redirect(`/content-management/courses/${course.id}/preview`)
+				await this.learningCatalogue
+					.createModule(course.id, module)
+					.then(() => {
+						res.redirect(`/content-management/courses/${course.id}/preview`)
+					})
+					.catch(error => {
+						next(error)
+					})
 			}
 		}
 	}

@@ -7,7 +7,7 @@ import {LearningCatalogue} from '../../../../src/learning-catalogue'
 import {mockReq, mockRes} from 'sinon-express-mock'
 import * as sinon from 'sinon'
 import {Course} from '../../../../src/learning-catalogue/model/course'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {YoutubeService} from '../../../../src/youtube/youtubeService'
@@ -38,6 +38,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 	let req: Request
 	let res: Response
+	const next: NextFunction = sinon.stub()
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -49,7 +50,6 @@ describe('YoutubeService Module Controller Test', function() {
 
 		req = mockReq()
 		res = mockRes()
-
 		req.session!.save = callback => {
 			callback(undefined)
 		}
@@ -71,13 +71,13 @@ describe('YoutubeService Module Controller Test', function() {
 
 		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
 		moduleFactory.create = sinon.stub().returns(module)
-		learningCatalogue.createModule = sinon.stub()
+		learningCatalogue.createModule = sinon.stub().returns(Promise.resolve(module))
 		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
 		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
 		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse)
 		youtubeService.getDuration = sinon.stub().returns(1)
 
-		await youtubeModuleController.setModule()(req, res)
+		await youtubeModuleController.setModule()(req, res, next)
 
 		expect(moduleFactory.create).to.have.been.calledTwice
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
@@ -86,6 +86,36 @@ describe('YoutubeService Module Controller Test', function() {
 		expect(youtubeService.getDuration).to.have.been.calledOnce
 		expect(learningCatalogue.createModule).to.have.been.calledWith(courseId, module)
 		expect(res.redirect).to.have.been.calledWith('/content-management/courses/abc/preview')
+	})
+
+	it('should try to set module and pass to next if error occurs', async function() {
+		const url = 'https://www.youtubeService.com/example'
+		req.body.url = url
+		const courseId = 'abc'
+		const course: Course = new Course()
+		course.id = courseId
+		res.locals.course = course
+		const module: Module = new Module()
+
+		const error: Error = new Error()
+
+		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
+		moduleFactory.create = sinon.stub().returns(module)
+		learningCatalogue.createModule = sinon.stub().returns(Promise.reject(error))
+		youtubeService.getYoutubeResponse = sinon.stub().returns(youtubeResponse)
+		youtubeService.checkYoutubeResponse = sinon.stub().returns(true)
+		youtubeService.getBasicYoutubeInfo = sinon.stub().returns(youtubeResponse)
+		youtubeService.getDuration = sinon.stub().returns(1)
+
+		await youtubeModuleController.setModule()(req, res, next)
+
+		expect(moduleFactory.create).to.have.been.calledTwice
+		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)
+		expect(youtubeService.checkYoutubeResponse).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getBasicYoutubeInfo).to.have.been.calledOnceWith(youtubeResponse)
+		expect(youtubeService.getDuration).to.have.been.calledOnce
+		expect(learningCatalogue.createModule).to.have.been.calledWith(courseId, module)
+		expect(next).to.have.been.calledWith(error)
 	})
 
 	it('should check for and find errors and redirect to course preview page', async function() {
@@ -97,7 +127,7 @@ describe('YoutubeService Module Controller Test', function() {
 		moduleFactory.create = sinon.stub().returns(module)
 		youtubeService.getYoutubeResponse = sinon.stub().returns(undefined)
 
-		await youtubeModuleController.setModule()(req, res)
+		await youtubeModuleController.setModule()(req, res, next)
 
 		expect(moduleFactory.create).to.have.been.calledOnce
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnce
@@ -121,7 +151,7 @@ describe('YoutubeService Module Controller Test', function() {
 
 		moduleFactory.create = sinon.stub().returns(module)
 
-		await youtubeModuleController.setModule()(req, res)
+		await youtubeModuleController.setModule()(req, res, next)
 
 		expect(moduleFactory.create).to.have.been.calledOnce
 		expect(youtubeService.getYoutubeResponse).to.have.been.calledOnceWith(url)

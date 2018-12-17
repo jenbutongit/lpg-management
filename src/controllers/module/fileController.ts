@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {ContentRequest} from '../../extended'
@@ -64,7 +64,7 @@ export class FileController {
 	}
 
 	public setFile() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const req = request as ContentRequest
 			let data = {
 				...req.body,
@@ -91,24 +91,30 @@ export class FileController {
 				return request.session!.save(() => {
 					response.redirect(`/content-management/courses/${course.id}/module-${data.fileType}`)
 				})
-			}
+			} else {
+				const newData = {
+					id: data.id,
+					type: data.type,
+					title: data.title,
+					description: data.description,
+					optional: data.isOptional || false,
+					duration: Math.abs(data.days * 86400) + Math.abs(data.hours * 3600) + Math.abs(data.minutes * 60),
+					fileSize: file.fileSizeKB,
+					mediaId: file.id,
+					url: config.CONTENT_URL + '/' + file.path,
+					startPage: file.metadata.startPage,
+				}
+				module = await this.moduleFactory.create(newData)
 
-			const newData = {
-				id: data.id,
-				type: data.type,
-				title: data.title,
-				description: data.description,
-				optional: data.isOptional || false,
-				duration: Math.abs(data.days * 86400) + Math.abs(data.hours * 3600) + Math.abs(data.minutes * 60),
-				fileSize: file.fileSizeKB,
-				mediaId: file.id,
-				url: config.CONTENT_URL + '/' + file.path,
-				startPage: file.metadata.startPage,
+				await this.learningCatalogue
+					.createModule(course.id, module)
+					.then(() => {
+						response.redirect(`/content-management/courses/${course.id}/preview`)
+					})
+					.catch(error => {
+						next(error)
+					})
 			}
-			module = await this.moduleFactory.create(newData)
-
-			await this.learningCatalogue.createModule(course.id, module)
-			response.redirect(`/content-management/courses/${course.id}/preview`)
 		}
 	}
 }

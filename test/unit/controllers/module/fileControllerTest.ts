@@ -6,7 +6,7 @@ import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {ModuleFactory} from '../../../../src/learning-catalogue/model/factory/moduleFactory'
 import {mockReq, mockRes} from 'sinon-express-mock'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import * as sinon from 'sinon'
 import {expect} from 'chai'
 import {Course} from '../../../../src/learning-catalogue/model/course'
@@ -20,6 +20,7 @@ describe('File Controller Test', function() {
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
 	let mediaRestService: OauthRestService
+	const next: NextFunction = sinon.stub()
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -63,7 +64,7 @@ describe('File Controller Test', function() {
 
 		course.id = 'courseId'
 
-		const setFile: (request: Request, response: Response) => void = fileController.setFile()
+		const setFile: (request: Request, response: Response, next: NextFunction) => void = fileController.setFile()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
@@ -83,9 +84,9 @@ describe('File Controller Test', function() {
 			metadata: {duration: 5.0},
 		})
 
-		learningCatalogue.createModule = sinon.stub()
+		learningCatalogue.createModule = sinon.stub().returns(Promise.resolve(module))
 
-		await setFile(request, response)
+		await setFile(request, response, next)
 
 		expect(moduleFactory.create).to.have.been.calledTwice
 		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
@@ -99,14 +100,14 @@ describe('File Controller Test', function() {
 
 		course.id = 'courseId'
 
-		const setFile: (request: Request, response: Response) => void = fileController.setFile()
+		const setFile: (request: Request, response: Response, next: NextFunction) => void = fileController.setFile()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
 		response.locals.course = course
 
-		moduleFactory.create = sinon.stub().returns(module)
+		moduleFactory.create = sinon.stub().returns(Promise.resolve(module))
 		moduleValidator.check = sinon.stub().returns({fields: ['validation_module_title_empty'], size: 1})
 		request.params.mediaId = 'mediaId'
 		request.body.file = 'file.pdf'
@@ -114,10 +115,47 @@ describe('File Controller Test', function() {
 		mediaRestService.get = sinon.stub().returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
 		request.session!.save = sinon.stub().returns(response.redirect(`/content-management/courses/${course.id}/module-file`))
 
-		await setFile(request, response)
+		await setFile(request, response, next)
 
 		expect(moduleFactory.create).to.have.been.calledOnceWith(request.body)
 		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-file`)
+	})
+
+	it('Should try to set module and pass to next if errors occur', async function() {
+		let course: Course = new Course()
+		let module: Module = new Module()
+		let error: Error = new Error()
+
+		course.id = 'courseId'
+
+		const setFile: (request: Request, response: Response, next: NextFunction) => void = fileController.setFile()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.course = course
+
+		moduleFactory.create = sinon.stub().returns(module)
+		moduleValidator.check = sinon.stub().returns({fields: [], size: 0})
+
+		request.body.mediaId = 'mediaId'
+		request.body.file = 'file.mp4'
+		request.body.type = 'video'
+		mediaRestService.get = sinon.stub().returns({
+			id: 'mediaId',
+			fileSizeKB: 1000,
+			path: '/location',
+			metadata: {duration: 5.0},
+		})
+
+		learningCatalogue.createModule = sinon.stub().returns(Promise.reject(error))
+
+		await setFile(request, response, next)
+
+		expect(moduleFactory.create).to.have.been.calledTwice
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
+		expect(mediaRestService.get).to.have.been.calledOnceWith('/mediaId')
+		expect(next).to.have.been.calledOnceWith(error)
 	})
 })

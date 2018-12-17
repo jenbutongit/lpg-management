@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import * as log4js from 'log4js'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {LinkFactory} from '../../learning-catalogue/model/factory/linkFactory'
@@ -48,7 +48,7 @@ export class LinkModuleController {
 	}
 
 	public setLinkModule() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const course = response.locals.course
 			const data = {
 				...request.body,
@@ -68,12 +68,17 @@ export class LinkModuleController {
 					module: data,
 					errors: errors,
 				})
+			} else {
+				const linkModule = this.linkFactory.create(data)
+				await this.learningCatalogue
+					.createModule(course.id, linkModule)
+					.then(() => {
+						return response.redirect(`/content-management/courses/${course.id}/add-module`)
+					})
+					.catch(error => {
+						next(error)
+					})
 			}
-
-			const linkModule = this.linkFactory.create(data)
-			await this.learningCatalogue.createModule(course.id, linkModule)
-
-			return response.redirect(`/content-management/courses/${course.id}/add-module`)
 		}
 	}
 }

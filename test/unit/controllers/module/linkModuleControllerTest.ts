@@ -8,6 +8,7 @@ import * as chai from 'chai'
 import {LinkModuleController} from '../../../../src/controllers/module/linkModuleController'
 import {expect} from 'chai'
 import sinon = require('sinon')
+import {NextFunction} from 'express'
 
 chai.use(sinonChai)
 
@@ -16,6 +17,7 @@ describe('LinkModuleController tests', () => {
 	let linkFactory: LinkFactory
 	let moduleValidator: Validator<Module>
 	let controller: LinkModuleController
+	const next: NextFunction = sinon.stub()
 
 	before(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -48,7 +50,7 @@ describe('LinkModuleController tests', () => {
 		linkFactory.create = sinon.stub()
 		learningCatalogue.createModule = sinon.stub()
 
-		await controller.setLinkModule()(request, response)
+		await controller.setLinkModule()(request, response, next)
 
 		expect(linkFactory.create).to.not.have.been.called
 		expect(learningCatalogue.createModule).to.not.have.been.called
@@ -107,11 +109,11 @@ describe('LinkModuleController tests', () => {
 
 		moduleValidator.check = sinon.stub().returns(errors)
 		linkFactory.create = sinon.stub()
-		learningCatalogue.createModule = sinon.stub()
+		learningCatalogue.createModule = sinon.stub().returns(Promise.resolve(linkModule))
 
 		linkFactory.create = sinon.stub().returns(linkModule)
 
-		await controller.setLinkModule()(request, response)
+		await controller.setLinkModule()(request, response, next)
 
 		expect(moduleValidator.check).to.have.been.calledOnceWith(
 			{
@@ -143,5 +145,80 @@ describe('LinkModuleController tests', () => {
 		expect(response.render).to.not.have.been.called
 
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/add-module`)
+	})
+
+	it('should try to add module and pass to next if error occured', async () => {
+		const error = new Error()
+		const course = {
+			id: 'course-id',
+		}
+
+		const data = {
+			isOptional: true,
+			title: 'Module title',
+			description: 'Module description',
+			url: 'http://example.org',
+			hours: 1,
+			minutes: 30,
+		}
+
+		const request = mockReq({
+			body: data,
+		})
+		const response = mockRes({
+			locals: {
+				course: course,
+			},
+		})
+
+		const errors = {size: 0, fields: []}
+
+		const linkModule = {
+			isOptional: true,
+			title: 'Module title',
+			description: 'Module description',
+			url: 'http://example.org',
+			type: 'link',
+			duration: 5400,
+		}
+
+		moduleValidator.check = sinon.stub().returns(errors)
+		linkFactory.create = sinon.stub()
+		learningCatalogue.createModule = sinon.stub().returns(Promise.reject(error))
+
+		linkFactory.create = sinon.stub().returns(linkModule)
+
+		await controller.setLinkModule()(request, response, next)
+
+		expect(moduleValidator.check).to.have.been.calledOnceWith(
+			{
+				isOptional: true,
+				title: 'Module title',
+				description: 'Module description',
+				url: 'http://example.org',
+				hours: 1,
+				minutes: 30,
+				type: 'link',
+				duration: 5400,
+			},
+			['title', 'description', 'url', 'duration']
+		)
+
+		expect(linkFactory.create).to.have.been.calledOnceWith({
+			isOptional: true,
+			title: 'Module title',
+			description: 'Module description',
+			url: 'http://example.org',
+			hours: 1,
+			minutes: 30,
+			type: 'link',
+			duration: 5400,
+		})
+
+		expect(learningCatalogue.createModule).to.have.been.calledOnceWith(course.id, linkModule)
+
+		expect(response.render).to.not.have.been.called
+
+		expect(next).to.have.been.calledOnceWith(error)
 	})
 })
