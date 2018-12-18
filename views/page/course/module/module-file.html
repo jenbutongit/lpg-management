@@ -8,18 +8,26 @@
 {% extends "../../../component/Page.njk" %}
 
 {% block pageTitle %}
-{% if type === 'file' %}
-    {{ i18n['module_add_file'] }}
-{% elif type === 'video' %}
-    {{ i18n['module_add_video_mp4'] }}
+
+{% if module.id %}
+{{ i18n.module.title.edit }}
 {% else %}
-    {{ i18n['module_add_scorm'] }}
+{{ i18n.module.title.add }}
 {% endif %}
-     - {{ i18n['proposition_name'] }}
+
+{% if type === 'file' %}
+    {{ i18n.module.title.file }}
+{% elif type === 'video' %}
+    {{ i18n.module.title.video }}
+{% else %}
+    {{ i18n.module.title.eLearning }}
+{% endif %}
+     module - {{ i18n['proposition_name'] }}
+
 {% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/courses/" + course.id + "/preview" %}
+{% set backButton = "/content-management/courses/" + course.id + "/add-module" %}
 
 {% block content %}
 
@@ -33,14 +41,14 @@
     {% else %}
         {% set chooseFileButtonClass = "govuk-form-group" %}
     {% endif %}
-    
+
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
-            <p class="govuk-body no-margin">You are adding
+            <p class="govuk-body no-margin">You are {% if module.id %} editing {% else %}adding{% endif %}
                 {% if type === "file" %}
                     a
                 {% else %}
@@ -50,93 +58,123 @@
             <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
             <input id="courseCatalogueUrl" type="hidden" value="{{courseCatalogueUrl}}">
 
-            <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file" method="post" class="module-form">
+            <form id="detailsForm" action="/content-management/courses/{{course.id}}/module-file/{{ module.id }}" method="post" class="module-form">
                 <input id="courseId" name="courseId" type="hidden" value="{{course.id}}">
                 <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
                 <input id="fileType" name="fileType" type="hidden" value="{{type}}">
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}
-                    {{ govukInput({
-                    label: {
-                    text: "Module title"
-                    },
-                    id: "title",
-                    name: "title",
-                    errorMessage: {
-                    text: "Module title is required"
-                    }
-                    }) }}
+                        {{ govukInput({
+                            label: {
+                                text: i18n.module.text.title
+                            },
+                            id: "title",
+                            name: "title",
+                            errorMessage: {
+                                text: i18n.module.validation.title.empty
+                            }
+                        }) }}
                     {% else %}
-                    {{ govukInput({
-                    label: {
-                    text: "Module title"
-                    },
-                    id: "title",
-                    name: "title",
-                    value: module.title
-                    }) }}
+                        {{ govukInput({
+                            label: {
+                                text: i18n.module.text.title
+                            },
+                            id: "title",
+                            name: "title",
+                            value: form.title|default(module.title)
+                        }) }}
                     {% endif %}
 
                     {% if errors.fields.description %}
-                    {{ govukTextarea({
-                    name: "description",
-                    id: "description",
-                    label: {
-                    text: "Description"
-                    },
-                    errorMessage: {
-                    text: "Module description is required"
-                    }
-                    }) }}
+                        {{ govukTextarea({
+                            name: "description",
+                            id: "description",
+                            label: {
+                                text: i18n.module.text.description
+                            },
+                            errorMessage: {
+                                text: i18n.module.validation.description.empty
+                            }
+                        }) }}
                     {% else %}
-                    {{ govukTextarea({
-                    name: "description",
-                    id: "description",
-                    value: module.description,
-                    label: {
-                    text: "Description"
-                    }
-                    }) }}
+                        {{ govukTextarea({
+                            name: "description",
+                            id: "description",
+                            value: module.description,
+                            label: {
+                                text: i18n.module.text.description
+                            }
+                        }) }}
                     {% endif %}
 
-                    <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
-                    <div class="time-inputs">
-                        {{ govukInput({
-                        type: "number",
-                        label: {
-                        text: "Days"
-                        },
-                        attributes: {
-                        maxlength: "3"
-                        },
-                        id: "days",
-                        name: "days",
-                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
-                        }) }}
-                        {{ govukInput({
-                        type: "number",
-                        label: {
-                        text: "Hours"
-                        },
-                        attributes: {
-                        maxlength: "3"
-                        },
-                        id: "hours",
-                        name: "hours",
-                        classes: "govuk-date-input__input govuk-input--width-3 font-light"
-                        }) }}
-                        {{ govukInput({
-                        type: "number",
-                        label: {
-                        text: "Minutes"
-                        },
-                        attributes: {
-                        maxlength: "2"
-                        },
-                        id: "minutes",
-                        name: "minutes",
-                        classes: "govuk-date-input__input govuk-input--width-3"
-                        }) }}
+                    {% if errors.fields.duration %}
+                    {% set classes = "errors" %}
+                    {% else %}
+                    {% set classes = "error-container" %}
+                    {% endif %}
+                    <div class={{classes}}>
+                        <p class="govuk-body govuk-!-margin-bottom-1 font-bold">Duration</p>
+                        {% if errors.fields.duration %}
+                        <p class="govuk-body error-message no-margin"><strong>{{i18n.module.validation.duration.empty}}</strong></p>
+                        {% endif %}
+                        <div class="time-inputs">
+                            {% if errors.fields.duration %}
+                                {{ govukInput({
+                                    type: "number",
+                                    label: {
+                                        text: "Hours"
+                                    },
+                                    attributes: {
+                                        maxlength: "3"
+                                    },
+                                    id: "hours",
+                                    name: "hours",
+                                    value: form.hours|default(module.hours),
+                                    classes: "govuk-date-input__input govuk-input--width-3 font-light"
+                                }) }}
+                                {{ govukInput({
+                                    type: "number",
+                                    label: {
+                                        text: "Minutes"
+                                    },
+                                    attributes: {
+                                        maxlength: "2"
+                                    },
+                                    id: "minutes",
+                                    value: form.hours|default(module.minutes),
+                                    name: "minutes",
+                                    classes: "govuk-date-input__input govuk-input--width-3"
+                                }) }}
+                            {% else %}
+                                {{ govukInput({
+                                    type: "number",
+                                    label: {
+                                        text: "Hours"
+                                    },
+                                    attributes: {
+                                        maxlength: "3"
+                                    },
+                                    id: "hours",
+                                    name: "hours",
+                                    value: form.hours|default(module.hours),
+                                    classes: "govuk-date-input__input govuk-input--width-3 font-light"
+                                }) }}
+
+                                {{ govukInput({
+                                    type: "number",
+                                    label: {
+                                        text: "Minutes"
+                                    },
+                                    attributes: {
+                                        maxlength: "2"
+                                    },
+                                    id: "minutes",
+                                    value: form.hours|default(module.minutes),
+                                    name: "minutes",
+                                    classes: "govuk-date-input__input govuk-input--width-3"
+                                }) }}
+                            {% endif %}
+                        </div>
                     </div>
                 </fieldset>
 
@@ -174,14 +212,12 @@
                     </strong>
                 </div>
 
-                {% if media is undefined %}
-                    {{ govukButton({
-                    attributes: {id: "uploadButton"},
-                    text: "Upload File",
-                    type: "input",
-                    classes: "button-blue left-aligned"
-                    }) }}
-                {% endif %}
+                {{ govukButton({
+                attributes: {id: "uploadButton"},
+                text: "Upload File",
+                type: "input",
+                classes: "button-blue left-aligned"
+                }) }}
 
                 {{ govukCheckboxes({
                 idPrefix: "isOptional",
@@ -203,7 +239,7 @@
                 }) }}
                 <div class="button-container">
                     {{ govukButton({
-                    text: "Continue",
+                    text: "Edit item" if module.id else "Add item",
                     type: "submit",
                     attributes: {id: "submitButton"}
                     }) }}
