@@ -60,6 +60,7 @@ import {InviteFactory} from './learner-record/model/factory/inviteFactory'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {Booking} from './learner-record/model/booking'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
 
 log4js.configure(config.LOGGING)
 
@@ -118,9 +119,9 @@ export class ApplicationContext {
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
 	searchController: SearchController
+	organisationalUnitService: OrganisationalUnitService
 
-	@EnvValue('LPG_UI_URL')
-	public lpgUiUrl: String
+	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
 	constructor() {
 		this.axiosInstance = axios.create({
@@ -236,13 +237,14 @@ export class ApplicationContext {
 		)
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
-		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
-
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
+
+		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService, this.csrs)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
-		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
+		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory)
 
+		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 	}
 

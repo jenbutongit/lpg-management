@@ -27,6 +27,18 @@ export class Csrs {
 		return await this._organisationalUnitService.create(`/organisationalUnits/`, organisationalUnit)
 	}
 
+	async getOrganisationalUnit(organisationalUnitId: string): Promise<OrganisationalUnit> {
+		return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
+	}
+
+	async updateOrganisationalUnit(organisationalUnitId: string, organisationalUnit: any): Promise<OrganisationalUnit> {
+		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
+	}
+
+	async deleteOrganisationalUnit(organisationalUnitId: string): Promise<void> {
+		return await this._organisationalUnitService.delete(`/organisationalUnits/${organisationalUnitId}`)
+	}
+
 	set organisationalUnitService(value: EntityService<OrganisationalUnit>) {
 		this._organisationalUnitService = value
 	}
