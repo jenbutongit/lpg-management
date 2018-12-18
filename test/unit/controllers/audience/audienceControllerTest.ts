@@ -13,7 +13,6 @@ import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
-import moment = require('moment')
 import {Csrs} from '../../../../src/csrs'
 
 chai.use(sinonChai)
@@ -407,14 +406,20 @@ describe('AudienceController', () => {
 			const audience = {id: audienceId, requiredBy: null}
 			res.locals.course = {audiences: [audience]}
 			res.locals.audience = audience
-			req.body = {'deadline-year': '2018', 'deadline-month': '12', 'deadline-day': '16'}
+
+			// set date to be tomorrow at midnight
+			const date = new Date()
+			date.setDate(date.getDate() + 1)
+			date.setHours(0, 0, 0, 0)
+
+			req.body = {'deadline-year': date.getFullYear().toString(), 'deadline-month': (date.getMonth() + 1).toString(), 'deadline-day': date.getDate().toString()}
 
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setDeadline()(req, res)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: moment('2018-12-16').toDate()}],
+				audiences: [{id: audienceId, requiredBy: date}],
 			})
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
