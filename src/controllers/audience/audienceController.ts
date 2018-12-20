@@ -8,6 +8,7 @@ import {CourseService} from '../../lib/courseService'
 import {AudienceService} from '../../lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
 import {DateTime} from '../../lib/dateTime'
+import {Csrs} from '../../csrs'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -15,6 +16,7 @@ export class AudienceController {
 	audienceFactory: AudienceFactory
 	courseService: CourseService
 	csrsService: CsrsService
+	csrs: Csrs
 	router: Router
 
 	constructor(
@@ -22,13 +24,15 @@ export class AudienceController {
 		audienceValidator: Validator<Audience>,
 		audienceFactory: AudienceFactory,
 		courseService: CourseService,
-		csrsService: CsrsService
+		csrsService: CsrsService,
+		csrs: Csrs
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
 		this.audienceFactory = audienceFactory
 		this.courseService = courseService
 		this.csrsService = csrsService
+		this.csrs = csrs
 		this.router = Router()
 		this.configurePathParametersProcessing()
 		this.setRouterPaths()
@@ -105,7 +109,6 @@ export class AudienceController {
 		return async (req: Request, res: Response) => {
 			const data = {...req.body}
 			const errors = await this.audienceValidator.check(data, ['audience.type'])
-
 			const audienceFromData = this.audienceFactory.create(data)
 
 			if (errors.size > 0) {
@@ -143,19 +146,19 @@ export class AudienceController {
 
 	getOrganisation() {
 		return async (req: Request, res: Response) => {
-			const organisations = await this.csrsService.getOrganisations()
-			res.render('page/course/audience/add-organisation', {organisations})
+			const organisations = await this.csrs.listOrganisationalUnitsForTypehead()
+			res.render('page/course/audience/add-organisation', {organisationalUnits: organisations})
 		}
 	}
 
 	setOrganisation() {
 		return async (req: Request, res: Response) => {
-			const organisations = await this.csrsService.getOrganisations()
-			const selectedOrganisations = this.mapSelectedOrganisationToCodes(req.body.organisation, req.body['input-autocomplete'], organisations)
-			if (selectedOrganisations.length > 0) {
-				res.locals.audience.departments = selectedOrganisations
-				await this.learningCatalogue.updateCourse(res.locals.course)
-			}
+			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : [req.body['parent']]
+
+			res.locals.audience.departments = departments
+
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
 			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
 	}
@@ -168,14 +171,11 @@ export class AudienceController {
 		}
 	}
 
-	private mapSelectedOrganisationToCodes(organisation: string, organisationName: string, organisations: any): string[] {
-		return organisations._embedded.organisationalUnits
-			.filter((org: any) => {
-				return organisation === 'all' || org.name === organisationName
-			})
-			.map((org: any) => {
-				return org.code
-			})
+	private async getAllOrganisationCodes(): Promise<string[]> {
+		const organisations = await this.csrsService.getOrganisations()
+		return organisations._embedded.organisationalUnits.map((org: any) => {
+			return org.code
+		})
 	}
 
 	deleteAudienceConfirmation() {
