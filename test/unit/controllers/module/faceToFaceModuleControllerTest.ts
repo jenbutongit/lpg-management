@@ -10,6 +10,7 @@ import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {FaceToFaceModuleController} from '../../../../src/controllers/module/faceToFaceModuleController'
 import * as sinon from 'sinon'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import {CourseService} from 'lib/courseService'
 
 chai.use(sinonChai)
 
@@ -18,6 +19,7 @@ describe('Face-to-face module controller tests', function() {
 	let learningCatalogue: LearningCatalogue
 	let moduleValidator: Validator<Module>
 	let moduleFactory: ModuleFactory
+	let courseService: CourseService
 
 	let req: Request
 	let res: Response
@@ -26,8 +28,9 @@ describe('Face-to-face module controller tests', function() {
 		learningCatalogue = <LearningCatalogue>{}
 		moduleValidator = <Validator<Module>>{}
 		moduleFactory = <ModuleFactory>{}
+		courseService = <CourseService>{}
 
-		faceToFaceModuleController = new FaceToFaceModuleController(learningCatalogue, moduleValidator, moduleFactory)
+		faceToFaceModuleController = new FaceToFaceModuleController(learningCatalogue, moduleValidator, moduleFactory, courseService)
 
 		req = mockReq()
 		res = mockRes()
@@ -75,5 +78,57 @@ describe('Face-to-face module controller tests', function() {
 		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'description', 'cost'])
 		expect(moduleFactory.create).to.have.been.calledOnceWith(req.body)
 		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-face-to-face`)
+	})
+
+	it('Should check for errors, update module and redirect to course preview page', async function() {
+		const module = new Module()
+		const course = new Course()
+		course.id = 'abc'
+		module.id = 'def'
+
+		const data = {
+			title: 'new title',
+			description: 'new description',
+			cost: 100,
+			isOptional: false,
+		}
+
+		req.body = data
+
+		res.locals.course = course
+		res.locals.module = module
+
+		moduleValidator.check = sinon.stub().returns({})
+		learningCatalogue.updateModule = sinon.stub()
+
+		await faceToFaceModuleController.editModule()(req, res)
+
+		expect(moduleValidator.check).to.have.been.calledOnceWith(data, ['title', 'description', 'cost'])
+		expect(learningCatalogue.updateModule).to.have.been.calledOnceWith('abc', module)
+		expect(res.redirect).to.have.been.calledOnceWith('/content-management/courses/abc/preview')
+
+		expect(module.id).to.equal('def')
+		expect(module.title).to.equal('new title')
+		expect(module.description).to.equal('new description')
+		expect(module.cost).to.equal(100)
+		expect(module.optional).to.equal(false)
+	})
+
+	it('Should check for errors, not update module and redirect to face to face module page', async function() {
+		const module = new Module()
+		const course = new Course()
+		course.id = 'abc'
+
+		res.locals.course = course
+		res.locals.module = module
+
+		req.params.moduleId = 'def'
+
+		moduleValidator.check = sinon.stub().returns({size: 1})
+
+		await faceToFaceModuleController.editModule()(req, res)
+
+		expect(moduleValidator.check).to.have.been.calledOnceWith(req.body, ['title', 'description', 'cost'])
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/abc/module-face-to-face/def`)
 	})
 })

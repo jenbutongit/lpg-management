@@ -5,7 +5,16 @@
 
 {% extends "../../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n['module_face_to_face_add'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}
+
+{% if module.id %}
+    {{ i18n.module.title.face_to_face_edit }}
+{% else %}
+    {{ i18n.module.title.face_to_face_add }}
+{% endif %}
+     - {{ i18n['proposition_name'] }}
+
+{% endblock %}
 
 {% set banner = true %}
 {% set backButton = "/content-management/courses/" + course.id + "/overview" %}
@@ -18,11 +27,17 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
+            {% if module.id %}
+            <p class="govuk-body form-header govuk-!-font-size-24">Edit a course</p>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
+            <p class="govuk-body no-margin">You are editing a <strong>face-to-face</strong> module</p>
+            {% else %}
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
             <p class="govuk-body no-margin">You are adding a <strong>face-to-face</strong> module</p>
+            {% endif %}
 
-            <form action="/content-management/courses/{{ course.id }}/module-face-to-face" method="post" class="module-form">
+            <form action="/content-management/courses/{{ course.id }}/module-face-to-face/{{ module.id }}" method="post" class="module-form">
                 <input name="type" type="hidden" value="face-to-face">
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}
@@ -115,7 +130,8 @@
                 }) }}
                 <div class="button-container">
                     {{ govukButton({
-                        text: "Continue"
+                        text: "Edit item" if module.id else "Add item",
+                        type: "submit"
                     }) }}
                 </div>
             </form>

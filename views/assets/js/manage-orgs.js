@@ -1,4 +1,4 @@
-var selectEl = document.querySelector('#organisationalUnit')
+var selectEl = document.querySelector('#parent')
 accessibleAutocomplete.enhanceSelectElement({
 	selectElement: selectEl,
 })
@@ -9,5 +9,5 @@ if (previouslySubmitted) {
 	var submittedEl = document.querySelector('.submitted')
 	submittedEl.classList.remove('submitted--hidden')
 	var params = new URLSearchParams(document.location.search.split('?')[1])
-	document.querySelector('.submitted__organisationalUnit').innerHTML = params.get('organisationalUnit')
+	document.querySelector('.submitted__parent').innerHTML = params.get('parent')
 }
