@@ -13,7 +13,7 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            <p class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</p>
+            <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</h1>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Organisation</h2>
             <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" method="post">
                 {% if errors.fields %}
@@ -27,11 +27,20 @@
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
                     {% set typeaheadHtml %}
-                        <div class="typeahead-container">
-                            <label class="govuk-body no-margin" for="autocomplete">Name of organisation</label>
-                            <p class="govuk-hint">Start typing the name of the organisation</p>
-                            <div id="autocomplete-container"></div>
-                        </div>
+                    <div class="autocomplete-wrapper">
+                        <select name="parent" id="parent">
+                            <option value=""></option>
+                            {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
+                            {% for key in organisationalUnits %}
+                                {% if parent === key.href %}
+                                    {% set selected='selected' %}
+                                {% else %}
+                                    {% set selected='' %}
+                                {% endif %}
+                                <option value={{ key.code }} {{ selected }}>{{ key.formattedName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     {% endset -%}
                     {{ govukRadios({
                         idPrefix: "organisation",
@@ -77,11 +86,6 @@
     <script src="/govuk-frontend/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-    <script type="text/javascript" src="/js/add-organisation.js"></script>
-    {% set orgs = [] %}
-    {% for organisation in organisations._embedded.organisationalUnits %}
-        {% set orgName = orgs.push(organisation.name)%}
-    {% endfor %}
-    <script orgs='{{orgs}}' src="/js/orgs.js"></script>
+    <script type="text/javascript" src="/js/manage-orgs.js"></script>
 {% endblock %}
 
