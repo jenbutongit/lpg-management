@@ -52,4 +52,26 @@ describe('CSRS tests', () => {
 
 		return expect(organisationalUnitService.create).to.have.been.calledOnceWith(`/organisationalUnits/`, organsationalUnit)
 	})
+
+	it('should call organisationalUnitService when getting an organisational unit', async () => {
+		const organsationalUnit: OrganisationalUnit = new OrganisationalUnit()
+		organsationalUnit.id = 'id123'
+
+		organisationalUnitService.get = sinon.stub()
+
+		await csrs.getOrganisationalUnit(organsationalUnit.id)
+
+		return expect(organisationalUnitService.get).to.have.been.calledOnceWith(`/organisationalUnits/${organsationalUnit.id}`)
+	})
+
+	it('should call organisationalUnitService when deleting an organisational unit', async () => {
+		const organisationalUnit: OrganisationalUnit = new OrganisationalUnit()
+		organisationalUnit.id = 'id123'
+
+		organisationalUnitService.delete = sinon.stub()
+
+		await csrs.deleteOrganisationalUnit(organisationalUnit.id)
+
+		return expect(organisationalUnitService.delete).to.have.been.calledOnceWith(`/organisationalUnits/${organisationalUnit.id}`)
+	})
 })

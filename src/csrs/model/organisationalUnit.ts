@@ -19,7 +19,9 @@ export class OrganisationalUnit {
 
 	paymentMethods: string[]
 
-	subOrgs: OrganisationalUnit[]
+	children: OrganisationalUnit[]
 
-	parent: OrganisationalUnit
+	parent: string
+
+	uri: string
 }
