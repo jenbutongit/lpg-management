@@ -14,9 +14,9 @@ export class Venue {
 		message: 'venue.validation.capacity.empty',
 	})
 	@IsPositive({
-                groups: ['all', 'event.all', 'event.location'],
-                message: 'venue.validation.capacity.positive',
-        })
+		groups: ['all', 'event.all', 'event.location'],
+		message: 'venue.validation.capacity.positive',
+	})
 	capacity: number
 
 	@IsNotEmpty({
@@ -24,9 +24,9 @@ export class Venue {
 		message: 'venue.validation.minCapacity.empty',
 	})
 	@IsPositive({
-                groups: ['all', 'event.all', 'event.location'],
-                message: 'venue.validation.minCapacity.positive',
-        })
+		groups: ['all', 'event.all', 'event.location'],
+		message: 'venue.validation.minCapacity.positive',
+	})
 	minCapacity: number
 
 	availability: number

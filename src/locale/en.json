@@ -116,7 +116,10 @@
 		},
 		"title": {
 			"manageOrganisations": "Manage organisations",
-			"addANewOrganisation": "Add a new organisation"
+			"addANewOrganisation": "Add a new organisation",
+			"editAnOrganisation": "Edit an organisation",
+			"removeAnOrganisation": "Remove an organisation",
+			"organisationOverview": "Organisation overview"
 		},
 		"validation": {
 			"name": {
@@ -124,6 +127,9 @@
 			},
 			"code": {
 				"empty": "Organisation code is required"
+			},
+			"organisation":{
+				"alreadyExists": "An organisation with this name or code already exists"
 			}
 		}
 	},
@@ -132,11 +138,43 @@
 		"validation": {
 			"cost": {
 				"positive": "Module cost must be a positive number"
+			},
+			"title":{
+				"empty": "Title is required"
+			},
+			"description":{
+				"empty": "Description is required"
+			},
+			"url":{
+				"empty": "A URL should include a protocol and be a top level domain"
+			},
+			"duration":{
+				"empty": "Duration is required"
 			}
 		},
 
 		"text": {
-			"cost": "Cost £ (ex VAT)"
+			"cost": "Cost £ (ex VAT)",
+			"title": "Module title",
+			"description": "Description",
+			"duration": "Duration",
+			"url": "URL"
+		},
+
+		"title":{
+			"edit": "Edit",
+			"add": "Add",
+			"video": "a video",
+			"file": "a file",
+			"eLearning": "an e-learning",
+            "faceToFace": "a face to face",
+			"add": "Add",
+			"link_add": "Add a link",
+			"link_edit": "Edit a link",
+            "face_to_face_add" : "Add a face-to-face module",
+            "face_to_face_edit": "Edit a face-to-face module",
+            "youtube_add": "Add a youtube module",
+            "youtube_edit": "Edit a youtube module"
 		}
 	},
 
@@ -175,13 +213,7 @@
 	"learning_provider_add_to_course_title": "Add learning provider to course",
 	"learning_provider_overview_title": "Learning provider overview",
 	"learning_providers_title": "Learning providers",
-	"module_add_file": "Add a file",
-	"module_add_video_mp4": "Add a Video (MP4)",
-	"module_add_scorm": "Add e-learning",
 	"module_add_title": "Add a module",
-	"module_link_add_title": "Add a link",
-	"module_youtube_add_title": "Add a YouTube video",
-	"module_face_to_face_add": "Add a classroom module",
 	"organisations_code_empty": "A valid code is required",
 	"organisations_new_name_empty": "Name is required",
 	"organisations_page_title": "Manage organisations",

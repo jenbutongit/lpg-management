@@ -1,38 +1,48 @@
 {% from "input/macro.njk" import govukInput with context%}
 {% from "button/macro.njk" import govukButton %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
 
 {% extends "../../component/Page.njk" %}
 
-{% block pageTitle %}{{ i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}{% endblock %}
+{% block pageTitle %}
+    {{ i18n.organisations.title.editAnOrganisation if organisationalUnit else i18n.organisations.title.addANewOrganisation }} - {{ i18n.proposition_name }}
+{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/organisations" %}
-
+{% if organisationalUnit %}
+    {% set backButton = "/content-management/organisations/" + organisationalUnit.id + "/overview"%}
+{% else %}
+    {% set backButton = "/content-management/organisations/manage" %}
+{% endif %}
 {% block content %}
+{% set errors = sessionFlash.errors %}
+{% set form = sessionFlash.form %}
+
+{{ errorSummary(errors.fields) }}
 {% set form = sessionFlash.form %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l">Add a new organisation</h1>
+            <h1 class="govuk-heading-l">{{ i18n.organisations.title.editAnOrganisation if organisationalUnit else i18n.organisations.title.addANewOrganisation }}</h1>
         </div>
     </div>
-    <div class="govuk-grid-row">
+<div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {% set errors = sessionFlash.errors %}
-
-            {{ errorSummary(errors.fields) }}
-            
-              <form action="/content-management/organisations/organisation" method="post">
-
-
+              <form action="/content-management/organisations/{{ organisationalUnit.id }}" method="post">
                 <div class="govuk-form-group">
                     <h2 class="govuk-heading-s no-margin">{{ i18n.organisations.text.parent }}</h2>
                     <p class="govuk-body custom-margin">If your new organisation has an existing parent, find them in the list below.</p>
                     <p for="organisationalUnit no-margin" class="govuk-body hint custom-margin">Start typing to find your organisation name</p>
                     <div class="autocomplete-wrapper">
-                        <select name="organisationalUnit" id="organisationalUnit">
+                        <select name="parent" id="parent">
                             <option value=""></option>
-                            {% for key, item in organisationalUnits %}
-                                <option value={{ key }}>{{ item }}</option>
+                            {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
+                            {% for key in organisationalUnits %}
+                                {% if parent === key.href %}
+                                    {% set selected='selected' %}
+                                {% else %}
+                                    {% set selected='' %}
+                                {% endif %}
+                            <option value={{ key.href }} {{ selected }}>{{ key.formattedName }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -88,15 +98,19 @@
                     classes: "govuk-input--width-10",
                     id: "abbreviation",
                     name: "abbreviation",
-                    value: organisationalUnit.abbreviation
+                    value: form.abbreviation|default(organisationalUnit.abbreviation)
                 }) }}
                 <div class="button-container">
                     {{ govukButton({
-                        text: "Add organisation"
+                        text: "Update" if organisationalUnit.id else "Add a new organisation"
                     }) }}
                 </div>
             </form>
-            <a href="/content-management/organisations" class="govuk-link">Cancel</a>
+            {% if organisationalUnit %}
+                <a href="/content-management/organisations/{{organisationalUnit.id}}/overview" class="govuk-link">Cancel</a>
+            {% else %}
+                <a href="/content-management/organisations/manage" class="govuk-link">Cancel</a>
+            {% endif %}
         </div>
         <div class="govuk-grid-column-one-third">
         </div>
