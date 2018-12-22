@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express'
 
-export class MiController {
+export class ReportingController {
 	router: Router
 
 	constructor() {
@@ -9,40 +9,40 @@ export class MiController {
 	}
 
 	private configureRouterPaths() {
-		this.router.get('/reports', this.getReports())
-		this.router.get('/reports/learner-record', this.getLearnerRecordReport())
-		this.router.get('/reports/ratings', this.getRatingsReport())
-		this.router.get('/reports/classroom', this.getClassroomReport())
-		this.router.get('/reports/professions', this.getProfessionsReport())
+		this.router.get('/reporting', this.getReports())
+		this.router.get('/reporting/learner-record', this.getLearnerRecordReport())
+		this.router.get('/reporting/ratings', this.getRatingsReport())
+		this.router.get('/reporting/classroom', this.getClassroomReport())
+		this.router.get('/reporting/professions', this.getProfessionsReport())
 	}
 
 	getReports() {
 		return async (request: Request, response: Response) => {
-			response.render('page/mi')
+			response.render('page/reporting')
 		}
 	}
 
 	getLearnerRecordReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reports/learner-record')
+			response.render('page/reporting/learner-record')
 		}
 	}
 
 	getRatingsReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reports/ratings')
+			response.render('page/reporting/ratings')
 		}
 	}
 
 	getClassroomReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reports/classroom')
+			response.render('page/reporting/classroom')
 		}
 	}
 
 	getProfessionsReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reports/professions')
+			response.render('page/reporting/professions')
 		}
 	}
 }
