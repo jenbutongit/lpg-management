@@ -1,0 +1,21 @@
+{% from "../component/reporting/macro.njk" import search with context %}
+
+{% extends "../../component/Page.njk" %} 
+
+{% block pageTitle %}{{ i18n['report_learner_record_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid row">
+        <div class="govuk-column-full">
+            <h1 class="govuk-heading-l">Learner records</h1>
+        </div>
+    </div>
+    <div class="govuk-grid row">
+        <div class="govuk-column-two-thirds">
+             {{ reporting("/reporting/learner-records") }}
+        </div>
+        <div class="govuk-column-one-third">
+        </div>
+    </div>
+{% endblock %}
