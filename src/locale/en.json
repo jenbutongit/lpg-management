@@ -128,7 +128,7 @@
 			"code": {
 				"empty": "Organisation code is required"
 			},
-			"organisation":{
+			"organisation": {
 				"alreadyExists": "An organisation with this name or code already exists"
 			}
 		}
@@ -139,16 +139,16 @@
 			"cost": {
 				"positive": "Module cost must be a positive number"
 			},
-			"title":{
+			"title": {
 				"empty": "Title is required"
 			},
-			"description":{
+			"description": {
 				"empty": "Description is required"
 			},
-			"url":{
+			"url": {
 				"empty": "A URL should include a protocol and be a top level domain"
 			},
-			"duration":{
+			"duration": {
 				"empty": "Duration is required"
 			}
 		},
@@ -161,20 +161,19 @@
 			"url": "URL"
 		},
 
-		"title":{
+		"title": {
 			"edit": "Edit",
 			"add": "Add",
 			"video": "a video",
 			"file": "a file",
 			"eLearning": "an e-learning",
-            "faceToFace": "a face to face",
-			"add": "Add",
+			"faceToFace": "a face to face",
 			"link_add": "Add a link",
 			"link_edit": "Edit a link",
-            "face_to_face_add" : "Add a face-to-face module",
-            "face_to_face_edit": "Edit a face-to-face module",
-            "youtube_add": "Add a youtube module",
-            "youtube_edit": "Edit a youtube module"
+			"face_to_face_add": "Add a face-to-face module",
+			"face_to_face_edit": "Edit a face-to-face module",
+			"youtube_add": "Add a youtube module",
+			"youtube_edit": "Edit a youtube module"
 		}
 	},
 
@@ -197,7 +196,7 @@
 		"file": "File",
 		"blended": "Blended"
 	},
-	"administration_pages_title": " My administration pages",
+	"administration_pages_title": "Reporting",
 	"blended": "Blended",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
