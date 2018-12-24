@@ -60,10 +60,8 @@ export class FaceToFaceModuleController {
 			})
 		)
 
-		this.router.get('/content-management/courses/:courseId/module-classroom/:moduleId?', this.getModule())
-		this.router.post('/content-management/courses/:courseId/module-classroom/:moduleId?', this.setModule())
-		this.router.get('/content-management/courses/:courseId/module-classroom/:moduleId/add-learning-provider', this.getLearnerProvider())
-		this.router.post('/content-management/courses/:courseId/module-classroom/:moduleId/add-learning-provider', this.setLearnerProvider())
+		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId/add-learning-provider', this.getLearnerProvider())
+		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId/add-learning-provider', this.setLearnerProvider())
 
 		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId?', asyncHandler(this.getModule()))
 		this.router.post('/content-management/courses/:courseId/module-face-to-face/', asyncHandler(this.setModule()))
@@ -72,7 +70,7 @@ export class FaceToFaceModuleController {
 
 	public getModule() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/module-classroom')
+			response.render('page/course/module/module-face-to-face')
 		}
 	}
 
