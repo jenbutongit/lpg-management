@@ -53,6 +53,10 @@
 	padding-top: 30px;
 }
 
+.attendee-form {
+	padding-top: 10px;
+}
+
 .no-errors {
 	display: none;
 }
@@ -96,8 +100,30 @@
 	}
 }
 
-.provider-input {
-	width: 100%;
+@media screen and (min-width: $tablet-small) {
+	.input-with-button {
+		display: flex;
+		align-items: flex-start;
+
+		.govuk-form-group {
+			width: 100%;
+			display: inline-block;
+			margin-bottom: 30px;
+
+			.govuk-label {
+				white-space: nowrap;
+			}
+
+			.govuk-input {
+				width: 100%;
+			}
+		}
+		.govuk-button {
+			margin: 0 0 0 30px;
+			flex: none;
+			width: 149px;
+		}
+	}
 }
 
 .date-set {

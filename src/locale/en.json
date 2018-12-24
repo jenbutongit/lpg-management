@@ -74,6 +74,36 @@
 			"cancel": "Cancel event"
 		}
 	},
+	"venue": {
+		"validation": {
+			"minCapacity": {
+				"empty": "Minimum capacity is required",
+				"positive": "Minimum capacity must be positive"
+			},
+			"capacity": {
+				"empty": "Capacity is required",
+				"positive": "Capacity must be positive"
+			},
+			"location": {
+				"empty": "Location is required"
+			}
+		}
+	},
+	"attendee": {
+		"title": {
+			"cancel": "Cancel attendee"
+		},
+		"status": {
+			"Requested": "Pending",
+			"Confirmed": "Booked",
+			"Cancelled": "Cancelled"
+		},
+		"validation": {
+			"cancellationReason": {
+				"empty": "A reason for cancellation is required"
+			}
+		}
+	},
 	"organisations": {
 		"headers": {
 			"organisationName": "Organisation name"
@@ -86,7 +116,10 @@
 		},
 		"title": {
 			"manageOrganisations": "Manage organisations",
-			"addANewOrganisation": "Add a new organisation"
+			"addANewOrganisation": "Add a new organisation",
+			"editAnOrganisation": "Edit an organisation",
+			"removeAnOrganisation": "Remove an organisation",
+			"organisationOverview": "Organisation overview"
 		},
 		"validation": {
 			"name": {
@@ -94,6 +127,9 @@
 			},
 			"code": {
 				"empty": "Organisation code is required"
+			},
+			"organisation": {
+				"alreadyExists": "An organisation with this name or code already exists"
 			}
 		}
 	},
@@ -102,11 +138,42 @@
 		"validation": {
 			"cost": {
 				"positive": "Module cost must be a positive number"
+			},
+			"title": {
+				"empty": "Title is required"
+			},
+			"description": {
+				"empty": "Description is required"
+			},
+			"url": {
+				"empty": "A URL should include a protocol and be a top level domain"
+			},
+			"duration": {
+				"empty": "Duration is required"
 			}
 		},
 
 		"text": {
-			"cost": "Cost £ (ex VAT)"
+			"cost": "Cost £ (ex VAT)",
+			"title": "Module title",
+			"description": "Description",
+			"duration": "Duration",
+			"url": "URL"
+		},
+
+		"title": {
+			"edit": "Edit",
+			"add": "Add",
+			"video": "a video",
+			"file": "a file",
+			"eLearning": "an e-learning",
+			"faceToFace": "a face to face",
+			"link_add": "Add a link",
+			"link_edit": "Edit a link",
+			"face_to_face_add": "Add a face-to-face module",
+			"face_to_face_edit": "Edit a face-to-face module",
+			"youtube_add": "Add a youtube module",
+			"youtube_edit": "Edit a youtube module"
 		}
 	},
 
@@ -169,6 +236,9 @@
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
+	"email_address_found_message": " has been invited to this event",
+	"email_address_not_found_message": " is not registered. Check the email address and try adding them again",
+	"email_address_already_invited_message": " has already been invited to this event",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",

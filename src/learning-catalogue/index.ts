@@ -50,6 +50,10 @@ export class LearningCatalogue {
 		return await this._courseService.listAllWithPagination(`/courses?status=Draft&status=Published&status=Archived&page=${page}&size=${size}`)
 	}
 
+	async searchCourses(query: string, page: number = 0, size: number = 10): Promise<DefaultPageResults<Course>> {
+		return await this._courseService.listAllWithPagination(`/search/courses/?status=Draft&status=Published&status=Archived&query=${query}&page=${page}&size=${size}`)
+	}
+
 	async createCourse(course: Course): Promise<Course> {
 		return this._courseService.create('/courses/', course)
 	}
@@ -68,6 +72,10 @@ export class LearningCatalogue {
 
 	async getModule(courseId: string, moduleId: string): Promise<Module> {
 		return this._moduleService.get(`/courses/${courseId}/modules/${moduleId}`)
+	}
+
+	async updateModule(courseId: string, module: Module): Promise<Module> {
+		return this._moduleService.update(`/courses/${courseId}/modules/${module.id}`, module)
 	}
 
 	async deleteModule(courseId: string, moduleId: string) {

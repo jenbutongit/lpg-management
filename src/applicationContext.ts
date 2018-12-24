@@ -49,13 +49,18 @@ import {DateRangeCommand} from './controllers/command/dateRangeCommand'
 import {DateRangeCommandFactory} from './controllers/command/factory/dateRangeCommandFactory'
 import {DateRange} from './learning-catalogue/model/dateRange'
 import {DateRangeFactory} from './learning-catalogue/model/factory/dateRangeFactory'
+import {LinkModule} from './learning-catalogue/model/linkModule'
+import {SearchController} from './controllers/searchController'
 import {OrganisationController} from './controllers/organisationController'
 import {Csrs} from './csrs'
 import {OrganisationalUnitFactory} from './csrs/model/organisationalUnitFactory'
 import {LearnerRecord} from './learner-record'
 import {LearnerRecordConfig} from './learner-record/learnerRecordConfig'
+import {InviteFactory} from './learner-record/model/factory/inviteFactory'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
+import {Booking} from './learner-record/model/booking'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
 
 log4js.configure(config.LOGGING)
 
@@ -84,6 +89,7 @@ export class ApplicationContext {
 	moduleFactory: ModuleFactory
 	youtubeModuleController: YoutubeModuleController
 	moduleValidator: Validator<Module>
+	linkModuleValidator: Validator<LinkModule>
 	eventValidator: Validator<Event>
 	audienceController: AudienceController
 	audienceValidator: Validator<Audience>
@@ -105,11 +111,15 @@ export class ApplicationContext {
 	dateRangeValidator: Validator<DateRange>
 	learnerRecord: LearnerRecord
 	learnerRecordConfig: LearnerRecordConfig
+	inviteFactory: InviteFactory
 	bookingFactory: BookingFactory
+	bookingValidator: Validator<Booking>
 	organisationController: OrganisationController
 	csrs: Csrs
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
+	searchController: SearchController
+	organisationalUnitService: OrganisationalUnitService
 
 	@EnvValue('LPG_UI_URL') public lpgUiUrl: String
 
@@ -165,7 +175,7 @@ export class ApplicationContext {
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory()
 		this.moduleValidator = new Validator<Module>(this.moduleFactory)
-		this.youtubeModuleController = new YoutubeModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.youtubeService)
+		this.youtubeModuleController = new YoutubeModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.youtubeService, this.courseService)
 
 		this.termsAndConditionsFactory = new TermsAndConditionsFactory()
 		this.learningProviderValidator = new Validator<LearningProvider>(this.learningProviderFactory)
@@ -186,10 +196,17 @@ export class ApplicationContext {
 		this.mediaConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url + '/media')
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
-		this.fileController = new FileController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, new OauthRestService(this.mediaConfig, this.auth))
-		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory, this.moduleValidator)
+		this.fileController = new FileController(
+			this.learningCatalogue,
+			this.moduleValidator,
+			this.moduleFactory,
+			new OauthRestService(this.mediaConfig, this.auth),
+			this.courseService
+		)
+		this.linkModuleValidator = new Validator<LinkModule>(this.moduleFactory)
+		this.linkModuleController = new LinkModuleController(this.learningCatalogue, this.moduleFactory, this.linkModuleValidator, this.courseService)
 
-		this.faceToFaceController = new FaceToFaceModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory)
+		this.faceToFaceController = new FaceToFaceModuleController(this.learningCatalogue, this.moduleValidator, this.moduleFactory, this.courseService)
 
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 
@@ -199,27 +216,36 @@ export class ApplicationContext {
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
 		this.bookingFactory = new BookingFactory()
+		this.inviteFactory = new InviteFactory()
 
 		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
-		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory)
+		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory, this.inviteFactory)
+
+		this.bookingValidator = new Validator<Booking>(this.bookingFactory)
 
 		this.eventController = new EventController(
 			this.learningCatalogue,
 			this.learnerRecord,
 			this.eventValidator,
+			this.bookingValidator,
 			this.eventFactory,
+			this.inviteFactory,
 			this.dateRangeCommandValidator,
 			this.dateRangeValidator,
-			this.dateRangeCommandFactory
+			this.dateRangeCommandFactory,
+			this.identityService
 		)
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
-		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService)
-
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
+
+		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService, this.csrs)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
-		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator)
+		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory)
+
+		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
+		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 	}
 
 	addToResponseLocals() {

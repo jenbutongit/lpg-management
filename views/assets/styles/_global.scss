@@ -102,8 +102,16 @@ ul {
 	box-sizing: border-box;
 
 	&.panel-blue {
-		background-color: $govuk-link-colour;
+		background-color: $panel;
 	}
+
+    &.error {
+      background-color: $error-message;
+    }
+
+    &.warning {
+      background-color: govuk-colour("orange");
+    }
 
 	.govuk-heading-s {
 		color: $white;

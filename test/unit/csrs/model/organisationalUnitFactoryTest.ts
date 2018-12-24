@@ -15,14 +15,14 @@ describe('OrganisationalUnitFactory tests', () => {
 		const name = 'organisational-unit'
 		const code = '123'
 		const paymentMethods = ['PO123']
-		const subOrgs = [childOrganisationalUnit]
+		const children = [childOrganisationalUnit]
 
 		const data: object = {
 			id: id,
 			name: name,
 			code: code,
 			paymentMethods: paymentMethods,
-			subOrgs: subOrgs,
+			children: children,
 		}
 
 		const result: OrganisationalUnit = organisationalUnitFactory.create(data)
@@ -31,6 +31,6 @@ describe('OrganisationalUnitFactory tests', () => {
 		expect(result.name).to.eql(name)
 		expect(result.code).to.eql(code)
 		expect(result.paymentMethods).to.eql(paymentMethods)
-		expect(result.subOrgs[0].name).to.eql(subOrgs[0].name)
+		expect(result.children[0].name).to.eql(children[0].name)
 	})
 })

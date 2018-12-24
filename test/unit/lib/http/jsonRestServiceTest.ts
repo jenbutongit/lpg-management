@@ -87,12 +87,12 @@ describe('JsonRestService tests', () => {
 
 	it('should throw error if problem with GET request', async () => {
 		const path = '/courses/course-id'
-		const errorMessage = 'Error with GET request: Error: Error thrown from test when getting http://example.org/courses/course-id'
+		const errorMessage = 'Error thrown from test'
 
 		http.get = sinon
 			.stub()
 			.withArgs(path)
-			.throws(new Error('Error thrown from test'))
+			.throws(new Error(errorMessage))
 
 		return expect(restService.get(path)).to.be.rejectedWith(errorMessage)
 	})
@@ -107,7 +107,7 @@ describe('JsonRestService tests', () => {
 		http.post = sinon
 			.stub()
 			.withArgs(path)
-			.throws(new Error('Error thrown from test'))
+			.throws(new Error(errorMessage))
 
 		return expect(restService.post(path, course)).to.be.rejectedWith(errorMessage)
 	})
@@ -146,7 +146,7 @@ describe('JsonRestService tests', () => {
 		http.put = sinon
 			.stub()
 			.withArgs(path)
-			.throws(new Error('Error thrown from test'))
+			.throws(new Error(errorMessage))
 
 		return expect(restService.put(path, course)).to.be.rejectedWith(errorMessage)
 	})
@@ -168,7 +168,7 @@ describe('JsonRestService tests', () => {
 		http.delete = sinon
 			.stub()
 			.withArgs(path)
-			.throws(new Error('Error thrown from test'))
+			.throws(new Error(errorMessage))
 
 		return expect(restService.delete(path)).to.be.rejectedWith(errorMessage)
 	})
@@ -204,7 +204,7 @@ describe('JsonRestService tests', () => {
 		http.patch = sinon
 			.stub()
 			.withArgs(path)
-			.throws(new Error('Error thrown from test'))
+			.throws(new Error(errorMessage))
 
 		return expect(restService.patch(path, course)).to.be.rejectedWith(errorMessage)
 	})

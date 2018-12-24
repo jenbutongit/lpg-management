@@ -217,4 +217,12 @@ describe('Learning Catalogue tests', () => {
 
 		return expect(termsAndConditionsService.delete).to.have.been.calledOnceWith(`/learning-providers/${learningProviderId}/terms-and-conditions/${termsAndConditionsId}`)
 	})
+
+	it('should call courseService when searching courses', async () => {
+		courseService.listAllWithPagination = sinon.stub()
+
+		await learningCatalogue.searchCourses('test', 0, 10)
+
+		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`)
+	})
 })

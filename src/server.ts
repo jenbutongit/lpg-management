@@ -16,7 +16,6 @@ import * as errorController from './lib/errorHandler'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
-
 const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')
 const appRoot = require('app-root-path')
@@ -82,7 +81,13 @@ app.use(serveStatic(appRoot + '/dist/views/assets'))
 app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
 app.use('/sortablejs', serveStatic(appRoot + '/node_modules/sortablejs/'))
 
-log4js.configure(config.LOGGING)
+app.use(
+	log4js.connectLogger(logger, {
+		format: ':method :url',
+		level: 'trace',
+		nolog: '\\.js|\\.css|\\.gif|\\.jpg|\\.png|\\.ico$',
+	})
+)
 
 app.use(cookieParser())
 
@@ -115,6 +120,7 @@ app.use(ctx.linkModuleController.router)
 app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
+app.use(ctx.searchController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')

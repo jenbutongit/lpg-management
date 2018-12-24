@@ -42,6 +42,9 @@ export class ModuleFactory {
 		video: (data: any) => {
 			const module = <VideoModule>ModuleFactory.defaultCreate(new VideoModule(), data)
 			module.url = data.url
+			if (data.url) {
+				module.subtype = !data.url.search(/http(.+)youtube(.*)/i) ? VideoModule.Subtype.YOUTUBE : VideoModule.Subtype.MP4
+			}
 			return module
 		},
 		link: (data: any) => {
