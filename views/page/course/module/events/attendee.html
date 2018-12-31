@@ -35,6 +35,9 @@
                                 </form>
                             {% endif %}
                         </li>
+                        {% if booking.poNumber %}
+                            <li class="list-details view"><p class="govuk-body"><strong>PO Number</strong></p><p class="govuk-body">{{ booking.poNumber }}</p></li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

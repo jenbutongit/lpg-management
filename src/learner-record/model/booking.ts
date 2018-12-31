@@ -7,6 +7,7 @@ export class Booking {
 	learnerEmail: string
 	event: string
 	paymentDetails: string
+	poNumber: string
 	status: Booking.Status
 
 	@IsNotEmpty({
