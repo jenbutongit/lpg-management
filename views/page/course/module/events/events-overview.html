@@ -1,6 +1,7 @@
 {% from "table/macro.njk" import govukTable %}
 {% from "input/macro.njk" import govukInput %}
 {% from "button/macro.njk" import govukButton %}
+{% from "../../../../component/statusWithLabel/macro.njk" import statusWithLabel with context %}
 {% from "../../../../component/menu/macro.njk" import menu %}
 
 {% extends "../../../../component/Page.njk" %}
@@ -161,6 +162,9 @@
         <div class="govuk-grid-column-one-third">
           {% if course.status !== "Archived" %}
             <div class="right-menu">
+              {% block statusWithLabel %}
+                {{ statusWithLabel(event.status) }}
+              {% endblock %}
               {% block menu %}
                 {% set actions = [
                   {
