@@ -14,6 +14,7 @@ export class BookingFactory {
 		booking.learnerEmail = data.learnerEmail
 		booking.event = data.event
 		booking.paymentDetails = data.paymentDetails
+		booking.poNumber = data.poNumber
 		booking.status = data.status ? Booking.Status[data.status.toUpperCase() as keyof typeof Booking.Status] : Booking.Status.REQUESTED
 		booking.cancellationReason = data.cancellationReason
 
