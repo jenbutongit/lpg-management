@@ -22,6 +22,7 @@ export class EventFactory {
 		event.dateRanges.sort((dateRange1, dateRange2) => DateTime.sortDateRanges(dateRange1, dateRange2))
 
 		event.venue = this.venueFactory.create(data.venue)
+		event.status = data.status ? Event.Status[data.status.toUpperCase() as keyof typeof Event.Status] : Event.Status.ACTIVE
 
 		return event
 	}
