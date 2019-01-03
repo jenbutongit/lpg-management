@@ -465,7 +465,16 @@ export class EventController implements FormController {
 						emailAddressFoundMessage: 'email_address_already_invited_message',
 						emailAddress: emailAddress,
 					}
+				} else if (error.response.data.errors[0] == 'The learner is already booked onto the event') {
+					req.session!.sessionFlash = {
+						emailAddressFoundMessage: 'email_address_already_booked_message',
+						emailAddress: emailAddress,
+					}
 				} else {
+					req.session!.sessionFlash = {
+						emailAddressFoundMessage: 'could_not_invite_learner',
+						emailAddress: emailAddress,
+					}
 				}
 			})
 

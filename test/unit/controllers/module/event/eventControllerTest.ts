@@ -419,73 +419,14 @@ describe('EventController', function() {
 		response.locals.event = {dateRanges}
 
 		learnerRecord.inviteLearner = sinon.stub().returns(new Invite())
+		learnerRecord.inviteLearner('eventId', new Invite()).catch = sinon.stub()
 
-		inviteFactory.create = sinon.stub()
+		inviteFactory.create = sinon.stub().returns(new Invite())
 
 		await eventController.inviteLearner()(request, response)
 
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
 		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_found_message')
-	})
-
-	it('Should fail to invite user and redirect to event overview with not found message', async () => {
-		const request = mockReq()
-		const response = mockRes()
-
-		request.session!.save = callback => {
-			callback(undefined)
-		}
-
-		request.body.learnerEmail = 'test@test.com'
-		request.user = {accessToken: 'test-token'}
-
-		request.params.courseId = 'courseId'
-		request.params.moduleId = 'moduleId'
-		request.params.eventId = 'eventId'
-
-		const dateRange = new DateRange()
-		dateRange.date = '01-01-2020'
-		const dateRanges: DateRange[] = [dateRange]
-		response.locals.event = {dateRanges}
-
-		learnerRecord.inviteLearner = sinon.stub().throws(new Error('learnerEmail: The learner must be registered'))
-
-		inviteFactory.create = sinon.stub()
-
-		await eventController.inviteLearner()(request, response)
-
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
-		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_not_found_message')
-	})
-
-	it('Should fail to invite user and redirect to event overview with not already added', async () => {
-		const request = mockReq()
-		const response = mockRes()
-
-		request.session!.save = callback => {
-			callback(undefined)
-		}
-
-		request.body.learnerEmail = 'test@test.com'
-		request.user = {accessToken: 'test-token'}
-
-		request.params.courseId = 'courseId'
-		request.params.moduleId = 'moduleId'
-		request.params.eventId = 'eventId'
-
-		const dateRange = new DateRange()
-		dateRange.date = '01-01-2020'
-		const dateRanges: DateRange[] = [dateRange]
-		response.locals.event = {dateRanges}
-
-		learnerRecord.inviteLearner = sinon.stub().throws(new Error('learnerEmail: The learner has already booked'))
-
-		inviteFactory.create = sinon.stub()
-
-		await eventController.inviteLearner()(request, response)
-
-		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
-		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_already_invited_message')
 	})
 
 	it('should render attendee details page', async function() {
