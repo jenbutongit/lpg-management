@@ -13,7 +13,7 @@ import {Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
-import moment = require('moment')
+import {Csrs} from '../../../../src/csrs'
 
 chai.use(sinonChai)
 
@@ -24,6 +24,7 @@ describe('AudienceController', () => {
 	let csrsService: CsrsService
 	let learningCatalogue: LearningCatalogue
 	let courseService: CourseService
+	let csrs: Csrs
 	let req: Request
 	let res: Response
 
@@ -36,7 +37,8 @@ describe('AudienceController', () => {
 		courseService = new CourseService(learningCatalogue)
 		audienceFactory = new AudienceFactory()
 		audienceValidator = new Validator(audienceFactory)
-		audienceController = new AudienceController(learningCatalogue, audienceValidator, audienceFactory, courseService, csrsService)
+		csrs = <Csrs>{}
+		audienceController = new AudienceController(learningCatalogue, audienceValidator, audienceFactory, courseService, csrsService, csrs)
 
 		req = mockReq()
 		req.session!.save = callback => {
@@ -172,7 +174,7 @@ describe('AudienceController', () => {
 
 	describe('#getOrganisation', () => {
 		it('should render add-organisation page', async function() {
-			csrsService.getOrganisations = sinon.stub()
+			csrs.listOrganisationalUnitsForTypehead = sinon.stub()
 			await audienceController.getOrganisation()(req, res)
 
 			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-organisation')
@@ -181,24 +183,28 @@ describe('AudienceController', () => {
 
 	describe('#setOrganisation', () => {
 		it('should update course audience with selected organisation code', async function() {
+			// res.locals.audience.departments = req.body['parent']
+			// await this.learningCatalogue.updateCourse(res.locals.course)
+			// res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+
 			req.params.audienceId = audienceId
 
 			const hmrcName = 'HM Revenue & Customs'
+			const hmrcCode = 'hmrc'
+
 			req.body = {organisation: 'selected', 'input-autocomplete': hmrcName}
 
-			const audience = {id: audienceId, departments: []}
-			res.locals.course = {audiences: [audience]}
+			const audience = {id: audienceId, departments: [hmrcCode]}
 			res.locals.audience = audience
 
-			const hmrcCode = 'hmrc'
-			csrsService.getOrganisations = sinon.stub().returns({_embedded: {organisationalUnits: [{code: hmrcCode, name: hmrcName}]}})
+			const course = {audiences: [audience]}
+			res.locals.course = course
+
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setOrganisation()(req, res)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, departments: [hmrcCode]}],
-			})
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
@@ -400,14 +406,20 @@ describe('AudienceController', () => {
 			const audience = {id: audienceId, requiredBy: null}
 			res.locals.course = {audiences: [audience]}
 			res.locals.audience = audience
-			req.body = {'deadline-year': '2018', 'deadline-month': '12', 'deadline-day': '16'}
+
+			// set date to be tomorrow at midnight
+			const date = new Date()
+			date.setDate(date.getDate() + 1)
+			date.setHours(0, 0, 0, 0)
+
+			req.body = {'deadline-year': date.getFullYear().toString(), 'deadline-month': (date.getMonth() + 1).toString(), 'deadline-day': date.getDate().toString()}
 
 			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setDeadline()(req, res)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: moment('2018-12-16').toDate()}],
+				audiences: [{id: audienceId, requiredBy: date}],
 			})
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})

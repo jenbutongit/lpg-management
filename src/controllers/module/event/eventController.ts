@@ -18,8 +18,10 @@ import {Validate} from '../../formValidator'
 import {FormController} from '../../formController'
 import {Course} from '../../../learning-catalogue/model/course'
 import {Module} from '../../../learning-catalogue/model/module'
+import * as log4js from 'log4js'
 
 export class EventController implements FormController {
+	logger = log4js.getLogger('controllers/homeController')
 	learningCatalogue: LearningCatalogue
 	learnerRecord: LearnerRecord
 	validator: Validator<Booking>
@@ -124,7 +126,10 @@ export class EventController implements FormController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', asyncHandler(this.getAttendeeDetails()))
 
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', asyncHandler(this.updateBooking()))
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.cancelEvent()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.setCancelEvent()))
+
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
 
@@ -435,7 +440,30 @@ export class EventController implements FormController {
 
 	public cancelEvent() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/module/events/cancel')
+			const course: Course = await this.learningCatalogue.getCourse(req.params.courseId)
+			const module: Module = await this.learningCatalogue.getModule(req.params.courseId, req.params.moduleId)
+			res.render('page/course/module/events/cancel', {course: course, module: module})
+		}
+	}
+
+	public setCancelEvent() {
+		return async (req: Request, res: Response) => {
+			let event = res.locals.event
+			event.status = Event.Status.CANCELLED
+
+			try {
+				await this.learnerRecord.cancelEvent(req.params.eventId, event, req.body.cancellationReason)
+			} catch (e) {
+				this.logger.info(`The event has no attendees: ${e}`)
+			}
+
+			req.session!.sessionFlash = {
+				eventCancelledMessage: 'event_cancelled_message',
+			}
+
+			return req.session!.save(() => {
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
+			})
 		}
 	}
 

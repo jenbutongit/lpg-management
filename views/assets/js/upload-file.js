@@ -1,5 +1,9 @@
 window.onload = function () {
     if(document.getElementById('uploadButton')) {
+        if(document.getElementById("mediaId").value !== "") {
+            document.getElementById("uploadButton").style.display = "none"
+        }
+
         document.getElementById('uploadButton').onclick = function upload() {
             let formData = new FormData()
             let fileInput = document.getElementById('file-upload')
@@ -50,4 +54,8 @@ window.onload = function () {
             return false
         }
     }
+}
+
+document.getElementById("file-upload").onclick = function unHideUploadButton() {
+    document.getElementById("uploadButton").style.display = "block"
 }

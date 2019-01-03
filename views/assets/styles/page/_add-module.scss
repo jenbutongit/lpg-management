@@ -18,6 +18,40 @@
 	background-color: govuk-colour('grey-4');
 }
 
+.errors {
+	border-left: 5px solid $error-message;
+	padding-left: 15px;
+	margin-bottom: 30px;
+}
+
+.error-container {
+	margin-bottom: 30px;
+}
+
+.time-inputs {
+
+	.govuk-form-group {
+		margin-bottom: 0;
+
+		.govuk-input {
+			margin-bottom: 0;
+		}
+	}
+}
+
+.errors {
+	.time-inputs{
+
+		.govuk-form-group {
+
+			.govuk-input {
+				border-color: $error-message;
+				border-width: 4px;
+			}
+		}
+	}
+}
+
 @media screen and (min-width: $tablet-small) {
 	.modules {
 		.module-headers,
@@ -60,9 +94,8 @@
 				cursor: pointer;
 				display: block;
 				height: 35px;
-				justify-self: flex-end;
-				margin: -10px 0;
-				width: 20px;
+				margin: -10px 0 -10px auto;
+				width: 16px;
 			}
 		}
 	}

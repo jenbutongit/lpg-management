@@ -21,4 +21,13 @@ export class VideoModule extends Module {
 	url: string
 
 	type: Module.Type.VIDEO
+
+	subtype: VideoModule.Subtype
+}
+
+export namespace VideoModule {
+	export enum Subtype {
+		MP4 = 'mp4',
+		YOUTUBE = 'youtube',
+	}
 }
