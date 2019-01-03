@@ -374,6 +374,10 @@ export class EventController implements FormController {
 				event.venue = data.venue
 
 				const savedEvent = await this.learningCatalogue.createEvent(req.params.courseId, req.params.moduleId, event)
+
+				const eventUri = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${savedEvent.id}`
+				await this.learnerRecord.createEvent(savedEvent.id, eventUri)
+
 				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
 			}
 		}
