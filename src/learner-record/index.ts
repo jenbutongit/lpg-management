@@ -5,6 +5,7 @@ import {Invite} from './model/invite'
 import {InviteFactory} from './model/factory/inviteFactory'
 import {Booking} from './model/booking'
 import {BookingFactory} from './model/factory/bookingFactory'
+import {Event} from '../learning-catalogue/model/event'
 
 export class LearnerRecord {
 	private _restService: OauthRestService
@@ -53,6 +54,17 @@ export class LearnerRecord {
 
 	async inviteLearner(eventId: string, invite: Invite): Promise<Invite> {
 		return await this._restService.post(`/event/${eventId}/invitee`, invite)
+	}
+
+	async cancelEvent(eventId: string, event: Event, cancellationReason: String) {
+		try {
+			return await this._restService.patch(`/event/${eventId}`, {
+				status: event.status,
+				cancellationReason: cancellationReason,
+			})
+		} catch (e) {
+			throw new Error(`An error occured when try to cancel an event: ${e}`)
+		}
 	}
 
 	set restService(value: OauthRestService) {
