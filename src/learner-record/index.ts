@@ -51,16 +51,8 @@ export class LearnerRecord {
 		}
 	}
 
-	async inviteLearner(eventId: string, invite: Invite) {
-		try {
-			return await this._restService.post(`/event/${eventId}/invitee`, invite)
-		} catch (e) {
-			if (e.toString().indexOf('learnerEmail: The learner must be registered') >= 0) {
-				throw new Error(`Email address not registered: ${e}`)
-			} else {
-				throw new Error(`Learner has already been invite to course: ${e}`)
-			}
-		}
+	async inviteLearner(eventId: string, invite: Invite): Promise<Invite> {
+		return await this._restService.post(`/event/${eventId}/invitee`, invite)
 	}
 
 	set restService(value: OauthRestService) {

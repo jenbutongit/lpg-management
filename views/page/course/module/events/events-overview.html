@@ -16,7 +16,7 @@
     {% set emailAddress = sessionFlash.emailAddress %}
 
     {% if emailAddressFoundMessage %}
-        {% if emailAddressFoundMessage == "email_address_not_found_message" %}
+        {% if emailAddressFoundMessage == "email_address_not_found_message" or emailAddressFoundMessage == 'could_not_invite_learner'%}
             {% set panelError = "error" %}
         {% elif emailAddressFoundMessage == "email_address_already_invited_message" %}
             {% set panelError = "warning" %}

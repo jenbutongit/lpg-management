@@ -449,26 +449,25 @@ export class EventController implements FormController {
 
 			data.event = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${req.params.eventId}`
 
-			try {
-				await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data))
+			req.session!.sessionFlash = {
+				emailAddressFoundMessage: 'email_address_found_message',
+				emailAddress: emailAddress,
+			}
 
-				req.session!.sessionFlash = {
-					emailAddressFoundMessage: 'email_address_found_message',
-					emailAddress: emailAddress,
-				}
-			} catch (e) {
-				if (e.toString().indexOf('learnerEmail: The learner must be registered') >= 0) {
+			await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data)).catch(error => {
+				if (error.response.data.errors[0] == 'learnerEmail: The learner must be registered') {
 					req.session!.sessionFlash = {
 						emailAddressFoundMessage: 'email_address_not_found_message',
 						emailAddress: emailAddress,
 					}
-				} else {
+				} else if (error.response.data.errors[0] == 'The learner has already been invited to the event') {
 					req.session!.sessionFlash = {
 						emailAddressFoundMessage: 'email_address_already_invited_message',
 						emailAddress: emailAddress,
 					}
+				} else {
 				}
-			}
+			})
 
 			return req.session!.save(() => {
 				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
