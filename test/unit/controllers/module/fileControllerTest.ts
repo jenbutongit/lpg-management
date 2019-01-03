@@ -271,6 +271,32 @@ describe('File Controller Test', function() {
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-file`)
 	})
 
+	it('should check for errors when editing and redirect to module-file page', async function() {
+		let course: Course = new Course()
+		let module: Module = new Module()
+
+		course.id = 'courseId'
+
+		const editFile: (request: Request, response: Response, next: NextFunction) => void = fileController.editFile()
+
+		const request: Request = mockReq()
+		const response: Response = mockRes()
+
+		response.locals.course = course
+
+		moduleFactory.create = sinon.stub().returns(module)
+		moduleValidator.check = sinon.stub().returns({fields: ['validation_module_title_empty'], size: 1})
+		request.params.mediaId = 'mediaId'
+		request.body.file = 'file.pdf'
+		request.body.type = 'file'
+		mediaRestService.get = sinon.stub().returns({id: 'mediaId', fileSizeKB: 1000, path: '/location', metadata: {duration: 5.0}})
+		request.session!.save = sinon.stub().returns(response.redirect(`/content-management/courses/${course.id}/module-file`))
+
+		await editFile(request, response, next)
+
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-file`)
+	})
+
 	it('should check try to update module and redirect to course preview page if errors', async function() {
 		const course = new Course()
 		const module = new Module()

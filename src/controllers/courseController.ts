@@ -32,7 +32,9 @@ export class CourseController implements FormController {
 
 		this.configureRouterPaths()
 	}
+
 	// prettier-ignore
+	/* istanbul ignore next */
 	private getCourseFromRouterParamAndSetOnLocals() {
 		this.router.param('courseId', asyncHandler(async (req: Request, res: Response, next: NextFunction, courseId: string) => {
 				const course = await this.learningCatalogue.getCourse(courseId)
@@ -47,6 +49,7 @@ export class CourseController implements FormController {
 		)
 	}
 
+	/* istanbul ignore next */
 	private configureRouterPaths() {
 		this.router.get('/content-management/courses/:courseId/overview', asyncHandler(this.courseOverview()))
 		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())

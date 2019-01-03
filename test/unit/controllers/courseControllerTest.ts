@@ -539,4 +539,10 @@ describe('Course Controller Tests', function() {
 			expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/course-id/overview')
 		})
 	})
+	describe('Course archive', () => {
+		it('should render archive page', async () => {
+			await courseController.archiveCourse()(req, res)
+			expect(res.render).to.have.been.calledOnceWith('page/course/archive')
+		})
+	})
 })
