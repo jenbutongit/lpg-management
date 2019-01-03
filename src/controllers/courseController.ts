@@ -110,11 +110,18 @@ export class CourseController implements FormController {
 		redirect: '/content-management/courses/title/:courseId',
 	})
 	updateCourseTitle() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			let course = response.locals.course
 			course.title = request.body.title
-			await this.learningCatalogue.updateCourse(course)
-			response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
+
+			await this.learningCatalogue
+				.updateCourse(course)
+				.then(() => {
+					response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -143,14 +150,20 @@ export class CourseController implements FormController {
 		redirect: '/content-management/courses/details',
 	})
 	createCourseDetails() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const course = this.courseFactory.create(req.body)
-			const savedCourse = await this.learningCatalogue.createCourse(course)
 
-			req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
-			req.session!.save(() => {
-				res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
-			})
+			await this.learningCatalogue
+				.createCourse(course)
+				.then(savedCourse => {
+					req.session!.sessionFlash = {courseAddedSuccessMessage: 'course_added_success_message'}
+					req.session!.save(() => {
+						res.redirect(`/content-management/courses/${savedCourse.id}/overview`)
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -159,23 +172,34 @@ export class CourseController implements FormController {
 		redirect: '/content-management/courses/details/:courseId',
 	})
 	updateCourseDetails() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			let course = res.locals.course
 			course.shortDescription = req.body.shortDescription
 			course.description = req.body.description
 			course.learningOutcomes = req.body.learningOutcomes
 			course.preparation = req.body.preparation
 
-			await this.learningCatalogue.updateCourse(course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
+			await this.learningCatalogue
+				.updateCourse(course)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/preview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
 	sortModules() {
-		return async (request: Request, response: Response) => {
-			await this.courseService.sortModules(request.params.courseId, request.query.moduleIds)
-			return response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
+		return async (request: Request, response: Response, next: NextFunction) => {
+			await this.courseService
+				.sortModules(request.params.courseId, request.query.moduleIds)
+				.then(() => {
+					response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -184,14 +208,20 @@ export class CourseController implements FormController {
 		redirect: '/content-management/courses/:courseId/overview',
 	})
 	setStatus() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			let course = response.locals.course
 			course.status = request.body.status
 
-			await this.learningCatalogue.updateCourse(course)
-			request.session!.save(() => {
-				response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
-			})
+			await this.learningCatalogue
+				.updateCourse(course)
+				.then(() => {
+					request.session!.save(() => {
+						response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
