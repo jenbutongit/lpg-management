@@ -483,25 +483,17 @@ export class EventController implements FormController {
 			}
 
 			await this.learnerRecord.inviteLearner(req.params.eventId, this.inviteFactory.create(data)).catch(error => {
-				if (error.response.data.errors[0] == 'learnerEmail: The learner must be registered') {
+				if ((error.response.status = 400)) {
 					req.session!.sessionFlash = {
-						emailAddressFoundMessage: 'email_address_not_found_message',
+						emailAddressFoundMessage: error.response.data.errors[0],
 						emailAddress: emailAddress,
-					}
-				} else if (error.response.data.errors[0] == 'The learner has already been invited to the event') {
-					req.session!.sessionFlash = {
-						emailAddressFoundMessage: 'email_address_already_invited_message',
-						emailAddress: emailAddress,
-					}
-				} else if (error.response.data.errors[0] == 'The learner is already booked onto the event') {
-					req.session!.sessionFlash = {
-						emailAddressFoundMessage: 'email_address_already_booked_message',
-						emailAddress: emailAddress,
+						warning: true,
 					}
 				} else {
 					req.session!.sessionFlash = {
 						emailAddressFoundMessage: 'could_not_invite_learner',
 						emailAddress: emailAddress,
+						error: true,
 					}
 				}
 			})

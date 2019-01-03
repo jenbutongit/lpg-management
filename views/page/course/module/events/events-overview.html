@@ -15,16 +15,21 @@
     {% set emailAddressFoundMessage = sessionFlash.emailAddressFoundMessage %}
     {% set eventCancelledMessage = sessionFlash.eventCancelledMessage %}
     {% set emailAddress = sessionFlash.emailAddress %}
+    {% set error = sessionFlash.error %}
+    {% set warning = sessionFlash.warning %}
 
     {% if emailAddressFoundMessage %}
-        {% if emailAddressFoundMessage == "email_address_not_found_message" or emailAddressFoundMessage == 'could_not_invite_learner'%}
+        {% if error == true %}
             {% set panelError = "error" %}
-        {% elif emailAddressFoundMessage == "email_address_already_invited_message" or emailAddressFoundMessage == 'email_address_already_booked_message'%}
+            {% set emailAddressFoundMessage = i18n[emailAddressFoundMessage] %}
+        {% elif warning == true%}
             {% set panelError = "warning" %}
+        {% else %}
+            {% set emailAddressFoundMessage = i18n[emailAddressFoundMessage] %}
         {% endif %}
         <div class="panel govuk-panel govuk-panel--confirmation {{panelError}}">
             <div class="govuk-panel__body custom-panel">
-                <p class="govuk-body"><strong>{{ emailAddress }}</strong>{{ i18n[emailAddressFoundMessage] }}</p>
+                <p class="govuk-body"><strong>{{ emailAddress }}</strong> {{emailAddressFoundMessage}}</p>
             </div>
         </div>
     {% endif %}
