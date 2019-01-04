@@ -244,6 +244,8 @@ describe('EventController', function() {
 				cancellationReason: Event.CancellationReason.UNAVAILABLE,
 			})
 
+			learnerRecord.createEvent = sinon.stub()
+
 			await eventController.setLocation()(req, res)
 
 			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
@@ -814,6 +816,7 @@ describe('EventController', function() {
 					},
 				],
 				status: Event.Status.ACTIVE,
+				cancellationReason: Event.CancellationReason.UNAVAILABLE,
 			})
 			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
 		})
