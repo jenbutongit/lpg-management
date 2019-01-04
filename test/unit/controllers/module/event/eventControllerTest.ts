@@ -241,6 +241,7 @@ describe('EventController', function() {
 				venue: venue,
 				dateRanges: [],
 				status: Event.Status.ACTIVE,
+				cancellationReason: Event.CancellationReason.UNAVAILABLE,
 			})
 
 			await eventController.setLocation()(req, res)
@@ -788,6 +789,7 @@ describe('EventController', function() {
 				},
 				dateRanges: [],
 				status: Event.Status.ACTIVE,
+				cancellationReason: Event.CancellationReason.UNAVAILABLE,
 			}
 			learningCatalogue.getEvent = sinon.stub().returns(event)
 			learningCatalogue.updateEvent = sinon.stub()

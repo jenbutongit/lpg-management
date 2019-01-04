@@ -3,6 +3,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "../../../../component/statusWithLabel/macro.njk" import statusWithLabel with context %}
 {% from "../../../../component/menu/macro.njk" import menu %}
+{% from "../../../../component/cancellationReason/macro.njk" import cancellationReason with context %}
 
 {% extends "../../../../component/Page.njk" %}
 
@@ -108,22 +109,24 @@
                 ]
               }) }}
             </div>
-            <div class="add-invitee">
-                <h3 class="govuk-heading-m">Invite learners</h3>
-                <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
-                    <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>
-                    <div class="input-with-button">
-                        {{ govukInput({
-                        id: "learnerEmail",
-                        name: "learnerEmail"
-                        }) }}
-                        {{ govukButton({
-                        text: "Invite",
-                        classes: "button-blue"
-                        }) }}
-                    </div>
-                </form>
-            </div>
+            {% if event.status == "Active" %}
+                <div class="add-invitee">
+                    <h3 class="govuk-heading-m">Invite learners</h3>
+                    <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
+                        <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>
+                        <div class="input-with-button">
+                            {{ govukInput({
+                            id: "learnerEmail",
+                            name: "learnerEmail"
+                            }) }}
+                            {{ govukButton({
+                            text: "Invite",
+                            classes: "button-blue"
+                            }) }}
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
             <div class="course-attendees">
               <h3 class="govuk-heading-m">Course attendees</h3>
               {% if bookings.length > 0 %}
@@ -165,24 +168,30 @@
               {% block statusWithLabel %}
                 {{ statusWithLabel(event.status) }}
               {% endblock %}
-              {% block menu %}
-                {% set actions = [
-                  {
-                      link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
-                      text: 'Edit time and date'
-                  },
-                  {
-                      link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
-                      text: 'Edit location and capacity'
-                  },
-                    {
-                        link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/cancel',
-                        text: 'Cancel this event'
-                    }
-                ]
-                %}
-                {{ menu("Actions", actions) }}
-              {% endblock %}
+              {% if event.status == "Cancelled" %}
+                {% block cancellationReason %}
+                    {{ cancellationReason("Cancellation Reason", i18n[event.cancellationReason]) }}
+                {% endblock %}
+              {% else %}
+                {% block menu %}
+                    {% set actions = [
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
+                            text: 'Edit time and date'
+                        },
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
+                            text: 'Edit location and capacity'
+                        },
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/cancel',
+                            text: 'Cancel this event'
+                        }
+                    ]
+                    %}
+                    {{ menu("Actions", actions) }}
+                {% endblock %}
+              {% endif %}
             </div>
           {% endif %}
         </div>
