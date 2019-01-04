@@ -244,12 +244,8 @@ describe('EventController', function() {
 				status: Event.Status.ACTIVE,
 				cancellationReason: Event.CancellationReason.UNAVAILABLE,
 			})
-			const eventUri = `http://localhost:9001/courses/course-id/modules/module-id/events/event-id`
-			learnerRecord.createEvent = sinon.stub().returns(new Event())
-			learnerRecord.createEvent('event-id', eventUri).then = sinon
-				.stub()
-				.returns(res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/event-id`))
-			learnerRecord.createEvent('event-id', eventUri).then().catch = sinon.stub()
+
+			learnerRecord.createEvent = sinon.stub().returns(Promise.resolve(event))
 
 			next = sinon.stub()
 
@@ -257,6 +253,54 @@ describe('EventController', function() {
 
 			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
+		})
+
+		it('should pass to next if error occurs when creating event', async function() {
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+			let next: NextFunction
+
+			req.params.courseId = 'course-id'
+			req.params.moduleId = 'module-id'
+
+			const venue = <Venue>{
+				location: 'London',
+				address: 'Victoria Street',
+				capacity: 10,
+				minCapacity: 5,
+			}
+
+			const event = new Event()
+
+			req.body = {
+				location: venue.location,
+				address: venue.address,
+				capacity: venue.capacity,
+				minCapacity: venue.minCapacity,
+				eventJson: JSON.stringify(event),
+			}
+
+			event.venue = venue
+
+			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
+			learningCatalogue.createEvent = sinon.stub().returns(<Event>{
+				id: 'event-id',
+				venue: venue,
+				dateRanges: [],
+				status: Event.Status.ACTIVE,
+				cancellationReason: Event.CancellationReason.UNAVAILABLE,
+			})
+
+			const error: Error = new Error()
+			learnerRecord.createEvent = sinon.stub().returns(Promise.reject(error))
+
+			next = sinon.stub()
+
+			await eventController.setLocation()(req, res, next)
+
+			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
+			expect(res.redirect).to.not.have.been.calledWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
+			expect(next).to.have.been.calledWith(error)
 		})
 
 		it('should update event and redirect to events overview page if no errors', async function() {
