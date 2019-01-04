@@ -40,4 +40,46 @@ describe('Identity tests', () => {
 		expect(orgManager.isOrganisationManager()).to.be.true
 		expect(learner.isOrganisationManager()).to.be.false
 	})
+
+	it('hasLearningCreate() should return true if identity has LEARNING_CREATE, LEARNING_MANAGER or CSL_AUTHOR roles', () => {
+		const accessToken: string = 'access-token'
+
+		const creator: Identity = new Identity('id1', ['LEARNING_CREATE'], accessToken)
+		const manager: Identity = new Identity('id1', ['LEARNING_MANAGER'], accessToken)
+		const cslAuthor: Identity = new Identity('id1', ['CSL_AUTHOR'], accessToken)
+		const learner: Identity = new Identity('id2', ['LEARNER'], accessToken)
+
+		expect(creator.hasLearningCreate()).to.be.true
+		expect(manager.hasLearningCreate()).to.be.true
+		expect(cslAuthor.hasLearningCreate()).to.be.true
+		expect(learner.hasLearningCreate()).to.be.false
+	})
+
+	it('hasLearningEdit() should return true if identity has LEARNING_CREATE, LEARNING_MANAGER or CSL_AUTHOR roles', () => {
+		const accessToken: string = 'access-token'
+
+		const editor: Identity = new Identity('id1', ['LEARNING_EDIT'], accessToken)
+		const manager: Identity = new Identity('id1', ['LEARNING_MANAGER'], accessToken)
+		const cslAuthor: Identity = new Identity('id1', ['CSL_AUTHOR'], accessToken)
+		const learner: Identity = new Identity('id2', ['LEARNER'], accessToken)
+
+		expect(editor.hasLearningEdit()).to.be.true
+		expect(manager.hasLearningEdit()).to.be.true
+		expect(cslAuthor.hasLearningEdit()).to.be.true
+		expect(learner.hasLearningEdit()).to.be.false
+	})
+
+	it('hasLearningDelete() should return true if identity has LEARNING_DELETE, LEARNING_MANAGER or CSL_AUTHOR roles', () => {
+		const accessToken: string = 'access-token'
+
+		const deleteRole: Identity = new Identity('id1', ['LEARNING_DELETE'], accessToken)
+		const manager: Identity = new Identity('id1', ['LEARNING_MANAGER'], accessToken)
+		const cslAuthor: Identity = new Identity('id1', ['CSL_AUTHOR'], accessToken)
+		const learner: Identity = new Identity('id2', ['LEARNER'], accessToken)
+
+		expect(deleteRole.hasLearningDelete()).to.be.true
+		expect(manager.hasLearningDelete()).to.be.true
+		expect(cslAuthor.hasLearningDelete()).to.be.true
+		expect(learner.hasLearningDelete()).to.be.false
+	})
 })

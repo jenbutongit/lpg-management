@@ -1,4 +1,11 @@
 export class Identity {
+	public static readonly ORGANISATION_MANAGER = 'ORGANISATION_MANAGER'
+	public static readonly CSL_AUTHOR = 'CSL_AUTHOR'
+	public static readonly LEARNING_MANAGER = 'LEARNING_MANAGER'
+	public static readonly LEARNING_CREATE = 'LEARNING_CREATE'
+	public static readonly LEARNING_EDIT = 'LEARNING_EDIT'
+	public static readonly LEARNING_DELETE = 'LEARNING_DELETE'
+
 	readonly uid: string
 	readonly roles: string[]
 	readonly accessToken: string
@@ -18,6 +25,26 @@ export class Identity {
 	}
 
 	isOrganisationManager() {
-		return this.hasRole('ORGANISATION_MANAGER')
+		return this.hasRole(Identity.ORGANISATION_MANAGER)
+	}
+
+	isLearningManager() {
+		return this.hasRole(Identity.LEARNING_MANAGER)
+	}
+
+	isCslAuthor() {
+		return this.hasRole(Identity.CSL_AUTHOR)
+	}
+
+	hasLearningCreate() {
+		return this.hasRole(Identity.LEARNING_CREATE) || this.isCslAuthor() || this.isLearningManager()
+	}
+
+	hasLearningEdit() {
+		return this.hasRole(Identity.LEARNING_EDIT) || this.isCslAuthor() || this.isLearningManager()
+	}
+
+	hasLearningDelete() {
+		return this.hasRole(Identity.LEARNING_DELETE) || this.isCslAuthor() || this.isLearningManager()
 	}
 }

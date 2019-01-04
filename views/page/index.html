@@ -39,17 +39,17 @@
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
                 {% block menu %}
-                {% set actions = [
-                        {
-                            link: '/content-management/courses/title',
-                            text: 'Add a new course'
-                        },
-                        {
-                            link: '/content-management/learning-providers',
-                            text: 'Manage learning providers'
-                        }
-                    ]
-                %}
+                {% set actions = [] %}
+                {% if identity.hasLearningCreate() %}
+                    {% set action = actions.push({
+                        link: '/content-management/courses/title',
+                        text: 'Add a new course'
+                    }) %}
+                {% endif %}
+                {% set action = actions.push({
+                    link: '/content-management/learning-providers',
+                    text: 'Manage learning providers'
+                }) %}
                 {% if identity.isOrganisationManager() %}
                     {% set action = actions.push({
                         link: '/content-management/organisations/manage',

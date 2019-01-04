@@ -24,7 +24,7 @@ const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
-const authorisedRole = 'COURSE_MANAGER'
+const authorisedRole = 'LEARNING_MANAGER'
 
 const appInsights = require('applicationinsights')
 
