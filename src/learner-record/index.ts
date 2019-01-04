@@ -83,7 +83,7 @@ export class LearnerRecord {
 				status: 'Active',
 			})
 		} catch (e) {
-			throw new Error(`An error occurred when tru to create an event: ${e}`)
+			throw new Error(`An error occurred when trying to create an event: ${e}`)
 		}
 	}
 

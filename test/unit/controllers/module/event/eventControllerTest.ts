@@ -8,7 +8,7 @@ import {Validator} from '../../../../../src/learning-catalogue/validator/validat
 import {Event} from '../../../../../src/learning-catalogue/model/event'
 import {EventFactory} from '../../../../../src/learning-catalogue/model/factory/eventFactory'
 import {mockReq, mockRes} from 'sinon-express-mock'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import * as sinon from 'sinon'
 import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
@@ -212,6 +212,7 @@ describe('EventController', function() {
 		it('should create event and redirect to events overview page if no errors', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
+			let next: NextFunction
 
 			req.params.courseId = 'course-id'
 			req.params.moduleId = 'module-id'
@@ -243,10 +244,16 @@ describe('EventController', function() {
 				status: Event.Status.ACTIVE,
 				cancellationReason: Event.CancellationReason.UNAVAILABLE,
 			})
+			const eventUri = `http://localhost:9001/courses/course-id/modules/module-id/events/event-id`
+			learnerRecord.createEvent = sinon.stub().returns(new Event())
+			learnerRecord.createEvent('event-id', eventUri).then = sinon
+				.stub()
+				.returns(res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/event-id`))
+			learnerRecord.createEvent('event-id', eventUri).then().catch = sinon.stub()
 
-			learnerRecord.createEvent = sinon.stub()
+			next = sinon.stub()
 
-			await eventController.setLocation()(req, res)
+			await eventController.setLocation()(req, res, next)
 
 			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
@@ -307,6 +314,7 @@ describe('EventController', function() {
 		it('should redirect back to location page if errors on create', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
+			let next: NextFunction
 
 			const event: Event = new Event()
 
@@ -320,10 +328,10 @@ describe('EventController', function() {
 			const errors = {fields: [{location: ['validation.module.event.venue.location.empty']}], size: 1}
 
 			eventValidator.check = sinon.stub().returns(errors)
-
 			learningCatalogue.createEvent = sinon.stub().returns(event)
+			next = sinon.stub()
 
-			await eventController.setLocation()(req, res)
+			await eventController.setLocation()(req, res, next)
 
 			expect(learningCatalogue.createEvent).to.not.have.been.called
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location', {
