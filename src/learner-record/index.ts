@@ -77,6 +77,7 @@ export class LearnerRecord {
 
 	async createEvent(eventId: string, uri: string) {
 		try {
+			throw new Error(`An error occurred when tr`)
 			return await this._restService.post(`/event`, {
 				uid: eventId,
 				uri: uri,

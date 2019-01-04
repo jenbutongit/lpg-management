@@ -382,7 +382,7 @@ export class EventController implements FormController {
 						res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
 					})
 					.catch(error => {
-						next()
+						next(error)
 					})
 			}
 		}
