@@ -15,4 +15,13 @@ export class Event {
 		groups: ['all', 'event.all', 'event.location'],
 	})
 	venue: Venue
+
+	status: Event.Status
+}
+
+export namespace Event {
+	export enum Status {
+		ACTIVE = 'Active',
+		CANCELLED = 'Cancelled',
+	}
 }

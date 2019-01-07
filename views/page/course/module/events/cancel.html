@@ -1,4 +1,5 @@
-{% from "input/macro.njk" import govukInput %}
+{% from "select/macro.njk" import govukSelect %}
+{% from "button/macro.njk" import govukButton %}
 
 {% extends "../../../../component/Page.njk" %}
 
@@ -6,35 +7,54 @@
 
 {% set banner = true %}
 {% if event %}
-    {% set backButton = "/content-management/courses/" + courseId + "/modules/" + moduleId + "/events-overview/" + event.id %}
+{% set backButton = "/content-management/courses/" + courseId + "/modules/" + moduleId + "/events-overview/" + event.id %}
 {% else %}
-    {% set backButton = "/content-management/courses/" + courseId + "/overview" %}
+{% set backButton = "/content-management/courses/" + courseId + "/overview" %}
 {% endif %}
-
 
 {% block content %}
 
-    {% set errors = sessionFlash.errors %}
-    {{ errorSummary(errors.fields) }}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full">
-            <h1 class="govuk-heading-l no-margin">Cancel event</h1>
-            <p class="govuk-body">This event is for the <strong>{{module.title | default("Module title", true)}}</strong> module on the <a href="/content-management/courses/{{courseId}}/overview" class="govuk-link">{{course.title}}</a> course</p>
-            <p class="govuk-body no-margin">Cancelling an event will notify attendeed by email and refund any paid POs.
-            <p class="govuk-body">The event will be labelled as cancelled.</p>
-            <p class="govuk-body">This cannot be undone</p>
-            <form action="" method="post">
-                {{ govukInput({
+{% set errors = sessionFlash.errors %}
+{{ errorSummary(errors.fields) }}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-l no-margin">Cancel event</h1>
+        <p class="govuk-body">This event is for the <strong>{{module.title | default("Module title", true)}}</strong> module on <a href="/content-management/courses/{{courseId}}/overview" class="govuk-link">{{course.title}}</a>.</p>
+        <p class="govuk-body no-margin">Cancelling the event notifies the attendees by email. Payment will be refunded.</p>
+        <p class="govuk-body">The event will be labelled as cancelled on the event overview page.</p>
+        <p class="govuk-body">A cancellation cannot be undone.</p>
+        <form action="{{'/content-management/courses/' + courseId + '/modules/' + moduleId + '/events/' + event.id + '/cancel'}}" method="post">
+            <input type="hidden" value="{{event.id}}" name="id">
+                {{ govukSelect({
+                    id: "cancellationReason",
+                    name: "cancellationReason",
                     label: {
-                        text: "Two-thirds width",
-                        classes: "govuk-!-width-two-thirds"
+                        text: "Cancellation reason"
                     },
-                    classes: "govuk-!-width-two-thirds",
-                    id: "cancel",
-                    name: "cancel"
+                    items: [
+                    {
+                        value: "",
+                        text: "Choose a cancellation reason",
+                        selected: true
+                    },
+                    {
+                        value: "The event is no longer available",
+                        text: "The event is no longer available"
+                    },
+                    {
+                        value: "Short notice unavailability of the venue",
+                        text: "Short notice unavailability of the venue"
+                    }
+                    ]
                 }) }}
-            </form>
-        </div>
+            <div class="button-container">
+                {{ govukButton({
+                    text: "Cancel event",
+                    classes: "button-red"
+                }) }}
+            </div>
+        </form>
     </div>
+</div>
 
 {% endblock %}
