@@ -1,6 +1,20 @@
+{% from "../../component/reporting/macro.njk" import reporting with context %}
+
 {% extends "../../component/Page.njk" %} 
 
-{% block pageTitle %}{{ i18n['report_ratings_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+{% block pageTitle %}{{ i18n['report_learner_record_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% block content %}
+    <div class="govuk-grid row">
+        <div class="govuk-column-full">
+            <h1 class="govuk-heading-l">Course ratings</h1>
+        </div>
+    </div>
+    <div class="govuk-grid row">
+        <div class="govuk-column-two-thirds">
+             {{ reporting("/reporting/professions-data") }}
+        </div>
+        <div class="govuk-column-one-third">
+        </div>
+    </div>
 {% endblock %}
