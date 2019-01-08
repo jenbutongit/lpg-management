@@ -352,7 +352,7 @@ export class EventController implements FormController {
 	}
 
 	public setLocation() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const data = {
 				venue: {
 					location: req.body.location,
@@ -374,7 +374,16 @@ export class EventController implements FormController {
 				event.venue = data.venue
 
 				const savedEvent = await this.learningCatalogue.createEvent(req.params.courseId, req.params.moduleId, event)
-				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
+
+				const eventUri = `${config.COURSE_CATALOGUE.url}/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${savedEvent.id}`
+				await this.learnerRecord
+					.createEvent(savedEvent.id, eventUri)
+					.then(() => {
+						res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${savedEvent.id}`)
+					})
+					.catch(error => {
+						next(error)
+					})
 			}
 		}
 	}

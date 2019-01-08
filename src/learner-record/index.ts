@@ -71,7 +71,19 @@ export class LearnerRecord {
 				cancellationReason: cancellationReason,
 			})
 		} catch (e) {
-			throw new Error(`An error occured when try to cancel an event: ${e}`)
+			throw new Error(`An error occurred when trying to cancel an event: ${e}`)
+		}
+	}
+
+	async createEvent(eventId: string, uri: string) {
+		try {
+			return await this._restService.post(`/event`, {
+				uid: eventId,
+				uri: uri,
+				status: 'Active',
+			})
+		} catch (e) {
+			throw new Error(`An error occurred when trying to create an event: ${e}`)
 		}
 	}
 
