@@ -6,9 +6,10 @@
 {% block pageTitle %}{{ i18n['module_add_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management/courses/details/"+ course.id %}
 
 {% block content %}
+
+    <a href="/Course-management/" class="govuk-link govuk-body">Course overview</a>
 
     {% set errors = sessionFlash.errors %}
     {{ errorSummary(errors.fields) }}
