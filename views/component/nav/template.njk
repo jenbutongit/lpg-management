@@ -9,7 +9,7 @@
             <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/profile">Profile</a>
             <a class="nav-item govuk-link active" href="/content-management">Admin</a>
             {% if identity.isCshrReporter() or identity.isOrganisationManager() %}
-                <a class="nav-item govuk-link" href="/reporting">My admin pages</a>
+                <a class="nav-item govuk-link" href="/reporting">Reporting</a>
             {% endif %}
             <a class="nav-item govuk-link" href="{{ lpgUiUrl }}/sign-out">Sign out</a>
         </nav>

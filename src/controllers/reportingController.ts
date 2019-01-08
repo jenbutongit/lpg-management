@@ -10,7 +10,7 @@ export class ReportingController {
 		this.router = Router()
 		this.configureRouterPaths()
 		this.exampleYear = new Date().getFullYear()
-		this.exampleMonth = new Date().getMonth()
+		this.exampleMonth = new Date().getMonth() + 1
 		this.exampleDay = new Date().getDate()
 	}
 
@@ -28,32 +28,31 @@ export class ReportingController {
 
 	getReports() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting')
+			response.render('page/reporting/index')
 		}
 	}
 
 	getLearnerRecordReport() {
-		console.log(this.exampleYear)
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/learner-record', this.currentDate())
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Learner record'})
 		}
 	}
 
 	getRatingsReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/ratings', {exampleYear: new Date(Date.now()).getFullYear() + 1})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Course ratings'})
 		}
 	}
 
 	getClassroomReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/classroom', {exampleYear: new Date(Date.now()).getFullYear() + 1})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Course performance'})
 		}
 	}
 
 	getProfessionsReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/professions', {exampleYear: new Date(Date.now()).getFullYear() + 1})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Professions data'})
 		}
 	}
 }
