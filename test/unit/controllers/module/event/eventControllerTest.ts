@@ -8,7 +8,7 @@ import {Validator} from '../../../../../src/learning-catalogue/validator/validat
 import {Event} from '../../../../../src/learning-catalogue/model/event'
 import {EventFactory} from '../../../../../src/learning-catalogue/model/factory/eventFactory'
 import {mockReq, mockRes} from 'sinon-express-mock'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import * as sinon from 'sinon'
 import {DateRange} from '../../../../../src/learning-catalogue/model/dateRange'
 import {DateRangeCommand} from '../../../../../src/controllers/command/dateRangeCommand'
@@ -37,6 +37,7 @@ describe('EventController', function() {
 	let dateRangeValidator: Validator<DateRange>
 	let dateRangeCommandFactory: DateRangeCommandFactory
 	let identityService: IdentityService
+	let next: NextFunction
 
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
@@ -49,6 +50,7 @@ describe('EventController', function() {
 		dateRangeValidator = <Validator<DateRange>>{}
 		dateRangeCommandFactory = <DateRangeCommandFactory>{}
 		identityService = <IdentityService>{}
+		next = sinon.stub()
 
 		eventController = new EventController(
 			learningCatalogue,
@@ -236,17 +238,56 @@ describe('EventController', function() {
 			event.venue = venue
 
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
-			learningCatalogue.createEvent = sinon.stub().returns(<Event>{
-				id: 'event-id',
-				venue: venue,
-				dateRanges: [],
-				status: Event.Status.ACTIVE,
-			})
+			learningCatalogue.createEvent = sinon.stub().returns(
+				Promise.resolve(<Event>{
+					id: 'event-id',
+					venue: venue,
+					dateRanges: [],
+					status: Event.Status.ACTIVE,
+				})
+			)
 
-			await eventController.setLocation()(req, res)
+			await eventController.setLocation()(req, res, next)
 
 			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
+		})
+
+		it('should pass to next if set location throws error', async function() {
+			const error: Error = new Error()
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.params.courseId = 'course-id'
+			req.params.moduleId = 'module-id'
+
+			const venue = <Venue>{
+				location: 'London',
+				address: 'Victoria Street',
+				capacity: 10,
+				minCapacity: 5,
+			}
+
+			const event = new Event()
+
+			req.body = {
+				location: venue.location,
+				address: venue.address,
+				capacity: venue.capacity,
+				minCapacity: venue.minCapacity,
+				eventJson: JSON.stringify(event),
+			}
+
+			event.venue = venue
+
+			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
+			learningCatalogue.createEvent = sinon.stub().returns(Promise.reject(error))
+
+			await eventController.setLocation()(req, res, next)
+
+			expect(learningCatalogue.createEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, event)
+			expect(res.redirect).to.not.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
+			expect(next).to.have.been.calledWith(error)
 		})
 
 		it('should update event and redirect to events overview page if no errors', async function() {
@@ -292,13 +333,67 @@ describe('EventController', function() {
 
 			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
 			learningCatalogue.getEvent = sinon.stub().returns(event)
-			learningCatalogue.updateEvent = sinon.stub()
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.resolve(event))
 
-			await eventController.updateLocation()(req, res)
+			await eventController.updateLocation()(req, res, next)
 
 			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, req.params.eventId)
 			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, req.params.eventId, event)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
+		})
+
+		it('should update event and redirect to events overview page if no errors', async function() {
+			const error: Error = new Error()
+			const req: Request = mockReq()
+			const res: Response = mockRes()
+
+			req.params.courseId = 'course-id'
+			req.params.moduleId = 'module-id'
+			req.params.eventId = 'event-id'
+
+			const venue = <Venue>{
+				location: 'London',
+				address: 'Victoria Street',
+				capacity: 10,
+				minCapacity: 5,
+			}
+
+			const event = <Event>{
+				id: 'event-id',
+				venue: {
+					location: 'London',
+					address: 'Victoria Street',
+					capacity: 10,
+					minCapacity: 5,
+				},
+				dateRanges: [
+					{
+						date: '2019-02-28',
+						startTime: '09:00',
+						endTime: '17:00',
+					},
+				],
+			}
+
+			req.body = {
+				location: venue.location,
+				address: venue.address,
+				capacity: venue.capacity,
+				minCapacity: venue.minCapacity,
+			}
+
+			event.venue = venue
+
+			eventValidator.check = sinon.stub().returns({fields: [], size: 0})
+			learningCatalogue.getEvent = sinon.stub().returns(event)
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.reject(error))
+
+			await eventController.updateLocation()(req, res, next)
+
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, req.params.eventId)
+			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(req.params.courseId, req.params.moduleId, req.params.eventId, event)
+			expect(res.redirect).to.not.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
+			expect(next).to.have.been.calledWith(error)
 		})
 
 		it('should redirect back to location page if errors on create', async function() {
@@ -318,9 +413,9 @@ describe('EventController', function() {
 
 			eventValidator.check = sinon.stub().returns(errors)
 
-			learningCatalogue.createEvent = sinon.stub().returns(event)
+			learningCatalogue.createEvent = sinon.stub().returns(Promise.resolve(event))
 
-			await eventController.setLocation()(req, res)
+			await eventController.setLocation()(req, res, next)
 
 			expect(learningCatalogue.createEvent).to.not.have.been.called
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location', {
@@ -349,9 +444,9 @@ describe('EventController', function() {
 
 			eventValidator.check = sinon.stub().returns(errors)
 
-			learningCatalogue.createEvent = sinon.stub().returns(event)
+			learningCatalogue.createEvent = sinon.stub().returns(Promise.resolve(event))
 
-			await eventController.updateLocation()(req, res)
+			await eventController.updateLocation()(req, res, next)
 
 			expect(learningCatalogue.createEvent).to.not.have.been.called
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location', {
@@ -790,9 +885,9 @@ describe('EventController', function() {
 				status: Event.Status.ACTIVE,
 			}
 			learningCatalogue.getEvent = sinon.stub().returns(event)
-			learningCatalogue.updateEvent = sinon.stub()
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.resolve(event))
 
-			await eventController.updateDateRange()(request, response)
+			await eventController.updateDateRange()(request, response, next)
 
 			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
 			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId, {
@@ -814,6 +909,74 @@ describe('EventController', function() {
 				status: Event.Status.ACTIVE,
 			})
 			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+		})
+
+		it('should pass to next if update throws error', async () => {
+			const error = new Error()
+			const courseId = 'course-id'
+			const moduleId = 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId,
+					dateRangeIndex: 0,
+				},
+				body: {
+					day: '01',
+					month: '12',
+					year: '2019',
+					startTime: ['11', '30'],
+					endTime: ['12', '30'],
+				},
+			}
+
+			let event = <Event>{
+				id: 'event-id',
+				venue: {
+					location: 'London',
+					address: 'London',
+					minCapacity: 5,
+					capacity: 10,
+				},
+				dateRanges: [
+					{
+						date: '2019-03-31',
+						startTime: '09:15',
+						endTime: '17:30',
+					},
+				],
+			}
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			const errors: any = {}
+
+			const dateRange = <DateRange>{
+				date: '2019-12-01',
+				startTime: '11:30',
+				endTime: '12:30',
+			}
+
+			let dateRangeCommand = <DateRangeCommand>{}
+			dateRangeCommandValidator.check = sinon.stub().returns(errors)
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
+
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			learningCatalogue.getEvent = sinon.stub().returns(event)
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.reject(error))
+
+			await eventController.updateDateRange()(request, response, next)
+
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
+			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId, event)
+			expect(response.redirect).to.not.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+			expect(next).to.have.been.calledWith(error)
 		})
 
 		it('should display errors if form validation fails on update', async () => {
@@ -838,6 +1001,23 @@ describe('EventController', function() {
 				},
 			}
 
+			let event = <Event>{
+				id: 'event-id',
+				venue: {
+					location: 'London',
+					address: 'London',
+					minCapacity: 5,
+					capacity: 10,
+				},
+				dateRanges: [
+					{
+						date: '2019-03-31',
+						startTime: '09:15',
+						endTime: '17:30',
+					},
+				],
+			}
+
 			const request = mockReq(requestConfig)
 			const response = mockRes()
 
@@ -853,9 +1033,9 @@ describe('EventController', function() {
 			dateRangeCommandValidator.check = sinon.stub().returns(errors)
 
 			learningCatalogue.getEvent = sinon.stub()
-			learningCatalogue.updateEvent = sinon.stub()
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.resolve(event))
 
-			await eventController.updateDateRange()(request, response)
+			await eventController.updateDateRange()(request, response, next)
 
 			expect(learningCatalogue.getEvent).to.have.not.been.called
 			expect(learningCatalogue.updateEvent).to.not.have.been.called
@@ -917,7 +1097,7 @@ describe('EventController', function() {
 			learningCatalogue.getEvent = sinon.stub()
 			learningCatalogue.updateEvent = sinon.stub()
 
-			await eventController.updateDateRange()(request, response)
+			await eventController.updateDateRange()(request, response, next)
 
 			expect(learningCatalogue.getEvent).to.have.not.been.called
 			expect(learningCatalogue.updateEvent).to.not.have.been.called
@@ -1003,9 +1183,9 @@ describe('EventController', function() {
 				],
 			}
 			learningCatalogue.getEvent = sinon.stub().returns(event)
-			learningCatalogue.updateEvent = sinon.stub()
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.resolve(event))
 
-			await eventController.addDateRange()(request, response)
+			await eventController.addDateRange()(request, response, next)
 
 			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
 			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId, {
@@ -1030,6 +1210,93 @@ describe('EventController', function() {
 				],
 			})
 			expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+		})
+
+		it('should pass to next if add date range throws error', async () => {
+			const error = new Error()
+			const courseId = 'course-id'
+			const moduleId = 'module-id'
+			const eventId = 'event-id'
+
+			const requestConfig = {
+				params: {
+					courseId: courseId,
+					moduleId: moduleId,
+					eventId: eventId,
+					dateRangeIndex: 0,
+				},
+				body: {
+					day: '01',
+					month: '12',
+					year: '2019',
+					startTime: ['11', '30'],
+					endTime: ['12', '30'],
+				},
+			}
+
+			const request = mockReq(requestConfig)
+			const response = mockRes()
+
+			const errors: any = {}
+
+			const dateRange = <DateRange>{
+				date: '2019-12-01',
+				startTime: '11:30',
+				endTime: '12:30',
+			}
+
+			let dateRangeCommand = <DateRangeCommand>{}
+			dateRangeCommandValidator.check = sinon.stub().returns(errors)
+			dateRangeCommandFactory.create = sinon.stub().returns(dateRangeCommand)
+			dateRangeCommand.asDateRange = sinon.stub().returns(dateRange)
+
+			dateRangeValidator.check = sinon.stub().returns(errors)
+
+			const event = <Event>{
+				id: 'event-id',
+				venue: {
+					address: 'London',
+					location: 'London',
+					minCapacity: 5,
+					capacity: 5,
+				},
+				dateRanges: [
+					{
+						date: '2019-03-31',
+						startTime: '09:30',
+						endTime: '16:30',
+					},
+				],
+			}
+			learningCatalogue.getEvent = sinon.stub().returns(event)
+			learningCatalogue.updateEvent = sinon.stub().returns(Promise.reject(error))
+
+			await eventController.addDateRange()(request, response, next)
+
+			expect(learningCatalogue.getEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId)
+			expect(learningCatalogue.updateEvent).to.have.been.calledOnceWith(courseId, moduleId, eventId, {
+				id: 'event-id',
+				venue: {
+					address: 'London',
+					location: 'London',
+					minCapacity: 5,
+					capacity: 5,
+				},
+				dateRanges: [
+					{
+						date: '2019-03-31',
+						startTime: '09:30',
+						endTime: '16:30',
+					},
+					{
+						date: '2019-12-01',
+						startTime: '11:30',
+						endTime: '12:30',
+					},
+				],
+			})
+			expect(response.redirect).to.not.have.been.calledOnceWith(`/content-management/courses/${courseId}/modules/${moduleId}/events/${eventId}/dateRanges`)
+			expect(next).to.have.been.calledWith(error)
 		})
 
 		it('should display errors if form validation fails on add', async () => {
@@ -1069,7 +1336,7 @@ describe('EventController', function() {
 			learningCatalogue.getEvent = sinon.stub()
 			learningCatalogue.updateEvent = sinon.stub()
 
-			await eventController.addDateRange()(request, response)
+			await eventController.addDateRange()(request, response, next)
 
 			expect(learningCatalogue.getEvent).to.have.not.been.called
 			expect(learningCatalogue.updateEvent).to.not.have.been.called
@@ -1130,7 +1397,7 @@ describe('EventController', function() {
 			learningCatalogue.getEvent = sinon.stub()
 			learningCatalogue.updateEvent = sinon.stub()
 
-			await eventController.addDateRange()(request, response)
+			await eventController.addDateRange()(request, response, next)
 
 			expect(learningCatalogue.getEvent).to.have.not.been.called
 			expect(learningCatalogue.updateEvent).to.not.have.been.called
