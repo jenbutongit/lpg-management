@@ -23,9 +23,9 @@
         {% set panelError = "error" %}
         {% if emailAddressFoundMessage == "email_address_found_message" %}
             {% set emailAddressFoundMessage = i18n[emailAddressFoundMessage] %}
-            {% set panelError = "" %}
+            {% set panelError = "panel-blue" %}
         {% endif %}
-        <div class="panel govuk-panel govuk-panel--confirmation {{panelError}}">
+        <div class="panel {{panelError}}">
             <div class="govuk-panel__body custom-panel">
                 {% if emailAddressFoundMessage == "validation_email_address_invalid" %}
                     <p class="govuk-body">{{i18n[emailAddressFoundMessage]}}</p>
@@ -37,7 +37,7 @@
     {% endif %}
 
     {% if eventCancelledMessage %}
-        <div class="panel govuk-panel govuk-panel--confirmation">
+        <div class="panel panel-blue">
             <div class="govuk-panel__body custom-panel">
                 <p class="govuk-body">This event on <strong>{{(event.dateRanges[0].date) | dateWithMonthAsText}}</strong> for <strong>{{course.title}}</strong> has been cancelled</p>
             </div>
