@@ -227,6 +227,8 @@
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
     "email_address_found_message": " has been invited to this event",
     "could_not_invite_learner": " could not be invited due to an unexpected error",
+    "cancellation_reason_unavailable": "the event is no longer available",
+    "cancellation_reason_venue": "of short notice unavailability of the venue",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
