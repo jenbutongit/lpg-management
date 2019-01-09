@@ -1,7 +1,9 @@
 {% from "table/macro.njk" import govukTable %}
 {% from "input/macro.njk" import govukInput %}
 {% from "button/macro.njk" import govukButton %}
+{% from "../../../../component/statusWithLabel/macro.njk" import statusWithLabel with context %}
 {% from "../../../../component/menu/macro.njk" import menu %}
+{% from "../../../../component/cancellationReason/macro.njk" import cancellationReason with context %}
 
 {% extends "../../../../component/Page.njk" %}
 
@@ -13,6 +15,7 @@
 {% block content %}
 
     {% set emailAddressFoundMessage = sessionFlash.emailAddressFoundMessage %}
+    {% set eventCancelledMessage = sessionFlash.eventCancelledMessage %}
     {% set emailAddress = sessionFlash.emailAddress %}
 
     {% if emailAddressFoundMessage %}
@@ -24,6 +27,14 @@
         <div class="panel govuk-panel govuk-panel--confirmation {{panelError}}">
             <div class="govuk-panel__body custom-panel">
                 <p class="govuk-body"><strong>{{ emailAddress }}</strong>{{ i18n[emailAddressFoundMessage] }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if eventCancelledMessage %}
+        <div class="panel govuk-panel govuk-panel--confirmation">
+            <div class="govuk-panel__body custom-panel">
+                <p class="govuk-body">This event on <strong>{{(event.dateRanges[0].date) | dateWithMonthAsText}}</strong> for <strong>{{course.title}}</strong> has been cancelled</p>
             </div>
         </div>
     {% endif %}
@@ -107,22 +118,24 @@
                 ]
               }) }}
             </div>
-            <div class="add-invitee">
-                <h3 class="govuk-heading-m">Invite learners</h3>
-                <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
-                    <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>
-                    <div class="input-with-button">
-                        {{ govukInput({
-                        id: "learnerEmail",
-                        name: "learnerEmail"
-                        }) }}
-                        {{ govukButton({
-                        text: "Invite",
-                        classes: "button-blue"
-                        }) }}
-                    </div>
-                </form>
-            </div>
+            {% if event.status == "Active" %}
+                <div class="add-invitee">
+                    <h3 class="govuk-heading-m">Invite learners</h3>
+                    <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
+                        <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>
+                        <div class="input-with-button">
+                            {{ govukInput({
+                            id: "learnerEmail",
+                            name: "learnerEmail"
+                            }) }}
+                            {{ govukButton({
+                            text: "Invite",
+                            classes: "button-blue"
+                            }) }}
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
             <div class="course-attendees">
               <h2 class="govuk-heading-m">Course attendees</h2>
               {% if bookings.length > 0 %}
@@ -161,19 +174,33 @@
         <div class="govuk-grid-column-one-third">
           {% if course.status !== "Archived" %}
             <div class="right-menu">
-              {% block menu %}
-                {% set actions = [
-                  {
-                      link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
-                      text: 'Edit time and date'
-                  },
-                  {
-                      link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
-                      text: 'Edit location and capacity'
-                  }
-                ] %}
-                {{ menu("Actions", actions) }}
+              {% block statusWithLabel %}
+                {{ statusWithLabel(event.status) }}
               {% endblock %}
+              {% if event.status == "Cancelled" %}
+                {% block cancellationReason %}
+                    {{ cancellationReason("This event has been cancelled because " + i18n[event.cancellationReason]) }}
+                {% endblock %}
+              {% else %}
+                {% block menu %}
+                    {% set actions = [
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
+                            text: 'Edit time and date'
+                        },
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
+                            text: 'Edit location and capacity'
+                        },
+                        {
+                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/cancel',
+                            text: 'Cancel this event'
+                        }
+                    ]
+                    %}
+                    {{ menu("Actions", actions) }}
+                {% endblock %}
+              {% endif %}
             </div>
           {% endif %}
         </div>

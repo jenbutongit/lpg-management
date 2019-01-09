@@ -2,7 +2,7 @@ import {beforeEach, describe, it} from 'mocha'
 import {expect} from 'chai'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 
-describe('Course tests', () => {
+describe('Module tests', () => {
 	let module: Module
 
 	beforeEach(() => {

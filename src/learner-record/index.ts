@@ -5,6 +5,7 @@ import {Invite} from './model/invite'
 import {InviteFactory} from './model/factory/inviteFactory'
 import {Booking} from './model/booking'
 import {BookingFactory} from './model/factory/bookingFactory'
+import {Event} from '../learning-catalogue/model/event'
 
 export class LearnerRecord {
 	private _restService: OauthRestService
@@ -60,6 +61,29 @@ export class LearnerRecord {
 			} else {
 				throw new Error(`Learner has already been invite to course: ${e}`)
 			}
+		}
+	}
+
+	async cancelEvent(eventId: string, event: Event, cancellationReason: String) {
+		try {
+			return await this._restService.patch(`/event/${eventId}`, {
+				status: event.status,
+				cancellationReason: cancellationReason,
+			})
+		} catch (e) {
+			throw new Error(`An error occurred when trying to cancel an event: ${e}`)
+		}
+	}
+
+	async createEvent(eventId: string, uri: string) {
+		try {
+			return await this._restService.post(`/event`, {
+				uid: eventId,
+				uri: uri,
+				status: 'Active',
+			})
+		} catch (e) {
+			throw new Error(`An error occurred when trying to create an event: ${e}`)
 		}
 	}
 
