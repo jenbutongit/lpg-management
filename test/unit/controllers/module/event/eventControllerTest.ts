@@ -485,6 +485,27 @@ describe('EventController', function() {
 		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('email_address_found_message')
 	})
 
+	it('should redirect to event overview page with error if email format is invalid', async () => {
+		const request = mockReq()
+		const response = mockRes()
+
+		request.session!.save = callback => {
+			callback(undefined)
+		}
+
+		request.body.learnerEmail = 'test'
+		request.user = {accessToken: 'test-token'}
+
+		request.params.courseId = 'courseId'
+		request.params.moduleId = 'moduleId'
+		request.params.eventId = 'eventId'
+
+		await eventController.inviteLearner()(request, response)
+
+		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events-overview/eventId`)
+		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('validation_email_address_invalid')
+	})
+
 	it('should render attendee details page', async function() {
 		const date: string = '2020-02-01'
 		const dateRange = new DateRange()
