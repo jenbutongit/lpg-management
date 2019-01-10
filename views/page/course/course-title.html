@@ -18,7 +18,6 @@
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
-    {{_csrf}}
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">{{i18n.course.text.editDetails if course else i18n.course.text.addNew}}</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n.course.text.details}}</h2>

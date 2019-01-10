@@ -17,7 +17,6 @@
     {% set errors = sessionFlash.errors %}
     {% set form = sessionFlash.form %}
     {% set course = sessionFlash.course %}
-{{_csrf}}
     {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
