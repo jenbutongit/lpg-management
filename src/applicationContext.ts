@@ -254,6 +254,7 @@ export class ApplicationContext {
 
 	addToResponseLocals() {
 		return (req: Request, res: Response, next: NextFunction) => {
+			res.locals.originalUrl = req.originalUrl
 			res.locals.lpgUiUrl = this.lpgUiUrl
 			res.locals.sessionFlash = req.session!.sessionFlash
 			delete req.session!.sessionFlash

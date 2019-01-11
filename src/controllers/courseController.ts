@@ -39,6 +39,7 @@ export class CourseController implements FormController {
 
 				if (course) {
 					res.locals.course = course
+					res.locals.adminActive = 'active'
 					next()
 				} else {
 					res.sendStatus(404)
