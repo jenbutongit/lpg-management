@@ -20,9 +20,10 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.edit if audience else i18n.audience.pageText.addNew}}</h1>
-            <h2 class="govuk-heading-m govuk-!-font-size-36">Type of audience</h2>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Target your course</h2>
             <form action="/content-management/courses/{{ course.id }}/audiences/{{(audience.id + '/') if audience}}type" method="post" class="audience-form">
-                <p class="govuk-body">You can limit who this course is shown to</p>
+                <p class="govuk-body no-margin">You can limit your course to specific groups of learners.</p>
+                <p class="govuk-body">Which approach do you want to use to target your audience?</p>
                 <input type="hidden" name="name" value="{{sessionFlash.audienceName}}" />
                 {% if errors.fields %}
                     {% set classNames = "govuk-fieldset audience-fieldset govuk-form-group--error" %}
@@ -32,7 +33,6 @@
                     {% set message = "no-errors" %}
                 {% endif %}
                 <div class="{{classNames}}">
-                    <p class="{{message}}">Select the type of course you are creating</p>
                     {{ govukRadios({
                         idPrefix: "audience-type",
                         name: "type",
@@ -47,7 +47,13 @@
                             {
                                 value: 'OPEN',
                                 text: i18n.audience.type.OPEN,
-                                checked: audienceTypeAsString == 'OPEN'
+                                checked: audienceTypeAsString == 'OPEN',
+                                label: {
+                                    classes: "govuk-label--s"
+                                },
+                                hint: {
+                                    text: "Limited to the group you select; this course can be found by everyone through Search."
+                                }
                             },
                             {
                                 value: 'CLOSED_COURSE',
@@ -57,7 +63,7 @@
                                     classes: "govuk-label--s"
                                 },
                                 hint: {
-                                    text: "A closed course can only be seen by learners who have the same organisation, grade, profession or interests as those of the course."
+                                    text: "Limited to the group you select; this course can be found through Search only by your specified group."
                                 }
                             },
                             {
@@ -65,7 +71,7 @@
                                 text: i18n.audience.type.PRIVATE_COURSE,
                                 checked: audienceTypeAsString == 'PRIVATE_COURSE',
                                 hint: {
-                                    text: "A private course is only open to specific learners invited by email."
+                                    text: "Limited to your selected group by email; this course cannot be found through Search."
                                 }
                             },
                             {
@@ -73,7 +79,7 @@
                                 text: i18n.audience.type.REQUIRED_LEARNING,
                                 checked: audienceTypeAsString == 'REQUIRED_LEARNING',
                                 hint: {
-                                    text: "Required learning can only be seen by learners who have the same organisation, grade, profession or interests as those of the course. The deadline for completion will be the end of the financial year."
+                                    text: "Limited to the group you select, this course appears as a priority, with a deadline, on their 'Your learning' pages. It is available to everyone through Search."
                                 }
                             }
                         ]
