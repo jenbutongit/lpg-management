@@ -63,8 +63,9 @@ export class CourseController implements FormController {
 		this.router.post('/content-management/courses/details/:courseId', this.updateCourseDetails())
 
 		this.router.get('/content-management/courses/:courseId/sort-modules', this.sortModules())
-		this.router.get('/content-management/courses/:courseId/archive', this.archiveCourse())
-		this.router.post('/content-management/courses/:courseId/status', this.setStatus())
+		this.router.get('/content-management/courses/:courseId/archive', this.getArchiveConfirmation())
+		this.router.post('/content-management/courses/:courseId/status/publish', this.publishCourse())
+		this.router.post('/content-management/courses/:courseId/status/archive', this.archiveCourse())
 		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules', this.sortModules())
 	}
 
@@ -210,7 +211,7 @@ export class CourseController implements FormController {
 		fields: ['status'],
 		redirect: '/content-management/courses/:courseId/overview',
 	})
-	setStatus() {
+	publishCourse() {
 		return async (request: Request, response: Response, next: NextFunction) => {
 			let course = response.locals.course
 			course.status = request.body.status
@@ -228,7 +229,29 @@ export class CourseController implements FormController {
 		}
 	}
 
+	@Validate({
+		fields: ['status'],
+		redirect: '/content-management/courses/:courseId/overview',
+	})
 	archiveCourse() {
+		return async (request: Request, response: Response, next: NextFunction) => {
+			let course = response.locals.course
+			course.status = request.body.status
+
+			await this.learningCatalogue
+				.updateCourse(course)
+				.then(() => {
+					request.session!.save(() => {
+						response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
+		}
+	}
+
+	getArchiveConfirmation() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/archive')
 		}

@@ -4,7 +4,7 @@ import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {LearningCatalogue} from '../../../src/learning-catalogue'
 import {Course} from '../../../src/learning-catalogue/model/course'
 import * as sinon from 'sinon'
@@ -39,11 +39,13 @@ describe('Home Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listCourses = listAll
 
-		const index: (request: Request, response: Response) => void = homeController.index()
+		const index: (request: Request, response: Response, next: NextFunction) => void = homeController.index()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
-		await index(request, response)
+		const next: NextFunction = sinon.stub()
+
+		await index(request, response, next)
 
 		expect(learningCatalogue.listCourses).to.have.been.calledWith(0, 10)
 
@@ -65,15 +67,16 @@ describe('Home Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listCourses = listAll
 
-		const index: (request: Request, response: Response) => void = homeController.index()
+		const index: (request: Request, response: Response, next: NextFunction) => void = homeController.index()
 
 		const request: Request = mockReq()
 		const response: Response = mockRes()
+		const next: NextFunction = sinon.stub()
 
 		request.query.p = 3
 		request.query.s = 5
 
-		await index(request, response)
+		await index(request, response, next)
 
 		expect(learningCatalogue.listCourses).to.have.been.calledWith(3, 5)
 

@@ -541,7 +541,7 @@ describe('Course Controller Tests', function() {
 	})
 	describe('Course archive', () => {
 		it('should render archive page', async () => {
-			await courseController.archiveCourse()(req, res)
+			await courseController.getArchiveConfirmation()(req, res)
 			expect(res.render).to.have.been.calledOnceWith('page/course/archive')
 		})
 	})
