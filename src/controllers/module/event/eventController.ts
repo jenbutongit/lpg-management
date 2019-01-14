@@ -566,9 +566,12 @@ export class EventController implements FormController {
 			const bookingId = req.params.bookingId
 			const booking = this.findBooking(bookings, bookingId)
 
+			const cancellationReasons = await this.learnerRecord.getBookingCancellationReasons()
+
 			res.render('page/course/module/events/cancel-attendee', {
 				booking: booking,
 				eventDateWithMonthAsText: eventDateWithMonthAsText,
+				cancellationReasons: cancellationReasons,
 			})
 		}
 	}

@@ -87,6 +87,14 @@ export class LearnerRecord {
 		}
 	}
 
+	async getBookingCancellationReasons() {
+		try {
+			return await this._restService.get(`/event/booking/cancellationReasons`)
+		} catch (e) {
+			throw new Error(`An error occurred when trying to get booking cancellation reasons: ${e}`)
+		}
+	}
+
 	set restService(value: OauthRestService) {
 		this._restService = value
 	}

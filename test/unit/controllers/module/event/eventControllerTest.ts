@@ -690,11 +690,13 @@ describe('EventController', function() {
 		request.params.bookingId = 99
 
 		learnerRecord.getEventBookings = sinon.stub().returns([booking])
+		learnerRecord.getBookingCancellationReasons = sinon.stub()
 
 		await getCancelAttendee(request, response)
 
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/cancel-attendee', {
 			booking: booking,
+			cancellationReasons: undefined,
 			eventDateWithMonthAsText: eventDateWithMonthAsText,
 		})
 	})
