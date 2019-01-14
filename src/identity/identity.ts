@@ -30,6 +30,6 @@ export class Identity {
 	}
 
 	isOrganisationReporter() {
-		return this.hasRole('ORGANISATION_REPORTER')g
+		return this.hasRole('ORGANISATION_REPORTER')
 	}
 }
