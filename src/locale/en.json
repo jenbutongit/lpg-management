@@ -33,7 +33,7 @@
 			}
 		},
 		"type": {
-			"OPEN": "Open",
+			"OPEN": "Open course",
 			"CLOSED_COURSE": "Closed course",
 			"PRIVATE_COURSE": "Private course",
 			"REQUIRED_LEARNING": "Required learning"
@@ -74,36 +74,36 @@
 			"cancel": "Cancel event"
 		}
 	},
-  "venue": {
-      "validation": {
-          "minCapacity": {
-              "empty": "Minimum capacity is required",
-              "positive": "Minimum capacity must be positive"
-          },
-          "capacity": {
-              "empty": "Capacity is required",
-              "positive": "Capacity must be positive"
-          },
-          "location": {
-              "empty": "Location is required"
-          }
-      }
-  },
-    "attendee": {
-        "title": {
-            "cancel": "Cancel attendee"
-        },
-        "status": {
-            "Requested": "Pending",
-            "Confirmed": "Booked",
-            "Cancelled": "Cancelled"
-        },
-        "validation": {
-            "cancellationReason": {
-                "empty": "A reason for cancellation is required"
-            }
-        }
-    },
+	"venue": {
+		"validation": {
+			"minCapacity": {
+				"empty": "Minimum capacity is required",
+				"positive": "Minimum capacity must be positive"
+			},
+			"capacity": {
+				"empty": "Capacity is required",
+				"positive": "Capacity must be positive"
+			},
+			"location": {
+				"empty": "Location is required"
+			}
+		}
+	},
+	"attendee": {
+		"title": {
+			"cancel": "Cancel attendee"
+		},
+		"status": {
+			"Requested": "Pending",
+			"Confirmed": "Booked",
+			"Cancelled": "Cancelled"
+		},
+		"validation": {
+			"cancellationReason": {
+				"empty": "A reason for cancellation is required"
+			}
+		}
+	},
 	"blended": "Blended",
 	"organisations": {
 		"headers": {
@@ -129,7 +129,7 @@
 			"code": {
 				"empty": "Organisation code is required"
 			},
-			"organisation":{
+			"organisation": {
 				"alreadyExists": "An organisation with this name or code already exists"
 			}
 		}
@@ -140,16 +140,16 @@
 			"cost": {
 				"positive": "Module cost must be a positive number"
 			},
-			"title":{
+			"title": {
 				"empty": "Title is required"
 			},
-			"description":{
+			"description": {
 				"empty": "Description is required"
 			},
-			"url":{
+			"url": {
 				"empty": "A URL should include a protocol and be a top level domain"
 			},
-			"duration":{
+			"duration": {
 				"empty": "Duration is required"
 			}
 		},
@@ -162,20 +162,20 @@
 			"url": "URL"
 		},
 
-		"title":{
+		"title": {
 			"edit": "Edit",
 			"add": "Add",
 			"video": "a video",
 			"file": "a file",
 			"eLearning": "an e-learning",
-            "faceToFace": "a face to face",
+			"faceToFace": "a face to face",
 			"add": "Add",
 			"link_add": "Add a link",
 			"link_edit": "Edit a link",
-            "face_to_face_add" : "Add a face-to-face module",
-            "face_to_face_edit": "Edit a face-to-face module",
-            "youtube_add": "Add a youtube module",
-            "youtube_edit": "Edit a youtube module"
+			"face_to_face_add": "Add a face-to-face module",
+			"face_to_face_edit": "Edit a face-to-face module",
+			"youtube_add": "Add a youtube module",
+			"youtube_edit": "Edit a youtube module"
 		}
 	},
 
@@ -203,7 +203,6 @@
 		"file": "File",
 		"blended": "Blended"
 	},
-	"blended": "Blended",
 	"error": "There is a problem with the service",
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
@@ -225,8 +224,8 @@
 	"proposition_name": "Civil Service Learning",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
-    "email_address_found_message": " has been invited to this event",
-    "could_not_invite_learner": " could not be invited due to an unexpected error",
+  "email_address_found_message": " has been invited to this event",
+  "could_not_invite_learner": " could not be invited due to an unexpected error",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
@@ -245,5 +244,5 @@
 	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
 	"validation_module_mediaId_empty": "File is required",
-    "validation_email_address_invalid": "Enter an email address in the correct format, like name@example.com"
+	"validation_email_address_invalid": "Enter an email address in the correct format, like name@example.com"
 }
