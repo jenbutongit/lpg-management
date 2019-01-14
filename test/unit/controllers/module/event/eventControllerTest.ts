@@ -738,7 +738,6 @@ describe('EventController', function() {
 			}
 
 			// learningCatalogue.getEvent = sinon.stub().returns(event)
-
 			const request = mockReq(requestConfig)
 			const response = mockRes(responseConfig)
 
