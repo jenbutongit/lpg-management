@@ -27,8 +27,8 @@
             <input type="hidden" value="{{event.id}}" name="id">
                 <select class="govuk-select" id="cancellationReason" name="cancellationReason">
                     <option value="">Choose a cancellation reasons</option>
-                    {% for cancellationReason in cancellationReasons %}
-                        <option value="{{cancellationReason}}">{{cancellationReason}}</option>
+                    {% for cancellationReason, value in  cancellationReasons %}
+                        <option value="{{cancellationReason}}">{{value}}</option>
                     {% endfor %}
                 </select>
             <div class="button-container">
