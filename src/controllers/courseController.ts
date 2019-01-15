@@ -217,7 +217,7 @@ export class CourseController implements FormController {
 			course.status = request.body.status
 
 			await this.learningCatalogue
-				.updateCourse(course)
+				.publishCourse(course)
 				.then(() => {
 					request.session!.save(() => {
 						response.redirect(`/content-management/courses/${request.params.courseId}/overview`)
@@ -239,7 +239,7 @@ export class CourseController implements FormController {
 			course.status = request.body.status
 
 			await this.learningCatalogue
-				.updateCourse(course)
+				.archiveCourse(course)
 				.then(() => {
 					request.session!.save(() => {
 						response.redirect(`/content-management/courses/${request.params.courseId}/overview`)

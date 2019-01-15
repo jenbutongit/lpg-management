@@ -10,7 +10,6 @@ import {ApplicationContext} from './applicationContext'
 import * as bodyParser from 'body-parser'
 import {AppConfig} from './config/appConfig'
 import moment = require('moment')
-import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 
@@ -69,7 +68,7 @@ nunjucks
 			: null
 	})
 	.addFilter('dateWithMonthAsText', function(date: string) {
-		return date ? DateTime.convertDate(date) : 'date unset'
+		return 'date unset'
 	})
 
 app.set('view engine', 'html')

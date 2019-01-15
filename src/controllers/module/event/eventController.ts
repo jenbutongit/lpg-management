@@ -446,7 +446,8 @@ export class EventController implements FormController {
 
 			const event = res.locals.event
 
-			const eventDateWithMonthAsText: string = event.dateRanges[0] ? DateTime.convertDate(event.dateRanges[0].date) : 'Unspecified'
+			// const eventDateWithMonthAsText: string = event.dateRanges[0] ? DateTime.convertDate(event.dateRanges[0].date) : 'Unspecified'
+			const eventDateWithMonthAsText: string = 'foo'
 
 			const bookings = await this.learnerRecord.getEventBookings(event.id)
 			const activeBookings = bookings.filter((booking: Booking) => booking.status != Booking.Status.CANCELLED)

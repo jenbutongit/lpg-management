@@ -443,7 +443,7 @@ describe('Course Controller Tests', function() {
 			validator.check = sinon.stub().returns(errors)
 			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(course))
 
-			await courseController.setStatus()(request, response, next)
+			await courseController.publishCourse()(request, response, next)
 
 			expect(validator.check).to.have.been.calledOnceWith(request.body)
 			expect(course.status).to.equal(Status.PUBLISHED)
@@ -485,7 +485,7 @@ describe('Course Controller Tests', function() {
 			validator.check = sinon.stub().returns(errors)
 			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
 
-			await courseController.setStatus()(request, response, next)
+			await courseController.publishCourse()(request, response, next)
 
 			expect(validator.check).to.have.been.calledOnceWith(request.body)
 			expect(course.status).to.equal(Status.PUBLISHED)
@@ -529,7 +529,7 @@ describe('Course Controller Tests', function() {
 			validator.check = sinon.stub().returns(errors)
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await courseController.setStatus()(request, response, next)
+			await courseController.publishCourse()(request, response, next)
 
 			expect(learningCatalogue.updateCourse).to.not.have.been.called
 			expect(request.session.sessionFlash).to.eql({

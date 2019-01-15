@@ -62,6 +62,14 @@ export class LearningCatalogue {
 		return this._courseService.update(`/courses/${course.id}`, course)
 	}
 
+	async publishCourse(course: Course): Promise<Course> {
+		return this._courseService.update(`/courses/${course.id}/publish`, course)
+	}
+
+	async archiveCourse(course: Course): Promise<Course> {
+		return this._courseService.update(`/courses/${course.id}/archive`, course)
+	}
+
 	async getCourse(courseId: string): Promise<Course> {
 		return this._courseService.get(`/courses/${courseId}`)
 	}
@@ -100,6 +108,10 @@ export class LearningCatalogue {
 
 	async getAudience(courseId: string, audienceId: string): Promise<Audience> {
 		return this._audienceService.get(`/courses/${courseId}/audiences/${audienceId}`)
+	}
+
+	async updateAudience(courseId: string, audience: Audience): Promise<Audience> {
+		return this._audienceService.update(`/courses/${courseId}/audiences/${audience.id}`, audience)
 	}
 
 	async deleteAudience(courseId: string, audienceId: string) {

@@ -7,7 +7,7 @@ export async function handleError(error: any, request: Request, response: Respon
 	try {
 		logger.error('Error handling request for', request.method, request.url, request.body, '\n', error.stack)
 
-		if (error.response.status == 403) {
+		if (error.response && error.response.status == 403) {
 			const errors = {fields: {fields: ['errors.actionNotAuthorised'], size: 1}}
 			request.session!.sessionFlash = {errors: errors}
 

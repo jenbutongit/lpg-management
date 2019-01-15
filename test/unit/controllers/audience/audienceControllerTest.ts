@@ -9,7 +9,7 @@ import {AudienceController} from '../../../../src/controllers/audience/audienceC
 import {AudienceFactory} from '../../../../src/learning-catalogue/model/factory/audienceFactory'
 import {Audience} from '../../../../src/learning-catalogue/model/audience'
 import {mockReq, mockRes} from 'sinon-express-mock'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {CourseService} from '../../../../src/lib/courseService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
@@ -27,6 +27,7 @@ describe('AudienceController', () => {
 	let csrs: Csrs
 	let req: Request
 	let res: Response
+	let next: NextFunction
 
 	const courseId = 'course-id'
 	const audienceId = 'audience-id'
@@ -47,6 +48,7 @@ describe('AudienceController', () => {
 		req.params.courseId = courseId
 
 		res = mockRes()
+		next = sinon.stub()
 	})
 
 	describe('#getAudienceName', () => {
@@ -106,7 +108,7 @@ describe('AudienceController', () => {
 			audienceValidator.check = sinon.stub().returns(errors)
 			audienceFactory.create = sinon.stub().returns({})
 
-			await audienceController.setAudienceType()(req, res)
+			await audienceController.setAudienceType()(req, res, next)
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
@@ -125,7 +127,7 @@ describe('AudienceController', () => {
 			const newAudienceId = 'new-audience-id'
 			learningCatalogue.createAudience = sinon.stub().returns({id: newAudienceId})
 
-			await audienceController.setAudienceType()(req, res)
+			await audienceController.setAudienceType()(req, res, next)
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
 			expect(audienceValidator.check).to.have.returned(errors)
@@ -202,7 +204,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setOrganisation()(req, res)
+			await audienceController.setOrganisation()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
@@ -224,7 +226,7 @@ describe('AudienceController', () => {
 			})
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setOrganisation()(req, res)
+			await audienceController.setOrganisation()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, departments: [hmrcCode, dwpCode]}],
@@ -242,7 +244,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.deleteOrganisation()(req, res)
+			await audienceController.deleteOrganisation()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, departments: []}],
@@ -272,7 +274,7 @@ describe('AudienceController', () => {
 			csrsService.isAreaOfWorkValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setAreasOfWork()(req, res)
+			await audienceController.setAreasOfWork()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, areasOfWork: [aowHumanResources]}],
@@ -290,7 +292,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.deleteAreasOfWork()(req, res)
+			await audienceController.deleteAreasOfWork()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, areasOfWork: []}],
@@ -319,7 +321,7 @@ describe('AudienceController', () => {
 			csrsService.isGradeCodeValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setGrades()(req, res)
+			await audienceController.setGrades()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, grades: [gradeCode]}],
@@ -337,7 +339,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.deleteGrades()(req, res)
+			await audienceController.deleteGrades()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, grades: []}],
@@ -366,7 +368,7 @@ describe('AudienceController', () => {
 			csrsService.isCoreLearningValid = sinon.stub().returns(true)
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setCoreLearning()(req, res)
+			await audienceController.setCoreLearning()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, interests: [interestCode]}],
@@ -384,7 +386,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.deleteCoreLearning()(req, res)
+			await audienceController.deleteCoreLearning()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, interests: []}],
@@ -416,7 +418,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setDeadline()(req, res)
+			await audienceController.setDeadline()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, requiredBy: date}],
@@ -431,7 +433,7 @@ describe('AudienceController', () => {
 			res.locals.audience = audience
 			req.body = {'deadline-year': '1999', 'deadline-month': '1', 'deadline-day': '1'}
 
-			await audienceController.setDeadline()(req, res)
+			await audienceController.setDeadline()(req, res, next)
 
 			expect(req.session!.sessionFlash.errors).is.not.undefined
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/deadline`)
@@ -447,7 +449,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.deleteDeadline()(req, res)
+			await audienceController.deleteDeadline()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, requiredBy: undefined}],
@@ -486,7 +488,7 @@ describe('AudienceController', () => {
 			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.setPrivateCourseEvent()(req, res)
+			await audienceController.setPrivateCourseEvent()(req, res, next)
 
 			expect(audience.eventId).to.be.equal(eventId)
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
@@ -505,7 +507,7 @@ describe('AudienceController', () => {
 
 			learningCatalogue.updateCourse = sinon.stub()
 
-			await audienceController.deletePrivateCourseEvent()(req, res)
+			await audienceController.deletePrivateCourseEvent()(req, res, next)
 
 			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
 				audiences: [{id: audienceId, eventId: undefined}],
