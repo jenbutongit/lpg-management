@@ -33,9 +33,8 @@ export class CsrsService {
 	}
 
 	async isAreaOfWorkValid(areaOfWork: string) {
-		// const areaOfWorkLookupResult = JsonpathService.queryWithLimit(await this.getAreasOfWork(), `$..professions[?(@.name==${JSON.stringify(areaOfWork)})]`, 1)
-		// return areaOfWorkLookupResult.length > 0
-		return false
+		const areaOfWorkLookupResult = JsonpathService.queryWithLimit(await this.getAreasOfWork(), `$..professions[?(@.name==${JSON.stringify(areaOfWork)})]`, 1)
+		return areaOfWorkLookupResult.length > 0
 	}
 
 	async getGrades() {
