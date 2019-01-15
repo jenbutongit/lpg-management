@@ -236,12 +236,9 @@
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
 	"email_address_found_message": " has been invited to this event",
-<<<<<<< HEAD
 	"email_address_not_found_message": " is not registered. Check the email address and try adding them again",
 	"email_address_already_invited_message": " has already been invited to this event",
-=======
 	"could_not_invite_learner": " could not be invited due to an unexpected error",
->>>>>>> a88096cf124d483b816b941dab32abf1e01e078e
 	"cancellation_reason_unavailable": "the event is no longer available",
 	"cancellation_reason_venue": "of short notice unavailability of the venue",
 	"validation.learningProvider.name.empty": "Name is required",
