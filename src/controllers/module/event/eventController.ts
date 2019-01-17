@@ -18,6 +18,8 @@ import {Validate} from '../../formValidator'
 import {FormController} from '../../formController'
 import {Course} from '../../../learning-catalogue/model/course'
 import {Module} from '../../../learning-catalogue/model/module'
+import {DefaultPageResults} from '../../../learning-catalogue/model/defaultPageResults'
+import {LearningProvider} from '../../../learning-catalogue/model/learningProvider'
 import * as log4js from 'log4js'
 import * as EmailValidator from 'email-validator'
 
@@ -566,7 +568,9 @@ export class EventController implements FormController {
 
 	public getLearningProvider() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/learning-provider/index')
+			const pageResults: DefaultPageResults<LearningProvider> = await this.learningCatalogue.listLearningProviders()
+
+			response.render('page/course/module/events/learning-provider/assign-learning-provider.html', {pageResults})
 		}
 	}
 
