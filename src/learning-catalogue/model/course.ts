@@ -48,6 +48,8 @@ export class Course {
 	})
 	status: Status = Status.DRAFT
 
+	visibility: Course.Visibility = Course.Visibility.PUBLIC
+
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
 	}
@@ -113,5 +115,12 @@ export class Course {
 			}
 		}
 		return areasOfWork
+	}
+}
+
+export namespace Course {
+	export enum Visibility {
+		PUBLIC,
+		PRIVATE,
 	}
 }
