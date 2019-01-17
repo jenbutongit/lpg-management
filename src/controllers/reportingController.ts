@@ -34,25 +34,25 @@ export class ReportingController {
 
 	getLearnerRecordReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Learner record'})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Learner data'})
 		}
 	}
 
 	getRatingsReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Course ratings'})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Registered learners'})
 		}
 	}
 
 	getClassroomReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Course performance'})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Booking information'})
 		}
 	}
 
 	getProfessionsReport() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Professions data'})
+			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Learners by profession'})
 		}
 	}
 }

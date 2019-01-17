@@ -1,8 +1,9 @@
 {% from "date-input/macro.njk" import govukDateInput %}
 {% from "button/macro.njk" import govukButton %}
 
-<form class="govuk-form" action="{{action}}" method="get">
+<form class="govuk-form" action="/reporting/{{type}}" method="get">
     <fieldset class="govuk-fieldset">
+        <input type="hidden" value="{{type}}" name="report-type" />
         <h2 class="govuk-heading-m">What dates do you want this report to cover?</h2>
         <div class="report-container">
             <div class="report-input first">
