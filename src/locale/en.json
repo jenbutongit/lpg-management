@@ -33,7 +33,7 @@
 			}
 		},
 		"type": {
-			"OPEN": "Open",
+			"OPEN": "Open course",
 			"CLOSED_COURSE": "Closed course",
 			"PRIVATE_COURSE": "Private course",
 			"REQUIRED_LEARNING": "Required learning"
@@ -247,5 +247,5 @@
 	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
 	"validation_module_mediaId_empty": "File is required",
-    "validation_email_address_invalid": "Enter an email address in the correct format, like name@example.com"
+	"validation_email_address_invalid": "Enter an email address in the correct format, like name@example.com"
 }
