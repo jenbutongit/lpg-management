@@ -1,0 +1,73 @@
+{% from "select/macro.njk" import govukSelect %}
+{% from "button/macro.njk" import govukButton %}
+{% extends "../../../../../component/Page.njk" %}
+{% block pageTitle %}{{ i18n['event_assign_policies'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/modules/" + module.id + "/events-overview/" + event.id %}
+{% block content %}
+    {% set errors = sessionFlash.errors %}
+    {{ errorSummary(errors.fields) }}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-body form-header govuk-!-font-size-24">Add a new event</h1>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Learning providers</h2>
+            <form class="govuk-form" action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/learning-provider/" method="post">
+                <fieldset class="govuk-fieldset">
+                    <legend>
+                        <h3 class="govuk-heading-s">Select a cancellation policy</h3>
+                    </legend>
+                    {% set policies = [{
+                        text: "Select a cancellation policy",
+                        value: "",
+                        selected: true,
+                        disabled: true
+                    }] %}
+                    {% for policy in provider.cancellationPolicy %}
+                       {% set policy = policies.push({
+                            text: provider.name,
+                            value: provider.name
+                       }) %}
+                    {% endfor %}
+                    {{ govukSelect({
+                        id: "cancellation-policy",
+                        name: "cancellation-policy",
+                        classes: "provider-input",
+                        items: policies
+                    }) }}
+                </fieldset>
+                <fieldset class="govuk-fieldset">
+                    <legend>
+                        <h3 class="govuk-heading-s">Select terms and conditions</h3>
+                    </legend>
+                    {% set options = [{
+                        text: "Select terms and conditions",
+                        value: "",
+                        selected: true,
+                        disabled: true
+                    }] %}
+                    {% for terms in provider.termsandconditions %}
+                       {% set prov = options.push({
+                            text: terms.name,
+                            value: terms.name
+                       }) %}
+                    {% endfor %}
+                    {{ govukSelect({
+                        id: "cancellation-policy",
+                        name: "cancellation-policy",
+                        classes: "provider-input",
+                        items: options
+                    }) }}
+                </fieldset>
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
+            </form>
+            <a href="/content-management/courses/{{course.id}}/overview">Cancel</a>
+        </div>
+        <div class="govuk-column-width-one-third">
+        </div>
+    </div>
+{% endblock%}

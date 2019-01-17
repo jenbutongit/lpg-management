@@ -1,0 +1,119 @@
+{% from "select/macro.njk" import govukSelect %}
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block pageTitle %}{{ i18n['module_add_learning_provider_policies'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management" %}
+
+{% block content %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full module-container">
+            <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
+            <h1 class="govuk-heading-m govuk-!-font-size-36 page-title">Learning providers</h1>
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">           
+            <p class="govuk-body">Add the learning provider and their policies if required</p>       
+                <form action="/content-management/courses/{{ course.id }}/module-face-to-face/{{catalogueModule.id}}/learner-provider" method="post" class="module-form">
+                    <fieldset class="govuk-fieldset module-selector">
+                        {{ govukSelect({
+                            id: "learning-provider",
+                            name: "learning-provider",
+                            classes: "govuk-!-width-one-half govuk-!-margin-bottom-6",
+                            label: {
+                                text: "Learning providers"
+                            },
+                            items: [
+                                {
+                                value: "",
+                                text: "Select a learning provider",
+                                selected: true
+                                },
+                                {
+                                value: "hard coded value 1",
+                                text: "Hard coded value 1"
+                                },
+                                {
+                                value: "hard coded value 2",
+                                text: "Hard coded value 3"
+                                },
+                                {
+                                value: "hard coded value 3",
+                                text: "Hard coded value 3"
+                                }
+                            ]
+                        }) }}
+                         {{ govukSelect({
+                            id: "cancellation-policy",
+                            name: "cancellation-policy",
+                            classes: "govuk-!-margin-bottom-6",
+                            label: {
+                                text: "Choose a cancellation policy"
+                            },
+                            items: [
+                                {
+                                value: "",
+                                text: "Classroom cancellation policy",
+                                selected: true
+                                },
+                                {
+                                value: "hard coded value 1",
+                                text: "Hard coded value 1"
+                                },
+                                {
+                                value: "hard coded value 2",
+                                text: "Hard coded value 3"
+                                },
+                                {
+                                value: "hard coded value 3",
+                                text: "Hard coded value 3"
+                                }
+                            ]
+                        }) }}
+                        {{ govukSelect({
+                            id: "learning-provider",
+                            name: "module",
+                            classes: "govuk-!-margin-bottom-6",
+                            label: {
+                                text: "Choose terms and conditions"
+                            },
+                            items: [
+                                {
+                                value: "",
+                                text: "Generic terms and conditions",
+                                selected: true
+                                },
+                                {
+                                value: "hard coded value 1",
+                                text: "Hard coded value 1"
+                                },
+                                {
+                                value: "hard coded value 2",
+                                text: "Hard coded value 2"
+                                },
+                                {
+                                value: "hard coded value 3",
+                                text: "Hard coded value 3"
+                                }
+                            ]
+                        }) }}
+                        {{ govukButton({
+                            text: "Change provider",
+                            classes: "button-blue"
+                        }) }}
+                    </fieldset>
+                </form>
+                <div class="button-container">
+                    <a class="govuk-button" href="/content-management/courses/{{course.id}}/preview">Continue without adding a learning provider</a>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-third">
+            </div>
+        </div>
+    </div>
+{% endblock %}

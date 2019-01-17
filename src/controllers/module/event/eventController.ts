@@ -134,9 +134,16 @@ export class EventController implements FormController {
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.getCancelBooking()))
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.cancelBooking()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite', asyncHandler(this.inviteLearner()))
-	}
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', this.updateBooking())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.cancelEvent())
 
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite', asyncHandler(this.inviteLearner()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId', this.getLearningProvider())
+
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId', this.setLearningProvider())
+
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId/policies', this.getPolicies())
+	}
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/module/events/events', {courseId: request.params.courseId, moduleId: request.params.moduleId})
@@ -554,6 +561,24 @@ export class EventController implements FormController {
 			await this.learnerRecord.updateBooking(req.params.eventId, booking)
 
 			return res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events/${req.params.eventId}/attendee/${req.params.bookingId}`)
+		}
+	}
+
+	public getLearningProvider() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/learning-provider/index')
+		}
+	}
+
+	public setLearningProvider() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/learning-provider/assign-learning-provider')
+		}
+	}
+
+	public getPolicies() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/module/events/learning-provider/assign-policies')
 		}
 	}
 

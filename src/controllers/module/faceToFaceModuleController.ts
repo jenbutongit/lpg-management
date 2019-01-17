@@ -60,6 +60,9 @@ export class FaceToFaceModuleController {
 			})
 		)
 
+		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId/add-learning-provider', this.getLearnerProvider())
+		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId/add-learning-provider', this.setLearnerProvider())
+
 		this.router.get('/content-management/courses/:courseId/module-face-to-face/:moduleId?', asyncHandler(this.getModule()))
 		this.router.post('/content-management/courses/:courseId/module-face-to-face/', asyncHandler(this.setModule()))
 		this.router.post('/content-management/courses/:courseId/module-face-to-face/:moduleId', asyncHandler(this.editModule()))
@@ -94,6 +97,17 @@ export class FaceToFaceModuleController {
 		}
 	}
 
+	public getLearnerProvider() {
+		return async (request: Request, response: Response) => {
+			response.render('page/learning-provider/add-learning-provider-to-course')
+		}
+	}
+
+	public setLearnerProvider() {
+		return async (request: Request, response: Response) => {
+			response.render('page/learning-provider/add-learning-provider-policies')
+		}
+	}
 	public editModule() {
 		return async (request: Request, response: Response) => {
 			const data = {...request.body}

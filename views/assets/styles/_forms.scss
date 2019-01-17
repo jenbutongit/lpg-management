@@ -54,7 +54,7 @@
 }
 
 .attendee-form {
-  padding-top: 10px;
+	padding-top: 10px;
 }
 
 .no-errors {
@@ -340,6 +340,10 @@
 
 	.small-input {
 		width: 130px;
+	}
+
+	.provider-input {
+		width: 75%;
 	}
 
 	.audience-fieldset {
