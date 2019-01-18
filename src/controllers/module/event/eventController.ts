@@ -31,6 +31,7 @@ export class EventController implements FormController {
 	eventValidator: Validator<Event>
 	eventFactory: EventFactory
 	inviteFactory: InviteFactory
+	courseValidator: Validator<Course>
 	dateRangeCommandValidator: Validator<DateRangeCommand>
 	dateRangeValidator: Validator<DateRange>
 	dateRangeCommandFactory: DateRangeCommandFactory
@@ -40,6 +41,7 @@ export class EventController implements FormController {
 	constructor(
 		learningCatalogue: LearningCatalogue,
 		learnerRecord: LearnerRecord,
+		courseValidator: Validator<Course>,
 		eventValidator: Validator<Event>,
 		bookingValidator: Validator<Booking>,
 		eventFactory: EventFactory,
@@ -51,6 +53,7 @@ export class EventController implements FormController {
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.learnerRecord = learnerRecord
+		this.courseValidator = courseValidator
 		this.eventValidator = eventValidator
 		this.validator = bookingValidator
 		this.eventFactory = eventFactory
@@ -145,6 +148,8 @@ export class EventController implements FormController {
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId', this.setLearningProvider())
 
 		this.router.get('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId/policies', this.getPolicies())
+
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId/policies', this.setPolicies())
 	}
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
@@ -575,25 +580,64 @@ export class EventController implements FormController {
 	}
 
 	public setLearningProvider() {
-		return async (request: Request, response: Response) => {
-			const learningProvider = await this.learningCatalogue.getLearningProvider(request.body.learning_providers)
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
 
-			request.session!.sessionFlash = {
+			if (!data.learningProvider) {
+				const pageResults: DefaultPageResults<LearningProvider> = await this.learningCatalogue.listLearningProviders()
+				const errors = {fields: {learningProvider: ['validation_course_learning_provider_empty']}, size: 1}
+				return res.render('page/course/module/events/learning-provider/assign-learning-provider', {providers: pageResults.results, errors: errors})
+			}
+
+			const learningProvider = await this.learningCatalogue.getLearningProvider(data.learningProvider)
+
+			req.session!.sessionFlash = {
 				learningProvider: learningProvider,
 			}
 
-			return request.session!.save(() => {
-				response.redirect(`/content-management/courses/${request.params.courseId}/modules/${request.params.moduleId}/learning-provider/${request.params.eventId}/policies`)
+			return req.session!.save(() => {
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/learning-provider/${req.params.eventId}/policies`)
 			})
 		}
 	}
 
 	public getPolicies() {
 		return async (request: Request, response: Response) => {
-			const learningProvider = request.session!.sessionFlash.learningProvider
+			const learningProvider = response.locals.sessionFlash.learningProvider
 
 			response.render('page/course/module/events/learning-provider/assign-policies', {
-				learningProvider: learningProvider,
+				provider: learningProvider,
+			})
+		}
+	}
+
+	public setPolicies() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
+
+			const learningProvider = await this.learningCatalogue.getLearningProvider(data.learningProviderId)
+			const course = await this.learningCatalogue.getCourse(req.params.courseId)
+			course.learningProvider = learningProvider
+			course.cancellationPolicyId = data.cancellationPolicy
+			course.termsAndConditionsId = data.termsAndConditions
+
+			let errors = await this.courseValidator.check(course, ['termsAndConditionsId', 'cancellationPolicyId'])
+
+			if (errors.size) {
+				return res.render('page/course/module/events/learning-provider/assign-policies', {
+					provider: learningProvider,
+					errors: errors,
+				})
+			}
+
+			await this.learningCatalogue.updateCourse(course)
+
+			return req.session!.save(() => {
+				res.redirect(`/content-management/courses/${req.params.courseId}/modules/${req.params.moduleId}/events-overview/${req.params.eventId}`)
 			})
 		}
 	}

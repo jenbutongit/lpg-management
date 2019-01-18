@@ -29,6 +29,7 @@ describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
 	let learnerRecord: LearnerRecord
+	let courseValidator: Validator<Course>
 	let validator: Validator<Booking>
 	let eventValidator: Validator<Event>
 	let eventFactory: EventFactory
@@ -41,6 +42,7 @@ describe('EventController', function() {
 	beforeEach(() => {
 		learningCatalogue = <LearningCatalogue>{}
 		learnerRecord = <LearnerRecord>{}
+		courseValidator = <Validator<Course>>{}
 		eventValidator = <Validator<Event>>{}
 		validator = <Validator<Booking>>{}
 		eventFactory = <EventFactory>{}
@@ -53,6 +55,7 @@ describe('EventController', function() {
 		eventController = new EventController(
 			learningCatalogue,
 			learnerRecord,
+			courseValidator,
 			eventValidator,
 			validator,
 			eventFactory,
