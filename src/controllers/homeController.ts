@@ -21,14 +21,16 @@ export class HomeController {
 		return async (request: Request, response: Response, next: NextFunction) => {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
 
-			// prettier-ignore
-			await self.learningCatalogue.listCourses(page, size).then(pageResults =>{
-				response.render('page/index', {
-					pageResults,
+			await self.learningCatalogue
+				.listCourses(page, size)
+				.then(pageResults => {
+					response.render('page/index', {
+						pageResults,
+					})
 				})
-			}).catch(error => {
-				next(error)
-			})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 }

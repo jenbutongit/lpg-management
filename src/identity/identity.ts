@@ -5,6 +5,8 @@ export class Identity {
 	public static readonly LEARNING_CREATE = 'LEARNING_CREATE'
 	public static readonly LEARNING_EDIT = 'LEARNING_EDIT'
 	public static readonly LEARNING_DELETE = 'LEARNING_DELETE'
+	public static readonly ORGANISATION_AUTHOR = 'ORGANISATION_AUTHOR'
+	public static readonly PROFESSION_AUTHOR = 'PROFESSION_AUTHOR'
 
 	readonly uid: string
 	readonly roles: string[]
@@ -34,6 +36,14 @@ export class Identity {
 
 	isCslAuthor() {
 		return this.hasRole(Identity.CSL_AUTHOR)
+	}
+
+	isOrganisationAuthor() {
+		return this.hasRole(Identity.ORGANISATION_AUTHOR)
+	}
+
+	isProfessionAuthor() {
+		return this.hasRole(Identity.PROFESSION_AUTHOR)
 	}
 
 	hasLearningCreate() {
