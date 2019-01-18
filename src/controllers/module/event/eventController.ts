@@ -144,7 +144,7 @@ export class EventController implements FormController {
 
 		this.router.post('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId', this.setLearningProvider())
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId/policies', this.getPolicies())
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/learning-provider/:eventId/policies', this.getPolicies())
 	}
 	public getDateTime() {
 		return async (request: Request, response: Response) => {
@@ -570,19 +570,31 @@ export class EventController implements FormController {
 		return async (request: Request, response: Response) => {
 			const pageResults: DefaultPageResults<LearningProvider> = await this.learningCatalogue.listLearningProviders()
 
-			response.render('page/course/module/events/learning-provider/assign-learning-provider.html', {pageResults})
+			response.render('page/course/module/events/learning-provider/assign-learning-provider', {providers: pageResults.results})
 		}
 	}
 
 	public setLearningProvider() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/learning-provider/assign-learning-provider')
+			const learningProvider = await this.learningCatalogue.getLearningProvider(request.body.learning_providers)
+
+			request.session!.sessionFlash = {
+				learningProvider: learningProvider,
+			}
+
+			return request.session!.save(() => {
+				response.redirect(`/content-management/courses/${request.params.courseId}/modules/${request.params.moduleId}/learning-provider/${request.params.eventId}/policies`)
+			})
 		}
 	}
 
 	public getPolicies() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/module/events/learning-provider/assign-policies')
+			const learningProvider = request.session!.sessionFlash.learningProvider
+
+			response.render('page/course/module/events/learning-provider/assign-policies', {
+				learningProvider: learningProvider,
+			})
 		}
 	}
 
