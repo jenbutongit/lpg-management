@@ -117,12 +117,43 @@ describe('Leaner Record Tests', () => {
 		expect(learnerRecord.inviteLearner(eventId, invite)).to.be.rejectedWith(`Learner has already been invite to course: 409`)
 	})
 
-	it('should throw 404 error if learner doesn not exist', async () => {
+	it('should throw 404 error if learner does not exist', async () => {
 		const eventId = 'eventId'
 		const invite: Invite = new Invite()
 
 		restService.post = sinon.stub().throws(new Error('404'))
 
 		expect(learnerRecord.inviteLearner(eventId, invite)).to.be.rejectedWith(`Email address not registered: 404`)
+	})
+
+	it('should post new event to learner record', async () => {
+		const eventId = 'eventId'
+		const uri = 'test/path/to/eventId'
+
+		const event = {
+			uid: eventId,
+			uri: uri,
+			status: 'Active',
+		}
+
+		restService.post = sinon.stub().returns(event)
+
+		const response = await learnerRecord.createEvent(eventId, uri)
+
+		expect(response).to.equal(event)
+		expect(restService.post).to.have.been.calledOnceWith('/event', event)
+	})
+
+	it('should get cancellation reasons', async () => {
+		const cancellationReasons = {
+			UNAVAILABLE: 'event is unavailable',
+		}
+
+		restService.get = sinon.stub().returns(cancellationReasons)
+
+		const response = await learnerRecord.getCancellationReasons()
+
+		expect(response).to.equal(cancellationReasons)
+		expect(restService.get).to.have.been.calledOnceWith(`/event/cancellationReasons`)
 	})
 })

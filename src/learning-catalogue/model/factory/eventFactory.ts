@@ -24,6 +24,8 @@ export class EventFactory {
 		event.venue = this.venueFactory.create(data.venue)
 		event.status = data.status ? Event.Status[data.status.toUpperCase() as keyof typeof Event.Status] : Event.Status.ACTIVE
 
+		event.cancellationReason = data.cancellationReason
+
 		return event
 	}
 }

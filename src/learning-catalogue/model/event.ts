@@ -17,6 +17,8 @@ export class Event {
 	venue: Venue
 
 	status: Event.Status
+
+	cancellationReason: string
 }
 
 export namespace Event {
