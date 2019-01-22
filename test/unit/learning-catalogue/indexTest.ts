@@ -71,7 +71,7 @@ describe('Learning Catalogue tests', () => {
 		courseService.listAllWithPagination = sinon.stub()
 
 		await learningCatalogue.listCourses()
-		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith('/courses?status=Draft&status=Published&status=Archived&page=0&size=10')
+		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith('/courses?status=Draft&status=Published&status=Archived&page=0&size=10&visibility=PRIVATE')
 	})
 
 	it('should call moduleService when creating a module', async () => {
@@ -223,6 +223,8 @@ describe('Learning Catalogue tests', () => {
 
 		await learningCatalogue.searchCourses('test', 0, 10)
 
-		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`)
+		return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(
+			`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10&visibility=PRIVATE`
+		)
 	})
 })
