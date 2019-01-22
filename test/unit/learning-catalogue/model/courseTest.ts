@@ -221,4 +221,13 @@ describe('Course tests', () => {
 	it('should return empty string if no audiences exist', () => {
 		expect(course.getAreasOfWork()).to.be.equal('')
 	})
+
+	it('should be able to set visibility', () => {
+		course.visibility = Course.Visibility.PRIVATE
+		expect(course.visibility).to.be.equal(Course.Visibility.PRIVATE)
+	})
+
+	it('visibility should be public by default', () => {
+		expect(course.visibility).to.be.equal(Course.Visibility.PUBLIC)
+	})
 })
