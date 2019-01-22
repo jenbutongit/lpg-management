@@ -79,6 +79,13 @@ export const REGISTRY_SERVICE_URL = set({
 	url: env.REGISTRY_SERVICE_URL || 'http://localhost:9002',
 })
 
+export const REPORT_SERVICE = set({
+	url: env.REPORT_SERVICE_URL || 'http://localhost:9004',
+	map: {
+		'booking-information': '/bookings'
+	}
+})
+
 export const CACHE = {
 	TTL_SECONDS: 3600,
 	CHECK_PERIOD_SECONDS: 600,

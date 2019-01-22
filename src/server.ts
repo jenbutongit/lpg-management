@@ -25,6 +25,7 @@ const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const authorisedRole = 'COURSE_MANAGER'
+// const authorisedRole = 'CSHR_REPORTER'
 
 const appInsights = require('applicationinsights')
 
