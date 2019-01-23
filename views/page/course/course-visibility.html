@@ -1,0 +1,69 @@
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block pageTitle %}
+    {{ i18n.course.pageTitle.editCourseTitle if course else i18n.course.pageTitle.addCourseTitle }} - {{ i18n.proposition_name }}
+{% endblock %}
+
+{% set banner = true %}
+{% set backButton = "/content-management" %}
+
+{% block content %}
+{% set errors = sessionFlash.errors %}
+{% set form = sessionFlash.form %}
+
+    {{ errorSummary(errors.fields) }}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p class="govuk-body form-header govuk-!-font-size-24">{{i18n.course.text.addNew}}</p>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n['course_visibility']}}</h2>
+            <form action="/content-management/courses/title/{{ course.id }}" method="post" class="course-form">
+                {% if course.id %}
+                <input type="hidden" name="id" value="{{ course.id }}">
+                {% endif %}
+
+                <fieldset class="govuk-fieldset">
+                    
+
+                    {{ govukRadios({
+                    classes: "govuk-radios--inline",
+                    idPrefix: "changed-name",
+                    name: "changed-name",
+                    fieldset: {
+                        legend: {
+                        text: "Have you changed your name?",
+                        isPageHeading: true,
+                        classes: "govuk-fieldset__legend--xl"
+                        }
+                    },
+                    hint: {
+                        text: "This includes changing your last name or spelling your name differently."
+                    },
+                    items: [
+                        {
+                        value: "yes",
+                        text: "Yes"
+                        },
+                        {
+                        value: "no",
+                        text: "No"
+                        }
+                    ]
+                    }) }}
+                </fieldset>
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
+                <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
+            </form>
+        </div>
+        <div class="govuk-grid-column-one-third">
+        </div>
+    </div>
+{% endblock %}
