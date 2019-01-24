@@ -21,7 +21,7 @@
         <div class="govuk-grid-column-two-thirds">
             <p class="govuk-body form-header govuk-!-font-size-24">{{i18n.course.text.addNew}}</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n['course_visibility']}}</h2>
-            <form action="/content-management/courses/title/{{ course.id }}" method="post" class="course-form">
+            <form action="/content-management/courses/visibility" method="post" class="course-form">
                 {% if course.id %}
                 <input type="hidden" name="id" value="{{ course.id }}">
                 {% endif %}
@@ -31,17 +31,17 @@
 
                     {{ govukRadios({
                     classes: "govuk-radios--inline",
-                    idPrefix: "changed-name",
-                    name: "changed-name",
+                    idPrefix: "visible",
+                    name: "visible",
                     fieldset: {
                         legend: {
-                        text: "Have you changed your name?",
-                        isPageHeading: true,
-                        classes: "govuk-fieldset__legend--xl"
+                        text: "Is this a private course?",
+                        isPageHeading: false,
+                        classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {
-                        text: "This includes changing your last name or spelling your name differently."
+                        text: "Limited to your selected group by email; this course cannot be found through Search."
                     },
                     items: [
                         {
