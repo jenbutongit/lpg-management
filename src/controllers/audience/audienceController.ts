@@ -71,6 +71,7 @@ export class AudienceController {
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/event', this.getPrivateCourseEvent())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event', this.setPrivateCourseEvent())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event/delete', this.deletePrivateCourseEvent())
+		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/required-learning', this.getRequiredLearning())
 	}
 
 	getAudienceName() {
@@ -355,6 +356,12 @@ export class AudienceController {
 			await this.learningCatalogue.updateCourse(res.locals.course)
 
 			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+		}
+	}
+
+	getRequiredLearning() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/add-deadline-and-frequency', {exampleYear: new Date(Date.now()).getFullYear() + 1})
 		}
 	}
 }

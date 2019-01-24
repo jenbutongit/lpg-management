@@ -38,7 +38,7 @@ export class Audience {
 	})
 	requiredBy?: Date
 
-	frequency?: string
+	frequency?: number
 
 	eventId?: string
 }
@@ -46,8 +46,6 @@ export class Audience {
 export namespace Audience {
 	export enum Type {
 		OPEN,
-		CLOSED_COURSE,
-		PRIVATE_COURSE,
 		REQUIRED_LEARNING,
 	}
 }
