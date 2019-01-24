@@ -14,6 +14,7 @@
 {% block content %}
 {% set errors = sessionFlash.errors %}
 {% set form = sessionFlash.form %}
+{% set course = sessionFlash.course %}
 
     {{ errorSummary(errors.fields) }}
 
@@ -25,6 +26,7 @@
                 {% if course.id %}
                 <input type="hidden" name="id" value="{{ course.id }}">
                 {% endif %}
+                <input  id="visibility" name="visibility" type="hidden" value="{{ form.visibility|default(course.visibility)}}">
 
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}

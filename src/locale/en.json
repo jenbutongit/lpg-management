@@ -67,7 +67,10 @@
 			},
 			"status": {
 				"invalid": "Status needs to be 'Draft', 'Published' or 'Archived'"
-			}
+			},
+            "visibility": {
+              "empty": "Visibility is required"
+            }
 		}
 	},
 	"event": {

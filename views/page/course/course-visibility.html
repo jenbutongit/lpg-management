@@ -31,8 +31,8 @@
 
                     {{ govukRadios({
                     classes: "govuk-radios--inline",
-                    idPrefix: "visible",
-                    name: "visible",
+                    idPrefix: "visibility",
+                    name: "visibility",
                     fieldset: {
                         legend: {
                         text: "Is this a private course?",
@@ -45,11 +45,11 @@
                     },
                     items: [
                         {
-                        value: "yes",
+                        value: "PRIVATE",
                         text: "Yes"
                         },
                         {
-                        value: "no",
+                        value: "PUBLIC",
                         text: "No"
                         }
                     ]

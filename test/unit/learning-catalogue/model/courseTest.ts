@@ -226,8 +226,4 @@ describe('Course tests', () => {
 		course.visibility = Course.Visibility.PRIVATE
 		expect(course.visibility).to.be.equal(Course.Visibility.PRIVATE)
 	})
-
-	it('visibility should be public by default', () => {
-		expect(course.visibility).to.be.equal(Course.Visibility.PUBLIC)
-	})
 })

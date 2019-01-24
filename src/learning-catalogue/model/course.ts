@@ -48,7 +48,11 @@ export class Course {
 	})
 	status: Status = Status.DRAFT
 
-	visibility: Course.Visibility = Course.Visibility.PUBLIC
+	@IsNotEmpty({
+		groups: ['all', 'visibility'],
+		message: 'course.validation.visibility.empty',
+	})
+	visibility: Course.Visibility
 
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)

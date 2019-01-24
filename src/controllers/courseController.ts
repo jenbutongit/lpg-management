@@ -107,9 +107,18 @@ export class CourseController implements FormController {
 		}
 	}
 
+	@Validate({
+		fields: ['visibility'],
+		redirect: '/content-management/courses/visibility',
+	})
 	setCourseVisibility() {
 		return async (request: Request, response: Response) => {
-			response.render('page/course/course-title')
+			const course = this.courseFactory.create(request.body)
+			request.session!.sessionFlash = {course}
+
+			request.session!.save(() => {
+				response.redirect('/content-management/courses/title/')
+			})
 		}
 	}
 
