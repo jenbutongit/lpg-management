@@ -47,7 +47,7 @@
         <div class="section">
             <div class="title-container"> 
                 <h3 class="govuk-heading-m">Course audiences</h3>
-                {% if course.status !== "Archived" %}
+                {% if course.status !== "Archived" and identity.hasLearningCreate() %}
                     <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audiences/">Add an audience</a>
                 {% endif %}
             </div>
@@ -65,15 +65,17 @@
                 {{ changeStatus(course.status) }}
             {% endblock %}
             {% if course.status !== "Archived" %}
-                {% block menu %}
-                    {% set actions = [
-                        {
-                            link: '/content-management/courses/' + course.id + "/preview",
-                            text: 'Preview and edit'
-                        }
-                    ] %}
-                    {{ menu("Actions", actions) }}
-                {% endblock %}
+                {% if identity.hasLearningEdit() %}
+                    {% block menu %}
+                        {% set actions = [
+                            {
+                                link: '/content-management/courses/' + course.id + "/preview",
+                                text: 'Preview and edit'
+                            }
+                        ] %}
+                        {{ menu("Actions", actions) }}
+                    {% endblock %}
+                {% endif %}
             {% endif %}
         </div>
     </div>

@@ -10,6 +10,7 @@ export class Identity {
 	public static readonly PROFESSION_AUTHOR = 'PROFESSION_AUTHOR'
 	public static readonly LEARNING_PUBLISH = 'LEARNING_PUBLISH'
 	public static readonly LEARNING_ARCHIVE = 'LEARNING_ARCHIVE'
+	public static readonly SUPPLIER_AUTHOR = 'SUPPLIER_AUTHOR'
 
 	readonly uid: string
 	readonly roles: string[]
@@ -41,35 +42,39 @@ export class Identity {
 		return this.hasRole(Identity.CSL_AUTHOR)
 	}
 
-	isOrganisationAuthor() {
-		return this.hasRole(Identity.ORGANISATION_AUTHOR)
-	}
-
-	isProfessionAuthor() {
-		return this.hasRole(Identity.PROFESSION_AUTHOR)
-	}
-
-	hasCslOrLearningManagerRole() {
+	isSuperUser() {
 		return this.isCslAuthor() || this.isLearningManager()
 	}
 
+	isOrganisationAuthor() {
+		return this.hasRole(Identity.ORGANISATION_AUTHOR) || this.isSuperUser()
+	}
+
+	isProfessionAuthor() {
+		return this.hasRole(Identity.PROFESSION_AUTHOR) || this.isSuperUser()
+	}
+
+	isSupplierAuthor() {
+		return this.hasRole(Identity.SUPPLIER_AUTHOR) || this.isSuperUser()
+	}
+
 	hasLearningCreate() {
-		return this.hasRole(Identity.LEARNING_CREATE)
+		return this.hasRole(Identity.LEARNING_CREATE) || this.isSuperUser()
 	}
 
 	hasLearningEdit() {
-		return this.hasRole(Identity.LEARNING_EDIT)
+		return this.hasRole(Identity.LEARNING_EDIT) || this.isSuperUser()
 	}
 
 	hasLearningDelete() {
-		return this.hasRole(Identity.LEARNING_DELETE)
+		return this.hasRole(Identity.LEARNING_DELETE) || this.isSuperUser()
 	}
 
 	hasLearningPublish() {
-		return this.hasRole(Identity.LEARNING_PUBLISH)
+		return this.hasRole(Identity.LEARNING_PUBLISH) || this.isSuperUser()
 	}
 
 	hasLearningArchive() {
-		return this.hasRole(Identity.LEARNING_ARCHIVE)
+		return this.hasRole(Identity.LEARNING_ARCHIVE) || this.isSuperUser()
 	}
 }

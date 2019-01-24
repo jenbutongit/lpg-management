@@ -81,24 +81,14 @@ describe('Identity tests', () => {
 		expect(learner.isProfessionAuthor()).to.be.false
 	})
 
-	it('hasCslOrLearningManagerRole() should return true if identity has learning manager roles', () => {
+	it('isSupplierAuthor() should return true if identity has profession author roles', () => {
 		const accessToken: string = 'access-token'
 
-		const learningCreate: Identity = new Identity('id1', [Identity.LEARNING_MANAGER], accessToken)
+		const supplierAuthor: Identity = new Identity('id1', [Identity.SUPPLIER_AUTHOR], accessToken)
 		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
 
-		expect(learningCreate.hasCslOrLearningManagerRole()).to.be.true
-		expect(learner.hasCslOrLearningManagerRole()).to.be.false
-	})
-
-	it('hasCslOrLearningManagerRole() should return true if identity has csl author roles', () => {
-		const accessToken: string = 'access-token'
-
-		const learningCreate: Identity = new Identity('id1', [Identity.CSL_AUTHOR], accessToken)
-		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
-
-		expect(learningCreate.hasCslOrLearningManagerRole()).to.be.true
-		expect(learner.hasCslOrLearningManagerRole()).to.be.false
+		expect(supplierAuthor.isSupplierAuthor()).to.be.true
+		expect(learner.isProfessionAuthor()).to.be.false
 	})
 
 	it('hasLearningCreate() should return true if identity has learning create roles', () => {
