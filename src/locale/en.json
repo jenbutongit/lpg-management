@@ -41,6 +41,7 @@
 	},
 	"course": {
 		"pageTitle": {
+            "addCourseVisibility": "Add course visibility",
 			"addCourseTitle": "Add course title",
 			"editCourseTitle": "Edit course title",
 			"addCourseDetails": "Add course details",

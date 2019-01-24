@@ -5,7 +5,7 @@
 {% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}
-    {{ i18n.course.pageTitle.editCourseTitle if course else i18n.course.pageTitle.addCourseTitle }} - {{ i18n.proposition_name }}
+    {{ i18n.course.pageTitle.addCourseVisibility if course else i18n.course.pageTitle.addCourseVisibility }} - {{ i18n.proposition_name }}
 {% endblock %}
 
 {% set banner = true %}
