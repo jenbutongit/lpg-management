@@ -17,15 +17,4 @@ export class AudienceService {
 			}
 		}
 	}
-
-	static updateAudienceType(audience: Audience, updatedType: Audience.Type) {
-		if (audience.type != updatedType) {
-			audience.eventId = undefined
-			if (audience.type == Audience.Type.REQUIRED_LEARNING) {
-				audience.requiredBy = undefined
-			}
-
-			audience.type = updatedType
-		}
-	}
 }

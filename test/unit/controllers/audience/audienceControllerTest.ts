@@ -74,19 +74,24 @@ describe('AudienceController', () => {
 		})
 
 		it('should redirect to audience type page if audience name validated successfully', async function() {
+			let audience: Audience = new Audience()
+			let savedAudience: Audience = new Audience()
+
 			req.body = {name: 'audience name'}
 
 			const errors = {size: 0}
 			audienceValidator.check = sinon.stub().returns(errors)
-			const audience = <Audience>{}
 			audienceFactory.create = sinon.stub().returns(audience)
+			learningCatalogue.createAudience = sinon.stub().returns(savedAudience)
 
 			await audienceController.setAudienceName()(req, res)
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.name'])
 			expect(audienceValidator.check).to.have.returned(errors)
 			expect(req.session!.sessionFlash.errors).to.be.undefined
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
+			expect(audience.type).to.eql(Audience.Type.OPEN)
+			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/${savedAudience.id}/configure`)
 		})
 	})
 
