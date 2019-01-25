@@ -41,6 +41,16 @@ describe('Identity tests', () => {
 		expect(learner.isOrganisationManager()).to.be.false
 	})
 
+	it('isOrganisationManagerOrSuperUser() should return true if identity has organisation_manager roles', () => {
+		const accessToken: string = 'access-token'
+
+		const orgManager: Identity = new Identity('id1', [Identity.ORGANISATION_MANAGER], accessToken)
+		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
+
+		expect(orgManager.isOrganisationManagerOrSuperUser()).to.be.true
+		expect(learner.isOrganisationManagerOrSuperUser()).to.be.false
+	})
+
 	it('isLearningManager() should return true if identity has learning manager roles', () => {
 		const accessToken: string = 'access-token'
 

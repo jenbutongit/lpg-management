@@ -34,6 +34,10 @@ export class Identity {
 		return this.hasRole(Identity.ORGANISATION_MANAGER)
 	}
 
+	isOrganisationManagerOrSuperUser() {
+		return this.hasRole(Identity.ORGANISATION_MANAGER) || this.isSuperUser()
+	}
+
 	isLearningManager() {
 		return this.hasRole(Identity.LEARNING_MANAGER)
 	}

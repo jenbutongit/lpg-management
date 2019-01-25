@@ -52,7 +52,7 @@
                     text: 'Manage learning providers'
                 }) %}
             {% endif %}
-            {% if identity.isOrganisationAuthorOrSuperUser() %}
+            {% if identity.isOrganisationManagerOrSuperUser() %}
                 {% set action = actions.push({
                     link: '/content-management/organisations/manage',
                     text: 'Manage organisations'
