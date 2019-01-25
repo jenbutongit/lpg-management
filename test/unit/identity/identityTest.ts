@@ -61,6 +61,16 @@ describe('Identity tests', () => {
 		expect(learner.isCslAuthor()).to.be.false
 	})
 
+	it('isOrganisationAuthorOrSuperUser() should return true if identity has organisation author roles', () => {
+		const accessToken: string = 'access-token'
+
+		const organisationAuthor: Identity = new Identity('id1', [Identity.ORGANISATION_AUTHOR], accessToken)
+		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
+
+		expect(organisationAuthor.isOrganisationAuthorOrSuperUser()).to.be.true
+		expect(learner.isOrganisationAuthorOrSuperUser()).to.be.false
+	})
+
 	it('isOrganisationAuthor() should return true if identity has organisation author roles', () => {
 		const accessToken: string = 'access-token'
 
@@ -71,14 +81,34 @@ describe('Identity tests', () => {
 		expect(learner.isOrganisationAuthor()).to.be.false
 	})
 
-	it('isProfessionAuthor() should return true if identity has profession author roles', () => {
+	it('isProfessionAuthorOrSuperUser() should return true if identity has profession author roles', () => {
 		const accessToken: string = 'access-token'
 
 		const professionAuthor: Identity = new Identity('id1', [Identity.PROFESSION_AUTHOR], accessToken)
 		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
 
-		expect(professionAuthor.isProfessionAuthor()).to.be.true
+		expect(professionAuthor.isProfessionAuthorOrSuperUser()).to.be.true
+		expect(learner.isProfessionAuthorOrSuperUser()).to.be.false
+	})
+
+	it('isProfessionAuthor() should return true if identity has profession author roles', () => {
+		const accessToken: string = 'access-token'
+
+		const organisationAuthor: Identity = new Identity('id1', [Identity.PROFESSION_AUTHOR], accessToken)
+		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
+
+		expect(organisationAuthor.isProfessionAuthor()).to.be.true
 		expect(learner.isProfessionAuthor()).to.be.false
+	})
+
+	it('isSupplierAuthorOrSuperUser() should return true if identity has profession author roles', () => {
+		const accessToken: string = 'access-token'
+
+		const supplierAuthor: Identity = new Identity('id1', [Identity.SUPPLIER_AUTHOR], accessToken)
+		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
+
+		expect(supplierAuthor.isSupplierAuthorOrSuperUser()).to.be.true
+		expect(learner.isProfessionAuthorOrSuperUser()).to.be.false
 	})
 
 	it('isSupplierAuthor() should return true if identity has profession author roles', () => {
@@ -88,7 +118,7 @@ describe('Identity tests', () => {
 		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
 
 		expect(supplierAuthor.isSupplierAuthor()).to.be.true
-		expect(learner.isProfessionAuthor()).to.be.false
+		expect(learner.isSupplierAuthor()).to.be.false
 	})
 
 	it('hasLearningCreate() should return true if identity has learning create roles', () => {

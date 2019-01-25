@@ -40,19 +40,19 @@
         <div class="right-menu">
             {% block menu %}
             {% set actions = [] %}
-            {% if identity.hasLearningCreate() %}
+            {% if identity.hasLearningCreateOrSuperUser() %}
                 {% set action = actions.push({
                     link: '/content-management/courses/title',
                     text: 'Add a new course'
                 }) %}
             {% endif %}
-            {% if identity.isSupplierAuthor() %}
+            {% if identity.isSupplierAuthorOrSuperUser() %}
                 {% set action = actions.push({
                     link: '/content-management/learning-providers',
                     text: 'Manage learning providers'
                 }) %}
             {% endif %}
-            {% if identity.isOrganisationAuthor() %}
+            {% if identity.isOrganisationAuthorOrSuperUser() %}
                 {% set action = actions.push({
                     link: '/content-management/organisations/manage',
                     text: 'Manage organisations'

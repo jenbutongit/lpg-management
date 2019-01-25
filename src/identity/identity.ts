@@ -46,16 +46,28 @@ export class Identity {
 		return this.isCslAuthor() || this.isLearningManager()
 	}
 
-	isOrganisationAuthor() {
+	isOrganisationAuthorOrSuperUser() {
 		return this.hasRole(Identity.ORGANISATION_AUTHOR) || this.isSuperUser()
 	}
 
-	isProfessionAuthor() {
+	isOrganisationAuthor() {
+		return this.hasRole(Identity.ORGANISATION_AUTHOR)
+	}
+
+	isProfessionAuthorOrSuperUser() {
 		return this.hasRole(Identity.PROFESSION_AUTHOR) || this.isSuperUser()
 	}
 
-	isSupplierAuthor() {
+	isProfessionAuthor() {
+		return this.hasRole(Identity.PROFESSION_AUTHOR)
+	}
+
+	isSupplierAuthorOrSuperUser() {
 		return this.hasRole(Identity.SUPPLIER_AUTHOR) || this.isSuperUser()
+	}
+
+	isSupplierAuthor() {
+		return this.hasRole(Identity.SUPPLIER_AUTHOR)
 	}
 
 	hasLearningCreate() {
