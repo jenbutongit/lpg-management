@@ -48,6 +48,8 @@ export class Course {
 	})
 	status: Status = Status.DRAFT
 
+	topicId: string
+
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
 	}

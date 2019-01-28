@@ -113,6 +113,7 @@ export class CourseController implements FormController {
 		return async (request: Request, response: Response) => {
 			let course = response.locals.course
 			course.title = request.body.title
+			course.topicId = request.body.topicId
 			await this.learningCatalogue.updateCourse(course)
 			response.redirect(`/content-management/courses/${request.params.courseId}/preview`)
 		}
