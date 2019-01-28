@@ -9,6 +9,7 @@ import {AudienceService} from '../../lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
 import {DateTime} from '../../lib/dateTime'
 import {Csrs} from '../../csrs'
+import * as moment from 'moment'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -312,7 +313,7 @@ export class AudienceController {
 			}
 
 			if (data.years || data.months) {
-				res.locals.audience.frequency = data.years * 12 + data.months
+				res.locals.audience.frequency = moment.duration(data.years * 12 + data.months, 'months')
 			}
 
 			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
