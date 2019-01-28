@@ -251,7 +251,7 @@ export class AudienceController {
 			res.locals.audience.areasOfWork = []
 
 			await this.learningCatalogue
-				.updateCourse(res.locals.course)
+				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`))
 				.catch(error => next(error))
 		}
@@ -319,7 +319,7 @@ export class AudienceController {
 				if (allGradesValid) {
 					res.locals.audience.grades = gradeCodes
 					await this.learningCatalogue
-						.updateCourse(res.locals.course)
+						.updateAudience(res.locals.course.id, res.locals.audience)
 						.then(() => {
 							res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 						})
@@ -335,7 +335,7 @@ export class AudienceController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.grades = []
 			await this.learningCatalogue
-				.updateCourse(res.locals.course)
+				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 				})
@@ -361,7 +361,7 @@ export class AudienceController {
 				if (allInterestsValid) {
 					res.locals.audience.interests = interests
 					await this.learningCatalogue
-						.updateCourse(res.locals.course)
+						.updateAudience(res.locals.course.id, res.locals.audience)
 						.then(() => {
 							res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 						})
@@ -380,7 +380,7 @@ export class AudienceController {
 			res.locals.audience.interests = []
 
 			await this.learningCatalogue
-				.updateCourse(res.locals.course)
+				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 				})
@@ -406,7 +406,7 @@ export class AudienceController {
 				if (event) {
 					res.locals.audience.eventId = eventId
 					await this.learningCatalogue
-						.updateCourse(res.locals.course)
+						.updateAudience(res.locals.course.id, res.locals.audience)
 						.then(() => {
 							res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 						})
@@ -424,7 +424,7 @@ export class AudienceController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.eventId = undefined
 			await this.learningCatalogue
-				.updateCourse(res.locals.course)
+				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 				})

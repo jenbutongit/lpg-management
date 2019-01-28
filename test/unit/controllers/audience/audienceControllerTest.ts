@@ -434,32 +434,30 @@ describe('AudienceController', () => {
 		it('should update course with empty areas of work array and redirect to audience configuration page', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, areasOfWork: ['some area of work']}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.deleteAreasOfWork()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, areasOfWork: []}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should pass to next if error occurs during update', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, areasOfWork: ['some area of work']}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.deleteAreasOfWork()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, areasOfWork: []}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
@@ -575,17 +573,16 @@ describe('AudienceController', () => {
 			const gradeCode = 'AA'
 			req.body = {grades: gradeCode}
 			const audience = {id: audienceId, grades: []}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			csrsService.isGradeCodeValid = sinon.stub().returns(true)
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.setGrades()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, grades: [gradeCode]}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
@@ -594,17 +591,16 @@ describe('AudienceController', () => {
 			const gradeCode = 'AA'
 			req.body = {grades: gradeCode}
 			const audience = {id: audienceId, grades: []}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			csrsService.isGradeCodeValid = sinon.stub().returns(true)
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.setGrades()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, grades: [gradeCode]}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
@@ -613,32 +609,30 @@ describe('AudienceController', () => {
 		it('should update course with empty grades array and redirect to audience configuration page', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, grades: ['some grade']}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.deleteGrades()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, grades: []}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should pass to next if error occurs on update', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, grades: ['some grade']}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.deleteGrades()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, grades: []}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
@@ -657,17 +651,16 @@ describe('AudienceController', () => {
 			const interestCode = 'AA'
 			req.body = {interests: interestCode}
 			const audience = {id: audienceId, interests: []}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			csrsService.isCoreLearningValid = sinon.stub().returns(true)
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.setCoreLearning()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, interests: [interestCode]}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
@@ -676,17 +669,16 @@ describe('AudienceController', () => {
 			const interestCode = 'AA'
 			req.body = {interests: interestCode}
 			const audience = {id: audienceId, interests: []}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			csrsService.isCoreLearningValid = sinon.stub().returns(true)
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.setCoreLearning()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, interests: [interestCode]}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
@@ -695,32 +687,30 @@ describe('AudienceController', () => {
 		it('should update course with empty interests array and redirect to audience configuration page', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, interests: ['some interest']}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.deleteCoreLearning()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, interests: []}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should pass to next if error occurs on update', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, interests: ['some interest']}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.deleteCoreLearning()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, interests: []}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
@@ -750,18 +740,17 @@ describe('AudienceController', () => {
 			req.body.events = eventId
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, eventId: null}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.setPrivateCourseEvent()(req, res, next)
 
 			expect(audience.eventId).to.be.equal(eventId)
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, eventId: eventId}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
@@ -770,18 +759,17 @@ describe('AudienceController', () => {
 			req.body.events = eventId
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, eventId: null}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			courseService.getAllEventsOnCourse = sinon.stub().returns([{id: eventId}])
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.setPrivateCourseEvent()(req, res, next)
 
 			expect(audience.eventId).to.be.equal(eventId)
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, eventId: eventId}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 
@@ -791,11 +779,11 @@ describe('AudienceController', () => {
 			res.locals.course = {audiences: [audience]}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.setPrivateCourseEvent()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.not.have.been.called
+			expect(learningCatalogue.updateAudience).to.not.have.been.called
 			expect(next).to.have.been.calledOnce
 		})
 
@@ -808,11 +796,11 @@ describe('AudienceController', () => {
 			res.locals.audience = audience
 
 			courseService.getAllEventsOnCourse = sinon.stub().returns([])
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.setPrivateCourseEvent()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.not.have.been.called
+			expect(learningCatalogue.updateAudience).to.not.have.been.called
 			expect(next).to.have.been.calledOnce
 		})
 	})
@@ -821,32 +809,30 @@ describe('AudienceController', () => {
 		it('should update audience with null event ID and redirect to audience configuration page', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, eventId: 'event-id'}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.deletePrivateCourseEvent()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, eventId: undefined}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should pass to next if error occurs on update', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, eventId: 'event-id'}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.deletePrivateCourseEvent()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, eventId: undefined}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
