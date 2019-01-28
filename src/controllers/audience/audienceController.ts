@@ -275,7 +275,7 @@ export class AudienceController {
 			if (!errors.size) {
 				res.locals.audience.requiredBy = date.toDate()
 				await this.learningCatalogue
-					.updateCourse(res.locals.course)
+					.updateAudience(res.locals.course.id, res.locals.audience)
 					.then(() => {
 						res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 					})
@@ -293,7 +293,7 @@ export class AudienceController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.requiredBy = undefined
 			await this.learningCatalogue
-				.updateCourse(res.locals.course)
+				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 				})

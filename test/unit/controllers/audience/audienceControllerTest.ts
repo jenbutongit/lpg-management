@@ -475,9 +475,8 @@ describe('AudienceController', () => {
 		it('should update course with deadline date if the date is valid and redirect to audience configuration page', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: null}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
-
 			// set date to be tomorrow at midnight
 			const date = new Date()
 			date.setDate(date.getDate() + 1)
@@ -485,20 +484,19 @@ describe('AudienceController', () => {
 
 			req.body = {'deadline-year': date.getFullYear().toString(), 'deadline-month': (date.getMonth() + 1).toString(), 'deadline-day': date.getDate().toString()}
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.setDeadline()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: date}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should pass to next if error occurs during update', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: null}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
 			// set date to be tomorrow at midnight
@@ -508,13 +506,12 @@ describe('AudienceController', () => {
 
 			req.body = {'deadline-year': date.getFullYear().toString(), 'deadline-month': (date.getMonth() + 1).toString(), 'deadline-day': date.getDate().toString()}
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.setDeadline()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: date}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 
@@ -536,32 +533,30 @@ describe('AudienceController', () => {
 		it('should update course with null deadline and redirect to audience configuration page', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: new Date()}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
 
 			await audienceController.deleteDeadline()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: undefined}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
 		})
 
 		it('should pass to next if error occurs when updating course', async () => {
 			req.params.audienceId = audienceId
 			const audience = {id: audienceId, requiredBy: new Date()}
-			res.locals.course = {audiences: [audience]}
+			res.locals.course = {audiences: [audience], id: courseId}
 			res.locals.audience = audience
 
-			learningCatalogue.updateCourse = sinon.stub().returns(Promise.reject(error))
+			learningCatalogue.updateAudience = sinon.stub().returns(Promise.reject(error))
 
 			await audienceController.deleteDeadline()(req, res, next)
 
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: undefined}],
-			})
+			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
+
 			expect(next).to.have.been.calledOnceWith(error)
 		})
 	})
