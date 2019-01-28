@@ -40,7 +40,7 @@
         <div class="right-menu">
             {% block menu %}
             {% set actions = [] %}
-            {% if identity.hasLearningCreateOrSuperUser() %}
+            {% if identity.hasLearningCreate() %}
                 {% set action = actions.push({
                     link: '/content-management/courses/title',
                     text: 'Add a new course'
