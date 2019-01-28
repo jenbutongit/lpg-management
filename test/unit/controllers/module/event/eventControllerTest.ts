@@ -691,7 +691,7 @@ describe('EventController', function() {
 		request.params.bookingId = 99
 
 		learnerRecord.getEventBookings = sinon.stub().returns([booking])
-		learnerRecord.getBookingCancellationReasons = sinon.stub()
+		learnerRecord.getBookingCancellationReasons = sinon.stub().returns(Promise.resolve(undefined))
 
 		await getCancelAttendee(request, response, next)
 
