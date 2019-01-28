@@ -156,6 +156,22 @@
                     classes: "button-red"
                 }) }}
             </div>
+
+            <div>
+                <form class="audience-form" action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/required-learning" method="post">
+                    <input id="year" name="year" type="hidden" value="2019">
+                    <input id="month" name="month" type="hidden" value="1">
+                    <input id="day" name="day" type="hidden" value="29">
+                    <input id="years" name="years" type="hidden" value="1">
+                    <input id="months" name="months" type="hidden" value="1">
+
+                    <div class="button-container">
+                        {{ govukButton({
+                        text: "Continue"
+                        }) }}
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -313,12 +313,14 @@ export class AudienceController {
 			}
 
 			if (data.years || data.months) {
-				res.locals.audience.frequency = moment.duration(data.years * 12 + data.months, 'months')
+				res.locals.audience.frequency = moment.duration(parseInt(data.years) * 12 + parseInt(data.months), 'months')
 			}
 
 			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
 
 			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
 	}
 }
