@@ -29,8 +29,8 @@
                 {% block list %}
                 {{ list("Courses", pageResults) }}
                 {% endblock %}
-                {% else %}
-                    <p class="govuk-body">There are currently no courses</p>
+            {% else %}
+                <p class="govuk-body">There are currently no courses</p>
             {% endif %}
         {% endif %}
         {% set paginationBaseUrl = '/content-management/' %}
