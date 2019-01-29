@@ -14,6 +14,9 @@ import {CourseService} from '../../../../src/lib/courseService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Csrs} from '../../../../src/csrs'
+import {DateTime} from '../../../../src/lib/dateTime'
+import * as moment from 'moment'
+import {Course} from '../../../../src/learning-catalogue/model/course'
 
 chai.use(sinonChai)
 
@@ -408,6 +411,52 @@ describe('AudienceController', () => {
 				audiences: [{id: audienceId, eventId: undefined}],
 			})
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
+		})
+	})
+
+	describe('#getRequiredLearning', () => {
+		it('should render required learning page', async () => {
+			const exampleYear = new Date(Date.now()).getFullYear() + 1
+
+			await audienceController.getRequiredLearning()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/required-learning', {exampleYear: exampleYear})
+		})
+	})
+
+	describe('#setRequiredLearning', () => {
+		it('should update course and redirect to configure audience page', async () => {
+			const course = new Course()
+			const audience = new Audience()
+
+			const year = '2020'
+			const month = '01'
+			const day = '02'
+			const years = '1'
+			const months = '6'
+
+			const requiredBy = DateTime.yearMonthDayToDate(year, month, day).toDate()
+			const frequency = moment.duration(parseInt(years) * 12 + parseInt(months), 'months')
+
+			const data = {
+				year,
+				month,
+				day,
+				years,
+				months,
+			}
+			req.body = data
+
+			res.locals.course = course
+			res.locals.audience = audience
+
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.setRequiredLearning()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
+			expect(audience.requiredBy).to.eql(requiredBy)
+			expect(audience.frequency).to.eql(frequency)
 		})
 	})
 })
