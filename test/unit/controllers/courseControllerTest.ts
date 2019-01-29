@@ -103,6 +103,7 @@ describe('Course Controller Tests', function() {
 		const errors = {fields: [], size: 0}
 		const course = new Course()
 		course.title = 'New Course'
+		course.topicId = 'topicId'
 
 		courseFactory.create = sinon.stub().returns(course)
 		validator.check = sinon.stub().returns({fields: [], size: 0})
@@ -139,11 +140,13 @@ describe('Course Controller Tests', function() {
 		req.body = {
 			title: 'New Title',
 			id: courseId,
+			topicId: 'topicId',
 		}
 
 		res.locals.course = <Course>{
 			id: courseId,
 			title: 'Old Title',
+			topicId: 'topicId',
 		}
 
 		validator.check = sinon.stub().returns({fields: [], size: 0})
