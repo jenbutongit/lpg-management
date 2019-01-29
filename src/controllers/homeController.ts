@@ -26,7 +26,11 @@ export class HomeController {
 					})
 				})
 				.catch(error => {
-					next(error)
+					if (error.response && error.response.status == 403) {
+						response.render('page/index')
+					} else {
+						next(error)
+					}
 				})
 		}
 	}
