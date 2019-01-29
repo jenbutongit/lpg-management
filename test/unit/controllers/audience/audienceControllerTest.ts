@@ -88,7 +88,6 @@ describe('AudienceController', () => {
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.name'])
 			expect(audienceValidator.check).to.have.returned(errors)
-			expect(req.session!.sessionFlash.errors).to.be.undefined
 			expect(audience.type).to.eql(Audience.Type.OPEN)
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/${savedAudience.id}/configure`)
