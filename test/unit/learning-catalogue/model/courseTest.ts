@@ -8,6 +8,7 @@ import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Event} from '../../../../src/learning-catalogue/model/event'
 import {DateRange} from '../../../../src/learning-catalogue/model/dateRange'
 import {Audience} from '../../../../src/learning-catalogue/model/audience'
+import {Visibility} from '../../../../src/learning-catalogue/model/visibility'
 
 describe('Course tests', () => {
 	let course: Course
@@ -223,7 +224,7 @@ describe('Course tests', () => {
 	})
 
 	it('should be able to set visibility', () => {
-		course.visibility = Course.Visibility.PRIVATE
-		expect(course.visibility).to.be.equal(Course.Visibility.PRIVATE)
+		course.visibility = Visibility.PRIVATE
+		expect(course.visibility).to.be.equal(Visibility.PRIVATE)
 	})
 })

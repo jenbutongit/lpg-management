@@ -3,6 +3,7 @@ import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {expect} from 'chai'
 import {CourseFactory} from '../../../../src/learning-catalogue/model/factory/courseFactory'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import {Visibility} from '../../../../src/learning-catalogue/model/visibility'
 
 describe('CourseValidator tests', () => {
 	let validator: Validator<Course>
@@ -150,7 +151,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'Course short description',
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			})
 
 			expect(errors.size).to.equal(1)
@@ -163,7 +164,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'Course short description',
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			})
 
 			expect(errors.size).to.equal(1)
@@ -202,7 +203,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'x'.repeat(161),
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -217,7 +218,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'x'.repeat(160),
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -231,7 +232,7 @@ describe('CourseValidator tests', () => {
 				description: 'x'.repeat(1501),
 				shortDescription: 'Course short description',
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -246,7 +247,7 @@ describe('CourseValidator tests', () => {
 				description: 'x'.repeat(1500),
 				shortDescription: 'Course short description',
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -260,7 +261,7 @@ describe('CourseValidator tests', () => {
 				shortDescription: 'Course short description',
 				description: '',
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -275,7 +276,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'Course short description',
 				status: 'Draft',
-				visibility: Course.Visibility.PUBLIC,
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)

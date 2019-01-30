@@ -14,6 +14,7 @@ import {Module} from '../../../src/learning-catalogue/model/module'
 import {CourseService} from '../../../src/lib/courseService'
 import {CsrsService} from '../../../src/csrs/service/csrsService'
 import {Status} from '../../../src/learning-catalogue/model/status'
+import {Visibility} from '../../../src/learning-catalogue/model/visibility'
 
 chai.use(sinonChai)
 
@@ -102,7 +103,7 @@ describe('Course Controller Tests', function() {
 	it('should check for visibility errors and redirect to title page if no errors', async function() {
 		const errors = {fields: [], size: 0}
 		const course = new Course()
-		course.visibility = Course.Visibility.PUBLIC
+		course.visibility = Visibility.PUBLIC
 
 		courseFactory.create = sinon.stub().returns(course)
 		validator.check = sinon.stub().returns({fields: [], size: 0})
