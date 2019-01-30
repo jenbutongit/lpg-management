@@ -298,7 +298,7 @@ export class AudienceController {
 
 	getRequiredLearning() {
 		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/required-learning', {exampleYear: new Date(Date.now()).getFullYear() + 1})
+			res.render('page/course/audience/add-required-learning', {exampleYear: new Date(Date.now()).getFullYear() + 1})
 		}
 	}
 

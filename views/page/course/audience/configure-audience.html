@@ -88,18 +88,22 @@
                 <div class="flex-container u--border--bgrey">
                     <div class="audience-content">
                         <p class="govuk-body">Required learning</p>
-                        {% if audience.grades and audience.grades.length > 0 %}
-                            <p class="audience-type no-margin">{{ audience.grades | jsonpath(gradeCodeToName) | join(', ') }}</p>
-                        {% else %}
+                        {% if audience.requiredBy %}
+                            <p class="audience-type no-margin">Deadline: {{audience.requiredBy}}</p>
+                        {% endif %}
+                        {% if audience.frequency %}
+                            <p class="audience-type no-margin">Occurs every: {{audience.frequency}}</p>
+                        {% endif %}
+                        {% if not audience.frequency and not audience.requiredBy %}
                             <p class="unset">No required learning has been added</p>
                         {% endif %}
                     </div>
-                    {% if audience.grades and audience.grades.length > 0 %}
-                        <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades/delete" method="post" class="audience-link">
+                    {% if audience.requiredBy or audience.frequency %}
+                        <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/required-learning/delete" method="post" class="audience-link">
                             <button class="govuk-link linkish-button">Delete</button>
                         </form>
                     {% else %}
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades" class="govuk-link audience-link">Add<span class="hidden"> required learning</span></a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/required-learning" class="govuk-link audience-link">Add<span class="hidden"> required learning</span></a>
                     {% endif %}
                 </div>
             </div>
