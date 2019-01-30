@@ -113,7 +113,8 @@
 			"code": "Organisation code",
 			"name": "Organisation name",
 			"abbreviation": "Organisation abbreviation",
-			"parent": "Parent"
+			"parent": "Parent",
+			"token": "Token"
 		},
 		"title": {
 			"manageOrganisations": "Manage organisations",
@@ -130,7 +131,7 @@
 				"empty": "Organisation code is required"
 			},
 			"organisation": {
-				"alreadyExists": "An organisation with this name or code already exists"
+				"alreadyExists": "An organisation with this name, token or code already exists"
 			}
 		}
 	},

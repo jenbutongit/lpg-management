@@ -17,6 +17,7 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.parent = data.parent
 		organisationalUnit.abbreviation = data.abbreviation
 		organisationalUnit.uri = `${config.REGISTRY_SERVICE_URL.url}/organisationalUnits/${organisationalUnit.id}`
+		organisationalUnit.token = data.token
 
 		return organisationalUnit
 	}

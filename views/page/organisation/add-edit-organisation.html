@@ -100,6 +100,29 @@
                     name: "abbreviation",
                     value: form.abbreviation|default(organisationalUnit.abbreviation)
                 }) }}
+              {% if errors.fields.token %}
+                  {{ govukInput({
+                      label: {
+                        text: i18n.organisations.text.token
+                      },
+                      classes: "govuk-input--width-10",
+                      id: "token",
+                      name: "token",
+                      errorMessage: {
+                        text: i18n.organisations.validation.token.empty
+                      }
+                  }) }}
+                  {% else %}
+                      {{ govukInput({
+                      label: {
+                        text: i18n.organisations.text.token
+                      },
+                      classes: "govuk-input--width-10",
+                      id: "token",
+                      name: "token",
+                      value: organisationalUnit.token|default(token)
+                  }) }}
+              {% endif %}
                 <div class="button-container">
                     {{ govukButton({
                         text: "Update" if organisationalUnit.id else "Add a new organisation"

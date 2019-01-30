@@ -35,6 +35,7 @@ export class OrganisationalUnitService {
 			code: organisationalUnit.code,
 			abbreviation: organisationalUnit.abbreviation,
 			parent: parent,
+			token: organisationalUnit.token,
 		}
 
 		return this.organisationalUnitFactory.create(data)

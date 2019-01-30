@@ -76,7 +76,8 @@ export class OrganisationController implements FormController {
 		return async (request: Request, response: Response) => {
 			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnitsForTypehead()
 
-			response.render('page/organisation/add-edit-organisation', {organisationalUnits: organisationalUnits})
+			const token = response.locals.organisationalUnit ? response.locals.organisationalUnit.token : this.randomString(10)
+			response.render('page/organisation/add-edit-organisation', {organisationalUnits: organisationalUnits, token: token})
 		}
 	}
 
@@ -157,5 +158,11 @@ export class OrganisationController implements FormController {
 
 			response.redirect('/content-management/organisations/manage')
 		}
+	}
+
+	private randomString(length: number) {
+		return Math.round(Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))
+			.toString(36)
+			.slice(1)
 	}
 }

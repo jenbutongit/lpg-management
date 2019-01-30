@@ -10,4 +10,5 @@ export class Organisation {
 	public name: string
 	public code: string
 	public abbreviation: string
+	public token: string
 }
