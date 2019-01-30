@@ -33,7 +33,7 @@
                             <button class="govuk-link audience-link linkish-button">Delete</button>
                         </form>
                     {% else %}
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" class="govuk-link audience-link">Add</a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" class="govuk-link audience-link">Add<span class="hidden"> organisations</span></a>
                     {% endif %}
                 </div>
                 <div class="flex-container u--border--bgrey">
@@ -50,7 +50,7 @@
                             <button class="govuk-link linkish-button">Delete</button>
                         </form>
                     {% else %}
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/area-of-work" class="govuk-link audience-link">Add</a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/area-of-work" class="govuk-link audience-link">Add<span class="hidden"> area of work</span></a>
                     {% endif %}
                 </div>
                 <div class="flex-container u--border--bgrey">
@@ -65,7 +65,7 @@
                     {% if audience.interests.length > 0 %}
                         <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/core-learning/delete" method="post" class="audience-link"><button class="govuk-link linkish-button">Delete</button></form>
                     {% else %}
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/add-core-learning" class="govuk-link audience-link">Add</a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/add-core-learning" class="govuk-link audience-link">Add<span class="hidden"> learning</span></a>
                     {% endif %}
                 </div>
                 <div class="flex-container u--border--bgrey">
@@ -82,7 +82,7 @@
                             <button class="govuk-link linkish-button">Delete</button>
                         </form>
                     {% else %}
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades" class="govuk-link audience-link">Add</a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades" class="govuk-link audience-link">Add<span class="hidden"> grades</span></a>
                     {% endif %}
                 </div>
                 <div class="flex-container u--border--bgrey">
@@ -91,7 +91,7 @@
                         {% if audience.grades and audience.grades.length > 0 %}
                             <p class="audience-type no-margin">{{ audience.grades | jsonpath(gradeCodeToName) | join(', ') }}</p>
                         {% else %}
-                            <p class="unset">No grades have been added</p>
+                            <p class="unset">No required learning has been added</p>
                         {% endif %}
                     </div>
                     {% if audience.grades and audience.grades.length > 0 %}
@@ -99,7 +99,7 @@
                             <button class="govuk-link linkish-button">Delete</button>
                         </form>
                     {% else %}
-                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades" class="govuk-link audience-link">Add</a>
+                        <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/grades" class="govuk-link audience-link">Add<span class="hidden"> required learning</span></a>
                     {% endif %}
                 </div>
             </div>
@@ -110,7 +110,7 @@
                     classes: "button-red"
                 }) }}
             </div>
-            <a class="govuk-body govuk-link return-link" href="/content-management/courses/{{course.id}}/overview">Return to course overview page</a>
+            <a class="govuk-body govuk-link return-link govuk-button" href="/content-management/courses/{{course.id}}/overview">Return to course</a>
         </div>
     </div>
 {% endblock %}

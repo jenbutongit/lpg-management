@@ -2,6 +2,7 @@ import {expect} from 'chai'
 import {describe, it} from 'mocha'
 import {AudienceFactory} from '../../../../../src/learning-catalogue/model/factory/audienceFactory'
 import {Audience} from '../../../../../src/learning-catalogue/model/audience'
+import * as moment from 'moment'
 
 describe('AudienceFactory tests', () => {
 	const audienceFactory: AudienceFactory = new AudienceFactory()
@@ -14,7 +15,7 @@ describe('AudienceFactory tests', () => {
 		const interests: string[] = ['basket weaving', 'fly fishing']
 		const requiredBy = new Date()
 		const type = 'OPEN'
-		const frequency = 'YEARLY'
+		const frequency = moment.duration(1, 'month')
 		const eventId = 'event-id'
 
 		const data: object = {
@@ -38,7 +39,7 @@ describe('AudienceFactory tests', () => {
 		expect(result.interests).to.eql(interests)
 		expect(result.requiredBy).to.equal(requiredBy)
 		expect(result.type).to.equal(Audience.Type.OPEN)
-		expect(result.frequency).to.equal(frequency)
+		expect(result.frequency!.toString()).to.equal(frequency.toString())
 		expect(result.eventId).to.equal(eventId)
 	})
 
@@ -49,7 +50,7 @@ describe('AudienceFactory tests', () => {
 		const grades: string[] = ['AA', 'G7', 'SCS']
 		const interests: string[] = ['basket weaving', 'fly fishing']
 		const type = 'OPEN'
-		const frequency = 'YEARLY'
+		const frequency = moment.duration(1, 'month')
 
 		const data: object = {
 			id: id,
@@ -70,6 +71,6 @@ describe('AudienceFactory tests', () => {
 		expect(result.interests).to.eql(interests)
 		expect(result.requiredBy).to.be.undefined
 		expect(result.type).to.equal(Audience.Type.OPEN)
-		expect(result.frequency).to.equal(frequency)
+		expect(result.frequency!.toString()).to.equal(frequency.toString())
 	})
 })

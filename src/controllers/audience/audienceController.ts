@@ -9,6 +9,7 @@ import {AudienceService} from '../../lib/audienceService'
 import {CsrsService} from '../../csrs/service/csrsService'
 import {DateTime} from '../../lib/dateTime'
 import {Csrs} from '../../csrs'
+import * as moment from 'moment'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -46,31 +47,34 @@ export class AudienceController {
 	private setRouterPaths() {
 		this.router.get('/content-management/courses/:courseId/audiences/', this.getAudienceName())
 		this.router.post('/content-management/courses/:courseId/audiences/', this.setAudienceName())
-		this.router.get('/content-management/courses/:courseId/audiences/type', this.getAudienceType())
-		this.router.post('/content-management/courses/:courseId/audiences/type', this.setAudienceType())
-		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/type', this.getAudienceType())
-		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/type', this.setAudienceType())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/configure', this.getConfigureAudience())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/organisation', this.getOrganisation())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/organisation', this.setOrganisation())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/organisation/delete', this.deleteOrganisation())
-		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/deadline', this.getDeadline())
-		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/deadline', this.setDeadline())
-		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/deadline/delete', this.deleteDeadline())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudienceConfirmation())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudience())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/area-of-work', this.getAreasOfWork())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/area-of-work', this.setAreasOfWork())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/area-of-work/delete', this.deleteAreasOfWork())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/add-core-learning', this.getCoreLearning())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/add-core-learning', this.setCoreLearning())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/core-learning/delete', this.deleteCoreLearning())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/grades', this.getGrades())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades', this.setGrades())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades/delete', this.deleteGrades())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/event', this.getPrivateCourseEvent())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event', this.setPrivateCourseEvent())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event/delete', this.deletePrivateCourseEvent())
+
+		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/required-learning', this.getRequiredLearning())
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/required-learning', this.setRequiredLearning())
 	}
 
 	getAudienceName() {
@@ -91,41 +95,12 @@ export class AudienceController {
 					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/`)
 				})
 			} else {
-				req.session!.sessionFlash = {audienceName: audience.name}
+				audience.type = Audience.Type.OPEN
+				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
+
 				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/type`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${savedAudience.id}/configure`)
 				})
-			}
-		}
-	}
-
-	getAudienceType() {
-		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/audience-type', {AudienceType: Audience.Type})
-		}
-	}
-
-	setAudienceType() {
-		return async (req: Request, res: Response) => {
-			const data = {...req.body}
-			const errors = await this.audienceValidator.check(data, ['audience.type'])
-			const audienceFromData = this.audienceFactory.create(data)
-
-			if (errors.size > 0) {
-				req.session!.sessionFlash = {errors, audienceName: audienceFromData.name}
-				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/configure`)
-				})
-			} else {
-				let savedAudienceId: string
-				if (res.locals.audience) {
-					AudienceService.updateAudienceType(res.locals.audience, audienceFromData.type)
-					await this.learningCatalogue.updateCourse(res.locals.course)
-					savedAudienceId = req.params.audienceId
-				} else {
-					savedAudienceId = (await this.learningCatalogue.createAudience(req.params.courseId, audienceFromData)).id
-				}
-				res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${savedAudienceId}/configure`)
 			}
 		}
 	}
@@ -215,43 +190,6 @@ export class AudienceController {
 	deleteAreasOfWork() {
 		return async (req: Request, res: Response) => {
 			res.locals.audience.areasOfWork = []
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
-		}
-	}
-
-	getDeadline() {
-		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/add-deadline', {exampleYear: new Date(Date.now()).getFullYear() + 1})
-		}
-	}
-
-	setDeadline() {
-		return async (req: Request, res: Response) => {
-			const year = req.body['deadline-year'] || ''
-			const month = req.body['deadline-month'] || ''
-			const day = req.body['deadline-day'] || ''
-
-			const date = DateTime.yearMonthDayToDate(year, month, day)
-			const errors = await this.audienceValidator.check({requiredBy: date.toDate()}, ['audience.requiredBy'])
-
-			if (!errors.size) {
-				res.locals.audience.requiredBy = date.toDate()
-				await this.learningCatalogue.updateCourse(res.locals.course)
-				res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
-			} else {
-				req.session!.sessionFlash = {errors, deadlineDate: {year, month, day}}
-				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/deadline`)
-				})
-			}
-		}
-	}
-
-	deleteDeadline() {
-		return async (req: Request, res: Response) => {
-			res.locals.audience.requiredBy = undefined
 			await this.learningCatalogue.updateCourse(res.locals.course)
 
 			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
@@ -352,6 +290,34 @@ export class AudienceController {
 	deletePrivateCourseEvent() {
 		return async (req: Request, res: Response) => {
 			res.locals.audience.eventId = undefined
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+		}
+	}
+
+	getRequiredLearning() {
+		return async (req: Request, res: Response) => {
+			res.render('page/course/audience/required-learning', {exampleYear: new Date(Date.now()).getFullYear() + 1})
+		}
+	}
+
+	setRequiredLearning() {
+		return async (req: Request, res: Response) => {
+			const data = {
+				...req.body,
+			}
+
+			if (data.year || data.month || data.day) {
+				res.locals.audience.requiredBy = DateTime.yearMonthDayToDate(data.year, data.month, data.day).toDate()
+			}
+
+			if (data.years || data.months) {
+				res.locals.audience.frequency = moment.duration(parseInt(data.years) * 12 + parseInt(data.months), 'months')
+			}
+
+			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
+
 			await this.learningCatalogue.updateCourse(res.locals.course)
 
 			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)

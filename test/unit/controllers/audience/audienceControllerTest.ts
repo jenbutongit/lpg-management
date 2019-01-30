@@ -14,6 +14,9 @@ import {CourseService} from '../../../../src/lib/courseService'
 import {CsrsService} from '../../../../src/csrs/service/csrsService'
 import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Csrs} from '../../../../src/csrs'
+import {DateTime} from '../../../../src/lib/dateTime'
+import * as moment from 'moment'
+import {Course} from '../../../../src/learning-catalogue/model/course'
 
 chai.use(sinonChai)
 
@@ -74,64 +77,23 @@ describe('AudienceController', () => {
 		})
 
 		it('should redirect to audience type page if audience name validated successfully', async function() {
+			let audience: Audience = new Audience()
+			let savedAudience: Audience = new Audience()
+
 			req.body = {name: 'audience name'}
 
 			const errors = {size: 0}
 			audienceValidator.check = sinon.stub().returns(errors)
-			const audience = <Audience>{}
 			audienceFactory.create = sinon.stub().returns(audience)
+			learningCatalogue.createAudience = sinon.stub().returns(savedAudience)
 
 			await audienceController.setAudienceName()(req, res)
 
 			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.name'])
 			expect(audienceValidator.check).to.have.returned(errors)
-			expect(req.session!.sessionFlash.errors).to.be.undefined
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
-		})
-	})
-
-	describe('#getAudienceType', () => {
-		it('should render audience-type page', async function() {
-			await audienceController.getAudienceType()(req, res)
-
-			expect(res.render).to.have.been.calledOnceWith('page/course/audience/audience-type')
-		})
-	})
-
-	describe('#setAudienceType', () => {
-		it('should redirect back to audience type page if validation error', async function() {
-			req.body = {type: ''}
-
-			const errors = {size: 1}
-			audienceValidator.check = sinon.stub().returns(errors)
-			audienceFactory.create = sinon.stub().returns({})
-
-			await audienceController.setAudienceType()(req, res)
-
-			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
-			expect(audienceValidator.check).to.have.returned(errors)
-			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-			expect(req.session!.sessionFlash.errors).to.be.equal(errors)
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/type`)
-		})
-
-		it('should redirect to audience configuration page if audience created successfully', async function() {
-			req.body = {name: 'audience name', type: 'OPEN'}
-
-			const errors = {size: 0}
-			audienceValidator.check = sinon.stub().returns(errors)
-			const audience = <Audience>{}
-			audienceFactory.create = sinon.stub().returns(audience)
-			const newAudienceId = 'new-audience-id'
-			learningCatalogue.createAudience = sinon.stub().returns({id: newAudienceId})
-
-			await audienceController.setAudienceType()(req, res)
-
-			expect(audienceValidator.check).to.have.been.calledWith(req.body, ['audience.type'])
-			expect(audienceValidator.check).to.have.returned(errors)
-			expect(req.session!.sessionFlash).to.be.undefined
+			expect(audience.type).to.eql(Audience.Type.OPEN)
 			expect(learningCatalogue.createAudience).to.have.been.calledOnceWith(courseId, audience)
-			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/${newAudienceId}/configure`)
+			expect(res.redirect).to.have.been.calledWith(`/content-management/courses/${courseId}/audiences/${savedAudience.id}/configure`)
 		})
 	})
 
@@ -393,68 +355,6 @@ describe('AudienceController', () => {
 		})
 	})
 
-	describe('#getDeadline', () => {
-		it('should render add deadline page', async () => {
-			await audienceController.getDeadline()(req, res)
-			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-deadline')
-		})
-	})
-
-	describe('#setDeadline', () => {
-		it('should update course with deadline date if the date is valid and redirect to audience configuration page', async () => {
-			req.params.audienceId = audienceId
-			const audience = {id: audienceId, requiredBy: null}
-			res.locals.course = {audiences: [audience]}
-			res.locals.audience = audience
-
-			// set date to be tomorrow at midnight
-			const date = new Date()
-			date.setDate(date.getDate() + 1)
-			date.setHours(0, 0, 0, 0)
-
-			req.body = {'deadline-year': date.getFullYear().toString(), 'deadline-month': (date.getMonth() + 1).toString(), 'deadline-day': date.getDate().toString()}
-
-			learningCatalogue.updateCourse = sinon.stub()
-
-			await audienceController.setDeadline()(req, res)
-
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: date}],
-			})
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
-		})
-
-		it('should error when deadline date is in the past', async () => {
-			req.params.audienceId = audienceId
-			const audience = {id: audienceId, requiredBy: null}
-			res.locals.course = {audiences: [audience]}
-			res.locals.audience = audience
-			req.body = {'deadline-year': '1999', 'deadline-month': '1', 'deadline-day': '1'}
-
-			await audienceController.setDeadline()(req, res)
-
-			expect(req.session!.sessionFlash.errors).is.not.undefined
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/deadline`)
-		})
-	})
-
-	describe('#deleteDeadline', () => {
-		it('should update course with null deadline and redirect to audience configuration page', async () => {
-			req.params.audienceId = audienceId
-			const audience = {id: audienceId, requiredBy: new Date()}
-			res.locals.course = {audiences: [audience]}
-			res.locals.audience = audience
-
-			learningCatalogue.updateCourse = sinon.stub()
-
-			await audienceController.deleteDeadline()(req, res)
-
-			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith({
-				audiences: [{id: audienceId, requiredBy: undefined}],
-			})
-		})
-	})
-
 	describe('#getPrivateCourseEvent', () => {
 		it('should gather events from all face-to-face modules into an events array and render add event page', async () => {
 			const dateRanges = [{date: '2018-10-08'}]
@@ -511,6 +411,52 @@ describe('AudienceController', () => {
 				audiences: [{id: audienceId, eventId: undefined}],
 			})
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
+		})
+	})
+
+	describe('#getRequiredLearning', () => {
+		it('should render required learning page', async () => {
+			const exampleYear = new Date(Date.now()).getFullYear() + 1
+
+			await audienceController.getRequiredLearning()(req, res)
+
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/required-learning', {exampleYear: exampleYear})
+		})
+	})
+
+	describe('#setRequiredLearning', () => {
+		it('should update course and redirect to configure audience page', async () => {
+			const course = new Course()
+			const audience = new Audience()
+
+			const year = '2020'
+			const month = '01'
+			const day = '02'
+			const years = '1'
+			const months = '6'
+
+			const requiredBy = DateTime.yearMonthDayToDate(year, month, day).toDate()
+			const frequency = moment.duration(parseInt(years) * 12 + parseInt(months), 'months')
+
+			const data = {
+				year,
+				month,
+				day,
+				years,
+				months,
+			}
+			req.body = data
+
+			res.locals.course = course
+			res.locals.audience = audience
+
+			learningCatalogue.updateCourse = sinon.stub()
+
+			await audienceController.setRequiredLearning()(req, res)
+
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
+			expect(audience.requiredBy).to.eql(requiredBy)
+			expect(audience.frequency).to.eql(frequency)
 		})
 	})
 })
