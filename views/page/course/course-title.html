@@ -9,7 +9,11 @@
 {% endblock %}
 
 {% set banner = true %}
-{% set backButton = "/content-management" %}
+{% if course %}
+    {% set backButton = "/content-management/courses/"+course.id+"/preview" %}
+{% else %}
+    {% set backButton = "/content-management/" %}
+{% endif %}
 
 {% block content %}
 {% set errors = sessionFlash.errors %}
@@ -24,10 +28,9 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n.course.text.details}}</h2>
             <form action="/content-management/courses/title/{{ course.id }}" method="post" class="course-form">
                 {% if course.id %}
-                <input type="hidden" name="id" value="{{ course.id }}">
+                    <input type="hidden" name="id" value="{{ course.id }}">
                 {% endif %}
                 <input  id="visibility" name="visibility" type="hidden" value="{{ form.visibility|default(course.visibility)}}">
-
                 <fieldset class="govuk-fieldset">
                     {% if errors.fields.title %}
                         {{ govukInput({
