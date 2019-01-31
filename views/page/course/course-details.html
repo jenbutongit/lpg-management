@@ -12,7 +12,7 @@
 
 {% set banner = true %}
 {% if course %}
-    {% set backButton = "/content-management" %}
+    {% set backButton = "/content-management/courses/"+course.id+"/preview" %}
 {% else %}
     {% set backButton = "/content-management/courses/title/" %}
 {% endif %}
@@ -33,6 +33,7 @@
                 <input type="hidden" name="id" value="{{ form.id|default(course.id) }}">
                 {% endif %}
                 <input id="title" name="title" type="hidden" value="{{ form.title|default(course.title)}}">
+                <input  id="visibility" name="visibility" type="hidden" value="{{ course.visibility }}">
                 <fieldset class="govuk-fieldset">
                     {% block textarea %}
                         {{ textarea("shortDescription", "shortDescription", "Maximum of 160 characters", 160, form.shortDescription|default(course.shortDescription), "Short description") }}

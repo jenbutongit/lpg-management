@@ -5,6 +5,7 @@ import {FaceToFaceModule} from './faceToFaceModule'
 import {DateTime} from '../../lib/dateTime'
 import {LearningProvider} from './learningProvider'
 import {Status} from './status'
+import {Visibility} from './visibility'
 
 export class Course {
 	id: string
@@ -48,7 +49,11 @@ export class Course {
 	})
 	status: Status = Status.DRAFT
 
-	visibility: Course.Visibility = Course.Visibility.PUBLIC
+	@IsNotEmpty({
+		groups: ['all', 'visibility'],
+		message: 'course.validation.visibility.empty',
+	})
+	visibility: Visibility
 
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
@@ -115,12 +120,5 @@ export class Course {
 			}
 		}
 		return areasOfWork
-	}
-}
-
-export namespace Course {
-	export enum Visibility {
-		PUBLIC,
-		PRIVATE,
 	}
 }
