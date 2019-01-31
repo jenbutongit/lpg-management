@@ -2,7 +2,6 @@ import {Request, Response, Router} from 'express'
 import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFactory'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
-import {Event} from '../../learning-catalogue/model/event'
 import {Validator} from '../../learning-catalogue/validator/validator'
 import {CourseService} from '../../lib/courseService'
 import {AudienceService} from '../../lib/audienceService'
@@ -10,6 +9,7 @@ import {CsrsService} from '../../csrs/service/csrsService'
 import {DateTime} from '../../lib/dateTime'
 import {Csrs} from '../../csrs'
 import * as moment from 'moment'
+const isValidDate = require('is-valid-date')
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -69,12 +69,9 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades', this.setGrades())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades/delete', this.deleteGrades())
 
-		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/event', this.getPrivateCourseEvent())
-		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event', this.setPrivateCourseEvent())
-		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event/delete', this.deletePrivateCourseEvent())
-
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/required-learning', this.getRequiredLearning())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/required-learning', this.setRequiredLearning())
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/required-learning/delete', this.deleteRequiredLearning())
 	}
 
 	getAudienceName() {
@@ -263,39 +260,6 @@ export class AudienceController {
 		}
 	}
 
-	getPrivateCourseEvent() {
-		return async (req: Request, res: Response) => {
-			const courseEvents = this.courseService.getAllEventsOnCourse(res.locals.course).map((event: Event) => {
-				event.dateRanges.sort((dr1, dr2) => (dr1.date < dr2.date ? -1 : dr1.date > dr2.date ? 1 : 0))
-				return event
-			})
-			res.render('page/course/audience/add-event', {courseEvents})
-		}
-	}
-
-	setPrivateCourseEvent() {
-		return async (req: Request, res: Response) => {
-			const eventId = req.body.events
-			if (eventId) {
-				const event = this.courseService.getAllEventsOnCourse(res.locals.course).find((event: Event) => event.id == eventId)
-				if (event) {
-					res.locals.audience.eventId = eventId
-					await this.learningCatalogue.updateCourse(res.locals.course)
-				}
-			}
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
-		}
-	}
-
-	deletePrivateCourseEvent() {
-		return async (req: Request, res: Response) => {
-			res.locals.audience.eventId = undefined
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
-		}
-	}
-
 	getRequiredLearning() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/audience/add-required-learning', {exampleYear: new Date(Date.now()).getFullYear() + 1})
@@ -309,14 +273,43 @@ export class AudienceController {
 			}
 
 			if (data.year || data.month || data.day) {
+				const audience: Audience = new Audience()
+				audience.requiredBy = new Date(data.year, data.month, data.day)
+
+				const errors = await this.audienceValidator.check(audience, ['audience.requiredBy'])
+
+				if (!isValidDate(`${data.day}/${data.month}/${data.year}`)) {
+					errors.fields.requiredBy = ['audience.validation.requiredBy.invalidDate']
+					errors.size++
+				}
+
+				if (errors.size) {
+					req.session!.sessionFlash = {errors}
+					return req.session!.save(() => {
+						res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/required-learning`)
+					})
+				}
+
 				res.locals.audience.requiredBy = DateTime.yearMonthDayToDate(data.year, data.month, data.day).toDate()
 			}
 
 			if (data.years || data.months) {
-				res.locals.audience.frequency = moment.duration(parseInt(data.years) * 12 + parseInt(data.months), 'months')
+				res.locals.audience.frequency = moment.duration(parseInt(data.years || 0) * 12 + parseInt(data.months || 0), 'months')
 			}
 
 			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
+
+			await this.learningCatalogue.updateCourse(res.locals.course)
+
+			return res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+		}
+	}
+
+	deleteRequiredLearning() {
+		return async (req: Request, res: Response) => {
+			res.locals.audience.type = Audience.Type.OPEN
+			res.locals.audience.requiredBy = undefined
+			res.locals.audience.frequency = undefined
 
 			await this.learningCatalogue.updateCourse(res.locals.course)
 

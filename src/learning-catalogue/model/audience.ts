@@ -29,13 +29,13 @@ export class Audience {
 	})
 	type: Audience.Type
 
-	@IsDate({
-		groups: ['all', 'audience.all', 'audience.requiredBy'],
-		message: 'audience.validation.requiredBy.invalidDate',
-	})
 	@IsFutureDate({
 		groups: ['all', 'audience.all', 'audience.requiredBy'],
 		message: 'audience.validation.requiredBy.dateIsNotInFuture',
+	})
+	@IsDate({
+		groups: ['all', 'audience.all', 'audience.requiredBy'],
+		message: 'audience.validation.requiredBy.invalidDate',
 	})
 	requiredBy?: Date
 

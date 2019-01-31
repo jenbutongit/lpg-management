@@ -13,6 +13,7 @@ import moment = require('moment')
 import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
+import {Duration} from 'moment'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -71,6 +72,18 @@ nunjucks
 	})
 	.addFilter('dateWithMonthAsText', function(date: string) {
 		return date ? DateTime.convertDate(date) : 'date unset'
+	})
+	.addFilter('formatDuration', function(duration: Duration) {
+		let years = ''
+		let months = ''
+		if (duration.years()) {
+			years = duration.years() + (duration.years() === 1 ? ' year ' : ' years ')
+		}
+		if (duration.months()) {
+			months = duration.months() + (duration.months() === 1 ? ' month' : ' months')
+		}
+
+		return years + months
 	})
 
 app.set('view engine', 'html')

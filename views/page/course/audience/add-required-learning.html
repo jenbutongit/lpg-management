@@ -19,7 +19,6 @@
                 {% if errors.fields.requiredBy %}
                     {{ govukDateInput({
                         id: "requiredBy",
-                        namePrefix: "requiredBy",
                         fieldset: {
                             legend: {
                                 text: "When does this course need to be completed by? (optional)",
@@ -54,7 +53,6 @@
                 {% else %}
                      {{ govukDateInput({
                         id: "requiredBy",
-                        namePrefix: "requiredBy",
                         fieldset: {
                             legend: {
                                 text: "When does this course need to be completed by? (optional)",
@@ -87,7 +85,6 @@
                 {% if errors.fields.frequency %}
                     {{ govukDateInput({
                         id: "frequency",
-                        namePrefix: "frequency",
                         fieldset: {
                             legend: {
                                 text: "How often do you want this course to run? (optional)",
@@ -103,13 +100,13 @@
                         },
                         items: [
                             {
-                                name: "year",
-                                value: deadlineDate.year,
+                                name: "years",
+                                value: deadlineDate.years,
                                 classes: "govuk-input--width-3"
                             },
                             {
-                                name: "month",
-                                value: deadlineDate.month,
+                                name: "months",
+                                value: deadlineDate.months,
                                 classes: "govuk-input--width-3"
                             }
                         ]
@@ -117,7 +114,6 @@
                 {% else %}
                     {{ govukDateInput({
                         id: "frequency",
-                        namePrefix: "frequency",
                         fieldset: {
                             legend: {
                                 text: "How often do you want this course to run? (optional)",
@@ -130,13 +126,13 @@
                         },
                         items: [
                             {
-                                name: "year",
-                                value: deadlineDate.year,
+                                name: "years",
+                                value: deadlineDate.years,
                                 classes: "govuk-input--width-3"
                             },
                             {
-                                name: "month",
-                                value: deadlineDate.month,
+                                name: "months",
+                                value: deadlineDate.months,
                                 classes: "govuk-input--width-3"
                             }
                         ]

@@ -89,10 +89,10 @@
                     <div class="audience-content">
                         <p class="govuk-body">Required learning</p>
                         {% if audience.requiredBy %}
-                            <p class="audience-type no-margin">Deadline: {{audience.requiredBy}}</p>
+                            <p class="audience-type no-margin">Deadline: {{audience.requiredBy | formatDate}}</p>
                         {% endif %}
                         {% if audience.frequency %}
-                            <p class="audience-type no-margin">Occurs every: {{audience.frequency}}</p>
+                            <p class="audience-type no-margin">Occurs every: {{audience.frequency | formatDuration}}</p>
                         {% endif %}
                         {% if not audience.frequency and not audience.requiredBy %}
                             <p class="unset">No required learning has been added</p>
