@@ -277,7 +277,6 @@ export class AudienceController {
 				audience.requiredBy = new Date(data.year, data.month, data.day)
 
 				const errors = await this.audienceValidator.check(audience, ['audience.requiredBy'])
-
 				if (!isValidDate(`${data.day}/${data.month}/${data.year}`)) {
 					errors.fields.requiredBy = ['audience.validation.requiredBy.invalidDate']
 					errors.size++
