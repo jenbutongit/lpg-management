@@ -192,6 +192,7 @@
                 {% endblock %}
               {% else %}
                 {% block menu %}
+                    {% if identity.hasLearningEdit() %}
                     {% set actions = [
                         {
                             link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
@@ -208,6 +209,7 @@
                     ]
                     %}
                     {{ menu("Actions", actions) }}
+                    {% endif %}
                 {% endblock %}
               {% endif %}
             </div>
