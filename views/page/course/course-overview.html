@@ -41,9 +41,10 @@
         <div class="section">
             <h3 class="govuk-heading-m">Course events</h3>
             {% block courseEvents %}
-                {{ courseEvents(course, faceToFaceModules) }}
+                {{ courseEvents(course, faceToFaceModules, identity) }}
             {% endblock %}
         </div>
+        {% if not identity.isSupplierAuthor() %}
         <div class="section">
             <div class="title-container"> 
                 <h3 class="govuk-heading-m">Course audiences</h3>
@@ -52,9 +53,10 @@
                 {% endif %}
             </div>
             {% block audiences %}
-                {{ audiences(course) }}
+                {{ audiences(course, identity) }}
             {% endblock %}
-        </div> 
+        </div>
+        {% endif %}
     </div>
     <div class="govuk-grid-column-one-third">
         <div class="right-menu">

@@ -24,7 +24,7 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {% block coursePreview %}
-                {{ coursePreview(course) }}
+                {{ coursePreview(course, identity) }}
             {% endblock %}
 
             {% if course.modules.length > 0 %}

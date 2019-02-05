@@ -111,26 +111,6 @@ describe('Identity tests', () => {
 		expect(learner.isProfessionAuthor()).to.be.false
 	})
 
-	it('isSupplierAuthorOrSuperUser() should return true if identity has profession author roles', () => {
-		const accessToken: string = 'access-token'
-
-		const supplierAuthor: Identity = new Identity('id1', [Identity.SUPPLIER_AUTHOR], accessToken)
-		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
-
-		expect(supplierAuthor.isSupplierAuthorOrSuperUser()).to.be.true
-		expect(learner.isProfessionAuthorOrSuperUser()).to.be.false
-	})
-
-	it('isSupplierAuthor() should return true if identity has profession author roles', () => {
-		const accessToken: string = 'access-token'
-
-		const supplierAuthor: Identity = new Identity('id1', [Identity.SUPPLIER_AUTHOR], accessToken)
-		const learner: Identity = new Identity('id2', [Identity.LEARNER], accessToken)
-
-		expect(supplierAuthor.isSupplierAuthor()).to.be.true
-		expect(learner.isSupplierAuthor()).to.be.false
-	})
-
 	it('hasLearningCreate() should return true if identity has learning create roles', () => {
 		const accessToken: string = 'access-token'
 

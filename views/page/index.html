@@ -44,7 +44,7 @@
                     text: 'Add a new course'
                 }) %}
             {% endif %}
-            {% if identity.isSupplierAuthorOrSuperUser() %}
+            {% if identity.isLearningProviderManager() %}
                 {% set action = actions.push({
                     link: '/content-management/learning-providers',
                     text: 'Manage learning providers'

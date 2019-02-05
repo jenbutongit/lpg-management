@@ -10,7 +10,10 @@ export class Identity {
 	public static readonly PROFESSION_AUTHOR = 'PROFESSION_AUTHOR'
 	public static readonly LEARNING_PUBLISH = 'LEARNING_PUBLISH'
 	public static readonly LEARNING_ARCHIVE = 'LEARNING_ARCHIVE'
-	public static readonly SUPPLIER_AUTHOR = 'SUPPLIER_AUTHOR'
+	public static readonly KPMG_SUPPLIER_AUTHOR = 'KPMG_SUPPLIER_AUTHOR'
+	public static readonly KORNFERRY_SUPPLIER_AUTHOR = 'KORNFERRY_SUPPLIER_AUTHOR'
+	public static readonly KNOWLEDGEPOOL_SUPPLIER_AUTHOR = 'KNOWLEDGEPOOL_SUPPLIER_AUTHOR'
+	public static readonly LEARNING_PROVIDER_MANAGER = 'LEARNING_PROVIDER_MANAGER'
 
 	readonly uid: string
 	readonly roles: string[]
@@ -66,12 +69,12 @@ export class Identity {
 		return this.hasRole(Identity.PROFESSION_AUTHOR)
 	}
 
-	isSupplierAuthorOrSuperUser() {
-		return this.hasRole(Identity.SUPPLIER_AUTHOR) || this.isSuperUser()
+	isSupplierAuthor() {
+		return this.hasRole(Identity.KPMG_SUPPLIER_AUTHOR) || this.hasRole(Identity.KNOWLEDGEPOOL_SUPPLIER_AUTHOR) || this.hasRole(Identity.KORNFERRY_SUPPLIER_AUTHOR)
 	}
 
-	isSupplierAuthor() {
-		return this.hasRole(Identity.SUPPLIER_AUTHOR)
+	isLearningProviderManager() {
+		return this.hasRole(Identity.LEARNING_PROVIDER_MANAGER)
 	}
 
 	hasLearningCreate() {
@@ -92,5 +95,9 @@ export class Identity {
 
 	hasLearningArchive() {
 		return this.hasRole(Identity.LEARNING_ARCHIVE) || this.isSuperUser()
+	}
+
+	isLearner() {
+		return this.hasRole(Identity.LEARNER)
 	}
 }
