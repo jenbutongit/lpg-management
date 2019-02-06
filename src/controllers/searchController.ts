@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+\import {Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../learning-catalogue'
 import {Course} from '../learning-catalogue/model/course'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
