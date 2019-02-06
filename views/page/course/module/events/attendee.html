@@ -46,7 +46,7 @@
             <div class="right-menu">
                     {% block menu %}
                     {% set actions = [] %}
-                    {% if course.status != "Archived" and identity.hasLearningDelete() %}
+                    {% if course.status !== "Archived" and identity.hasLearningDelete() %}
                         {% set action = actions.push({
                             link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
                             text: 'Cancel Attendee'
