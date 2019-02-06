@@ -66,7 +66,7 @@ describe('Learning Catalogue tests', () => {
 			await learningCatalogue.searchCourses('test', 0, 10)
 
 			return expect(courseService.listAllWithPagination).to.have.been.calledOnceWith(
-				`/search/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`
+				`/search/management/courses/?status=Draft&status=Published&status=Archived&query=test&page=0&size=10`
 			)
 		})
 
