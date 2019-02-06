@@ -48,7 +48,7 @@
                                         <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/module-{{module.type}}/{{ module.id }}">Edit</a></p>
                                     {% endif %}
                                 {% endif %}
-                                {% if identity.hasLearningCancel() %}
+                                {% if identity.hasLearningDelete() %}
                                     <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{ course.id }}/{{ module.id }}/delete">Delete</a></p>
                                 {% endif %}
                                 {% if identity.hasLearningEdit() %}
