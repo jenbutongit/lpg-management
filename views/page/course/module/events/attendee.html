@@ -44,15 +44,17 @@
         </div>
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
-                {% block menu %}
-                    {% set actions = [
-                        {
-                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
-                            text: 'Cancel Attendee'
-                        }
-                    ] %}
-                    {{ menu("Actions", actions) }}
-                {% endblock %}
+                {% if identity.hasLearningDelete() %}
+                    {% block menu %}
+                        {% set actions = [
+                            {
+                                link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
+                                text: 'Cancel Attendee'
+                            }
+                        ] %}
+                        {{ menu("Actions", actions) }}
+                    {% endblock %}
+                {% endif %}
             </div>
         </div>
         <div class="govuk-grid-column-oneo-third">
