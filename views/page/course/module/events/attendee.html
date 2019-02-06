@@ -50,8 +50,7 @@
                         {% set action = actions.push({
                             link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/attendee/' + booking.id + '/cancel',
                             text: 'Cancel Attendee'
-                        }
-                    ] %}
+                        }) %}
                     {{ menu("Actions", actions) }}
                     {% endif %}
                     {% endblock %}
