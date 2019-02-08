@@ -224,6 +224,12 @@ ul {
 	display: none;
 }
 
+.zero-results {
+	list-style-type: disc;
+	list-style-position: inside;
+	font-size: $font-normal;
+}
+
 @media screen and (min-width: $tablet-small) {
 	.govuk-input,
 	.govuk-textarea {
