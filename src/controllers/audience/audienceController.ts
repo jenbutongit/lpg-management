@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {AudienceFactory} from '../../learning-catalogue/model/factory/audienceFactory'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {Audience} from '../../learning-catalogue/model/audience'
@@ -124,22 +124,33 @@ export class AudienceController {
 	}
 
 	setOrganisation() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : [req.body['parent']]
 
 			res.locals.audience.departments = departments
 
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
 	deleteOrganisation() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.departments = []
-			await this.learningCatalogue.updateCourse(res.locals.course)
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -157,9 +168,15 @@ export class AudienceController {
 	}
 
 	deleteAudience() {
-		return async (req: Request, res: Response) => {
-			await this.learningCatalogue.deleteAudience(req.params.courseId, req.params.audienceId)
-			res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
+		return async (req: Request, res: Response, next: NextFunction) => {
+			await this.learningCatalogue
+				.deleteAudience(req.params.courseId, req.params.audienceId)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/overview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -171,25 +188,31 @@ export class AudienceController {
 	}
 
 	setAreasOfWork() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const areaOfWork = req.body['area-of-work']
-			if (areaOfWork) {
-				if (await this.csrsService.isAreaOfWorkValid(areaOfWork)) {
-					res.locals.audience.areasOfWork = [areaOfWork]
-					await this.learningCatalogue.updateCourse(res.locals.course)
-				}
+			if (await this.csrsService.isAreaOfWorkValid(areaOfWork)) {
+				res.locals.audience.areasOfWork = [areaOfWork]
+				await this.learningCatalogue
+					.updateAudience(res.locals.course.id, res.locals.audience)
+					.then(() => {
+						res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+					})
+					.catch(error => {
+						next(error)
+					})
+			} else {
+				next(new Error('Area of work is not valid'))
 			}
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
 	}
 
 	deleteAreasOfWork() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.areasOfWork = []
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`))
+				.catch(error => next(error))
 		}
 	}
 
@@ -201,7 +224,7 @@ export class AudienceController {
 	}
 
 	setGrades() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const gradeCodes = Array.isArray(req.body.grades) ? req.body.grades : [req.body.grades]
 			if (gradeCodes && gradeCodes.length > 0) {
 				const allGradesValid = await gradeCodes.reduce(
@@ -210,20 +233,28 @@ export class AudienceController {
 				)
 				if (allGradesValid) {
 					res.locals.audience.grades = gradeCodes
-					await this.learningCatalogue.updateCourse(res.locals.course)
+					await this.learningCatalogue
+						.updateAudience(res.locals.course.id, res.locals.audience)
+						.then(() => {
+							res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+						})
+						.catch(error => next(error))
 				}
+			} else {
+				next(new Error('Grade not valid'))
 			}
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
 	}
 
 	deleteGrades() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.grades = []
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => next(error))
 		}
 	}
 
@@ -235,7 +266,7 @@ export class AudienceController {
 	}
 
 	setCoreLearning() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const interests = Array.isArray(req.body.interests) ? req.body.interests : [req.body.interests]
 			if (interests) {
 				const allInterestsValid = await interests.reduce(
@@ -244,19 +275,31 @@ export class AudienceController {
 				)
 				if (allInterestsValid) {
 					res.locals.audience.interests = interests
-					await this.learningCatalogue.updateCourse(res.locals.course)
+					await this.learningCatalogue
+						.updateAudience(res.locals.course.id, res.locals.audience)
+						.then(() => {
+							res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+						})
+						.catch(error => next(error))
+				} else {
+					next(new Error('Interests not valid'))
 				}
+			} else {
+				next(new Error('Interests not present'))
 			}
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
 		}
 	}
 
 	deleteCoreLearning() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.interests = []
-			await this.learningCatalogue.updateCourse(res.locals.course)
 
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => next(error))
 		}
 	}
 
@@ -267,7 +310,7 @@ export class AudienceController {
 	}
 
 	setRequiredLearning() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			const data = {
 				...req.body,
 			}
@@ -298,21 +341,27 @@ export class AudienceController {
 
 			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
 
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			return res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => next(error))
 		}
 	}
 
 	deleteRequiredLearning() {
-		return async (req: Request, res: Response) => {
+		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.type = Audience.Type.OPEN
 			res.locals.audience.requiredBy = undefined
 			res.locals.audience.frequency = undefined
 
-			await this.learningCatalogue.updateCourse(res.locals.course)
-
-			res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => next(error))
 		}
 	}
 }

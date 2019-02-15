@@ -17,4 +17,8 @@ export class AudienceService {
 			}
 		}
 	}
+
+	public getDefaults(request: Request) {
+		return ''
+	}
 }
