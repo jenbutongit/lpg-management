@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {ContentRequest} from '../../extended'
@@ -110,7 +110,7 @@ export class FileController {
 	}
 
 	public setFile() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const req = request as ContentRequest
 			let data = {
 				...req.body,
@@ -158,21 +158,28 @@ export class FileController {
 			}
 			module = await this.moduleFactory.create(newData)
 
-			await this.learningCatalogue.createModule(course.id, module)
-			response.redirect(`/content-management/courses/${course.id}/preview`)
+			await this.learningCatalogue
+				.createModule(course.id, module)
+				.then(() => {
+					response.redirect(`/content-management/courses/${course.id}/preview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
 	public editFile() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			let data = {
 				...request.body,
 			}
 
-			data.type = fileType.getFileModuleType(data.file)
-
 			const course = response.locals.course
 			let module = response.locals.module
+
+			data.type = data.file ? fileType.getFileModuleType(data.file) : module.type
+
 			let errors = await this.moduleValidator.check(data, ['title', 'description', 'mediaId'])
 
 			let file
@@ -202,10 +209,16 @@ export class FileController {
 			module.url = config.CONTENT_URL + '/' + file.path
 			module.startPage = file.metadata.startPage
 
-			await this.learningCatalogue.updateModule(course.id, module)
-			return request.session!.save(() => {
-				response.redirect(`/content-management/courses/${course.id}/preview`)
-			})
+			await this.learningCatalogue
+				.updateModule(course.id, module)
+				.then(() => {
+					return request.session!.save(() => {
+						response.redirect(`/content-management/courses/${course.id}/preview`)
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 }

@@ -143,4 +143,30 @@ describe('Leaner Record Tests', () => {
 		expect(response).to.equal(event)
 		expect(restService.post).to.have.been.calledOnceWith('/event', event)
 	})
+
+	it('should get cancellation reasons', async () => {
+		const cancellationReasons = {
+			UNAVAILABLE: 'event is unavailable',
+		}
+
+		restService.get = sinon.stub().returns(cancellationReasons)
+
+		const response = await learnerRecord.getCancellationReasons()
+
+		expect(response).to.equal(cancellationReasons)
+		expect(restService.get).to.have.been.calledOnceWith(`/event/cancellationReasons`)
+	})
+
+	it('should get booking cancellationReasons', async () => {
+		const cancellationReasons = {
+			PAYMENT: 'booking has not been paid',
+		}
+
+		restService.get = sinon.stub().returns(cancellationReasons)
+
+		const response = await learnerRecord.getBookingCancellationReasons()
+
+		expect(response).to.equal(cancellationReasons)
+		expect(restService.get).to.have.been.calledOnceWith(`/event/booking/cancellationReasons`)
+	})
 })

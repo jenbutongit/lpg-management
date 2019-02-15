@@ -114,7 +114,7 @@
                 ]
               }) }}
             </div>
-            {% if event.status == "Active" %}
+            {% if event.status == "Active" and identity.hasLearningEdit() and course.status !== "Archived" %}
                 <div class="add-invitee">
                     <h3 class="govuk-heading-m">Invite learners</h3>
                     <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
@@ -138,8 +138,7 @@
                                     name: "learnerEmail"
                                 }) }}
                                 {{ govukButton({
-                                    text: "Invite",
-                                    classes: "button-blue"
+                                    text: "Invite"
                                 }) }}
                             {% endif %}
                         </div>
@@ -189,26 +188,28 @@
               {% endblock %}
               {% if event.status == "Cancelled" %}
                 {% block cancellationReason %}
-                    {{ cancellationReason("This event has been cancelled because " + i18n[event.cancellationReason]) }}
+                    {{ cancellationReason("This event has been cancelled because " + event.cancellationReason) }}
                 {% endblock %}
               {% else %}
                 {% block menu %}
-                    {% set actions = [
-                        {
-                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
-                            text: 'Edit time and date'
-                        },
-                        {
-                            link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
-                            text: 'Edit location and capacity'
-                        },
-                        {
+                {% set actions = [] %}
+                {% if identity.hasLearningCreate() %}
+                    {% set action = actions.push({
+                        link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/dateRanges/',
+                        text: 'Edit time and date'
+                    }) %}
+                    {% set action = actions.push({
+                        link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/location/',
+                        text: 'Edit location and capacity'
+                    }) %}
+                    {% endif %}
+                    {% if identity.hasLearningDelete() %}
+                        {% set action = actions.push({
                             link: '/content-management/courses/' + course.id + '/modules/' + module.id + '/events/' + event.id + '/cancel',
                             text: 'Cancel this event'
-                        }
-                    ]
-                    %}
-                    {{ menu("Actions", actions) }}
+                        }) %}
+                {% endif %}
+                {{ menu("Actions", actions) }}
                 {% endblock %}
               {% endif %}
             </div>

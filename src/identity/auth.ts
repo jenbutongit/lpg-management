@@ -122,13 +122,4 @@ export class Auth {
 			next()
 		}
 	}
-
-	hasRole(role: string) {
-		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.user && req.user.hasRole(role)) {
-				return next()
-			}
-			res.sendStatus(401)
-		}
-	}
 }

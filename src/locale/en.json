@@ -146,7 +146,7 @@
 				"empty": "Description is required"
 			},
 			"url": {
-				"empty": "A URL should include a protocol and be a top level domain"
+				"empty": "Make sure your URL includes http or https"
 			},
 			"duration": {
 				"empty": "Duration is required"
@@ -198,6 +198,10 @@
 	},
 	"administration_pages_title": "Reporting",
 	"blended": "Blended",
+	"error": "There is a problem with the service",
+	"errors": {
+		"actionNotAuthorised": "You are not authorised to perform this operation"
+	},
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
@@ -229,13 +233,14 @@
   "could_not_invite_learner": " could not be invited due to an unexpected error",
   "cancellation_reason_unavailable": "the event is no longer available",
   "cancellation_reason_venue": "of short notice unavailability of the venue",
+	"could_not_invite_learner": " could not be invited due to an unexpected error",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
-	"validation_module_url_invalid": "A URL should include a protocol and be a top level domain",
+	"validation_module_url_invalid": "Make sure your URL includes http or https",
 	"validation_module_title_empty": "Title is required",
 	"validation.module.duration.empty": "Duration is required",
 	"validation.module.duration.positive": "Duration must be positive",
