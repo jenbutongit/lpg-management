@@ -151,7 +151,7 @@
 				"empty": "Description is required"
 			},
 			"url": {
-				"empty": "A URL should include a protocol and be a top level domain"
+				"empty": "Make sure your URL includes http or https"
 			},
 			"duration": {
 				"empty": "Duration is required"
@@ -239,7 +239,7 @@
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
-	"validation_module_url_invalid": "A URL should include a protocol and be a top level domain",
+	"validation_module_url_invalid": "Make sure your URL includes http or https",
 	"validation_module_title_empty": "Title is required",
 	"validation.module.duration.empty": "Duration is required",
 	"validation.module.duration.positive": "Duration must be positive",
