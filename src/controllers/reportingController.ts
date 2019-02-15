@@ -69,7 +69,6 @@ export class ReportingController {
 					'Content-disposition': `attachment;filename=${request.query['report-type']}.csv`,
 					'Content-length': report.length,
 				})
-
 				response.end(Buffer.from(report, 'binary'))
 			} catch (error) {
 				throw new Error(error)
