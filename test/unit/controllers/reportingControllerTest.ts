@@ -107,7 +107,7 @@ describe('Reporting Controller Tests', function() {
 		const headers = {
 			'Content-type': 'text/csv',
 			'Content-disposition': 'attachment;filename=booking-information.csv',
-			'Content-length': data.length
+			'Content-length': data.length,
 		}
 
 		expect(res.writeHead).to.have.been.calledOnceWith(200, headers)

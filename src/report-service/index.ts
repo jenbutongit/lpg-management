@@ -11,29 +11,22 @@ export class ReportService {
 		this.http = http
 	}
 
-	getReport(params: {
-		'report-type': string,
-		'from-year': number,
-		'from-month': number,
-		'from-day': number,
-		'to-year': number,
-		'to-month': number,
-		'to-day': number,
-	}) {
-
-		const from = moment().utc()
-			.date(params['from-day'])
-			.month(params['from-month'] - 1)
-			.year(params['from-year'])
+	getReport(params: {'report-type': string; 'from-year': number; 'from-month': number; 'from-day': number; 'to-year': number; 'to-month': number; 'to-day': number}) {
+		const from = moment()
+			.utc()
+			.date(1)
+			.month(1)
+			.year(2018)
 			.format('YYYY-MM-DD')
 
-		const to = moment().utc()
-			.date(params['to-day'])
-			.month(params['to-month'] - 1)
-			.year(params['to-year'])
+		const to = moment()
+			.utc()
+			.date(1)
+			.month(1)
+			.year(2019)
 			.format('YYYY-MM-DD')
 
-		const reportUrl = `${this.config.url}${this.config.map[params['report-type']]}?from=${from}&to=${to}`
+		const reportUrl = `${this.config.url}/bookings?from=${from}&to=${to}`
 
 		return this.http.get(reportUrl)
 	}

@@ -22,7 +22,7 @@ export class Auth {
 		this.identityService = identityService
 	}
 
-	configure(app: any, authorisedRole: string) {
+	configure(app: any) {
 		app.use(this.initialize())
 		app.use(this.session())
 
@@ -32,7 +32,6 @@ export class Auth {
 
 		app.use(this.checkAuthenticatedAndAssignCurrentUser())
 		app.use(this.addToResponseLocals())
-		app.use(this.hasRole(authorisedRole))
 	}
 
 	initialize(): Handler {

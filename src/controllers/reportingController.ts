@@ -62,20 +62,18 @@ export class ReportingController {
 
 	generateReport() {
 		return async (request: Request, response: Response) => {
-
 			try {
 				const report = await this.reportService.getReport(request.query)
 				response.writeHead(200, {
 					'Content-type': 'text/csv',
 					'Content-disposition': `attachment;filename=${request.query['report-type']}.csv`,
-					'Content-length': report.length
+					'Content-length': report.length,
 				})
 
 				response.end(Buffer.from(report, 'binary'))
-			} catch(error) {
+			} catch (error) {
 				throw new Error(error)
 			}
-
 		}
 	}
 }
