@@ -12,6 +12,7 @@ export class ReportService {
 	}
 
 	getReport(params: {'report-type': string; 'from-year': number; 'from-month': number; 'from-day': number; 'to-year': number; 'to-month': number; 'to-day': number}) {
+		// hard-coding from and to until we can tie in with front end
 		const from = moment()
 			.utc()
 			.date(1)
@@ -23,7 +24,7 @@ export class ReportService {
 			.utc()
 			.date(1)
 			.month(1)
-			.year(2019)
+			.year(2020)
 			.format('YYYY-MM-DD')
 
 		const reportUrl = `${this.config.url}/bookings?from=${from}&to=${to}`

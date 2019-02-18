@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {ReportService} from '../report-service'
 
 export class ReportingController {
@@ -61,15 +61,21 @@ export class ReportingController {
 	}
 
 	generateReport() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			try {
-				const report = await this.reportService.getReport(request.query)
-				response.writeHead(200, {
-					'Content-type': 'text/csv',
-					'Content-disposition': `attachment;filename=${request.query['report-type']}.csv`,
-					'Content-length': report.length,
-				})
-				response.end(Buffer.from(report, 'binary'))
+				await this.reportService
+					.getReport(request.query)
+					.then(report => {
+						response.writeHead(200, {
+							'Content-type': 'text/csv',
+							'Content-disposition': `attachment;filename=${request.query['report-type']}.csv`,
+							'Content-length': report.length,
+						})
+						response.end(Buffer.from(report, 'binary'))
+					})
+					.catch(error => {
+						next(error)
+					})
 			} catch (error) {
 				throw new Error(error)
 			}
