@@ -37,6 +37,6 @@ describe('Report Service tests', () => {
 
 		reportService.getReport(query)
 
-		expect(http.get).to.have.been.calledOnceWith('http://localhost/bookings?from=2018-02-01&to=2019-02-01')
+		expect(http.get).to.have.been.calledOnceWith('http://localhost/bookings?from=2018-02-01&to=2020-02-01')
 	})
 })
