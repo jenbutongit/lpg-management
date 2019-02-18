@@ -4,7 +4,7 @@ import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
 import {expect} from 'chai'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import {ReportService} from '../../../src/report-service'
 import * as sinon from 'sinon'
 
@@ -13,8 +13,10 @@ chai.use(sinonChai)
 describe('Reporting Controller Tests', function() {
 	let reportingController: ReportingController
 	let reportService: ReportService
+	let next: NextFunction
 
 	beforeEach(() => {
+		next = sinon.stub()
 		reportService = <ReportService>{}
 		reportingController = new ReportingController(reportService)
 	})
@@ -80,7 +82,7 @@ describe('Reporting Controller Tests', function() {
 	})
 
 	it('should generate report', async () => {
-		const getReports: (req: Request, res: Response) => void = reportingController.generateReport()
+		const getReports: (req: Request, res: Response, next: NextFunction) => void = reportingController.generateReport()
 
 		const req: Request = mockReq({
 			query: {
@@ -96,13 +98,13 @@ describe('Reporting Controller Tests', function() {
 
 		const data = 'a,b,c'
 
-		reportService.getReport = sinon.stub().returns(data)
+		reportService.getReport = sinon.stub().returns(Promise.resolve(data))
 
 		const res: Response = mockRes()
 
 		res.writeHead = sinon.stub()
 
-		await getReports(req, res)
+		await getReports(req, res, next)
 
 		const headers = {
 			'Content-type': 'text/csv',
