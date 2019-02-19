@@ -104,7 +104,6 @@
 			}
 		}
 	},
-	"blended": "Blended",
 	"organisations": {
 		"headers": {
 			"organisationName": "Organisation name"
@@ -179,11 +178,6 @@
 	},
 
 	"termsAndConditions": {
-		"text": {
-			"addNew": "Add new terms and conditions",
-			"edit": "Edit terms and conditions"
-		},
-
 		"validation": {
 			"name": {
 				"empty": "Name is required"
@@ -202,6 +196,8 @@
 		"file": "File",
 		"blended": "Blended"
 	},
+	"administration_pages_title": "Reporting",
+	"blended": "Blended",
 	"error": "There is a problem with the service",
 	"errors": {
 		"actionNotAuthorised": "You are not authorised to perform this operation"
@@ -212,6 +208,7 @@
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
+	"error": "There is a problem with the service",
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
@@ -224,9 +221,18 @@
 	"organisations_new_name_empty": "Name is required",
 	"organisations_page_title": "Manage organisations",
 	"proposition_name": "Civil Service Learning",
+	"report_course_ratings_title": "Course ratings",
+	"report_course_performance_title": "Course performance",
+	"report_professions_data_title": "Professions report",
+	"report_learner_record_title": "Learner record report",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
 	"email_address_found_message": " has been invited to this event",
+	"email_address_not_found_message": " is not registered. Check the email address and try adding them again",
+	"email_address_already_invited_message": " has already been invited to this event",
+  "could_not_invite_learner": " could not be invited due to an unexpected error",
+  "cancellation_reason_unavailable": "the event is no longer available",
+  "cancellation_reason_venue": "of short notice unavailability of the venue",
 	"could_not_invite_learner": " could not be invited due to an unexpected error",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",

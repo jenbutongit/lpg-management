@@ -60,7 +60,10 @@ import {InviteFactory} from './learner-record/model/factory/inviteFactory'
 import {BookingFactory} from './learner-record/model/factory/bookingFactory'
 import {Booking} from './learner-record/model/booking'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {ReportingController} from './controllers/reportingController'
 import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
+import {ReportServiceConfig} from './report-service/reportServiceConfig'
+import {ReportService} from './report-service'
 
 log4js.configure(config.LOGGING)
 
@@ -119,7 +122,10 @@ export class ApplicationContext {
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
 	searchController: SearchController
+	reportingController: ReportingController
 	organisationalUnitService: OrganisationalUnitService
+	reportServiceConfig: ReportServiceConfig
+	reportService: ReportService
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -158,6 +164,9 @@ export class ApplicationContext {
 			stdTTL: config.CACHE.TTL_SECONDS,
 			checkperiod: config.CACHE.CHECK_PERIOD_SECONDS,
 		})
+
+		this.reportServiceConfig = new ReportServiceConfig()
+		this.reportService = new ReportService(this.reportServiceConfig, new OauthRestService(this.reportServiceConfig, this.auth))
 
 		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
 		this.csrsService = new CsrsService(new OauthRestService(this.csrsConfig, this.auth), this.cacheService)
@@ -247,10 +256,13 @@ export class ApplicationContext {
 
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
+
+		this.reportingController = new ReportingController(this.reportService)
 	}
 
 	addToResponseLocals() {
 		return (req: Request, res: Response, next: NextFunction) => {
+			res.locals.originalUrl = req.originalUrl
 			res.locals.lpgUiUrl = this.lpgUiUrl
 			res.locals.sessionFlash = req.session!.sessionFlash
 			delete req.session!.sessionFlash

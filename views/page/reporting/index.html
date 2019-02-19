@@ -1,0 +1,23 @@
+{% extends "../../component/Page.njk" %} 
+
+{% block pageTitle %}{{ i18n['administration_pages_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-heading-l">Reporting</h1>
+            <div class="reports-container">
+                <ul class="list">
+                    <li class="course list-details u--border--bgrey">
+                        <div class="course-details">
+                            <a class="govuk-link list-title" href="/reporting/booking-information">Booking information</a>
+                            <p class="govuk-body no-margin">Shows data on classroom courses, identifying requests (state before payment accepted), bookings (state once payment received) and cancellations (for reasons such as capacity issues, course not run or payment not accepted).</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="govuk-grid-column-one-third">
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% from "../../component/reporting/macro.njk" import reporting with context %}
+
+{% extends "../../component/Page.njk" %} 
+
+{% block pageTitle %}{{ i18n['report_'+ (pageTitle | lower | replace(" ", "_")) +'_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
+
+{% block content %}
+
+    <div class="govuk-grid row">
+        <div class="govuk-column-full">
+            <h1 class="govuk-heading-l">{{pageTitle}}</h1>
+        </div>
+    </div>
+    <div class="govuk-grid row">
+        <div class="govuk-column-two-thirds">
+             {{ reporting(pageTitle | lower | replace(" ", "-")) }}
+        </div>
+        <div class="govuk-column-one-third">
+        </div>
+    </div>
+{% endblock %}
