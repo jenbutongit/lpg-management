@@ -114,6 +114,6 @@ export class Identity {
 	}
 
 	isKPMGSupplierReporter() {
-		return this.hasRole('KPMG_SUPPLIER_AUTHOR')
+		return this.hasRole('KPMG_SUPPLIER_REPORTER')
 	}
 }
