@@ -69,7 +69,7 @@
   {% block nav %}
     {{ nav(lpgUiUrl, identity) }}
   {% endblock %}
-  {% if backButton %}  
+  {% if backButton %}
     {% block backLink %}
       {{ backLink(backButton) }}
     {% endblock%}
@@ -85,22 +85,19 @@
     meta: {
       items: [
         {
-          href: "#1",
-          text: "Help"
-        },
-        {
           href: lpgUiUrl + "/cookies",
           text: "Cookies"
         },
         {
-          href: "mailto:feedback@cslearning.gov.uk",
-          text: "Contact"
+          href: lpgUiUrl + "/privacy",
+          text: "Privacy"
         },
         {
-          href: "#4",
-          text: "Terms and conditions"
+          href: lpgUiUrl + "/contact-us",
+          text: "Help and support"
         }
-      ]
+      ],
+      html: "<div><ul><li>Built by the <a class=\"govuk-footer__link\" href=\"#\">Civil Service Learning Platform</a></li></ul></div>"
     }
   }) }}
 {% endblock %}
