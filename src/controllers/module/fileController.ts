@@ -97,9 +97,10 @@ export class FileController {
 					mediaId = items[items.length - 1]
 				}
 
-				const media = await this.restService.get(`/${mediaId}`)
-
-				return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
+				if (mediaId) {
+					const media = await this.restService.get(`/${mediaId}`)
+					return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
+				}
 			}
 
 			return response.render('page/course/module/module-file', {
@@ -180,7 +181,7 @@ export class FileController {
 
 			data.type = data.file ? fileType.getFileModuleType(data.file) : module.type
 
-			let errors = await this.moduleValidator.check(data, ['title', 'description', 'mediaId'])
+			let errors = await this.moduleValidator.check(data, ['title', 'description'])
 
 			let file
 			if (data.mediaId) {
@@ -204,10 +205,10 @@ export class FileController {
 			module.description = data.description
 			module.optional = data.isOptional || false
 			module.duration = moment.duration({hours: data.hours, minutes: data.minutes}).asSeconds()
-			module.fileSize = file.fileSizeKB
-			module.mediaId = file.id
-			module.url = config.CONTENT_URL + '/' + file.path
-			module.startPage = file.metadata.startPage
+			module.fileSize = file ? file.fileSizeKB : module.fileSize
+			module.mediaId = file ? file.id : module.mediaId
+			module.url = file ? config.CONTENT_URL + '/' + file.path : module.url
+			module.startPage = file ? file.metadata.startPage : module.startPage
 
 			await this.learningCatalogue
 				.updateModule(course.id, module)
