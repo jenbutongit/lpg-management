@@ -89,10 +89,10 @@ export class FileController {
 				const module = response.locals.module
 				let mediaId = module.mediaId
 
-				if (module.type === Module.Type.VIDEO) {
+				if (module.type === Module.Type.VIDEO && module.url) {
 					const items = module.url.split('/')
 					mediaId = items[items.length - 2]
-				} else if (module.type === Module.Type.E_LEARNING) {
+				} else if (module.type === Module.Type.E_LEARNING && module.url) {
 					const items = module.url.split('/')
 					mediaId = items[items.length - 1]
 				}
