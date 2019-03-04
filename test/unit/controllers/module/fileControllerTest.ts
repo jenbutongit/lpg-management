@@ -74,7 +74,7 @@ describe('File Controller Test', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		mediaRestService.get = sinon.stub().returns({id: 'mediaId'})
+		mediaRestService.get = sinon.stub().returns(Promise.resolve({id: 'mediaId'}))
 
 		request.params.moduleId = 'moduleId'
 		response.locals.module = module
