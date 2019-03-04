@@ -98,8 +98,17 @@ export class FileController {
 				}
 
 				if (mediaId) {
-					const media = await this.restService.get(`/${mediaId}`)
-					return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
+					return await this.restService
+						.get(`/${mediaId}`)
+						.then(media => {
+							response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
+						})
+						.catch(() => {
+							response.render('page/course/module/module-file', {
+								type: type,
+								courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media',
+							})
+						})
 				}
 			}
 
