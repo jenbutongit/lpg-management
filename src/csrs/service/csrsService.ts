@@ -25,7 +25,7 @@ export class CsrsService {
 		let areasOfWork = this.cacheService.cache.get(CsrsService.AREAS_OF_WORK)
 
 		if (!areasOfWork) {
-			areasOfWork = await this.restService.get('/professions')
+			areasOfWork = await this.restService.get('/professions?size=999')
 			this.cacheService.cache.set(CsrsService.AREAS_OF_WORK, areasOfWork)
 		}
 
