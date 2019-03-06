@@ -46,6 +46,11 @@ describe('Course tests', () => {
 		expect(course.learningOutcomes).to.equal('test-learningOutcomes')
 	})
 
+	it('should be able to set topicId', () => {
+		course.topicId = 'topicId'
+		expect(course.topicId).to.equal('topicId')
+	})
+
 	it('should be able to set modules', () => {
 		const modules = [new Module()]
 

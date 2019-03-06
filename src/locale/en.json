@@ -50,7 +50,8 @@
 			"details": "Course details",
 			"title": "Course title",
 			"addNew": "Add a new course",
-			"editDetails": "Edit course details"
+			"editDetails": "Edit course details",
+            "topicId": "Topic ID (optional)"
 		},
 		"validation": {
 			"title": {
