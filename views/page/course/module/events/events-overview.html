@@ -115,8 +115,7 @@
               }) }}
             </div>
           
-            {% if event.status == "Active" and course.status == "Published" %}
-            {% if event.status == "Active" and identity.hasLearningEdit() and course.status === "Published" %}
+            {% if event.status == "Active" and course.status == "Published" and identity.hasLearningEdit() %}
                 <div class="add-invitee">
                     <h3 class="govuk-heading-m">Invite learners</h3>
                     <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
