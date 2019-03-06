@@ -18,7 +18,7 @@
     </li>
     <li class="list-item course-item">
         <h3 class="govuk-heading-s">Grades</h3>
-        <p class="govuk-body no-margin">{{ grades|join(", ") if grades.length > 0 else "Unspecified" }}</p>
+        <p class="govuk-body no-margin">{{ grades | join(", ") if grades.length > 0 else "Unspecified" }}</p>
     </li>
     {% if faceToFace === true %}
         <li class="list-item course-item">
