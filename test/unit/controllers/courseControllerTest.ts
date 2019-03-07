@@ -104,10 +104,11 @@ describe('Course Controller Tests', function() {
 			expect(res.render).to.have.been.calledWith('page/course/course-title')
 		})
 
-		it('should check for title errors and redirect to details page if no errors', async function() {
-			const errors = {fields: [], size: 0}
-			const course = new Course()
-			course.title = 'New Course'
+    it('should check for title errors and redirect to details page if no errors', async function() {
+      const errors = {fields: [], size: 0}
+      const course = new Course()
+      course.title = 'New Course'
+      course.topicId = 'topicId'
 
 			courseFactory.create = sinon.stub().returns(course)
 			validator.check = sinon.stub().returns({fields: [], size: 0})
@@ -142,15 +143,17 @@ describe('Course Controller Tests', function() {
 
 			req.params.courseId = courseId
 
-			req.body = {
-				title: 'New Title',
-				id: courseId,
-			}
+      req.body = {
+        title: 'New Title',
+        id: courseId,
+        topicId: 'topicId',
+      }
 
-			res.locals.course = <Course>{
-				id: courseId,
-				title: 'Old Title',
-			}
+      res.locals.course = <Course>{
+        id: courseId,
+        title: 'Old Title',
+        topicId: 'topicId',
+      }
 
 			validator.check = sinon.stub().returns({fields: [], size: 0})
 			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(course))
