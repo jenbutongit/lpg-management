@@ -53,7 +53,17 @@
                             value: course.title
                         }) }}
                     {% endif %}
+
+                    {{ govukInput({
+                        label: {
+                            text: i18n.course.text.topicId
+                        },
+                        id: "topicId",
+                        name: "topicId",
+                        value: course.topicId
+                    }) }}
                 </fieldset>
+
                 <div class="button-container">
                     {{ govukButton({
                         text: "Continue"

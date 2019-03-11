@@ -34,6 +34,7 @@ describe('CourseFactory tests', () => {
 		const shortDescription = 'This topic introduces yo… governance processes.'
 		const description: string = 'You learn about creating…in government’ topic.'
 		const learningOutcomes: string = 'After completing this to…h the financial cycle'
+		const topicId: string = 'topicId'
 		const moduleData = {
 			id: 'jksdhskdjhsdfk',
 			type: 'link',
@@ -64,6 +65,7 @@ describe('CourseFactory tests', () => {
 			modules: [moduleData],
 			audiences: [audienceData],
 			learningProvider: learningProviderData,
+			topicId: topicId,
 		}
 
 		const result: Course = courseFactory.create(data)
@@ -77,6 +79,7 @@ describe('CourseFactory tests', () => {
 		expect(result.audiences[0]).to.deep.equal(courseAudience)
 		expect(result.learningProvider).to.deep.equal(courseLearningProvider)
 		expect(result.status).to.equal(Status.DRAFT)
+		expect(result.topicId).to.equal(topicId)
 	})
 
 	it('should add empty list if modules is null', () => {

@@ -100,4 +100,20 @@ export class Identity {
 	isLearner() {
 		return this.hasRole(Identity.LEARNER)
 	}
+
+	isCshrReporter() {
+		return this.hasRole('CSHR_REPORTER')
+	}
+
+	isProfessionReporter() {
+		return this.hasRole('PROFESSION_REPORTER')
+	}
+
+	isOrganisationReporter() {
+		return this.hasRole('ORGANISATION_REPORTER')
+	}
+
+	isKPMGSupplierReporter() {
+		return this.hasRole('KPMG_SUPPLIER_REPORTER')
+	}
 }

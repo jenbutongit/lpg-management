@@ -23,7 +23,9 @@
                     {% set classNames = "govuk-fieldset audience-fieldset" %}
                     {% set message = "no-errors" %}
                 {% endif %}
-
+                {% for organisation in organisations %}
+                <li>{{ organisation}}</li>
+                {% endfor %}
                 <div class="{{classNames}}">
                     <p class="{{message}}">Select which organisations are included</p>
                     {% set typeaheadHtml %}

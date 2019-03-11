@@ -140,6 +140,7 @@ export class CourseController implements FormController {
 		return async (request: Request, response: Response, next: NextFunction) => {
 			let course = response.locals.course
 			course.title = request.body.title
+			course.topicId = request.body.topicId
 
 			await this.learningCatalogue
 				.updateCourse(course)
