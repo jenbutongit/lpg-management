@@ -47,11 +47,13 @@ export class LearningCatalogue {
 	}
 
 	async listCourses(page: number = 0, size: number = 10): Promise<DefaultPageResults<Course>> {
-		return await this._courseService.listAllWithPagination(`/courses/management?page=${page}&size=${size}`)
+		return await this._courseService.listAllWithPagination(`/courses/management?page=${page}&size=${size}&visibility=PRIVATE`)
 	}
 
 	async searchCourses(query: string, page: number = 0, size: number = 10): Promise<DefaultPageResults<Course>> {
-		return await this._courseService.listAllWithPagination(`/search/management/courses/?status=Draft&status=Published&status=Archived&query=${query}&page=${page}&size=${size}`)
+		return await this._courseService.listAllWithPagination(
+			`/search/management/courses/?status=Draft&status=Published&status=Archived&query=${query}&page=${page}&size=${size}&visibility=PRIVATE`
+		)
 	}
 
 	async createCourse(course: Course): Promise<Course> {

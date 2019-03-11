@@ -14,6 +14,7 @@ import {Module} from '../../../src/learning-catalogue/model/module'
 import {CourseService} from '../../../src/lib/courseService'
 import {CsrsService} from '../../../src/csrs/service/csrsService'
 import {Status} from '../../../src/learning-catalogue/model/status'
+import {Visibility} from '../../../src/learning-catalogue/model/visibility'
 
 chai.use(sinonChai)
 
@@ -98,17 +99,40 @@ describe('Course Controller Tests', function() {
 		})
 	})
 
+	describe('Course visibility', () => {
+		it('should render course visibility page', async () => {
+			await courseController.getCourseVisibility()(req, res)
+			expect(res.render).to.have.been.calledOnceWith('page/course/course-visibility')
+		})
+
+		it('should check for visibility errors and redirect to title page if no errors', async function() {
+			const errors = {fields: [], size: 0}
+			const course = new Course()
+			course.visibility = Visibility.PUBLIC
+
+			courseFactory.create = sinon.stub().returns(course)
+			validator.check = sinon.stub().returns({fields: [], size: 0})
+
+			await courseController.setCourseVisibility()(req, res)
+
+			expect(validator.check).to.have.been.calledOnceWith(req.body, ['visibility'])
+			expect(validator.check).to.have.returned(errors)
+			expect(req.session!.sessionFlash.course).to.be.equal(course)
+			expect(res.redirect).to.have.been.calledOnceWith('/content-management/courses/title/')
+		})
+	})
+
 	describe('Course title', () => {
 		it('should render add-course-title page', async function() {
 			await courseController.getCourseTitle()(req, res)
 			expect(res.render).to.have.been.calledWith('page/course/course-title')
 		})
 
-    it('should check for title errors and redirect to details page if no errors', async function() {
-      const errors = {fields: [], size: 0}
-      const course = new Course()
-      course.title = 'New Course'
-      course.topicId = 'topicId'
+		it('should check for title errors and redirect to details page if no errors', async function() {
+			const errors = {fields: [], size: 0}
+			const course = new Course()
+			course.title = 'New Course'
+			course.topicId = 'topicId'
 
 			courseFactory.create = sinon.stub().returns(course)
 			validator.check = sinon.stub().returns({fields: [], size: 0})
@@ -143,17 +167,17 @@ describe('Course Controller Tests', function() {
 
 			req.params.courseId = courseId
 
-      req.body = {
-        title: 'New Title',
-        id: courseId,
-        topicId: 'topicId',
-      }
+			req.body = {
+				title: 'New Title',
+				id: courseId,
+				topicId: 'topicId',
+			}
 
-      res.locals.course = <Course>{
-        id: courseId,
-        title: 'Old Title',
-        topicId: 'topicId',
-      }
+			res.locals.course = <Course>{
+				id: courseId,
+				title: 'Old Title',
+				topicId: 'topicId',
+			}
 
 			validator.check = sinon.stub().returns({fields: [], size: 0})
 			learningCatalogue.updateCourse = sinon.stub().returns(Promise.resolve(course))

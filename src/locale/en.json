@@ -41,6 +41,7 @@
 	},
 	"course": {
 		"pageTitle": {
+            "addCourseVisibility": "Add course visibility",
 			"addCourseTitle": "Add course title",
 			"editCourseTitle": "Edit course title",
 			"addCourseDetails": "Add course details",
@@ -67,7 +68,10 @@
 			},
 			"status": {
 				"invalid": "Status needs to be 'Draft', 'Published' or 'Archived'"
-			}
+			},
+            "visibility": {
+              "empty": "Visibility is required"
+            }
 		}
 	},
 	"event": {
@@ -209,6 +213,7 @@
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
+	"course_visibility": "Course visibility",
 	"error": "There is a problem with the service",
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",

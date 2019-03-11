@@ -54,6 +54,8 @@ export class CourseController implements FormController {
 		this.router.get('/content-management/courses/:courseId/overview', asyncHandler(this.courseOverview()))
 		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
 
+		this.router.get('/content-management/courses/visibility/:courseId?', this.getCourseVisibility())
+		this.router.post('/content-management/courses/visibility/:courseId?', this.setCourseVisibility())
 		this.router.get('/content-management/courses/title/:courseId?', this.getCourseTitle())
 		this.router.post('/content-management/courses/title/', this.createCourseTitle())
 		this.router.post('/content-management/courses/title/:courseId', this.updateCourseTitle())
@@ -103,6 +105,27 @@ export class CourseController implements FormController {
 		}
 	}
 
+	getCourseVisibility() {
+		return async (request: Request, response: Response) => {
+			response.render('page/course/course-visibility')
+		}
+	}
+
+	@Validate({
+		fields: ['visibility'],
+		redirect: '/content-management/courses/visibility',
+	})
+	setCourseVisibility() {
+		return async (request: Request, response: Response) => {
+			const course = this.courseFactory.create(request.body)
+			request.session!.sessionFlash = {course}
+
+			request.session!.save(() => {
+				response.redirect('/content-management/courses/title/')
+			})
+		}
+	}
+
 	getCourseTitle() {
 		return async (request: Request, response: Response) => {
 			response.render('page/course/course-title')
@@ -118,7 +141,7 @@ export class CourseController implements FormController {
 			let course = response.locals.course
 			course.title = request.body.title
 			course.topicId = request.body.topicId
-      
+
 			await this.learningCatalogue
 				.updateCourse(course)
 				.then(() => {
