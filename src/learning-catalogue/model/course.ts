@@ -55,6 +55,8 @@ export class Course {
 	})
 	visibility: Visibility
 
+	topicId: string
+
 	getCost() {
 		return this.modules.map(module => module.cost).reduce((acc: number, moduleCost) => acc + (moduleCost || 0), 0)
 	}

@@ -30,6 +30,7 @@ export class CourseFactory {
 		course.status = 'status' in data ? data.status : course.status
 		course.learningProvider = this._learningProviderFactory.create(data.learningProvider || {})
 		course.visibility = Visibility[data.visibility as keyof typeof Visibility]
+		course.topicId = data.topicId
 		return course
 	}
 

@@ -74,7 +74,7 @@ describe('File Controller Test', function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		mediaRestService.get = sinon.stub().returns({id: 'mediaId'})
+		mediaRestService.get = sinon.stub().returns(Promise.resolve({id: 'mediaId'}))
 
 		request.params.moduleId = 'moduleId'
 		response.locals.module = module
@@ -185,7 +185,7 @@ describe('File Controller Test', function() {
 
 		await fileController.editFile()(request, response, next)
 
-		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description'])
 		expect(mediaRestService.get).to.have.been.calledOnceWith(`/mediaId`)
 		expect(learningCatalogue.updateModule).to.have.been.calledOnceWith('courseId', module)
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/preview`)
@@ -229,7 +229,7 @@ describe('File Controller Test', function() {
 
 		await fileController.editFile()(request, response, next)
 
-		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description', 'mediaId'])
+		expect(moduleValidator.check).to.have.been.calledOnceWith(request.body, ['title', 'description'])
 		expect(mediaRestService.get).to.have.been.calledOnceWith(`/mediaId`)
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/${course.id}/module-file`)
 	})
