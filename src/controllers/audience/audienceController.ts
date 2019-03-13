@@ -65,6 +65,10 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/add-core-learning', this.setCoreLearning())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/core-learning/delete', this.deleteCoreLearning())
 
+		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/grades', this.getGrades())
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades', this.setGrades())
+		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/grades/delete', this.deleteGrades())
+
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/event', this.getPrivateCourseEvent())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event', this.setPrivateCourseEvent())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/event/delete', this.deletePrivateCourseEvent())
