@@ -368,13 +368,13 @@ export class AudienceController {
 			if (data.year || data.month || data.day) {
 				res.locals.audience.requiredBy = DateTime.yearMonthDayToDate(data.year, data.month, data.day).toDate()
 			}
+			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
+
 			const years = data.years ? parseInt(data.years) : 0
 			const months = data.months ? parseInt(data.months) : 0
 			if (data.years || data.months) {
 				res.locals.audience.frequency = moment.duration(years * 12 + months, 'months')
 			}
-
-			res.locals.audience.type = Audience.Type.REQUIRED_LEARNING
 
 			await this.learningCatalogue.updateCourse(res.locals.course)
 

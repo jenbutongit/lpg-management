@@ -46,7 +46,7 @@ export class Audience {
 
 export namespace Audience {
 	export enum Type {
-		OPEN,
-		REQUIRED_LEARNING,
+		OPEN = 'OPEN',
+		REQUIRED_LEARNING = 'REQUIRED_LEARNING',
 	}
 }
