@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from 'express'
 import {Audience} from '../learning-catalogue/model/audience'
+// import {Duration} from "moment"
 
 export class AudienceService {
 	/* istanbul ignore next */

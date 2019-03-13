@@ -64,12 +64,15 @@ describe('AudienceController', () => {
 	})
 
 	describe('#setAudienceName', () => {
-		it('should redirect back to audience name page if validation error', async function() {
+		it('serror', async function() {
+			let savedAudience: Audience = new Audience()
+
 			req.body = {name: ''}
 
 			const errors = {size: 1}
 			audienceValidator.check = sinon.stub().returns(errors)
 			audienceFactory.create = sinon.stub().returns({})
+			learningCatalogue.createAudience = sinon.stub().returns(savedAudience)
 
 			await audienceController.setAudienceName()(req, res)
 
@@ -498,7 +501,6 @@ describe('AudienceController', () => {
 	describe('#setRequiredLearning', () => {
 		it('should update course and redirect to configure audience page', async () => {
 			const course = new Course()
-			course.id = 'courseId'
 			const audience = new Audience()
 
 			const year = '2020'
@@ -522,44 +524,13 @@ describe('AudienceController', () => {
 			res.locals.course = course
 			res.locals.audience = audience
 
-			req.params.courseId = 'courseId'
-
-			learningCatalogue.updateAudience = sinon.stub().returns(Promise.resolve(res.locals.course))
+			learningCatalogue.updateCourse = sinon.stub()
 
 			await audienceController.setRequiredLearning()(req, res, next)
 
-			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith('courseId', audience)
+			expect(learningCatalogue.updateCourse).to.have.been.calledOnceWith(course)
 			expect(audience.requiredBy).to.eql(requiredBy)
 			expect(audience.frequency).to.eql(frequency)
-		})
-
-		it('should redirect to required learning page when date is invalid', async () => {
-			const course = new Course()
-			const audience = new Audience()
-
-			const year = '2020'
-			const month = '13'
-			const day = '02'
-			const years = '1'
-			const months = '6'
-
-			const data = {
-				year,
-				month,
-				day,
-				years,
-				months,
-			}
-			req.body = data
-			req.params.courseId = 'courseId'
-			req.params.audienceId = 'audienceId'
-
-			res.locals.course = course
-			res.locals.audience = audience
-
-			await audienceController.setRequiredLearning()(req, res, next)
-
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/audiences/audienceId/required-learning`)
 		})
 	})
 
