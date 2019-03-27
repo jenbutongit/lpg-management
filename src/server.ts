@@ -139,6 +139,11 @@ app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
+app.get('/log-out', function(req, res) {
+	req.logout()
+	res.redirect('/')
+})
+
 app.get('/content-management', asyncHandler(ctx.homeController.index()))
 
 app.use(errorController.handleError)
