@@ -40,21 +40,21 @@ describe('Report Service tests', () => {
 		expect(http.get).to.have.been.calledOnceWith('http://localhost/bookings?from=2018-02-01&to=2020-02-01')
 	})
 
-    it('should return the url of the learner record report from form parameters', async () => {
-        const query = {
-            'report-type': 'booking',
-            'from-year': 2018,
-            'from-month': 3,
-            'from-day': 1,
-            'to-year': 2019,
-            'to-month': 1,
-            'to-day': 1,
-        }
+	it('should return the url of the learner record report from form parameters', async () => {
+		const query = {
+			'report-type': 'booking',
+			'from-year': 2018,
+			'from-month': 3,
+			'from-day': 1,
+			'to-year': 2019,
+			'to-month': 1,
+			'to-day': 1,
+		}
 
-        http.get = sinon.stub()
+		http.get = sinon.stub()
 
-        reportService.getReportLearnerRecord(query)
+		reportService.getReportLearnerRecord(query)
 
-        expect(http.get).to.have.been.calledOnceWith('http://localhost/modules?from=2018-02-01&to=2020-02-01')
-    })
+		expect(http.get).to.have.been.calledOnceWith('http://localhost/modules?from=2018-02-01&to=2020-02-01')
+	})
 })
