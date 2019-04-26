@@ -33,7 +33,7 @@ export class ReportingController {
 
 	getReports() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/index')
+			response.render('page/reporting/index', {exampleYear: new Date(Date.now()).getFullYear() + 1})
 		}
 	}
 

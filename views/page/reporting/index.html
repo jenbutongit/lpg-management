@@ -1,4 +1,7 @@
-{% extends "../../component/Page.njk" %} 
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../../component/Page.njk" %}
 
 {% block pageTitle %}{{ i18n['administration_pages_title'] }} - {{ i18n['proposition_name'] }}{% endblock %}
 
@@ -8,12 +11,156 @@
             <h1 class="govuk-heading-l">Reporting</h1>
             <div class="reports-container">
                 <ul class="list">
-                    <li class="course list-details u--border--bgrey">
+                    <li class="course list-details">
                         <div class="course-details">
                             <a class="govuk-link list-title" href="/reporting/booking-information">Booking information</a>
                             <p class="govuk-body no-margin">Shows data on classroom courses, identifying requests (state before payment accepted), bookings
                                 (state once payment received) and cancellations (for reasons such as capacity issues, course not run or payment not accepted).</p>
                         </div>
+<<<<<<< Updated upstream
+=======
+                    <li class="course list-details u--border--bgrey">
+                        <form action="/content-management/courses/{{courseId}}/modules/{{moduleId}}/events/{{event.id}}" method="post">
+                            <input type="hidden" name="eventJson" value="{{eventJson}}" />
+                            {% if errors.fields.minDate or errors.fields.dateRanges or errors.fields.invalidDate %}
+                            {{ govukDateInput({
+                                id: "start-date",
+                                name: "start-date",
+                                fieldset: {
+                                    legend: {
+                                        text: "Start date",
+                                        isPageHeading: false,
+                                        classes: "govuk-fieldset__legend--s"
+                                    }
+
+                                },
+                            hint: {
+                                text: "For example, 31 3 " + exampleYear
+                            },
+                            errorMessage: {
+                                text: "A valid start date is required"
+                            },
+                            items: [
+                                {
+                                    name: "day",
+                                    classes: "govuk-input--width-3"
+                                },
+                                {
+                                    name: "month",
+                                    classes: "govuk-input--width-3"
+                                },
+                                {
+                                    name: "year",
+                                    classes: "govuk-input--width-5"
+                                }
+                            ]
+                            }) }}
+
+                            {{ govukDateInput({
+                            id: "end-date",
+                            name: "end-date",
+                            fieldset: {
+                            legend: {
+                            text: "End date",
+                            isPageHeading: false,
+                            classes: "govuk-fieldset__legend--s"
+                            }
+
+                            },
+                            hint: {
+                            text: "For example, 31 3 " + exampleYear
+                            },
+                            errorMessage: {
+                            text: "A valid end date is required"
+                            },
+                            items: [
+                            {
+                            name: "day",
+                            classes: "govuk-input--width-3"
+                            },
+                            {
+                            name: "month",
+                            classes: "govuk-input--width-3"
+                            },
+                            {
+                            name: "year",
+                            classes: "govuk-input--width-5"
+                            }
+                            ]
+                            }) }}
+                            {% else %}
+
+                            {{ govukDateInput({
+                            id: "start-date",
+                            name: "start-date",
+                            fieldset: {
+                            legend: {
+                            text: "Start date",
+                            isPageHeading: true,
+                            classes: "govuk-fieldset__legend--s"
+                            }
+                            },
+                            hint: {
+                            text: "For example, 31 3 " + exampleYear
+                            },
+                            items: [
+                            {attributes: {
+                            "maxLength": "2"
+                            },
+                            name: "day",
+                            classes: "govuk-input--width-3"
+                            },
+                            {
+                            name: "month",
+                            classes: "govuk-input--width-3"
+                            },
+                            {
+                            name: "year",
+                            classes: "govuk-input--width-5"
+                            }
+                            ]
+                            }) }}
+
+
+                            {{ govukDateInput({
+                            id: "end-date",
+                            name: "end-date",
+                            fieldset: {
+                            legend: {
+                            text: "End date",
+                            isPageHeading: true,
+                            classes: "govuk-fieldset__legend--s"
+                            }
+                            },
+                            hint: {
+                            text: "For example, 31 3 " + exampleYear
+                            },
+                            items: [
+                            {attributes: {
+                            "maxLength": "2"
+                            },
+                            name: "day",
+                            classes: "govuk-input--width-3"
+                            },
+                            {
+                            name: "month",
+                            classes: "govuk-input--width-3"
+                            },
+                            {
+                            name: "year",
+                            classes: "govuk-input--width-5"
+                            }
+                            ]
+                            }) }}
+                            {% endif %}
+
+                            {{ govukButton({
+                            text: "Download report",
+                            classes: "button-blue left-aligned"
+                            }) }}
+                        </form>
+                    </li>
+>>>>>>> Stashed changes
                     </li>
                     <li class="course list-details u--border--bgrey">
                         <div class="course-details">
