@@ -140,8 +140,9 @@ app.get('/', function(req, res) {
 })
 
 app.get('/log-out', function(req, res) {
+	console.log('in logout')
 	req.logout()
-	res.redirect('/')
+	res.redirect(config.AUTHENTICATION.authenticationServiceUrl + '/logout')
 })
 
 app.get('/content-management', asyncHandler(ctx.homeController.index()))
