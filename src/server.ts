@@ -14,8 +14,6 @@ import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 import {Duration} from 'moment'
-// import axios from 'axios'
-// import {IdentityService} from './identity/identityService'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
