@@ -122,4 +122,16 @@ export class Auth {
 			next()
 		}
 	}
+
+	logout() {
+		return async (req: Request, res: Response) => {
+			try {
+				await this.identityService.logout(req!.user!.accessToken)
+				req.logout()
+				return res.redirect(`${this.config.authenticationServiceUrl}/login`)
+			} catch (e) {
+				logger.warn(`Error retrieving user profile information`, e)
+			}
+		}
+	}
 }

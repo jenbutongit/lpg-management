@@ -14,6 +14,8 @@ import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 import {Duration} from 'moment'
+// import axios from 'axios'
+// import {IdentityService} from './identity/identityService'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -139,11 +141,7 @@ app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
 
-app.get('/log-out', function(req, res) {
-	console.log('in logout')
-	req.logout()
-	res.redirect(config.AUTHENTICATION.authenticationServiceUrl + '/logout')
-})
+app.get('/log-out', asyncHandler(ctx.auth.logout()))
 
 app.get('/content-management', asyncHandler(ctx.homeController.index()))
 
