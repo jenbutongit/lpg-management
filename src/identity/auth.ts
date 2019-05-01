@@ -130,7 +130,7 @@ export class Auth {
 				req.logout()
 				return res.redirect(`${this.config.authenticationServiceUrl}/login`)
 			} catch (e) {
-				logger.warn(`Error retrieving user profile information`, e)
+				logger.warn(`Error logging user out`, e)
 			}
 		}
 	}
