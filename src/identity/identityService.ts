@@ -20,4 +20,13 @@ export class IdentityService {
 
 		return identity
 	}
+
+	async logout(token: string) {
+		await this.http.get(`/oauth/logout`, {
+			baseURL: config.AUTHENTICATION.authenticationServiceUrl,
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+	}
 }
