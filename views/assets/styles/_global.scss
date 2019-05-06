@@ -54,6 +54,11 @@ ul {
 	list-style-type: none;
 }
 
+ul.bullet {
+	list-style-type: disc;
+	margin-left: 20px;
+}
+
 .right-menu {
 	border: 1px solid $border;
 	border-top: 8px solid $theme;
