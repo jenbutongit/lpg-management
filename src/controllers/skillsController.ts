@@ -47,7 +47,8 @@ export class SkillsController {
 		})
 
 		parser.on('end', () => {
-			// now send the array to the API
+			// TODO: now send the array to the API
+            // TODO: send success to the UI
 		})
 	}
 
