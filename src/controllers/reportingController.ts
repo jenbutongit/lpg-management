@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response, Router} from 'express'
 import {ReportService} from '../report-service'
+import moment = require('moment')
 
 export class ReportingController {
 	router: Router
@@ -63,13 +64,16 @@ export class ReportingController {
 
 	generateReportBookingInformation() {
 		return async (request: Request, response: Response, next: NextFunction) => {
+			const reportType = 'Booking_information_'
+			const filename = reportType.concat(moment().toISOString())
+
 			try {
 				await this.reportService
 					.getReportBookingInformation(request.query)
 					.then(report => {
 						response.writeHead(200, {
 							'Content-type': 'text/csv',
-							'Content-disposition': `attachment;filename=${request.query['report-type']}.csv`,
+							'Content-disposition': `attachment;filename=${filename}.csv`,
 							'Content-length': report.length,
 						})
 						response.end(Buffer.from(report, 'binary'))
@@ -85,13 +89,16 @@ export class ReportingController {
 
 	generateReportLearnerRecord() {
 		return async (request: Request, response: Response, next: NextFunction) => {
+			const reportType = 'Learner_record_'
+			const filename = reportType.concat(moment().toISOString())
+
 			try {
 				await this.reportService
 					.getReportLearnerRecord(request.query)
 					.then(report => {
 						response.writeHead(200, {
 							'Content-type': 'text/csv',
-							'Content-disposition': `attachment;filename=${request.query['report-type']}.csv`,
+							'Content-disposition': `attachment;filename=${filename}.csv`,
 							'Content-length': report.length,
 						})
 						response.end(Buffer.from(report, 'binary'))
