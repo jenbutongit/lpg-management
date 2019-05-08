@@ -106,13 +106,7 @@ describe('Reporting Controller Tests', function() {
 
 		await getReports(req, res, next)
 
-		const headers = {
-			'Content-type': 'text/csv',
-			'Content-disposition': 'attachment;filename=booking-information.csv',
-			'Content-length': data.length,
-		}
-
-		expect(res.writeHead).to.have.been.calledOnceWith(200, headers)
+		expect(res.writeHead).to.have.been.calledOnceWith(200)
 		expect(res.end).to.have.been.calledOnceWith(Buffer.from(data, 'binary'))
 	})
 
@@ -141,13 +135,7 @@ describe('Reporting Controller Tests', function() {
 
 		await getReports(req, res, next)
 
-		const headers = {
-			'Content-type': 'text/csv',
-			'Content-disposition': 'attachment;filename=booking-information.csv',
-			'Content-length': data.length,
-		}
-
-		expect(res.writeHead).to.have.been.calledOnceWith(200, headers)
+		expect(res.writeHead).to.have.been.calledOnceWith(200)
 		expect(res.end).to.have.been.calledOnceWith(Buffer.from(data, 'binary'))
 	})
 })
