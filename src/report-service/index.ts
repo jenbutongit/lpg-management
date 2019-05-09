@@ -15,14 +15,14 @@ export class ReportService {
 		const from = moment()
 			.utc()
 			.date(date.startDay)
-			.month(date.startMonth)
+			.month(date.startMonth - 1)
 			.year(date.startYear)
 			.format('YYYY-MM-DD')
 
 		const to = moment()
 			.utc()
 			.date(date.endDay)
-			.month(date.endMonth)
+			.month(date.endMonth - 1)
 			.year(date.endYear)
 			.format('YYYY-MM-DD')
 
