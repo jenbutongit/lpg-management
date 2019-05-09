@@ -11,28 +11,19 @@ export class ReportService {
 		this.http = http
 	}
 
-	getReportBookingInformation(params: {
-		'report-type': string
-		'from-year': number
-		'from-month': number
-		'from-day': number
-		'to-year': number
-		'to-month': number
-		'to-day': number
-	}) {
-		// hard-coding from and to until we can tie in with front end
+	getReportBookingInformation(date: any) {
 		const from = moment()
 			.utc()
-			.date(1)
-			.month(1)
-			.year(2018)
+			.date(date.startDay)
+			.month(date.startMonth)
+			.year(date.startYear)
 			.format('YYYY-MM-DD')
 
 		const to = moment()
 			.utc()
-			.date(1)
-			.month(1)
-			.year(2020)
+			.date(date.endDay)
+			.month(date.endMonth)
+			.year(date.endYear)
 			.format('YYYY-MM-DD')
 
 		const reportUrl = `${this.config.url}/bookings?from=${from}&to=${to}`
@@ -40,28 +31,19 @@ export class ReportService {
 		return this.http.get(reportUrl)
 	}
 
-	getReportLearnerRecord(params: {
-		'report-type': string
-		'from-year': number
-		'from-month': number
-		'from-day': number
-		'to-year': number
-		'to-month': number
-		'to-day': number
-	}) {
-		// hard-coding from and to until we can tie in with front end
+	getReportLearnerRecord(date: any) {
 		const from = moment()
 			.utc()
-			.date(1)
-			.month(1)
-			.year(2018)
+			.date(date.startDay)
+			.month(date.startMonth)
+			.year(date.startYear)
 			.format('YYYY-MM-DD')
 
 		const to = moment()
 			.utc()
-			.date(1)
-			.month(1)
-			.year(2020)
+			.date(date.endDay)
+			.month(date.endMonth)
+			.year(date.endYear)
 			.format('YYYY-MM-DD')
 
 		const reportUrl = `${this.config.url}/modules?from=${from}&to=${to}`

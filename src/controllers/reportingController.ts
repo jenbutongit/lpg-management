@@ -24,8 +24,8 @@ export class ReportingController {
 		this.router.get('/reporting/classroom', this.getClassroomReport())
 		this.router.get('/reporting/professions', this.getProfessionsReport())
 
-		this.router.get('/reporting/booking-information', this.generateReportBookingInformation())
-		this.router.get('/reporting/learner-record', this.generateReportLearnerRecord())
+		this.router.post('/reporting/booking-information', this.generateReportBookingInformation())
+		this.router.post('/reporting/learner-record', this.generateReportLearnerRecord())
 	}
 
 	currentDate() {
@@ -69,7 +69,7 @@ export class ReportingController {
 
 			try {
 				await this.reportService
-					.getReportBookingInformation(request.query)
+					.getReportBookingInformation(request.body)
 					.then(report => {
 						response.writeHead(200, {
 							'Content-type': 'text/csv',
@@ -94,7 +94,7 @@ export class ReportingController {
 
 			try {
 				await this.reportService
-					.getReportLearnerRecord(request.query)
+					.getReportLearnerRecord(request.body)
 					.then(report => {
 						response.writeHead(200, {
 							'Content-type': 'text/csv',
