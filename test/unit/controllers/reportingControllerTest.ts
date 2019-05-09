@@ -106,7 +106,6 @@ describe('Reporting Controller Tests', function() {
 
 		await getReports(req, res, next)
 
-		expect(res.writeHead).to.have.been.calledOnceWith(200)
 		expect(res.end).to.have.been.calledOnceWith(Buffer.from(data, 'binary'))
 	})
 
@@ -135,7 +134,6 @@ describe('Reporting Controller Tests', function() {
 
 		await getReports(req, res, next)
 
-		expect(res.writeHead).to.have.been.calledOnceWith(200)
 		expect(res.end).to.have.been.calledOnceWith(Buffer.from(data, 'binary'))
 	})
 })
