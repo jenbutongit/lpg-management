@@ -1,5 +1,4 @@
 import {ReportServiceConfig} from './reportServiceConfig'
-import moment = require('moment')
 import {OauthRestService} from '../lib/http/oauthRestService'
 import {DateStartEnd} from '../learning-catalogue/model/dateStartEnd'
 
