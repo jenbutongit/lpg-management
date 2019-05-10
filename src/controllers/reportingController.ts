@@ -63,7 +63,7 @@ export class ReportingController {
 			} else {
 				try {
 					await this.reportService
-						.getReportBookingInformation(request.body)
+						.getReportBookingInformation(dateRange)
 						.then(report => {
 							response.writeHead(200, {
 								'Content-type': 'text/csv',
@@ -104,7 +104,7 @@ export class ReportingController {
 			} else {
 				try {
 					await this.reportService
-						.getReportLearnerRecord(request.body)
+						.getReportLearnerRecord(dateRange)
 						.then(report => {
 							response.writeHead(200, {
 								'Content-type': 'text/csv',

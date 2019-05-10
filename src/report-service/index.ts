@@ -1,6 +1,7 @@
 import {ReportServiceConfig} from './reportServiceConfig'
 import moment = require('moment')
 import {OauthRestService} from '../lib/http/oauthRestService'
+import {DateStartEnd} from '../learning-catalogue/model/dateStartEnd'
 
 export class ReportService {
 	config: ReportServiceConfig
@@ -11,42 +12,14 @@ export class ReportService {
 		this.http = http
 	}
 
-	getReportBookingInformation(date: any) {
-		const from = moment()
-			.utc()
-			.date(date.startDay)
-			.month(date.startMonth - 1)
-			.year(date.startYear)
-			.format('YYYY-MM-DD')
-
-		const to = moment()
-			.utc()
-			.date(date.endDay)
-			.month(date.endMonth - 1)
-			.year(date.endYear)
-			.format('YYYY-MM-DD')
-
-		const reportUrl = `${this.config.url}/bookings?from=${from}&to=${to}`
+	getReportBookingInformation(dateRange: DateStartEnd) {
+		const reportUrl = `${this.config.url}/bookings?from=${dateRange.startDate}&to=${dateRange.endDate}`
 
 		return this.http.get(reportUrl)
 	}
 
-	getReportLearnerRecord(date: any) {
-		const from = moment()
-			.utc()
-			.date(date.startDay)
-			.month(date.startMonth)
-			.year(date.startYear)
-			.format('YYYY-MM-DD')
-
-		const to = moment()
-			.utc()
-			.date(date.endDay)
-			.month(date.endMonth)
-			.year(date.endYear)
-			.format('YYYY-MM-DD')
-
-		const reportUrl = `${this.config.url}/modules?from=${from}&to=${to}`
+	getReportLearnerRecord(dateRange: DateStartEnd) {
+		const reportUrl = `${this.config.url}/modules?from=${dateRange.startDate}&to=${dateRange.endDate}`
 
 		return this.http.get(reportUrl)
 	}
