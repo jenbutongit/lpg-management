@@ -1,64 +1,44 @@
 import {NextFunction, Request, Response, Router} from 'express'
 import {ReportService} from '../report-service'
 import moment = require('moment')
+import {DateStartEndCommandFactory} from './command/factory/dateStartEndCommandFactory'
+import {DateStartEndCommand} from './command/dateStartEndCommand'
+import {DateStartEnd} from '../learning-catalogue/model/dateStartEnd'
+import {Validator} from '../learning-catalogue/validator/validator'
+import {PlaceholderDate} from '../learning-catalogue/model/placeholderDate'
 
 export class ReportingController {
 	router: Router
-	exampleYear: number
-	exampleMonth: number
-	exampleDay: number
 	reportService: ReportService
+	dateStartEndCommandFactory: DateStartEndCommandFactory
+	dateStartEndCommandValidator: Validator<DateStartEndCommand>
+	dateStartEndValidator: Validator<DateStartEnd>
 
-	constructor(reportService: ReportService) {
+	constructor(
+		reportService: ReportService,
+		dateStartEndCommandFactory: DateStartEndCommandFactory,
+		dateStartEndCommandValidator: Validator<DateStartEndCommand>,
+		dateStartEndValidator: Validator<DateStartEnd>
+	) {
 		this.router = Router()
 		this.configureRouterPaths()
-		this.exampleYear = new Date().getFullYear()
-		this.exampleMonth = new Date().getMonth() + 1
-		this.exampleDay = new Date().getDate()
 		this.reportService = reportService
+		this.dateStartEndCommandFactory = dateStartEndCommandFactory
+		this.dateStartEndCommandValidator = dateStartEndCommandValidator
+		this.dateStartEndValidator = dateStartEndValidator
 	}
 
 	private configureRouterPaths() {
 		this.router.get('/reporting', this.getReports())
-		this.router.get('/reporting/ratings', this.getRatingsReport())
-		this.router.get('/reporting/classroom', this.getClassroomReport())
-		this.router.get('/reporting/professions', this.getProfessionsReport())
-
 		this.router.post('/reporting/booking-information', this.generateReportBookingInformation())
 		this.router.post('/reporting/learner-record', this.generateReportLearnerRecord())
 	}
 
-	currentDate() {
-		return this.exampleDay + ' ' + this.exampleMonth + ' ' + this.exampleYear
-	}
-
 	getReports() {
 		return async (request: Request, response: Response) => {
-			response.render('page/reporting/index', {exampleYear: new Date(Date.now()).getFullYear() + 1})
-		}
-	}
-
-	getLearnerRecordReport() {
-		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Learner record'})
-		}
-	}
-
-	getRatingsReport() {
-		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Course ratings'})
-		}
-	}
-
-	getClassroomReport() {
-		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Course performance'})
-		}
-	}
-
-	getProfessionsReport() {
-		return async (request: Request, response: Response) => {
-			response.render('page/reporting/report', {exampleDate: this.currentDate(), pageTitle: 'Learners by profession'})
+			response.render('page/reporting/index', {
+				placeholder: new PlaceholderDate(),
+			})
 		}
 	}
 
@@ -67,22 +47,37 @@ export class ReportingController {
 			const reportType = 'Booking_information_'
 			const filename = reportType.concat(moment().toISOString())
 
-			try {
-				await this.reportService
-					.getReportBookingInformation(request.body)
-					.then(report => {
-						response.writeHead(200, {
-							'Content-type': 'text/csv',
-							'Content-disposition': `attachment;filename=${filename}.csv`,
-							'Content-length': report.length,
+			let data = {
+				...request.body,
+			}
+
+			const dateRangeCommand: DateStartEndCommand = this.dateStartEndCommandFactory.create(data)
+			const dateRange: DateStartEnd = dateRangeCommand.asDateRange()
+
+			const errors = await this.dateStartEndValidator.check(dateRange)
+			if (errors.size) {
+				request.session!.sessionFlash = {errors}
+				request.session!.save(() => {
+					response.redirect(`/reporting`)
+				})
+			} else {
+				try {
+					await this.reportService
+						.getReportBookingInformation(request.body)
+						.then(report => {
+							response.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							response.end(Buffer.from(report, 'binary'))
 						})
-						response.end(Buffer.from(report, 'binary'))
-					})
-					.catch(error => {
-						next(error)
-					})
-			} catch (error) {
-				throw new Error(error)
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
 			}
 		}
 	}
@@ -92,22 +87,38 @@ export class ReportingController {
 			const reportType = 'Learner_record_'
 			const filename = reportType.concat(moment().toISOString())
 
-			try {
-				await this.reportService
-					.getReportLearnerRecord(request.body)
-					.then(report => {
-						response.writeHead(200, {
-							'Content-type': 'text/csv',
-							'Content-disposition': `attachment;filename=${filename}.csv`,
-							'Content-length': report.length,
+			let data = {
+				...request.body,
+			}
+
+			const dateRangeCommand: DateStartEndCommand = this.dateStartEndCommandFactory.create(data)
+			const dateRange: DateStartEnd = dateRangeCommand.asDateRange()
+
+			const errors = await this.dateStartEndValidator.check(dateRange)
+
+			if (errors.size) {
+				request.session!.sessionFlash = {errors}
+				request.session!.save(() => {
+					response.redirect(`/reporting`)
+				})
+			} else {
+				try {
+					await this.reportService
+						.getReportLearnerRecord(request.body)
+						.then(report => {
+							response.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							response.end(Buffer.from(report, 'binary'))
 						})
-						response.end(Buffer.from(report, 'binary'))
-					})
-					.catch(error => {
-						next(error)
-					})
-			} catch (error) {
-				throw new Error(error)
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
 			}
 		}
 	}
