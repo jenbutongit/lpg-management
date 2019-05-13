@@ -28,7 +28,7 @@
                             {% else %}
                             {% set selected='' %}
                             {% endif %}
-                            <option value={{ key.name }} {{ selected }}>{{ key.formattedName }}</option>
+                            <option value="{{ key.formattedName }}" {{ selected }}>{{ key.formattedName }}</option>
                             {% endfor %}
                         </select>
                     </div>

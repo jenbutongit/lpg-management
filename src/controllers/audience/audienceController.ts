@@ -132,7 +132,6 @@ export class AudienceController {
 	setOrganisation() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : [req.body['parent']]
-
 			res.locals.audience.departments = departments
 
 			await this.learningCatalogue
@@ -198,6 +197,7 @@ export class AudienceController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			const areaOfWork = req.body['parent']
 			res.locals.audience.areasOfWork = [areaOfWork]
+
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
