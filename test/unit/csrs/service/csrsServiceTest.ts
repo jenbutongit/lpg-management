@@ -58,7 +58,7 @@ describe('CsrsService tests', () => {
 			it('should get areas of work data', async () => {
 				const result = await csrsService.getAreasOfWork()
 
-				expect(restService.get).to.have.been.calledOnceWith('/professions?size=999')
+				expect(restService.get).to.have.been.calledOnceWith('/professions/flat')
 				expect(result).to.eql(areasOfWork)
 			})
 		})
