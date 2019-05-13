@@ -1,0 +1,152 @@
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "button/macro.njk" import govukButton %}
+
+{% extends "../../../component/Page.njk" %}
+
+{% set banner = true %}
+{% set backButton = "/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure" %}
+
+{% block content %}
+    {% set errors = sessionFlash.errors %}
+    {{ errorSummary(errors.fields) }}
+    {% set deadlineDate = sessionFlash.deadlineDate %}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</h1>
+            <h2 class="govuk-heading-m govuk-!-font-size-36">Add a deadline and frequency</h2>
+            <form class="audience-form" action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/required-learning" method="post">
+                {% if errors.fields.requiredBy %}
+                    {{ govukDateInput({
+                        id: "requiredBy",
+                        fieldset: {
+                            legend: {
+                                text: "When does this course need to be completed by? (optional)",
+                                isPageHeading: false,
+                                classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        errorMessage: {
+                            text: "Date must be valid"
+                        },
+                        hint: {
+                            text: "For example, 30 11 " + exampleYear
+                        },
+                        items: [
+                            {
+                                name: "day",
+                                value: requiredBy.day,
+                                classes: "govuk-input--width-3 govuk-input--error"
+                            },
+                            {
+                                name: "month",
+                                value: requiredBy.month,
+                                classes: "govuk-input--width-3 govuk-input--error"
+                            },
+                            {
+                                name: "year",
+                                value: requiredBy.year,
+                                classes: "govuk-input--width-5 govuk-input--error"
+                            }
+                        ]
+                    }) }}
+                {% else %}
+                     {{ govukDateInput({
+                        id: "requiredBy",
+                        fieldset: {
+                            legend: {
+                                text: "When does this course need to be completed by? (optional)",
+                                isPageHeading: false,
+                                classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        hint: {
+                            text: "For example, 30 11 " + exampleYear
+                        },
+                        items: [
+                            {
+                                name: "day",
+                                value: deadlineDate.day,
+                                classes: "govuk-input--width-3"
+                            },
+                            {
+                                name: "month",
+                                value: deadlineDate.month,
+                                classes: "govuk-input--width-3"
+                            },
+                            {
+                                name: "year",
+                                value: deadlineDate.year,
+                                classes: "govuk-input--width-5"
+                            }
+                        ]
+                    }) }}
+                {% endif %}
+                {% if errors.fields.frequency %}
+                    {{ govukDateInput({
+                        id: "frequency",
+                        fieldset: {
+                            legend: {
+                                text: "How often do you want this course to run? (optional)",
+                                isPageHeading: false,
+                                classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        errorMessage: {
+                            text: "Date must be valid"
+                        },
+                        hint: {
+                            text: "For example, 3 years"
+                        },
+                        items: [
+                            {
+                                name: "years",
+                                value: deadlineDate.years,
+                                classes: "govuk-input--width-3"
+                            },
+                            {
+                                name: "months",
+                                value: deadlineDate.months,
+                                classes: "govuk-input--width-3"
+                            }
+                        ]
+                    }) }}
+                {% else %}
+                    {{ govukDateInput({
+                        id: "frequency",
+                        fieldset: {
+                            legend: {
+                                text: "How often do you want this course to run? (optional)",
+                                isPageHeading: false,
+                                classes: "govuk-fieldset__legend--s"
+                            }
+                        },
+                        hint: {
+                            text: "For example, 3 years"
+                        },
+                        items: [
+                            {
+                                name: "years",
+                                value: deadlineDate.years,
+                                classes: "govuk-input--width-3"
+                            },
+                            {
+                                name: "months",
+                                value: deadlineDate.months,
+                                classes: "govuk-input--width-3"
+                            }
+                        ]
+                    }) }}
+                {% endif %}
+                <div class="button-container">
+                    {{ govukButton({
+                        text: "Continue"
+                    }) }}
+                </div>
+            </form>
+            <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Cancel</a>
+        </div>
+        <div class="govuk-grid-column-one-third">
+        </div>
+    </div>
+{% endblock %}

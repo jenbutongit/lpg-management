@@ -2,17 +2,14 @@ import {Course} from '../course'
 import {ModuleFactory} from './moduleFactory'
 import {AudienceFactory} from './audienceFactory'
 import {LearningProviderFactory} from './learningProviderFactory'
+import {Visibility} from '../visibility'
 
 export class CourseFactory {
 	private _moduleFactory: ModuleFactory
 	private audienceFactory: AudienceFactory
 	private _learningProviderFactory: LearningProviderFactory
 
-	constructor(
-		audienceFactory = new AudienceFactory(),
-		moduleFactory = new ModuleFactory(),
-		learningProviderFactory = new LearningProviderFactory()
-	) {
+	constructor(audienceFactory = new AudienceFactory(), moduleFactory = new ModuleFactory(), learningProviderFactory = new LearningProviderFactory()) {
 		this.audienceFactory = audienceFactory
 		this._moduleFactory = moduleFactory
 		this._learningProviderFactory = learningProviderFactory
@@ -32,6 +29,8 @@ export class CourseFactory {
 		course.audiences = (data.audiences || []).map(this.audienceFactory.create)
 		course.status = 'status' in data ? data.status : course.status
 		course.learningProvider = this._learningProviderFactory.create(data.learningProvider || {})
+		course.visibility = Visibility[data.visibility as keyof typeof Visibility]
+		course.topicId = data.topicId
 		return course
 	}
 

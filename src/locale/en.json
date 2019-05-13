@@ -41,6 +41,7 @@
 	},
 	"course": {
 		"pageTitle": {
+            "addCourseVisibility": "Add course visibility",
 			"addCourseTitle": "Add course title",
 			"editCourseTitle": "Edit course title",
 			"addCourseDetails": "Add course details",
@@ -50,7 +51,8 @@
 			"details": "Course details",
 			"title": "Course title",
 			"addNew": "Add a new course",
-			"editDetails": "Edit course details"
+			"editDetails": "Edit course details",
+            "topicId": "Topic ID (optional)"
 		},
 		"validation": {
 			"title": {
@@ -66,7 +68,10 @@
 			},
 			"status": {
 				"invalid": "Status needs to be 'Draft', 'Published' or 'Archived'"
-			}
+			},
+            "visibility": {
+              "empty": "Visibility is required"
+            }
 		}
 	},
 	"event": {
@@ -104,7 +109,6 @@
 			}
 		}
 	},
-	"blended": "Blended",
 	"organisations": {
 		"headers": {
 			"organisationName": "Organisation name"
@@ -147,7 +151,7 @@
 				"empty": "Description is required"
 			},
 			"url": {
-				"empty": "A URL should include a protocol and be a top level domain"
+				"empty": "Make sure your URL includes http or https"
 			},
 			"duration": {
 				"empty": "Duration is required"
@@ -169,7 +173,6 @@
 			"file": "a file",
 			"eLearning": "an e-learning",
 			"faceToFace": "a face to face",
-			"add": "Add",
 			"link_add": "Add a link",
 			"link_edit": "Edit a link",
 			"face_to_face_add": "Add a face-to-face module",
@@ -180,11 +183,6 @@
 	},
 
 	"termsAndConditions": {
-		"text": {
-			"addNew": "Add new terms and conditions",
-			"edit": "Edit terms and conditions"
-		},
-
 		"validation": {
 			"name": {
 				"empty": "Name is required"
@@ -203,13 +201,20 @@
 		"file": "File",
 		"blended": "Blended"
 	},
+	"administration_pages_title": "Reporting",
+	"blended": "Blended",
 	"error": "There is a problem with the service",
+	"errors": {
+		"actionNotAuthorised": "You are not authorised to perform this operation"
+	},
 	"content_management_title": "Content management",
 	"cancellation_policy_add_title": "Add cancellation policy",
 	"cancellation_policy_edit_title": "Edit cancellation policy",
 	"course_added_success_message": " has been created and saved as a draft.",
 	"course_overview_title": "Course overview",
 	"course_preview_title": "Course preview",
+	"course_visibility": "Course visibility",
+	"error": "There is a problem with the service",
 	"event_add_title": "Add event date & time",
 	"event_overview": "Event overview",
 	"event_add_location": "Event location and availability",
@@ -222,17 +227,26 @@
 	"organisations_new_name_empty": "Name is required",
 	"organisations_page_title": "Manage organisations",
 	"proposition_name": "Civil Service Learning",
+	"report_course_ratings_title": "Course ratings",
+	"report_course_performance_title": "Course performance",
+	"report_professions_data_title": "Professions report",
+	"report_learner_record_title": "Learner record report",
 	"terms_and_conditions_add_title": "Add terms and conditions",
 	"terms_and_conditions_edit_title": "Edit terms and conditions",
-  "email_address_found_message": " has been invited to this event",
+	"email_address_found_message": " has been invited to this event",
+	"email_address_not_found_message": " is not registered. Check the email address and try adding them again",
+	"email_address_already_invited_message": " has already been invited to this event",
   "could_not_invite_learner": " could not be invited due to an unexpected error",
+  "cancellation_reason_unavailable": "the event is no longer available",
+  "cancellation_reason_venue": "of short notice unavailability of the venue",
+	"could_not_invite_learner": " could not be invited due to an unexpected error",
 	"validation.learningProvider.name.empty": "Name is required",
 	"validation.cancellationPolicy.name.empty": "Name is required",
 	"validation.cancellationPolicy.shortVersion.empty": "Short version is required",
 	"validation.cancellationPolicy.fullVersion.empty": "Full version is required",
 	"validation_learningProvider_name_empty": "Name is required",
 	"validation_module_url_empty": "URL is required",
-	"validation_module_url_invalid": "A URL should include a protocol and be a top level domain",
+	"validation_module_url_invalid": "Make sure your URL includes http or https",
 	"validation_module_title_empty": "Title is required",
 	"validation.module.duration.empty": "Duration is required",
 	"validation.module.duration.positive": "Duration must be positive",
@@ -244,5 +258,7 @@
 	"validation_module_event_dateRanges_endBeforeStart": "End time must be after start time",
 	"validation_module_event_date_invalid": "Start date is not valid",
 	"validation_module_mediaId_empty": "File is required",
-	"validation_email_address_invalid": "Enter an email address in the correct format, like name@example.com"
+	"validation_email_address_invalid": "Enter an email address in the correct format, like name@example.com",
+	"validation_report_start_invalid": "Start date must be a valid date",
+	"validation_report_end_invalid": "End date must be a valid date"
 }

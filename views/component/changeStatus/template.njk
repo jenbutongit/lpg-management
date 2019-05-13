@@ -12,15 +12,24 @@
             <p class="govuk-body">This course has been published. Any further edits will be shown immediately.</p>
             <p class="govuk-body">Archiving this course will stop it being listed and prevent further interactions.</p>
         {% endif %}
-        <form method="post" action="/content-management/courses/{{course.id}}/status">
+        <form method="post" action="/content-management/courses/{{course.id}}/status/publish">
             <input type="hidden" name="status" value="{{ value }}" />
             {% if status === "Draft" %}
-                {{ govukButton({
-                    text: buttonText
-                }) }}
+                {% if identity.hasLearningPublish() %}
+                    {{ govukButton({
+                        text: buttonText
+                    }) }}
+                {% endif %}
             {% elif status === "Published" %}
-                <a href="/content-management/courses/{{course.id }}/archive" class="govuk-button red-button">{{buttonText}}</a>
+                {% if identity.hasLearningArchive() %}
+                    <a href="/content-management/courses/{{course.id }}/archive" class="govuk-button red-button">{{buttonText}}</a>
+                {% endif %}
             {% endif %}
         </form>
+    </div>
+{% elif course.status === "Archived" %}
+    <div class="change-status">
+        <p class="govuk-body">This course has been archived and is no longer available.</p>
+        <p class="govuk-body">It may appear in a learner's record of completed learning, but cannot be started or resumed.</p>
     </div>
 {% endif %}

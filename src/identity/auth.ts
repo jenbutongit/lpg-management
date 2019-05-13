@@ -22,7 +22,7 @@ export class Auth {
 		this.identityService = identityService
 	}
 
-	configure(app: any, authorisedRole: string) {
+	configure(app: any) {
 		app.use(this.initialize())
 		app.use(this.session())
 
@@ -32,7 +32,6 @@ export class Auth {
 
 		app.use(this.checkAuthenticatedAndAssignCurrentUser())
 		app.use(this.addToResponseLocals())
-		app.use(this.hasRole(authorisedRole))
 	}
 
 	initialize(): Handler {
@@ -124,12 +123,15 @@ export class Auth {
 		}
 	}
 
-	hasRole(role: string) {
-		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.user && req.user.hasRole(role)) {
-				return next()
+	logout() {
+		return async (req: Request, res: Response) => {
+			try {
+				await this.identityService.logout(req!.user!.accessToken)
+				req.logout()
+				return res.redirect(`${this.config.authenticationServiceUrl}/login`)
+			} catch (e) {
+				logger.warn(`Error logging user out`, e)
 			}
-			res.sendStatus(401)
 		}
 	}
 }

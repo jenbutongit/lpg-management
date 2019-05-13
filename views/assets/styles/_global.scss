@@ -58,6 +58,11 @@ ul {
 	list-style-type: none;
 }
 
+ul.bullet {
+	list-style-type: disc;
+	margin-left: 20px;
+}
+
 .right-menu {
 	border: 1px solid $border;
 	border-top: 8px solid $theme;
@@ -212,7 +217,6 @@ ul {
 .button-red {
 	background-color: $theme;
 	color: $white;
-	padding: 5px 10px;
 	border: none;
 	text-decoration: none;
 
@@ -227,6 +231,12 @@ ul {
 
 .hidden {
 	display: none;
+}
+
+.zero-results {
+	list-style-type: disc;
+	list-style-position: inside;
+	font-size: $font-normal;
 }
 
 @media screen and (min-width: $tablet-small) {

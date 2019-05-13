@@ -13,6 +13,7 @@ import moment = require('moment')
 import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
+import {Duration} from 'moment'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -24,7 +25,6 @@ const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
-const authorisedRole = 'COURSE_MANAGER'
 
 const appInsights = require('applicationinsights')
 
@@ -72,6 +72,18 @@ nunjucks
 	.addFilter('dateWithMonthAsText', function(date: string) {
 		return date ? DateTime.convertDate(date) : 'date unset'
 	})
+	.addFilter('formatDuration', function(duration: Duration) {
+		let years = ''
+		let months = ''
+		if (duration.years()) {
+			years = duration.years() + (duration.years() === 1 ? ' year ' : ' years ')
+		}
+		if (duration.months()) {
+			months = duration.months() + (duration.months() === 1 ? ' month' : ' months')
+		}
+
+		return years + months
+	})
 
 app.set('view engine', 'html')
 
@@ -106,7 +118,7 @@ app.use(
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
-ctx.auth.configure(app, authorisedRole)
+ctx.auth.configure(app)
 app.use(ctx.addToResponseLocals())
 app.use(ctx.courseController.router)
 app.use(ctx.audienceController.router)
@@ -121,10 +133,13 @@ app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
 app.use(ctx.searchController.router)
+app.use(ctx.reportingController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')
 })
+
+app.get('/log-out', asyncHandler(ctx.auth.logout()))
 
 app.get('/content-management', asyncHandler(ctx.homeController.index()))
 

@@ -3,6 +3,7 @@ import {Validator} from '../../../../src/learning-catalogue/validator/validator'
 import {expect} from 'chai'
 import {CourseFactory} from '../../../../src/learning-catalogue/model/factory/courseFactory'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import {Visibility} from '../../../../src/learning-catalogue/model/visibility'
 
 describe('CourseValidator tests', () => {
 	let validator: Validator<Course>
@@ -55,10 +56,7 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, ['shortDescription'])
 
 			expect(errors.size).to.equal(2)
-			expect(errors.fields.shortDescription).to.eql([
-				'course.validation.shortDescription.maxLength',
-				'course.validation.shortDescription.empty',
-			])
+			expect(errors.fields.shortDescription).to.eql(['course.validation.shortDescription.maxLength', 'course.validation.shortDescription.empty'])
 		})
 
 		it('should fail validation if shortDescription is greater than 160 characters', async () => {
@@ -100,10 +98,7 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, ['description'])
 
 			expect(errors.size).to.equal(2)
-			expect(errors.fields.description).to.eql([
-				'course.validation.description.maxLength',
-				'course.validation.description.empty',
-			])
+			expect(errors.fields.description).to.eql(['course.validation.description.maxLength', 'course.validation.description.empty'])
 		})
 
 		it('should fail validation if description is empy string', async () => {
@@ -156,6 +151,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'Course short description',
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			})
 
 			expect(errors.size).to.equal(1)
@@ -168,29 +164,37 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'Course short description',
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			})
 
 			expect(errors.size).to.equal(1)
 			expect(errors.fields.title).to.eql(['course.validation.title.empty'])
 		})
 
-		it('should fail validation if title, shortDescription, description and status are missing', async () => {
+		it('should fail validation if visibility is null', async () => {
+			const errors = await validator.check({
+				title: 'Course title',
+				description: 'Course description',
+				shortDescription: 'Course short description',
+				status: 'Draft',
+			})
+
+			expect(errors.size).to.equal(1)
+			expect(errors.fields.visibility).to.eql(['course.validation.visibility.empty'])
+		})
+
+		it('should fail validation if title, shortDescription, description, visibility and status are missing', async () => {
 			const params = {
 				status: null,
 			}
 
 			const errors = await validator.check(params)
 
-			expect(errors.size).to.equal(6)
-			expect(errors.fields.shortDescription).to.eql([
-				'course.validation.shortDescription.maxLength',
-				'course.validation.shortDescription.empty',
-			])
-			expect(errors.fields.description).to.eql([
-				'course.validation.description.maxLength',
-				'course.validation.description.empty',
-			])
+			expect(errors.size).to.equal(7)
+			expect(errors.fields.shortDescription).to.eql(['course.validation.shortDescription.maxLength', 'course.validation.shortDescription.empty'])
+			expect(errors.fields.description).to.eql(['course.validation.description.maxLength', 'course.validation.description.empty'])
 			expect(errors.fields.title).to.eql(['course.validation.title.empty'])
+			expect(errors.fields.visibility).to.eql(['course.validation.visibility.empty'])
 		})
 
 		it('should fail validation if shortDescription is greater than 160 characters', async () => {
@@ -199,6 +203,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'x'.repeat(161),
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -213,6 +218,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'x'.repeat(160),
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -226,6 +232,7 @@ describe('CourseValidator tests', () => {
 				description: 'x'.repeat(1501),
 				shortDescription: 'Course short description',
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -240,6 +247,7 @@ describe('CourseValidator tests', () => {
 				description: 'x'.repeat(1500),
 				shortDescription: 'Course short description',
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -253,6 +261,7 @@ describe('CourseValidator tests', () => {
 				shortDescription: 'Course short description',
 				description: '',
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -267,6 +276,7 @@ describe('CourseValidator tests', () => {
 				description: 'Course description',
 				shortDescription: 'Course short description',
 				status: 'Draft',
+				visibility: Visibility.PUBLIC,
 			}
 
 			const errors = await validator.check(params)
@@ -310,14 +320,8 @@ describe('CourseValidator tests', () => {
 			const errors = await validator.check(params, ['title', 'shortDescription', 'description'])
 
 			expect(errors.size).to.equal(5)
-			expect(errors.fields.shortDescription).to.eql([
-				'course.validation.shortDescription.maxLength',
-				'course.validation.shortDescription.empty',
-			])
-			expect(errors.fields.description).to.eql([
-				'course.validation.description.maxLength',
-				'course.validation.description.empty',
-			])
+			expect(errors.fields.shortDescription).to.eql(['course.validation.shortDescription.maxLength', 'course.validation.shortDescription.empty'])
+			expect(errors.fields.description).to.eql(['course.validation.description.maxLength', 'course.validation.description.empty'])
 			expect(errors.fields.title).to.eql(['course.validation.title.empty'])
 		})
 

@@ -8,6 +8,7 @@ import {Module} from '../../../../src/learning-catalogue/model/module'
 import {Event} from '../../../../src/learning-catalogue/model/event'
 import {DateRange} from '../../../../src/learning-catalogue/model/dateRange'
 import {Audience} from '../../../../src/learning-catalogue/model/audience'
+import {Visibility} from '../../../../src/learning-catalogue/model/visibility'
 
 describe('Course tests', () => {
 	let course: Course
@@ -44,6 +45,11 @@ describe('Course tests', () => {
 	it('should be able to set learningOutcomes', () => {
 		course.learningOutcomes = 'test-learningOutcomes'
 		expect(course.learningOutcomes).to.equal('test-learningOutcomes')
+	})
+
+	it('should be able to set topicId', () => {
+		course.topicId = 'topicId'
+		expect(course.topicId).to.equal('topicId')
 	})
 
 	it('should be able to set modules', () => {
@@ -220,5 +226,10 @@ describe('Course tests', () => {
 
 	it('should return empty string if no audiences exist', () => {
 		expect(course.getAreasOfWork()).to.be.equal('')
+	})
+
+	it('should be able to set visibility', () => {
+		course.visibility = Visibility.PRIVATE
+		expect(course.visibility).to.be.equal(Visibility.PRIVATE)
 	})
 })

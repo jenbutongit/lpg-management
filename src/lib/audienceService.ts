@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from 'express'
 import {Audience} from '../learning-catalogue/model/audience'
+// import {Duration} from "moment"
 
 export class AudienceService {
 	/* istanbul ignore next */
@@ -18,22 +19,7 @@ export class AudienceService {
 		}
 	}
 
-	static updateAudienceType(audience: Audience, updatedType: Audience.Type) {
-		if (audience.type != updatedType) {
-			if (updatedType == Audience.Type.PRIVATE_COURSE) {
-				audience.areasOfWork = []
-				audience.departments = []
-				audience.grades = []
-				audience.interests = []
-				audience.requiredBy = undefined
-				audience.frequency = undefined
-			} else {
-				audience.eventId = undefined
-				if (audience.type == Audience.Type.REQUIRED_LEARNING) {
-					audience.requiredBy = undefined
-				}
-			}
-			audience.type = updatedType
-		}
+	public getDefaults(request: Request) {
+		return ''
 	}
 }

@@ -75,9 +75,7 @@ describe('CourseService tests', () => {
 			.withArgs(courseId)
 			.returns(course)
 
-		return expect(courseService.sortModules(courseId, ['4', '2', '1'])).to.be.rejectedWith(
-			'Module (id: 4) not found in course (id: course-id)'
-		)
+		return expect(courseService.sortModules(courseId, ['4', '2', '1'])).to.be.rejectedWith('Module (id: 4) not found in course (id: course-id)')
 	})
 
 	it('should throw error if length of modules and module ids does not match', async () => {
@@ -104,9 +102,7 @@ describe('CourseService tests', () => {
 			.withArgs(courseId)
 			.returns(course)
 
-		return expect(courseService.sortModules(courseId, ['3', '2'])).to.be.rejectedWith(
-			'Course modules length(3) does not match module ids length(2)'
-		)
+		return expect(courseService.sortModules(courseId, ['3', '2'])).to.be.rejectedWith('Course modules length(3) does not match module ids length(2)')
 	})
 
 	describe('helper function for displaying audiences on front-end', () => {
@@ -136,11 +132,11 @@ describe('CourseService tests', () => {
 			module2.events = [event2, event3]
 			course.modules = [module1, module2]
 			const audience1 = new Audience()
-			audience1.type = Audience.Type.PRIVATE_COURSE
+			audience1.type = Audience.Type.REQUIRED_LEARNING
 			audience1.id = audience1Id
 			audience1.eventId = event1Id
 			const audience2 = new Audience()
-			audience2.type = Audience.Type.PRIVATE_COURSE
+			audience2.type = Audience.Type.REQUIRED_LEARNING
 			audience2.id = audience2Id
 			audience2.eventId = event2Id
 			course.audiences = [audience1, audience2]
@@ -148,11 +144,7 @@ describe('CourseService tests', () => {
 
 		describe('#getAllEventsOnCourse', () => {
 			it('should return an array of events on all course modules', () => {
-				expect(courseService.getAllEventsOnCourse(course)).to.be.deep.equal([
-					{id: event1Id},
-					{id: event2Id},
-					{id: event3Id},
-				])
+				expect(courseService.getAllEventsOnCourse(course)).to.be.deep.equal([{id: event1Id}, {id: event2Id}, {id: event3Id}])
 			})
 		})
 

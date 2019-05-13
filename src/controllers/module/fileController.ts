@@ -1,4 +1,4 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import {LearningCatalogue} from '../../learning-catalogue'
 import {ModuleFactory} from '../../learning-catalogue/model/factory/moduleFactory'
 import {ContentRequest} from '../../extended'
@@ -89,17 +89,27 @@ export class FileController {
 				const module = response.locals.module
 				let mediaId = module.mediaId
 
-				if (module.type === Module.Type.VIDEO) {
+				if (module.type === Module.Type.VIDEO && module.url) {
 					const items = module.url.split('/')
 					mediaId = items[items.length - 2]
-				} else if (module.type === Module.Type.E_LEARNING) {
+				} else if (module.type === Module.Type.E_LEARNING && module.url) {
 					const items = module.url.split('/')
 					mediaId = items[items.length - 1]
 				}
 
-				const media = await this.restService.get(`/${mediaId}`)
-
-				return response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
+				if (mediaId) {
+					return await this.restService
+						.get(`/${mediaId}`)
+						.then(media => {
+							response.render('page/course/module/module-file', {type: type, media: media, courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media'})
+						})
+						.catch(() => {
+							response.render('page/course/module/module-file', {
+								type: type,
+								courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media',
+							})
+						})
+				}
 			}
 
 			return response.render('page/course/module/module-file', {
@@ -110,7 +120,7 @@ export class FileController {
 	}
 
 	public setFile() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const req = request as ContentRequest
 			let data = {
 				...req.body,
@@ -158,22 +168,29 @@ export class FileController {
 			}
 			module = await this.moduleFactory.create(newData)
 
-			await this.learningCatalogue.createModule(course.id, module)
-			response.redirect(`/content-management/courses/${course.id}/preview`)
+			await this.learningCatalogue
+				.createModule(course.id, module)
+				.then(() => {
+					response.redirect(`/content-management/courses/${course.id}/preview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
 	public editFile() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			let data = {
 				...request.body,
 			}
 
-			data.type = fileType.getFileModuleType(data.file)
-
 			const course = response.locals.course
 			let module = response.locals.module
-			let errors = await this.moduleValidator.check(data, ['title', 'description', 'mediaId'])
+
+			data.type = data.file ? fileType.getFileModuleType(data.file) : module.type
+
+			let errors = await this.moduleValidator.check(data, ['title', 'description'])
 
 			let file
 			if (data.mediaId) {
@@ -197,15 +214,21 @@ export class FileController {
 			module.description = data.description
 			module.optional = data.isOptional || false
 			module.duration = moment.duration({hours: data.hours, minutes: data.minutes}).asSeconds()
-			module.fileSize = file.fileSizeKB
-			module.mediaId = file.id
-			module.url = config.CONTENT_URL + '/' + file.path
-			module.startPage = file.metadata.startPage
+			module.fileSize = file ? file.fileSizeKB : module.fileSize
+			module.mediaId = file ? file.id : module.mediaId
+			module.url = file ? config.CONTENT_URL + '/' + file.path : module.url
+			module.startPage = file ? file.metadata.startPage : module.startPage
 
-			await this.learningCatalogue.updateModule(course.id, module)
-			return request.session!.save(() => {
-				response.redirect(`/content-management/courses/${course.id}/preview`)
-			})
+			await this.learningCatalogue
+				.updateModule(course.id, module)
+				.then(() => {
+					return request.session!.save(() => {
+						response.redirect(`/content-management/courses/${course.id}/preview`)
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 }

@@ -49,7 +49,7 @@
             <p class="govuk-body form-header govuk-!-font-size-24">Add a new course</p>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Course module details</h2>
             <p class="govuk-body no-margin">You are {% if module.id %} editing {% else %}adding{% endif %}
-                {% if type === "file" %}
+                {% if type === "file" or type === "video" %}
                     a
                 {% else %}
                     an
@@ -178,6 +178,7 @@
                     </div>
                 </fieldset>
 
+                {% if not module.id %}
                 <div class="{{chooseFileButtonClass}}">
                     <fieldset class="govuk-fieldset">
                         <div class="add-file-form govuk-form-group">
@@ -218,6 +219,13 @@
                 type: "input",
                 classes: "button-blue left-aligned"
                 }) }}
+                {% else %}
+                {{ govukWarningText({
+                    text: "If you want to amend the attached file, return to the course modules page and delete this module. Create a new module using the existing title and description and the new attachment.",
+                    iconFallbackText: "Warning"
+                }) }}
+                {% endif %}
+
 
                 {{ govukCheckboxes({
                 idPrefix: "isOptional",
@@ -244,6 +252,7 @@
                     attributes: {id: "submitButton"}
                     }) }}
                 </div>
+
             </form>
             <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/preview">Cancel</a>
         </div>

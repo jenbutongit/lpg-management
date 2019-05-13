@@ -1,5 +1,6 @@
 import {IsFutureDate} from '../validator/custom/isFutureDate'
 import {IsDate, IsNotEmpty, MaxLength} from 'class-validator'
+import {Duration} from 'moment'
 
 export class Audience {
 	id: string
@@ -28,26 +29,24 @@ export class Audience {
 	})
 	type: Audience.Type
 
-	@IsDate({
-		groups: ['all', 'audience.all', 'audience.requiredBy'],
-		message: 'audience.validation.requiredBy.invalidDate',
-	})
 	@IsFutureDate({
 		groups: ['all', 'audience.all', 'audience.requiredBy'],
 		message: 'audience.validation.requiredBy.dateIsNotInFuture',
 	})
+	@IsDate({
+		groups: ['all', 'audience.all', 'audience.requiredBy'],
+		message: 'audience.validation.requiredBy.invalidDate',
+	})
 	requiredBy?: Date
 
-	frequency?: string
+	frequency?: Duration
 
 	eventId?: string
 }
 
 export namespace Audience {
 	export enum Type {
-		OPEN,
-		CLOSED_COURSE,
-		PRIVATE_COURSE,
-		REQUIRED_LEARNING,
+		OPEN = 'OPEN',
+		REQUIRED_LEARNING = 'REQUIRED_LEARNING',
 	}
 }
