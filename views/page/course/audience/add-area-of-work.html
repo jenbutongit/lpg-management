@@ -23,19 +23,19 @@
                             <option value=""></option>
                             {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
                             {% for key in organisationalUnits %}
-                            {% if parent === key.href %}
-                            {% set selected='selected' %}
-                            {% else %}
-                            {% set selected='' %}
-                            {% endif %}
-                            <option value="{{ key.formattedName }}" {{ selected }}>{{ key.formattedName }}</option>
+                                {% if parent === key.href %}
+                                    {% set selected='selected' %}
+                                {% else %}
+                                    {% set selected='' %}
+                                {% endif %}
+                                <option value="{{ key.name }}" {{ selected }}>{{ key.formattedName }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     {% endset -%}
                     {{ govukRadios({
-                        idPrefix: "organisation",
-                        name: "organisation",
+                        idPrefix: "areaOfWork",
+                        name: "areaOfWork",
                         fieldset: {
                             legend: {
                                 text: "Which area of work?",
@@ -43,7 +43,13 @@
                                 classes: "govuk-fieldset__legend--s "
                             }
                         },
-                        items: [{
+                        items: [
+                            {
+                                value: "all",
+                                text: "All",
+                                id: "all"
+                            },
+                            {
                             value: "selected",
                             text: "Selected professions only",
                             id: "selected",

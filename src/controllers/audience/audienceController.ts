@@ -166,6 +166,13 @@ export class AudienceController {
 		})
 	}
 
+	private async getAllProfessions(): Promise<string[]> {
+		const professions = await this.csrsService.getAreasOfWork()
+		return professions.map((profession: any) => {
+			return profession.name
+		})
+	}
+
 	deleteAudienceConfirmation() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/audience/delete-audience-confirmation')
@@ -195,8 +202,8 @@ export class AudienceController {
 
 	setAreasOfWork() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			const areaOfWork = req.body['parent']
-			res.locals.audience.areasOfWork = [areaOfWork]
+			const areaOfWork = req.body.areaOfWork === 'all' ? await this.getAllProfessions() : [req.body['parent']]
+			res.locals.audience.areasOfWork = areaOfWork
 
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
