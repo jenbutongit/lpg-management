@@ -64,6 +64,7 @@ import {ReportingController} from './controllers/reportingController'
 import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
 import {ReportServiceConfig} from './report-service/reportServiceConfig'
 import {ReportService} from './report-service'
+import {SkillsController} from './controllers/skillsController'
 
 log4js.configure(config.LOGGING)
 
@@ -126,6 +127,7 @@ export class ApplicationContext {
 	organisationalUnitService: OrganisationalUnitService
 	reportServiceConfig: ReportServiceConfig
 	reportService: ReportService
+	skillsController: SkillsController
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -258,6 +260,7 @@ export class ApplicationContext {
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService)
+		this.skillsController = new SkillsController()
 	}
 
 	addToResponseLocals() {

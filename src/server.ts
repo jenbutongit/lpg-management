@@ -134,6 +134,7 @@ app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
 app.use(ctx.searchController.router)
 app.use(ctx.reportingController.router)
+app.use(ctx.skillsController.router)
 
 app.get('/', function(req, res) {
 	res.redirect('/content-management')

@@ -1,0 +1,31 @@
+{% from "file-upload/macro.njk" import govukFileUpload %}
+{% from "select/macro.njk" import govukSelect %}
+
+{% extends "../../component/Page.njk" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Skills</h1>
+        <div class="reports-container">
+            <ul class="list">
+                <li class="list-details">
+                    <p class="govuk-body no-margin">Search for a profession:</p>
+                    <form action="/content-management/skills" method="post" class="skills-form">
+
+                    </form>
+                </li>
+                <li class="course list-details u--border--bgrey">
+                        {{ govukFileUpload({
+                        id: "file-upload-1",
+                        name: "file-upload-1",
+                        label: {
+                        text: "Upload a file"
+                        }
+                        }) }}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
