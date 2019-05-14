@@ -272,7 +272,7 @@ export class ApplicationContext {
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)
-		this.skillsController = new SkillsController()
+		this.skillsController = new SkillsController(this.csrsService)
 	}
 
 	addToResponseLocals() {

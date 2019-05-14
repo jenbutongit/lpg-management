@@ -2,14 +2,19 @@ import {Request, Response, Router} from 'express'
 // import parse from 'csv-parse'
 
 import * as log4js from 'log4js'
+import {CsrsService} from "../csrs/service/csrsService";
 
 export class SkillsController {
+	csrsService: CsrsService
 	logger = log4js.getLogger('controllers/searchController')
 	router: Router
 
-	constructor() {
+	constructor(
+		csrsService: CsrsService
+	) {
 		this.router = Router()
 		this.configureRouterPaths()
+		this.csrsService = csrsService
 	}
 
 	private configureRouterPaths() {
@@ -17,23 +22,11 @@ export class SkillsController {
 		// this.router.post('/skills/', this.uploadAndProcess())
 	}
 
-
-
 	getSkills() {
 		return async (req: Request, res: Response) => {
-			res.render('page/skills/skills')
-		}
-	}
+			const areasOfWork = await this.csrsService.getAreasOfWork()
 
-	show() {
-
-		// TODO: list the professions in dropdown with web request
-		// TODO: Upload form
-		// let professions: [];
-		return async (request: Request, response: Response) => {
-			response.render('page/skills', {
-				// professions
-			})
+			res.render('page/skills/skills', {areasOfWork: areasOfWork})
 		}
 	}
 
@@ -59,6 +52,4 @@ export class SkillsController {
     //         // TODO: send success to the UI
 	// 	})
 	// }
-
-
 }

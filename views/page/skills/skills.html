@@ -1,5 +1,6 @@
 {% from "file-upload/macro.njk" import govukFileUpload %}
-{% from "select/macro.njk" import govukSelect %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -10,9 +11,51 @@
         <div class="reports-container">
             <ul class="list">
                 <li class="list-details">
-                    <p class="govuk-body no-margin">Search for a profession:</p>
                     <form action="/content-management/skills" method="post" class="skills-form">
-
+                        <div class="{{classNames}}">
+                            {% set typeaheadHtml %}
+                            <div class="autocomplete-wrapper">
+                                <select name="parent" id="parent">
+                                    <option value=""></option>
+                                    {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
+                                    {% for key in areasOfWork %}
+                                    {% if parent === key.href %}
+                                    {% set selected='selected' %}
+                                    {% else %}
+                                    {% set selected='' %}
+                                    {% endif %}
+                                    <option value="{{ key.name }}" {{ selected }}>{{ key.formattedName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            {% endset -%}
+                            {{ govukRadios({
+                                idPrefix: "areaOfWork",
+                                name: "areaOfWork",
+                                fieldset: {
+                                    legend: {
+                                        text: "Which area of work?",
+                                        isPageHeading: true,
+                                        classes: "govuk-fieldset__legend--s "
+                                    }
+                                },
+                                items: [
+                                    {
+                                        value: "selected",
+                                        text: "Selected professions only",
+                                        id: "selected",
+                                            conditional: {
+                                            html: typeaheadHtml
+                                            }
+                                    }
+                                ]
+                            }) }}
+                        </div>
+                        <div class="button-container">
+                            {{ govukButton({
+                            text: "Continue"
+                            }) }}
+                        </div>
                     </form>
                 </li>
                 <li class="course list-details u--border--bgrey">
@@ -28,4 +71,11 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block bodyEnd %}
+<script src="/govuk-frontend/all.js"></script>
+<script>window.GOVUKFrontend.initAll()</script>
+<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
+<script type="text/javascript" src="/js/manage-orgs.js"></script>
 {% endblock %}
