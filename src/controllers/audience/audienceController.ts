@@ -132,7 +132,6 @@ export class AudienceController {
 	setOrganisation() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : [req.body['parent']]
-
 			res.locals.audience.departments = departments
 
 			await this.learningCatalogue
@@ -167,6 +166,13 @@ export class AudienceController {
 		})
 	}
 
+	private async getAllProfessions(): Promise<string[]> {
+		const professions = await this.csrsService.getAreasOfWork()
+		return professions.map((profession: any) => {
+			return profession.name
+		})
+	}
+
 	deleteAudienceConfirmation() {
 		return async (req: Request, res: Response) => {
 			res.render('page/course/audience/delete-audience-confirmation')
@@ -189,26 +195,24 @@ export class AudienceController {
 	getAreasOfWork() {
 		return async (req: Request, res: Response) => {
 			const areasOfWork = await this.csrsService.getAreasOfWork()
-			res.render('page/course/audience/add-area-of-work', {areasOfWork})
+
+			res.render('page/course/audience/add-area-of-work', {areasOfWork: areasOfWork})
 		}
 	}
 
 	setAreasOfWork() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			const areaOfWork = req.body['area-of-work']
-			if (await this.csrsService.isAreaOfWorkValid(areaOfWork)) {
-				res.locals.audience.areasOfWork = [areaOfWork]
-				await this.learningCatalogue
-					.updateAudience(res.locals.course.id, res.locals.audience)
-					.then(() => {
-						res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
-					})
-					.catch(error => {
-						next(error)
-					})
-			} else {
-				next(new Error('Area of work is not valid'))
-			}
+			const areaOfWork = req.body.areaOfWork === 'all' ? await this.getAllProfessions() : [req.body['parent']]
+			res.locals.audience.areasOfWork = areaOfWork
+
+			await this.learningCatalogue
+				.updateAudience(res.locals.course.id, res.locals.audience)
+				.then(() => {
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 

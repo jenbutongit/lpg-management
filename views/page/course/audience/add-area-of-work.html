@@ -14,29 +14,51 @@
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</h1>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Area of work</h2>
-            <form action="/content-management/courses/{{ course.id }}/audiences/{{audience.id}}/area-of-work" method="post" class="audience-form">
-                {% set professions = [] %}
-                {% for areaOfWork in areasOfWork._embedded.professions %}
-                    {% set profession = professions.push({
-                        "text": areaOfWork.name,
-                        "value": areaOfWork.name
-                    }) %}
-                {% endfor %}
-                {{ govukRadios({
-                    idPrefix: "area-of-work",
-                    name: "area-of-work",
-                    hint:{
-                        text: "Just click Continue if you want to skip"
-                    },
-                    fieldset: {
-                        legend: {
-                            text: "Which area of work?",
-                            isPageHeading: true,
-                            classes: "govuk-fieldset__legend--s"
+            <form action="/content-management/courses/{{ course.id }}/audiences/{{audience.id}}/area-of-work" method="post">
+                <div class="{{classNames}}">
+                    {% set typeaheadHtml %}
+                    <div class="autocomplete-wrapper">
+                        <select name="parent" id="parent">
+                            <option value=""></option>
+                            {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
+                            {% for key in areasOfWork %}
+                                {% if parent === key.href %}
+                                    {% set selected='selected' %}
+                                {% else %}
+                                    {% set selected='' %}
+                                {% endif %}
+                                <option value="{{ key.name }}" {{ selected }}>{{ key.formattedName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {% endset -%}
+                    {{ govukRadios({
+                        idPrefix: "areaOfWork",
+                        name: "areaOfWork",
+                        fieldset: {
+                            legend: {
+                                text: "Which area of work?",
+                                isPageHeading: true,
+                                classes: "govuk-fieldset__legend--s "
+                            }
+                        },
+                        items: [
+                            {
+                                value: "all",
+                                text: "All",
+                                id: "all"
+                            },
+                            {
+                            value: "selected",
+                            text: "Selected professions only",
+                            id: "selected",
+                            conditional: {
+                                html: typeaheadHtml
+                            }
                         }
-                    },
-                    items: professions
-                }) }}
+                    ]
+                    }) }}
+                </div>
                 <div class="button-container">
                     {{ govukButton({
                         text: "Continue"
@@ -50,3 +72,9 @@
     </div>
 {% endblock %}
 
+{% block bodyEnd %}
+<script src="/govuk-frontend/all.js"></script>
+<script>window.GOVUKFrontend.initAll()</script>
+<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
+<script type="text/javascript" src="/js/manage-orgs.js"></script>
+{% endblock %}
