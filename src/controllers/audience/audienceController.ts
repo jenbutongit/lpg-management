@@ -196,7 +196,7 @@ export class AudienceController {
 		return async (req: Request, res: Response) => {
 			const areasOfWork = await this.csrsService.getAreasOfWork()
 
-			res.render('page/course/audience/add-area-of-work', {organisationalUnits: areasOfWork})
+			res.render('page/course/audience/add-area-of-work', {areasOfWork: areasOfWork})
 		}
 	}
 

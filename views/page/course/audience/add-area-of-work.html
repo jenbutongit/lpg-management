@@ -16,13 +16,12 @@
             <h2 class="govuk-heading-m govuk-!-font-size-36">Area of work</h2>
             <form action="/content-management/courses/{{ course.id }}/audiences/{{audience.id}}/area-of-work" method="post">
                 <div class="{{classNames}}">
-                    {% set areasOfWork = [] %}
                     {% set typeaheadHtml %}
                     <div class="autocomplete-wrapper">
                         <select name="parent" id="parent">
                             <option value=""></option>
                             {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
-                            {% for key in organisationalUnits %}
+                            {% for key in areasOfWork %}
                                 {% if parent === key.href %}
                                     {% set selected='selected' %}
                                 {% else %}

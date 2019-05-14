@@ -250,7 +250,7 @@ describe('AudienceController', () => {
 			csrsService.getAreasOfWork = sinon.stub().returns({})
 			await audienceController.getAreasOfWork()(req, res)
 
-			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-area-of-work', {organisationalUnits: {}})
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-area-of-work', {areasOfWork: {}})
 		})
 	})
 
