@@ -288,16 +288,6 @@ describe('AudienceController', () => {
 			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
 			expect(next).to.have.been.calledOnceWith(error)
 		})
-
-		it('should throw error if aow not valid', async () => {
-			const aowHumanResources = 'Human resources'
-			req.body = {'area-of-work': aowHumanResources}
-
-			csrsService.isAreaOfWorkValid = sinon.stub().returns(false)
-			await audienceController.setAreasOfWork()(req, res, next)
-
-			expect(next).to.have.been.calledWith()
-		})
 	})
 
 	describe('#deleteAreasOfWork', () => {

@@ -64,6 +64,10 @@ import {ReportingController} from './controllers/reportingController'
 import {OrganisationalUnitService} from './csrs/service/organisationalUnitService'
 import {ReportServiceConfig} from './report-service/reportServiceConfig'
 import {ReportService} from './report-service'
+import {DateStartEndCommand} from './controllers/command/dateStartEndCommand'
+import {DateStartEndCommandFactory} from './controllers/command/factory/dateStartEndCommandFactory'
+import {DateStartEnd} from './learning-catalogue/model/dateStartEnd'
+import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartEndFactory'
 import {SkillsController} from './controllers/skillsController'
 
 log4js.configure(config.LOGGING)
@@ -110,8 +114,12 @@ export class ApplicationContext {
 	csrsConfig: CsrsConfig
 	csrsService: CsrsService
 	dateRangeCommandFactory: DateRangeCommandFactory
+	dateStartEndCommandFactory: DateStartEndCommandFactory
 	dateRangeCommandValidator: Validator<DateRangeCommand>
+	dateStartEndCommandValidator: Validator<DateStartEndCommand>
+	dateStartEndValidator: Validator<DateStartEnd>
 	dateRangeFactory: DateRangeFactory
+	dateStartEndFactory: DateStartEndFactory
 	dateRangeValidator: Validator<DateRange>
 	learnerRecord: LearnerRecord
 	learnerRecordConfig: LearnerRecordConfig
@@ -223,7 +231,11 @@ export class ApplicationContext {
 		this.eventValidator = new Validator<Event>(this.eventFactory)
 
 		this.dateRangeCommandFactory = new DateRangeCommandFactory()
+		this.dateStartEndCommandFactory = new DateStartEndCommandFactory()
+		this.dateStartEndFactory = new DateStartEndFactory()
 		this.dateRangeCommandValidator = new Validator<DateRangeCommand>(this.dateRangeCommandFactory)
+		this.dateStartEndCommandValidator = new Validator<DateStartEndCommand>(this.dateStartEndCommandFactory)
+		this.dateStartEndValidator = new Validator<DateStartEnd>(this.dateStartEndFactory)
 		this.dateRangeFactory = new DateRangeFactory()
 		this.dateRangeValidator = new Validator<DateRange>(this.dateRangeFactory)
 
@@ -259,7 +271,7 @@ export class ApplicationContext {
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
-		this.reportingController = new ReportingController(this.reportService)
+		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)
 		this.skillsController = new SkillsController()
 	}
 
