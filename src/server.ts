@@ -25,6 +25,7 @@ const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
+const fileUpload = require('express-fileupload')
 
 const appInsights = require('applicationinsights')
 
@@ -46,6 +47,8 @@ app.use(
 		textsVarName: 'i18n',
 	})
 )
+
+app.use(fileUpload());
 
 nunjucks
 	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/', appRoot + '/node_modules/govuk-frontend/components'], {

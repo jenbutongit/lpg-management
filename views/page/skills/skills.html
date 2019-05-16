@@ -12,6 +12,7 @@
             <ul class="list">
                 <li class="list-details">
                     <form action="/content-management/skills" method="post" class="skills-form">
+                        <input name="foo" type="file" />
                         <div class="{{classNames}}">
                             {% set typeaheadHtml %}
                             <div class="autocomplete-wrapper">
@@ -50,22 +51,22 @@
                                     }
                                 ]
                             }) }}
+                            {{ govukFileUpload({
+                                id: "file",
+                                name: "file",
+                                label: {
+                                    text: "Upload a file"
+                                }
+                            }) }}
                         </div>
                         <div class="button-container">
                             {{ govukButton({
-                            text: "Continue"
+                                text: "Continue"
                             }) }}
                         </div>
                     </form>
                 </li>
                 <li class="course list-details u--border--bgrey">
-                        {{ govukFileUpload({
-                        id: "file-upload-1",
-                        name: "file-upload-1",
-                        label: {
-                        text: "Upload a file"
-                        }
-                        }) }}
                 </li>
             </ul>
         </div>

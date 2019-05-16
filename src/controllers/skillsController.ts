@@ -1,8 +1,12 @@
-import {Request, Response, Router} from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 // import parse from 'csv-parse'
-
 import * as log4js from 'log4js'
 import {CsrsService} from "../csrs/service/csrsService";
+
+// let express = require('express')
+// let multer  = require('multer')
+// let upload = multer({ dest: 'uploads/' })
+// let app = express()
 
 export class SkillsController {
 	csrsService: CsrsService
@@ -19,7 +23,7 @@ export class SkillsController {
 
 	private configureRouterPaths() {
 		this.router.get('/content-management/skills', this.getSkills())
-		// this.router.post('/skills/', this.uploadAndProcess())
+		this.router.post('/content-management/skills', this.setSkills())
 	}
 
 	getSkills() {
@@ -27,6 +31,20 @@ export class SkillsController {
 			const areasOfWork = await this.csrsService.getAreasOfWork()
 
 			res.render('page/skills/skills', {areasOfWork: areasOfWork})
+		}
+	}
+
+	setSkills(){
+		return async (req: Request, res: Response, next: NextFunction) => {
+			// get profession
+			const areaOfWork = [req.body['parent']]
+			console.log("hey: ", areaOfWork)
+
+			// get file
+			// console.log(req.files.foo)
+
+			// check if CSV
+			// check if valid CSV
 		}
 	}
 
