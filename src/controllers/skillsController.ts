@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response, Router} from 'express'
-// @ts-ignore
-import parse from 'csv-parse'
 import {CsrsService} from "../csrs/service/csrsService";
+import * as csvtojson from "csvtojson"
 
 export class SkillsController {
     csrsService: CsrsService
@@ -30,36 +29,25 @@ export class SkillsController {
 
     uploadAndProcess() {
         return async (req: Request, res: Response, next: NextFunction) => {
-            // get profession
-            const areaOfWork = [req.body['parent']]
-            console.log("hey: ", areaOfWork)
+            // Get profession
+            // const areaOfWork = [req.body['parent']]
+            // console.log("hey: ", areaOfWork)
 
-            // get file
-            // console.log(req.files.foo)
-
-            // check if CSV
-            // check if valid CSV
-            //TODO: take the profession ID from the request
-            //TODO: Take the uploaded file
-            const output = []
-            // @ts-ignore
-            let parser = parse(req.files.foo);
-            parser.on('readable', () => {
-                let record
-                while (record = parser.read()) {
-                    output.push(record)
-                    //TODO: verify the record matches what we expect maybe?
-                }
-            })
-            parser.on('error', (err: any) => {
-                console.error(err.message)
-                //TODO: display error on UI
+            // Getting CSV from file uploader, and converting into JSON
+			// @ts-ignore
+            csvtojson().fromString(req.files.file.data.toString('utf-8')).then((questions: any) => {
+                console.log(questions)
+                questions.forEach((question : any) => {
+                    // console.log(question['CHOICE A'])
+                })
             })
 
-            parser.on('end', () => {
-                // TODO: now send the array to the API
-                // TODO: send success to the UI
-            })
+			//TODO: restructure JSON to match endpoint JSON
+
+			//TODO: verify the record matches what we expect maybe?
+			//TODO: display error on UI
+			// TODO: now send the array to the API
+			// TODO: send success to the UI
         }
     }
 }
