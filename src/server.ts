@@ -139,7 +139,7 @@ app.use(ctx.searchController.router)
 app.use(ctx.reportingController.router)
 app.use(ctx.skillsController.router)
 
-app.get('/', function(req, res) {
+app.get('/', function(req: any, res: any) {
 	res.redirect('/content-management')
 })
 
