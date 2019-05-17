@@ -9,7 +9,14 @@ class Choice {
 		this.value = val
 	}
 }
+class Profession {
+	id: number
+}
 
+class Quiz {
+	profession: Profession
+	questions: Question[]
+}
 class Question {
 	type: string
 	value: string
@@ -53,12 +60,9 @@ export class SkillsController {
 	}
 
 	uploadAndProcess() {
-		return async (req: Request, res: Response, next: NextFunction) =>
-
-			// Getting CSV from file uploader, and converting into JSON
+		return async (req: Request, res: Response, next: NextFunction) => {
 			// @ts-ignore
-			csvtojson().fromString(req.files.file.data.toString('utf-8')).then((questions: any) => {
-				console.log("JSON parsed from CSV: ", questions)
+			csvtojson().fromString(req.files.file.data.toString('utf-8')).then(async (questions: any) => {
 
 				const opts = ['A', 'B', 'C', 'D', 'E']
 				let questionToSend: Question[] = []
@@ -66,19 +70,33 @@ export class SkillsController {
 				questions.forEach((question: any) => {
 					let choices: Choice[] = [], answers: Choice[] = [];
 					opts.forEach((o: string) => {
-						if (question['CHOICE '+ o]) {
-							choices.push(new Choice(question['CHOICE '+ o]))
+						if (question['CHOICE ' + o]) {
+							choices.push(new Choice(question['CHOICE ' + o]))
 						}
-						if (question['ANSWER '+ o] === 'YES') {
-							answers.push(new Choice(question['ANSWER '+ o]))
+						if (question['ANSWER ' + o] === 'YES') {
+							answers.push(new Choice(question['ANSWER ' + o]))
 						}
 					})
 					questionToSend.push(
-						new Question(question.type, question.QUESTION, question['LEARNING NAME'], question['LEARNING REFERENCE'], choices, answers)
+						new Question(question.TYPE, question.QUESTION, question['LEARNING NAME'], question['LEARNING REFERENCE'], choices, answers)
 					)
 				})
 
-				console.log(questionToSend)
+				const profession = new Profession()
+				// TODO: Hardcoded live profession Id = 22 for policy
+				profession.id = 1
+				const quiz = new Quiz()
+				quiz.profession = profession
+				quiz.questions = questionToSend
+
+				console.log(quiz)
+
+				await this.csrsService.postSkills(quiz).then(() =>{
+					res.render('page/skills/success')
+				}).catch(error => {
+					next(error)
+				})
 			})
+		}
 	}
 }

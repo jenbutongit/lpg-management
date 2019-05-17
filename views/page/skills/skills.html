@@ -13,43 +13,7 @@
                 <li class="list-details">
                     <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
                         <div class="{{classNames}}">
-                            {% set typeaheadHtml %}
-                            <div class="autocomplete-wrapper">
-                                <select name="parent" id="parent">
-                                    <option value=""></option>
-                                    {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
-                                    {% for key in areasOfWork %}
-                                    {% if parent === key.href %}
-                                    {% set selected='selected' %}
-                                    {% else %}
-                                    {% set selected='' %}
-                                    {% endif %}
-                                    <option value="{{ key.name }}" {{ selected }}>{{ key.formattedName }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            {% endset -%}
-                            {{ govukRadios({
-                                idPrefix: "areaOfWork",
-                                name: "areaOfWork",
-                                fieldset: {
-                                    legend: {
-                                        text: "Which area of work?",
-                                        isPageHeading: true,
-                                        classes: "govuk-fieldset__legend--s "
-                                    }
-                                },
-                                items: [
-                                    {
-                                        value: "selected",
-                                        text: "Selected professions only",
-                                        id: "selected",
-                                            conditional: {
-                                            html: typeaheadHtml
-                                            }
-                                    }
-                                ]
-                            }) }}
+                            You are uploading file for <strong>Policy Profession</strong> only.
                             {{ govukFileUpload({
                                 id: "file",
                                 name: "file",
