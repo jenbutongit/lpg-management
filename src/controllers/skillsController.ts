@@ -29,21 +29,43 @@ export class SkillsController {
 
     uploadAndProcess() {
         return async (req: Request, res: Response, next: NextFunction) => {
-            // Get profession
-            // const areaOfWork = [req.body['parent']]
-            // console.log("hey: ", areaOfWork)
 
             // Getting CSV from file uploader, and converting into JSON
 			// @ts-ignore
             csvtojson().fromString(req.files.file.data.toString('utf-8')).then((questions: any) => {
-                console.log(questions)
-                questions.forEach((question : any) => {
-                    // console.log(question['CHOICE A'])
-                })
+            	console.log("JSON parsed from CSV: ", questions)
+
+				// Creating and populating array of 'Yes' answers for all questions
+				let answers : string[] = []
+				let i : number = 0;
+
+            	// For each question in JSON:
+				questions.forEach((question : any) => {
+					i++
+					let questionNumber : string = "QUESTION #" + i.toString()
+					answers.push(questionNumber)
+
+					// Check if answer exists in A,B,D,C or E
+					if(question['ANSWER A']){
+						answers.push(question['ANSWER A'])
+					}
+					if(question['ANSWER B']){
+						answers.push(question['ANSWER B'])
+					}
+					if(question['ANSWER C']){
+						answers.push(question['ANSWER C'])
+					}
+					if(question['ANSWER D']){
+						answers.push(question['ANSWER D'])
+					}
+					if(question['ANSWER E']){
+						answers.push(question['ANSWER E'])
+					}
+				})
+				console.log("Array of 'Yes' answers: ", answers)
             })
 
 			//TODO: restructure JSON to match endpoint JSON
-
 			//TODO: verify the record matches what we expect maybe?
 			//TODO: display error on UI
 			// TODO: now send the array to the API
