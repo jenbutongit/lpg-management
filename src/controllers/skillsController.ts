@@ -11,6 +11,8 @@ class Choice {
 }
 class Profession {
 	id: number
+	name: string
+	href: string
 }
 
 class Quiz {
@@ -61,8 +63,9 @@ export class SkillsController {
 
 	uploadAndProcess() {
 		return async (req: Request, res: Response, next: NextFunction) => {
+			res.render('page/skills/success')
 			// @ts-ignore
-			csvtojson().fromString(req.files.file.data.toString('utf-8')).then(async (questions: any) => {
+			await csvtojson().fromString(req.files.file.data.toString('utf-8')).then(async (questions: any) => {
 
 				const opts = ['A', 'B', 'C', 'D', 'E']
 				let questionToSend: Question[] = []
@@ -82,16 +85,27 @@ export class SkillsController {
 					)
 				})
 
-				const profession = new Profession()
-				// TODO: Hardcoded live profession Id = 22 for policy
-				profession.id = 1
+				const policyProfession = new Profession()
+
+				await this.csrsService.getAreasOfWork()
+					.then(professions => {
+						professions.forEach((profession: Profession) => {
+							if (profession.name.toLowerCase() === "analysis") {
+								let professionHref = profession.href.split('/')
+								let professionId = professionHref[professionHref.length - 1]
+								policyProfession.id = parseInt(professionId, 0)
+							}
+						})
+					}).catch(error => {
+						next(error)
+					})
+
 				const quiz = new Quiz()
-				quiz.profession = profession
+				quiz.profession = policyProfession
 				quiz.questions = questionToSend
 
-				console.log(quiz)
-
-				await this.csrsService.postSkills(quiz).then(() =>{
+				console.log("Quiz: ", quiz)
+				await this.csrsService.postSkills(quiz).then(() => {
 					res.render('page/skills/success')
 				}).catch(error => {
 					next(error)
