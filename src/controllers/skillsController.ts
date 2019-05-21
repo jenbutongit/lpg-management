@@ -63,7 +63,6 @@ export class SkillsController {
 
 	uploadAndProcess() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			res.render('page/skills/success')
 			// @ts-ignore
 			await csvtojson().fromString(req.files.file.data.toString('utf-8')).then(async (questions: any) => {
 
@@ -71,6 +70,7 @@ export class SkillsController {
 				let questionToSend: Question[] = []
 
 				questions.forEach((question: any) => {
+
 					let choices: Choice[] = [], answers: Choice[] = [];
 					opts.forEach((o: string) => {
 						if (question['CHOICE ' + o]) {
@@ -104,7 +104,6 @@ export class SkillsController {
 				quiz.profession = policyProfession
 				quiz.questions = questionToSend
 
-				console.log("Quiz: ", quiz)
 				await this.csrsService.postSkills(quiz).then(() => {
 					res.render('page/skills/success')
 				}).catch(error => {
