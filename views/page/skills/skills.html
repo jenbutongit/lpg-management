@@ -4,35 +4,46 @@
 
 {% extends "../../component/Page.njk" %}
 
+{% set uploadedFileCSV = sessionFlash.uploadedFileCSV %}
+
 {% block content %}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">Skills</h1>
-        <div class="reports-container">
-            <ul class="list">
-                <li class="list-details">
-                    <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
-                        <div class="{{classNames}}">
-                            You are uploading file for <strong>Policy Profession</strong> only.
-                            {{ govukFileUpload({
-                                id: "file",
-                                name: "file",
-                                label: {
-                                    text: "Upload a file"
-                                }
-                            }) }}
-                        </div>
-                        <div class="button-container">
-                            {{ govukButton({
-                                text: "Continue"
-                            }) }}
-                        </div>
-                    </form>
-                </li>
-                <li class="course list-details u--border--bgrey">
-                </li>
-            </ul>
-        </div>
+        <p> {{ backLink("/content-management")}}</p>
+        <p class="govuk-body form-header govuk-!-font-size-24">Add a new skills quiz</p>
+        <h2 class="govuk-heading-m govuk-!-font-size-36">Skills quiz</h2>
+        <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
+            <div class="{{classNames}}">
+                <p class="govuk-body">Currently, only the Policy profession can upload a skills quiz.</p>
+                <p class="govuk-body">Quiz questions should be saved as CSV, an Excel file type. In your Excel question document, select
+                    ‘Save as’. At ‘Save as type’, select CSV (comma delimited).</p>
+                {% if uploadedFileCSV %}
+                {{ govukFileUpload({
+                    id: "file",
+                    name: "file",
+                    label: {
+                    text: "Upload a file"
+                }
+                }) }}
+                {% else %}
+                {{ govukFileUpload({
+                    id: "file",
+                    name: "file",
+                    label: {
+                    text: "Upload a file"
+                },
+                errorMessage: {
+                    text: "The selected file must be a CSV"
+                }
+                }) }}
+                {% endif %}
+            </div>
+            <div class="button-container">
+                {{ govukButton({
+                text: "Add file"
+                }) }}
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}
