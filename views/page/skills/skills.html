@@ -17,7 +17,7 @@
                 <p class="govuk-body">Currently, only the Policy profession can upload a skills quiz.</p>
                 <p class="govuk-body">Quiz questions should be saved as CSV, an Excel file type. In your Excel question document, select
                     ‘Save as’. At ‘Save as type’, select CSV (comma delimited).</p>
-                {% if uploadedFileCSV === true %}
+                {% if uploadedFileCSV %}
                 {{ govukFileUpload({
                     id: "file",
                     name: "file",
