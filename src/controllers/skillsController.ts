@@ -60,19 +60,14 @@ export class SkillsController {
 
 	getSkills() {
 		return async (req: Request, res: Response) => {
-			let uploadedFileCSV: boolean = true
-			req.session!.sessionFlash = {uploadedFileCSV}
-
 			const areasOfWork = await this.csrsService.getAreasOfWork()
-			req.session!.save(() => {
 				res.render('page/skills/skills', areasOfWork)
-			})
 		}
 	}
 
 	uploadAndProcess() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			let uploadedFileCSV: boolean = true
+			let uploadedFileNotCSV: boolean = false
 
 			// @ts-ignore
 			const uploadedFile = req.files.file
@@ -81,9 +76,8 @@ export class SkillsController {
 
 			console.log("fileType: ", fileType)
 			if (fileType.toLowerCase() !== "csv") {
-				uploadedFileCSV = false
-
-				req.session!.sessionFlash = {uploadedFileCSV}
+				uploadedFileNotCSV = true
+				req.session!.sessionFlash = {uploadedFileNotCSV}
 				req.session!.save(() => {
 					res.redirect('/content-management/skills')
 				})

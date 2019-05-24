@@ -1,10 +1,9 @@
 {% from "file-upload/macro.njk" import govukFileUpload %}
-{% from "radios/macro.njk" import govukRadios %}
 {% from "button/macro.njk" import govukButton %}
 
 {% extends "../../component/Page.njk" %}
 
-{% set uploadedFileCSV = sessionFlash.uploadedFileCSV %}
+{% set uploadedFileNotCSV = sessionFlash.uploadedFileNotCSV %}
 
 {% block content %}
 <div class="govuk-grid-row">
@@ -13,34 +12,24 @@
         <p class="govuk-body form-header govuk-!-font-size-24">Add a new skills quiz</p>
         <h2 class="govuk-heading-m govuk-!-font-size-36">Skills quiz</h2>
         <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
-            <div class="{{classNames}}">
-                <p class="govuk-body">Currently, only the Policy profession can upload a skills quiz.</p>
-                <p class="govuk-body">Quiz questions should be saved as CSV, an Excel file type. In your Excel question document, select
-                    ‘Save as’. At ‘Save as type’, select CSV (comma delimited).</p>
-                {% if uploadedFileCSV %}
-                {{ govukFileUpload({
-                    id: "file",
-                    name: "file",
-                    label: {
-                    text: "Upload a file"
-                }
-                }) }}
+            <p class="govuk-body">Currently, only the Policy profession can upload a skills quiz.</p>
+            <p class="govuk-body">Quiz questions should be saved as CSV, an Excel file type. In your Excel question document, select
+                ‘Save as’. At ‘Save as type’, select CSV (comma delimited).</p>
+            <div class="add-file-form govuk-form-group">
+                <label class="govuk-label">Upload a file</label>
+                {% if uploadedFileNotCSV %}
+                <span id="file-upload-error" class="govuk-error-message">"The selected file must be a CSV"</span>
+                {% endif %}
+                <input class="govuk-file-upload custom-uploader" id="file-upload" name="file" type="file" aria-describedby="file-upload-hint">
+                {% if media %}
+                <label class="btn" for="file-upload"><span>{{media.name}}</span></label>
                 {% else %}
-                {{ govukFileUpload({
-                    id: "file",
-                    name: "file",
-                    label: {
-                    text: "Upload a file"
-                },
-                errorMessage: {
-                    text: "The selected file must be a CSV"
-                }
-                }) }}
+                <label class="btn" for="file-upload"><span>Choose file</span></label>
                 {% endif %}
             </div>
             <div class="button-container">
                 {{ govukButton({
-                text: "Add file"
+                    text: "Add file"
                 }) }}
             </div>
         </form>
