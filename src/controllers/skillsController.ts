@@ -94,10 +94,10 @@ export class SkillsController {
 						let choices: Choice[] = [], answers: Choice[] = [];
 						opts.forEach((o: string) => {
 							if (question['CHOICE ' + o]) {
-								choices.push(new Choice(question['CHOICE ' + o]))
+								choices.push(new Choice(question['CHOICE ' + o].replace(/(\r\n|\n|\r)/gm)))
 							}
 							if (question['ANSWER ' + o] === 'YES') {
-								answers.push(new Choice(question['ANSWER ' + o]))
+								answers.push(new Choice(question['CHOICE ' + o].replace(/(\r\n|\n|\r)/gm)))
 							}
 						})
 						questionToSend.push(
