@@ -48,7 +48,7 @@ app.use(
 	})
 )
 
-app.use(fileUpload());
+app.use(fileUpload())
 
 nunjucks
 	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/', appRoot + '/node_modules/govuk-frontend/components'], {

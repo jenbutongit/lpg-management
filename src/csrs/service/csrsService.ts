@@ -93,4 +93,8 @@ export class CsrsService {
 
 		return mapping
 	}
+
+	async findByName(name: string) {
+		await this.restService.get(`/professions/search/findByName?name=${name}`)
+	}
 }
