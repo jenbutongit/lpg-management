@@ -56,7 +56,7 @@
                     text: 'Manage organisations'
                 }) %}
             {% endif %}
-            {% if identity.hasLearningCreate() %}
+            {% if identity.isSkillsManagerOrSuperUser() %}
                 {% set action = actions.push({
                     link: '/content-management/skills',
                     text: 'Edit the Measure your skills quiz'
