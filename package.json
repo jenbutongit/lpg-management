@@ -31,7 +31,7 @@
 	"dependencies": {
 		"app-root-path": "2.1.0",
 		"applicationinsights": "1.0.6",
-		"axios": "0.18.0",
+		"axios": "0.18.1",
 		"class-validator": "0.9.1",
 		"convert-seconds": "1.0.1",
 		"cookie-parser": "1.4.3",
