@@ -12,18 +12,18 @@
 {% set backButton = "/content-management" %}
 
 {% set uploadedFileNotCSV = sessionFlash.uploadedFileNotCSV %}
-{% set errors = sessionFlash.error %}
 
 {% block content %}
 
-{% if errors %}
+{% if not doesPolicyExist %}
 {{ govukErrorSummary({
     titleText: "There is a problem",
     errorList: [
         {
             text: "Policy profession does not exist, and a skills quiz cannot be created."
         }
-    ]
+    ],
+    classes: "custom-error-message"
 }) }}
 {% endif %}
 
@@ -35,7 +35,7 @@
             <p class="govuk-body">Currently, only the <strong>Policy</strong> profession can upload a skills quiz.</p>
             <p class="govuk-body">Quiz questions should be saved as CSV, an Excel file type. In your Excel question document, select
                 ‘Save as’. At ‘Save as type’, select CSV (comma delimited).</p>
-            {% if not errors %}
+            {% if doesPolicyExist %}
             <div class="add-file-form govuk-form-group">
                 <label class="govuk-label">Upload a file</label>
                 {% if uploadedFileNotCSV %}
@@ -50,6 +50,7 @@
                 }) }}
             </div>
             {% endif %}
+            <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
         </form>
     </div>
 </div>

@@ -95,6 +95,6 @@ export class CsrsService {
 	}
 
 	async findByName(name: string) {
-		await this.restService.get(`/professions/search/findByName?name=${name}`)
+		return await this.restService.get(`/professions/search/findByName?name=${name}`)
 	}
 }

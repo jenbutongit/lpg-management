@@ -59,19 +59,19 @@ export class SkillsController {
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
+			let doesPolicyExist: boolean
 			await this.csrsService
 				.findByName('Policy')
 				.then(() => {
-					req.session!.save(() => {
-						res.render('page/skills/skills')
-					})
+					doesPolicyExist = true
 				})
 				.catch(() => {
-					req.session!.sessionFlash = {error: true}
-					req.session!.save(() => {
-						res.render('page/skills/skills')
-					})
+					doesPolicyExist = false
 				})
+
+			req.session!.save(() => {
+				res.render('page/skills/skills', {doesPolicyExist: doesPolicyExist})
+			})
 		}
 	}
 
