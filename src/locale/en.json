@@ -117,7 +117,9 @@
 			"code": "Organisation code",
 			"name": "Organisation name",
 			"abbreviation": "Organisation abbreviation",
-			"parent": "Parent"
+			"parent": "Parent",
+			"token": "Organisation token",
+			"quota": "Organisation quota"
 		},
 		"title": {
 			"manageOrganisations": "Manage organisations",

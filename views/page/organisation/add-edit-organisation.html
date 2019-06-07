@@ -100,6 +100,24 @@
                     name: "abbreviation",
                     value: form.abbreviation|default(organisationalUnit.abbreviation)
                 }) }}
+                  {{ govukInput({
+                  label: {
+                  text: i18n.organisations.text.token
+                  },
+                  classes: "govuk-input--width-10",
+                  id: "token",
+                  name: "token",
+                  value: form.token|default(organisationalUnit.token)
+                  }) }}
+                  {{ govukInput({
+                  label: {
+                  text: i18n.organisations.text.quota
+                  },
+                  classes: "govuk-input--width-10",
+                  id: "quota",
+                  name: "quota",
+                  value: form.quota|default(organisationalUnit.quota)
+                  }) }}
                 <div class="button-container">
                     {{ govukButton({
                         text: "Update" if organisationalUnit.id else "Add a new organisation"
