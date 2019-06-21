@@ -184,13 +184,6 @@ export class AudienceController {
 		}
 	}
 
-	// private async getAllOrganisationCodes(): Promise<string[]> {
-	// 	const organisations = await this.csrsService.getOrganisations()
-	// 	return organisations._embedded.organisationalUnits.map((org: any) => {
-	// 		return org.code
-	// 	})
-	// }
-
 	private async getAllProfessions(): Promise<string[]> {
 		const professions = await this.csrsService.getAreasOfWork()
 		return professions.map((profession: any) => {
