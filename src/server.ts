@@ -14,6 +14,7 @@ import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 import {Duration} from 'moment'
+import {OrganisationalUnit} from './csrs/model/organisationalUnit'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -86,6 +87,9 @@ nunjucks
 		}
 
 		return years + months
+	})
+	.addFilter('parseOrganisation', function(organisationalUnits: OrganisationalUnit[], code: string) {
+		return organisationalUnits.find(o => o.code === code)
 	})
 
 app.set('view engine', 'html')

@@ -16,6 +16,7 @@ import {Csrs} from '../../../../src/csrs'
 import {DateTime} from '../../../../src/lib/dateTime'
 import * as moment from 'moment'
 import {Course} from '../../../../src/learning-catalogue/model/course'
+import {OrganisationalUnit} from '../../../../src/csrs/model/organisationalUnit'
 
 chai.use(sinonChai)
 
@@ -135,10 +136,15 @@ describe('AudienceController', () => {
 
 	describe('#getOrganisation', () => {
 		it('should render add-organisation page', async function() {
-			csrs.listOrganisationalUnitsForTypehead = sinon.stub()
+			const departments = {departments: ['co', 'dh']}
+			res.locals.audience = {
+				departments: departments,
+			}
+			const organisations: OrganisationalUnit[] = []
+			csrs.listOrganisationalUnitsForTypehead = sinon.stub().returns(organisations)
 			await audienceController.getOrganisation()(req, res)
 
-			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-organisation')
+			expect(res.render).to.have.been.calledOnceWith('page/course/audience/add-organisation', {organisationalUnits: organisations, selectedOrganisations: departments})
 		})
 	})
 
@@ -163,7 +169,7 @@ describe('AudienceController', () => {
 			await audienceController.setOrganisation()(req, res, next)
 
 			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(id, audience)
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/organisation`)
 		})
 
 		it('should pass to next if update throws error', async function() {
@@ -209,7 +215,7 @@ describe('AudienceController', () => {
 
 			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
 
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/organisation`)
 		})
 	})
 
@@ -226,7 +232,7 @@ describe('AudienceController', () => {
 			await audienceController.deleteOrganisation()(req, res, next)
 
 			expect(learningCatalogue.updateAudience).to.have.been.calledOnceWith(courseId, audience)
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/configure`)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/${courseId}/audiences/${audienceId}/organisation`)
 		})
 
 		it('should pass to next if update throws error', async function() {

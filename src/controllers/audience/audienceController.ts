@@ -10,6 +10,8 @@ import {CsrsService} from '../../csrs/service/csrsService'
 import {DateTime} from '../../lib/dateTime'
 import {Csrs} from '../../csrs'
 import * as moment from 'moment'
+import {OrganisationalUnit} from '../../csrs/model/organisationalUnit'
+import {DefaultPageResults} from '../../learning-catalogue/model/defaultPageResults'
 
 export class AudienceController {
 	learningCatalogue: LearningCatalogue
@@ -52,7 +54,7 @@ export class AudienceController {
 
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/organisation', this.getOrganisation())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/organisation', this.setOrganisation())
-		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/organisation/delete', this.deleteOrganisation())
+		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/organisation/delete/:organisationCode', this.deleteOrganisation())
 
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudienceConfirmation())
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/delete', this.deleteAudience())
@@ -124,34 +126,57 @@ export class AudienceController {
 
 	getOrganisation() {
 		return async (req: Request, res: Response) => {
-			const organisations = await this.csrs.listOrganisationalUnitsForTypehead()
-			res.render('page/course/audience/add-organisation', {organisationalUnits: organisations})
+			const selectedOrganisations = res.locals.audience.departments
+
+			let organisations: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnitsForTypehead()
+
+			res.render('page/course/audience/add-organisation', {organisationalUnits: organisations, selectedOrganisations: selectedOrganisations})
 		}
 	}
 
 	setOrganisation() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			const departments = req.body.organisation === 'all' ? await this.getAllOrganisationCodes() : [req.body['parent']]
-			res.locals.audience.departments = departments
+			const selectedOrganisationalUnit: string = req.body['parent']
 
-			await this.learningCatalogue
-				.updateAudience(res.locals.course.id, res.locals.audience)
-				.then(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+			const existingDepartments: string[] = res.locals.audience.departments
+
+			if (existingDepartments.includes(selectedOrganisationalUnit) || selectedOrganisationalUnit === '' || selectedOrganisationalUnit === null) {
+				req.session!.sessionFlash = {errors: true}
+				req.session!.save(() => {
+					return res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/organisation`)
 				})
-				.catch(error => {
-					next(error)
-				})
+			} else {
+				existingDepartments.push(selectedOrganisationalUnit)
+
+				res.locals.audience.departments = existingDepartments
+
+				await this.learningCatalogue
+					.updateAudience(res.locals.course.id, res.locals.audience)
+					.then(() => {
+						res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/organisation`)
+					})
+					.catch(error => {
+						next(error)
+					})
+			}
 		}
 	}
-
 	deleteOrganisation() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			res.locals.audience.departments = []
+			const organisationalUnitCode = req.params.organisationCode
+			const selectedOrganisations: OrganisationalUnit[] = res.locals.audience.departments
+
+			selectedOrganisations.forEach((item, index) => {
+				if (item == organisationalUnitCode) {
+					selectedOrganisations.splice(index, 1)
+				}
+			})
+
+			res.locals.audience.departments = selectedOrganisations
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`)
+					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/organisation`)
 				})
 				.catch(error => {
 					next(error)
@@ -159,12 +184,12 @@ export class AudienceController {
 		}
 	}
 
-	private async getAllOrganisationCodes(): Promise<string[]> {
-		const organisations = await this.csrsService.getOrganisations()
-		return organisations._embedded.organisationalUnits.map((org: any) => {
-			return org.code
-		})
-	}
+	// private async getAllOrganisationCodes(): Promise<string[]> {
+	// 	const organisations = await this.csrsService.getOrganisations()
+	// 	return organisations._embedded.organisationalUnits.map((org: any) => {
+	// 		return org.code
+	// 	})
+	// }
 
 	private async getAllProfessions(): Promise<string[]> {
 		const professions = await this.csrsService.getAreasOfWork()
