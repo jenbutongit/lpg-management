@@ -123,4 +123,8 @@ export class Course {
 		}
 		return areasOfWork
 	}
+
+	getVisibility() {
+		return Visibility[this.visibility]
+	}
 }
