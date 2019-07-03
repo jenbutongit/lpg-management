@@ -28,13 +28,7 @@
                         <p class="unset">No organisations have been added</p>
                     {% endif %}
                 </div>
-                {% if audience.departments and audience.departments.length > 0 %}
-                    <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation/delete" method="post" class="audience-link">
-                        <button class="govuk-link audience-link linkish-button">Delete</button>
-                    </form>
-                {% else %}
-                    <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" class="govuk-link audience-link">Add<span class="hidden"> organisations</span></a>
-                {% endif %}
+                <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" class="govuk-link audience-link">{{ 'Edit' if (audience.departments and audience.departments.length > 0) else 'Add'}}<span class="hidden"> organisations</span></a>
             </div>
             <div class="flex-container u--border--bgrey">
                 <div class="audience-content">

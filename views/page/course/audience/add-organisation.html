@@ -2,6 +2,7 @@
 {% from "button/macro.njk" import govukButton %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
 {% from "radios/macro.njk" import govukRadios %}
+{% from "select/macro.njk" import govukSelect %}
 
 {% extends "../../../component/Page.njk" %}
 
@@ -11,26 +12,48 @@
 {% set backButton = "/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure" %}
 
 {% block content %}
+    {% if sessionFlash.errors %}
+        {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: [
+                {
+                    text: "The organisation selected is not valid",
+                    href: "#parent"
+                }
+            ]
+        }) }}
+    {% endif %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</h1>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Organisation</h2>
-            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" method="post">
-                {% if errors.fields %}
-                    {% set classNames = "govuk-fieldset audience-fieldset govuk-form-group--error" %}
-                    {% set message = "govuk-error-message" %}
+            <div>
+                <h3 class="govuk-heading-m">Added organisations</h3>
+                {% if selectedOrganisations.length > 0%}
+                <ul class="list modules">
+                    <li class="module-headers">
+                        <p class="govuk-body header title"><strong>Organisation name</strong></p>
+                        <span class="spacer"></span>
+                    </li>
+                    {% for s in selectedOrganisations %}
+                    {% set org = organisationalUnits | parseOrganisation(s) %}
+                    <ul class="list modules" id="modules">
+                        <li class="list-details" id="1233" >
+                            <p class="govuk-body title">{{ org.name }}</p>
+                            <p class="govuk-body buttons"><a class="govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation/delete/{{org.code}}">Remove</a></p>
+                        </li>
+                    </ul>
+                    {% endfor %}
+                </ul>
                 {% else %}
-                    {% set classNames = "govuk-fieldset audience-fieldset" %}
-                    {% set message = "no-errors" %}
+                <p class="govuk-body">This audience does not have any organisations yet</p>
                 {% endif %}
-                {% for organisation in organisations %}
-                <li>{{ organisation}}</li>
-                {% endfor %}
-                <div class="{{classNames}}">
-                    <p class="{{message}}">Select which organisations are included</p>
-                    {% set typeaheadHtml %}
-                    <div class="autocomplete-wrapper">
-                        <select name="parent" id="parent">
+
+            <h3 class="govuk-heading-m">Add an organisation</h3>
+            <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/organisation" method="post">
+                <fieldset class="govuk-fieldset module-selector">
+                    <div class="autocomplete-wrapper autocomplete-wrapper-organisations ">
+                        <select class = "autocomplete__organisations" name="parent" id="parent">
                             <option value=""></option>
                             {% set parent = form.parent|default(organisationalUnit.parent.uri) %}
                             {% for key in organisationalUnits %}
@@ -43,42 +66,17 @@
                             {% endfor %}
                         </select>
                     </div>
-                    {% endset -%}
-                    {{ govukRadios({
-                        idPrefix: "organisation",
-                        name: "organisation",
-                        fieldset: {
-                            legend: {
-                                text: "Which organisations are included in this audience?",
-                                isPageHeading: true,
-                                classes: "govuk-fieldset__legend--s "
-                            }
-                        },
-                        items: [
-                            {
-                            value: "all",
-                            text: "All",
-                            id: "all"
-                            },
-                            {
-                            value: "selected",
-                            text: "Selected organisations only",
-                            id: "selected",
-                                conditional: {
-                                    html: typeaheadHtml
-                                }
-                            }
-                        ]
-                        }) }}
-                </div>
-                <div class="button-container">
                     {{ govukButton({
-                        text: "Continue"
+                        text: "Add organisation",
+                        classes: "button-blue button-blue-organisations"
                     }) }}
-                </div>
+                </fieldset>
             </form>
+            {{ govukButton({
+                text: "Return to audience",
+                href: "/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure"
+            }) }}
             <a class="cancel-button govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Cancel</a>
-        </div>
         <div class="govuk-grid-column-one-third">
         </div>
     </div>
