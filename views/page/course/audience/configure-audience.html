@@ -17,13 +17,17 @@
     <div class="govuk-grid-column-full">
         <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</h1>
         <h2 class="govuk-heading-m govuk-!-font-size-36">Configure your audience</h2>
-        <p class="govuk-body">Your audience is called: <strong>{{ audience.name }}</strong></p>
+        {% if audience.name != '' %}
+            <p class="govuk-body">Your audience is called: <strong>{{ audience.name }}</strong></p>
+        {% else %}
+            <p class="govuk-body">Your audience has not been configured</strong></p>
+        {% endif %}
         <div class="audience-container">
             <div class="flex-container u--border--bgrey">
                 <div class="audience-content">
                     <p class="govuk-body">Organisation</p>
                     {% if audience.departments and audience.departments.length > 0 %}
-                        <p class="audience-type no-margin">{{ audience.departments | jsonpath(departmentCodeToName) | join(', ') }}</p>
+                        <p class="audience-type no-margin">{{ audience.departments | jsonpath(departmentCodeToName) | sort | join(', ') }}</p>
                     {% else %}
                         <p class="unset">No organisations have been added</p>
                     {% endif %}
@@ -41,7 +45,7 @@
                 </div>
                 {% if audience.areasOfWork and audience.areasOfWork.length > 0 %}
                     <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/area-of-work/delete" method="post" class="audience-link">
-                        <button class="govuk-link linkish-button">Delete</button>
+                        <button class="govuk-link linkish-button delete-audience-configuration-link">Delete</button>
                     </form>
                 {% else %}
                     <a href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/area-of-work" class="govuk-link audience-link">Add<span class="hidden"> area of work</span></a>

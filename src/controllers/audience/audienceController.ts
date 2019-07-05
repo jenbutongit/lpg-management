@@ -20,6 +20,7 @@ export class AudienceController {
 	courseService: CourseService
 	csrsService: CsrsService
 	csrs: Csrs
+	audienceService: AudienceService
 	router: Router
 
 	constructor(
@@ -28,7 +29,8 @@ export class AudienceController {
 		audienceFactory: AudienceFactory,
 		courseService: CourseService,
 		csrsService: CsrsService,
-		csrs: Csrs
+		csrs: Csrs,
+		audienceService: AudienceService
 	) {
 		this.learningCatalogue = learningCatalogue
 		this.audienceValidator = audienceValidator
@@ -37,6 +39,7 @@ export class AudienceController {
 		this.csrsService = csrsService
 		this.csrs = csrs
 		this.router = Router()
+		this.audienceService = audienceService
 		this.configurePathParametersProcessing()
 		this.setRouterPaths()
 	}
@@ -47,7 +50,6 @@ export class AudienceController {
 	}
 
 	private setRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/audiences/', this.getAudienceName())
 		this.router.post('/content-management/courses/:courseId/audiences/', this.setAudienceName())
 
 		this.router.get('/content-management/courses/:courseId/audiences/:audienceId/configure', this.getConfigureAudience())
@@ -80,31 +82,18 @@ export class AudienceController {
 		this.router.post('/content-management/courses/:courseId/audiences/:audienceId/required-learning/delete', this.deleteRequiredLearning())
 	}
 
-	getAudienceName() {
-		return async (req: Request, res: Response) => {
-			res.render('page/course/audience/audience-name')
-		}
-	}
-
 	setAudienceName() {
 		return async (req: Request, res: Response) => {
-			const data = {...req.body}
-			const errors = await this.audienceValidator.check(data, ['audience.name'])
-			const audience = this.audienceFactory.create(data)
+			const audience: Audience = new Audience()
 
-			if (errors.size > 0) {
-				req.session!.sessionFlash = {errors, audience}
-				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/`)
-				})
-			} else {
-				audience.type = Audience.Type.OPEN
-				const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
+			audience.name = await this.audienceService.getAudienceName(audience)
+			audience.type = Audience.Type.OPEN
 
-				req.session!.save(() => {
-					res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${savedAudience.id}/configure`)
-				})
-			}
+			const savedAudience = await this.learningCatalogue.createAudience(req.params.courseId, audience)
+
+			req.session!.save(() => {
+				res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${savedAudience.id}/configure`)
+			})
 		}
 	}
 
@@ -150,6 +139,8 @@ export class AudienceController {
 
 				res.locals.audience.departments = existingDepartments
 
+				res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
+
 				await this.learningCatalogue
 					.updateAudience(res.locals.course.id, res.locals.audience)
 					.then(() => {
@@ -173,6 +164,7 @@ export class AudienceController {
 			})
 
 			res.locals.audience.departments = selectedOrganisations
+			res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
@@ -222,6 +214,7 @@ export class AudienceController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			const areaOfWork = req.body.areaOfWork === 'all' ? await this.getAllProfessions() : [req.body['parent']]
 			res.locals.audience.areasOfWork = areaOfWork
+			res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
@@ -237,6 +230,7 @@ export class AudienceController {
 	deleteAreasOfWork() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.areasOfWork = []
+			res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => res.redirect(`/content-management/courses/${req.params.courseId}/audiences/${req.params.audienceId}/configure`))
@@ -261,6 +255,7 @@ export class AudienceController {
 				)
 				if (allGradesValid) {
 					res.locals.audience.grades = gradeCodes
+					res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 					await this.learningCatalogue
 						.updateAudience(res.locals.course.id, res.locals.audience)
 						.then(() => {
@@ -277,6 +272,7 @@ export class AudienceController {
 	deleteGrades() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.locals.audience.grades = []
+			res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 			await this.learningCatalogue
 				.updateAudience(res.locals.course.id, res.locals.audience)
 				.then(() => {
@@ -303,6 +299,7 @@ export class AudienceController {
 				)
 				if (allInterestsValid) {
 					res.locals.audience.interests = interests
+					res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 					await this.learningCatalogue
 						.updateAudience(res.locals.course.id, res.locals.audience)
 						.then(() => {

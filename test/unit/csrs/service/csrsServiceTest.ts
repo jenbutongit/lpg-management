@@ -158,4 +158,21 @@ describe('CsrsService tests', () => {
 			})
 		})
 	})
+
+	describe('#getDepartmentCodeToAbbreviationMapping', () => {
+		it('should return a map from department code to abbreviation', async () => {
+			const hmrcAbbreviation = 'HMRC'
+			const dwpAbbreviation = 'DWP'
+
+			csrsService.getOrganisations = sinon.stub().returns({
+				_embedded: {
+					organisationalUnits: [{code: 'hmrc', abbreviation: hmrcAbbreviation}, {code: 'dwp', abbreviation: dwpAbbreviation}],
+				},
+			})
+			expect(await csrsService.getDepartmentCodeToAbbreviationMapping()).to.be.deep.equal({
+				hmrc: hmrcAbbreviation,
+				dwp: dwpAbbreviation,
+			})
+		})
+	})
 })
