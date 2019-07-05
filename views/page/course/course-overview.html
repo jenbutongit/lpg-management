@@ -53,7 +53,7 @@
                 {% endif %}
             </div>
             {% block audiences %}
-                {{ audiences(course, identity) }}
+                {{ audiences(course, sortedAudiences, identity) }}
             {% endblock %}
         </div>
         {% endif %}

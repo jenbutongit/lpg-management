@@ -89,4 +89,45 @@ export class CourseService {
 	getModuleByModuleId(course: Course, moduleId: String) {
 		return course.modules.find((module: Module) => module.id == moduleId)
 	}
+
+	async sortAudiences(audiences: Audience[]) {
+		// sorts into order: [audiences with >0 departments], [audiences with >0 areas of work], [audiences with >0 interests], then alphabetically ascending order
+
+		let sortFunction = (audience1: Audience, audience2: Audience) => {
+			return audience1.name > audience2.name ? 1 : -1
+		}
+		let audiencesWithDepartments: Audience[] = []
+		let audiencesWithAreasOfWork: Audience[] = []
+		let audiencesWithInterests: Audience[] = []
+		let audiencesWithNone: Audience[] = []
+
+		for (let audience of audiences) {
+			if (Array.isArray(audience.departments) && audience.departments.length) {
+				audiencesWithDepartments.push(audience)
+				continue
+			}
+
+			if (Array.isArray(audience.areasOfWork) && audience.areasOfWork.length) {
+				audiencesWithAreasOfWork.push(audience)
+				continue
+			}
+
+			if (Array.isArray(audience.interests) && audience.interests.length) {
+				audiencesWithInterests.push(audience)
+				continue
+			}
+
+			audiencesWithNone.push(audience)
+		}
+
+		audiencesWithDepartments.sort(sortFunction)
+		audiencesWithAreasOfWork.sort(sortFunction)
+		audiencesWithInterests.sort(sortFunction)
+		audiencesWithNone.sort(sortFunction)
+
+		let sortedAudiences: Audience[] = []
+		sortedAudiences.push(...audiencesWithDepartments, ...audiencesWithAreasOfWork, ...audiencesWithInterests, ...audiencesWithNone)
+
+		return sortedAudiences
+	}
 }

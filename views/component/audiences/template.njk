@@ -1,7 +1,7 @@
 {% from "details/macro.njk" import govukDetails %}
-{% if course.audiences.length > 0 %}
+{% if sortedAudiences.length > 0 %}
     <ul class="audience-list">
-        {% for audience in course.audiences %}
+        {% for audience in sortedAudiences %}
             {% set audienceTypeAsString = AudienceType[audience.type] %}
             <li class="list-item">
                 <div class="title-container">
