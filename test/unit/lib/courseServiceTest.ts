@@ -105,6 +105,75 @@ describe('CourseService tests', () => {
 		return expect(courseService.sortModules(courseId, ['3', '2'])).to.be.rejectedWith('Course modules length(3) does not match module ids length(2)')
 	})
 
+	describe('Sort audiences', () => {
+		it('should sort audiences according to: department presence -> areas of work presence -> interests presence -> name (ascending)', async () => {
+			let audience1: Audience = Object.assign(new Audience(), {
+				name: 'CO, HMRC, Analysis, Commerical, EU and international, Leadership',
+				departments: ['co, hmrc'],
+				areasOfWork: ['Analysis, Commercial'],
+				interests: ['Leadership, EU and international'],
+			})
+			let audience2: Audience = Object.assign(new Audience(), {
+				name: 'CO, HMRC, Analysis, Commerical, Finance',
+				departments: ['co, hmrc'],
+				areasOfWork: ['Analysis, Finance, Commercial'],
+				interests: [],
+			})
+			let audience3: Audience = Object.assign(new Audience(), {
+				name: 'HMRC, EU and international, Leadership',
+				departments: ['hmrc'],
+				areasOfWork: [],
+				interests: ['EU and international'],
+			})
+
+			let audience4: Audience = Object.assign(new Audience(), {
+				name: 'Analysis, Corporate finance, EU and international, Leadership',
+				departments: [],
+				areasOfWork: ['Analysis, Corporate finance'],
+				interests: ['Leadership, EU and international'],
+			})
+			let audience5: Audience = Object.assign(new Audience(), {
+				name: 'Analysis, Finance, Commerical',
+				departments: [],
+				areasOfWork: ['Analysis, Finance, Commercial'],
+				interests: [],
+			})
+			let audience6: Audience = Object.assign(new Audience(), {
+				name: 'Analysis, Finance, Commerical, Parliament and the constitution',
+				departments: [],
+				areasOfWork: ['Analysis, Finance, Commercial'],
+				interests: ['Parliament and the constitution'],
+			})
+			let audience7: Audience = Object.assign(new Audience(), {
+				name: 'Finance, EU and international, Leadership',
+				departments: [],
+				areasOfWork: ['Finance'],
+				interests: ['Leadership, EU and international'],
+			})
+
+			let audience8: Audience = Object.assign(new Audience(), {name: 'EU and international', departments: [], areasOfWork: [], interests: ['EU and international']})
+			let audience9: Audience = Object.assign(new Audience(), {
+				name: 'EU and international, Leadership',
+				departments: [],
+				areasOfWork: [],
+				interests: ['Leadership, EU and international'],
+			})
+			let audience10: Audience = Object.assign(new Audience(), {
+				name: 'Parliament and the constitution',
+				departments: [],
+				areasOfWork: [],
+				interests: ['Parliament and the constitution'],
+			})
+			let audience11: Audience = Object.assign(new Audience(), {name: 'Temp', departments: [], areasOfWork: [], interests: []})
+
+			let audiences: Audience[] = [audience4, audience5, audience3, audience1, audience2, audience9, audience10, audience6, audience7, audience8, audience11]
+			let expectedAudiences: Audience[] = [audience1, audience2, audience3, audience4, audience5, audience6, audience7, audience8, audience9, audience10, audience11]
+			let sortedAudiences = await courseService.sortAudiences(audiences)
+
+			expect(sortedAudiences).to.deep.equal(expectedAudiences)
+		})
+	})
+
 	describe('helper function for displaying audiences on front-end', () => {
 		let course: Course
 		const event1Id = 'event-id-1'
