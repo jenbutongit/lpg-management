@@ -1,14 +1,14 @@
 {% from "details/macro.njk" import govukDetails %}
-{% if course.audiences.length > 0 %}
+{% if sortedAudiences.length > 0 %}
     <ul class="audience-list">
-        {% for audience in course.audiences %}
+        {% for audience in sortedAudiences %}
             {% if audience.name != '' %}
                 {% set audienceTypeAsString = AudienceType[audience.type] %}
                 <li class="list-item">
                     <div class="title-container">
                         <h3 class="govuk-heading-s">{{ audience.name | default("Audience", true) }}</h3>
                         {% if course.status !== "Archived" and identity.hasLearningEdit()%}
-                            <a class="govuk-body govuk-link edit-audience-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Edit</a>
+                            <a class="govuk-body govuk-link" href="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/configure">Edit</a>
                         {% endif %}
                     </div>
                     {% set audienceHTML = '<ul class="list audience">
@@ -36,7 +36,6 @@
                         {% set audienceHTML = audienceHTML + '</span></li>' %}
                     {% endif %}
                     {% set audienceHTML = audienceHTML + '</ul>' %}
-
                     {{ govukDetails({
                         summaryText: 'View audience details',
                         html: audienceHTML

@@ -55,6 +55,7 @@ describe('Course Controller Tests', function() {
 			courseService.getAudienceIdToEventMapping = sinon.stub()
 			courseService.getEventIdToModuleIdMapping = sinon.stub()
 			courseService.getUniqueGrades = sinon.stub().returns(['G1', 'G2', 'G3'])
+			courseService.sortAudiences = sinon.stub()
 
 			const course = new Course()
 			course.modules = []
