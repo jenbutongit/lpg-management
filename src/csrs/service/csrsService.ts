@@ -11,6 +11,7 @@ export class CsrsService {
 	static readonly GRADES = 'CsrsService.grades'
 	static readonly GRADE_CODE_TO_NAME_MAPPING = 'CsrsService.gradeCodeToNameMapping'
 	static readonly INTERESTS = 'CsrsService.interests'
+	static readonly DEPARTMENT_CODE_TO_ABBREVIATION_MAPPING = 'CsrsService.departmentCodeToAbbreviationMapping'
 
 	constructor(restService: OauthRestService, cacheService: CacheService) {
 		this.restService = restService
@@ -96,5 +97,26 @@ export class CsrsService {
 
 	async findByName(name: string) {
 		return await this.restService.get(`/professions/search/findByName?name=${name}`)
+	}
+
+	async getDepartmentCodeToAbbreviationMapping() {
+		return this.getCodeToAbbreviationMapping(this.getOrganisations, '$._embedded.organisationalUnits.*', CsrsService.DEPARTMENT_CODE_TO_ABBREVIATION_MAPPING)
+	}
+
+	private async getCodeToAbbreviationMapping(functionToRetrieveMappingFromBackend: () => Promise<any>, pathForMapObjects: string, cacheKey: string) {
+		let mapping = this.cacheService.cache.get(cacheKey)
+
+		if (!mapping) {
+			const codeAbbreviationObjectArray = JsonpathService.query(await functionToRetrieveMappingFromBackend.call(this), pathForMapObjects)
+
+			mapping = codeAbbreviationObjectArray.reduce((map: any, object: any) => {
+				map[object.code] = object.abbreviation
+				return map
+			}, {})
+
+			this.cacheService.cache.set(cacheKey, mapping)
+		}
+
+		return mapping
 	}
 }
