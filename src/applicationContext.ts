@@ -69,6 +69,7 @@ import {DateStartEndCommandFactory} from './controllers/command/factory/dateStar
 import {DateStartEnd} from './learning-catalogue/model/dateStartEnd'
 import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartEndFactory'
 import {SkillsController} from './controllers/skillsController'
+import {AudienceService} from './lib/audienceService'
 
 log4js.configure(config.LOGGING)
 
@@ -136,6 +137,7 @@ export class ApplicationContext {
 	reportServiceConfig: ReportServiceConfig
 	reportService: ReportService
 	skillsController: SkillsController
+	audienceService: AudienceService
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -263,7 +265,16 @@ export class ApplicationContext {
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
 
-		this.audienceController = new AudienceController(this.learningCatalogue, this.audienceValidator, this.audienceFactory, this.courseService, this.csrsService, this.csrs)
+		this.audienceService = new AudienceService(this.csrsService)
+		this.audienceController = new AudienceController(
+			this.learningCatalogue,
+			this.audienceValidator,
+			this.audienceFactory,
+			this.courseService,
+			this.csrsService,
+			this.csrs,
+			this.audienceService
+		)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
 		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory)

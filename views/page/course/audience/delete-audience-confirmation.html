@@ -12,14 +12,18 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">
             <h1 class="govuk-heading-m govuk-!-font-size-36">Confirm deleting this audience</h1>
-            <p class="govuk-body no-margin">Are you sure you want to remove audience <strong>{{audience.name}}</strong>?</p>
+            {% if audience.name %}
+                <p class="govuk-body no-margin">Are you sure you want to remove audience <strong>{{audience.name}}</strong>?</p>
+            {% else %}
+                <p class="govuk-body no-margin">Are you sure you want to remove this audience?</p>
+            {% endif %}
             <p class="govuk-body"><strong>Deleting an audience is irreversible.</strong></p>
 
             <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/delete" method="post">
                 <div class="button-container">
                     {{ govukButton({
-                    text: "Delete audience",
-                    classes: "button-red"
+                        text: "Delete audience",
+                        classes: "button-red"
                     }) }}
                 </div>
             </form>
