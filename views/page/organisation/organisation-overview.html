@@ -40,6 +40,21 @@
             <li class="list-item module-item u--border--bgrey"><p class="govuk-body no-margin"><strong>Organisation code</strong></p><p class="govuk-body no-margin">{{ organisationalUnit.code | default("Unspecified", true) }}</p></li>
             <li class="list-item module-item u--border--bgrey"><p class="govuk-body no-margin"><strong>Organisation abbreviation</strong></p><p class="govuk-body no-margin">{{ organisationalUnit.abbreviation | default("Unspecified", true) }}</p></li>
         </ul>
+        <h3 class="govuk-heading-m">Organisation token details</h3>
+        <ul class="list module-list">
+            {% set token = organisationalUnit.agencyToken %}
+            {% if token %}
+                <li class="list-item module-item u--border--bgrey"><p class="govuk-body no-margin"><strong>Token number</strong></p><p class="govuk-body no-margin">{{ token.token | default("Unspecified", true) }}</p></li>
+                <li class="list-item module-item u--border--bgrey"><p class="govuk-body no-margin"><strong>Token spaces</strong></p><p class="govuk-body no-margin">{{ token.capacity | default("Unspecified", true) }}</p>
+                <li class="list-item module-item u--border--bgrey"><p class="govuk-body no-margin"><strong>Domains</strong></p>
+                {% for domain in token.agencyDomains%}
+                    <p class="govuk-body no-margin">{{ domain.domain | default("Unspecified", true) }}</p>
+                {% endfor %}
+                </li>
+            {% else %}
+                <p class="govuk-body no-margin">This organisation does not have an associated agency token</p>
+            {% endif %}
+        </ul>
     </div>
     <div class="govuk-grid-column-one-third">
         <div class="right-menu">
