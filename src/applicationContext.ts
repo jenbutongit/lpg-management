@@ -70,6 +70,7 @@ import {DateStartEnd} from './learning-catalogue/model/dateStartEnd'
 import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartEndFactory'
 import {SkillsController} from './controllers/skillsController'
 import {AudienceService} from './lib/audienceService'
+import {AgencyTokenHttpService} from './csrs/agencyTokenHttpService'
 
 log4js.configure(config.LOGGING)
 
@@ -129,6 +130,7 @@ export class ApplicationContext {
 	bookingValidator: Validator<Booking>
 	organisationController: OrganisationController
 	csrs: Csrs
+	agencyTokenHttpService: AgencyTokenHttpService
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
 	searchController: SearchController
@@ -264,6 +266,7 @@ export class ApplicationContext {
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
+		this.agencyTokenHttpService = new AgencyTokenHttpService(this.csrsConfig, this.auth)
 
 		this.audienceService = new AudienceService(this.csrsService)
 		this.audienceController = new AudienceController(
@@ -277,7 +280,7 @@ export class ApplicationContext {
 		)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
-		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory)
+		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory, this.agencyTokenHttpService)
 
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
