@@ -206,6 +206,12 @@ export class AudienceController {
 		return async (req: Request, res: Response) => {
 			const areasOfWork = await this.csrsService.getAreasOfWork()
 
+			for (let i = areasOfWork.length - 1; i >= 0; i--) {
+				if (areasOfWork[i]['name'] == "I don't know") {
+					areasOfWork.splice(i, 1)
+				}
+			}
+
 			res.render('page/course/audience/add-area-of-work', {areasOfWork: areasOfWork})
 		}
 	}
@@ -213,6 +219,12 @@ export class AudienceController {
 	setAreasOfWork() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			const areaOfWork = req.body.areaOfWork === 'all' ? await this.getAllProfessions() : [req.body['parent']]
+
+			const index = areaOfWork.indexOf("I don't know")
+			if (index > -1) {
+				areaOfWork.splice(index, 1)
+			}
+
 			res.locals.audience.areasOfWork = areaOfWork
 			res.locals.audience.name = await this.audienceService.getAudienceName(res.locals.audience)
 
