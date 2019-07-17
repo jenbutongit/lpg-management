@@ -125,22 +125,20 @@ describe('CsrsService tests', () => {
 		})
 	})
 
-	// describe('#getDepartmentCodeToNameMapping', () => {
-	// 	it('should return a map from department code to name', async () => {
-	// 		const hmrcName = 'HM Revenue & Customs'
-	// 		const dwpName = 'Department for Work & Pensions'
-	//
-	// 		csrsService.getOrganisations = sinon.stub().returns({
-	// 			_embedded: {
-	// 				organisationalUnits: [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}],
-	// 			},
-	// 		})
-	// 		expect(await csrsService.getDepartmentCodeToNameMapping()).to.be.deep.equal({
-	// 			hmrc: hmrcName,
-	// 			dwp: dwpName,
-	// 		})
-	// 	})
-	// })
+	describe('#getDepartmentCodeToNameMapping', () => {
+		it('should return a map from department code to name', async () => {
+			const hmrcName = 'HM Revenue & Customs'
+			const dwpName = 'Department for Work & Pensions'
+			const expectedNames = [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}]
+
+			csrsService.getOrganisations = sinon.stub().returns(expectedNames)
+
+			expect(await csrsService.getDepartmentCodeToNameMapping()).to.be.deep.equal({
+				hmrc: hmrcName,
+				dwp: dwpName,
+			})
+		})
+	})
 
 	describe('#getGradeCodeToNameMapping', () => {
 		it('should return a map from grade code to name', async () => {
@@ -159,18 +157,16 @@ describe('CsrsService tests', () => {
 		})
 	})
 
-	// describe('#getDepartmentCodeToAbbreviationMapping', () => {
-	// 	it('should return a map from department code to abbreviation', async () => {
-	// 		const hmrcAbbreviation = 'HMRC'
-	// 		const dwpAbbreviation = 'DWP'
-	//
-	// 		csrsService.getOrganisations = sinon.stub().returns({
-	// 			foo: [{code: 'hmrc', abbreviation: hmrcAbbreviation}, {code: 'dwp', abbreviation: dwpAbbreviation}],
-	// 		})
-	// 		expect(await csrsService.getDepartmentCodeToAbbreviationMapping()).to.be.deep.equal({
-	// 			hmrc: hmrcAbbreviation,
-	// 			dwp: dwpAbbreviation,
-	// 		})
-	// 	})
-	// })
+	describe('#getDepartmentCodeToAbbreviationMapping', () => {
+		it('should return a map from department code to abbreviation', async () => {
+			const hmrcAbbreviation = 'HMRC'
+			const dwpAbbreviation = 'DWP'
+			const expectedOrganisationalUnits = [{code: 'hmrc', abbreviation: hmrcAbbreviation}, {code: 'dwp', abbreviation: dwpAbbreviation}]
+			csrsService.getOrganisations = sinon.stub().returns(expectedOrganisationalUnits)
+			expect(await csrsService.getDepartmentCodeToAbbreviationMapping()).to.be.deep.equal({
+				hmrc: hmrcAbbreviation,
+				dwp: dwpAbbreviation,
+			})
+		})
+	})
 })
