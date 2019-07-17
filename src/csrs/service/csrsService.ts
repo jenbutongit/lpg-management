@@ -100,7 +100,7 @@ export class CsrsService {
 	}
 
 	async getDepartmentCodeToAbbreviationMapping() {
-		return this.getCodeToAbbreviationMapping(this.getOrganisations, '$._embedded.organisationalUnits.*', CsrsService.DEPARTMENT_CODE_TO_ABBREVIATION_MAPPING)
+		return this.getCodeToAbbreviationMapping(this.getOrganisations, '$.*', CsrsService.DEPARTMENT_CODE_TO_ABBREVIATION_MAPPING)
 	}
 
 	private async getCodeToAbbreviationMapping(functionToRetrieveMappingFromBackend: () => Promise<any>, pathForMapObjects: string, cacheKey: string) {
