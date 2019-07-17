@@ -19,7 +19,7 @@ export class CsrsService {
 	}
 
 	async getOrganisations() {
-		return await this.restService.get('/organisationalUnits/?size=999')
+		return await this.restService.get('/organisationalUnits/normalised')
 	}
 
 	async postSkills(quiz: any) {
