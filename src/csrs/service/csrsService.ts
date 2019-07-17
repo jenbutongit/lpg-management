@@ -19,7 +19,7 @@ export class CsrsService {
 	}
 
 	async getOrganisations() {
-		return await this.restService.get('/organisationalUnits/?size=999')
+		return await this.restService.get('/organisationalUnits/normalised')
 	}
 
 	async postSkills(quiz: any) {
@@ -71,7 +71,7 @@ export class CsrsService {
 	}
 
 	async getDepartmentCodeToNameMapping() {
-		return this.getCodeToNameMapping(this.getOrganisations, '$._embedded.organisationalUnits.*', CsrsService.DEPARTMENT_CODE_TO_NAME_MAPPING)
+		return this.getCodeToNameMapping(this.getOrganisations, '$.*', CsrsService.DEPARTMENT_CODE_TO_NAME_MAPPING)
 	}
 
 	async getGradeCodeToNameMapping() {
@@ -100,7 +100,7 @@ export class CsrsService {
 	}
 
 	async getDepartmentCodeToAbbreviationMapping() {
-		return this.getCodeToAbbreviationMapping(this.getOrganisations, '$._embedded.organisationalUnits.*', CsrsService.DEPARTMENT_CODE_TO_ABBREVIATION_MAPPING)
+		return this.getCodeToAbbreviationMapping(this.getOrganisations, '$.*', CsrsService.DEPARTMENT_CODE_TO_ABBREVIATION_MAPPING)
 	}
 
 	private async getCodeToAbbreviationMapping(functionToRetrieveMappingFromBackend: () => Promise<any>, pathForMapObjects: string, cacheKey: string) {

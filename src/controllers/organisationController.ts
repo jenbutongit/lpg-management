@@ -59,10 +59,15 @@ export class OrganisationController implements FormController {
 	}
 
 	public getOrganisationList() {
-		return async (request: Request, response: Response) => {
-			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnits()
-
-			response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
+		return async (request: Request, response: Response, next: NextFunction) => {
+			await this.csrs
+				.listOrganisationalUnits()
+				.then(organisationalUnits => {
+					response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 

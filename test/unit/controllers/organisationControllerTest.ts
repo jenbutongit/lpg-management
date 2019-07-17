@@ -3,7 +3,7 @@ import {mockReq, mockRes} from 'sinon-express-mock'
 import * as chai from 'chai'
 import {expect} from 'chai'
 import * as sinonChai from 'sinon-chai'
-import {Request, Response} from 'express'
+import {NextFunction, Request, Response} from 'express'
 import * as sinon from 'sinon'
 import {OrganisationController} from '../../../src/controllers/organisationController'
 import {Csrs} from '../../../src/csrs/index'
@@ -24,6 +24,7 @@ describe('Organisation Controller Tests', function() {
 
 	let req: Request
 	let res: Response
+	let next: NextFunction
 
 	beforeEach(() => {
 		csrs = <Csrs>{}
@@ -34,6 +35,7 @@ describe('Organisation Controller Tests', function() {
 
 		req = mockReq()
 		res = mockRes()
+		next = sinon.stub()
 
 		req.session!.save = callback => {
 			callback(undefined)
@@ -50,12 +52,12 @@ describe('Organisation Controller Tests', function() {
 			results: [organisationalUnit],
 		} as PageResults<OrganisationalUnit>
 
-		const getOrganisations: (request: Request, response: Response) => void = organisationController.getOrganisationList()
+		const getOrganisations: (request: Request, response: Response, next: NextFunction) => void = organisationController.getOrganisationList()
 
 		let listOrganisationalUnits = sinon.stub().returns(Promise.resolve(pageResults))
 		csrs.listOrganisationalUnits = listOrganisationalUnits
 
-		await getOrganisations(req, res)
+		await getOrganisations(req, res, next)
 
 		expect(res.render).to.have.been.calledOnceWith('page/organisation/manage-organisations', {organisationalUnits: pageResults})
 	})
