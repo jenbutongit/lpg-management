@@ -71,7 +71,7 @@ export class CsrsService {
 	}
 
 	async getDepartmentCodeToNameMapping() {
-		return this.getCodeToNameMapping(this.getOrganisations, '$._embedded.organisationalUnits.*', CsrsService.DEPARTMENT_CODE_TO_NAME_MAPPING)
+		return this.getCodeToNameMapping(this.getOrganisations, '$.*', CsrsService.DEPARTMENT_CODE_TO_NAME_MAPPING)
 	}
 
 	async getGradeCodeToNameMapping() {
