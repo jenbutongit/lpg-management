@@ -97,7 +97,8 @@ export class OrganisationController implements FormController {
 
 			try {
 				const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
-
+				this.csrs.listOrganisationalUnits()
+				this.csrs.listOrganisationalUnitsForTypehead()
 				request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
 
 				response.redirect(`/content-management/organisations/${newOrganisationalUnit.id}/overview`)
@@ -132,6 +133,8 @@ export class OrganisationController implements FormController {
 
 			try {
 				await this.csrs.updateOrganisationalUnit(organisationalUnit.id, data)
+				this.csrs.listOrganisationalUnits()
+				this.csrs.listOrganisationalUnitsForTypehead()
 			} catch (e) {
 				const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
 
