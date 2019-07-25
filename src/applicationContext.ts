@@ -71,6 +71,10 @@ import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartE
 import {SkillsController} from './controllers/skillsController'
 import {AudienceService} from './lib/audienceService'
 import {AgencyTokenHttpService} from './csrs/agencyTokenHttpService'
+import {AgencyToken} from './csrs/model/agencyToken'
+import {AgencyTokenFactory} from './csrs/model/agencyTokenFactory'
+import {AgencyTokenService} from './lib/agencyTokenService'
+import {AgencyTokenController} from './controllers/agencyTokenController'
 
 log4js.configure(config.LOGGING)
 
@@ -140,6 +144,10 @@ export class ApplicationContext {
 	reportService: ReportService
 	skillsController: SkillsController
 	audienceService: AudienceService
+	agencyTokenFactory: AgencyTokenFactory
+	agencyTokenValidator: Validator<AgencyToken>
+	agencyTokenService: AgencyTokenService
+	agencyTokenController: AgencyTokenController
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -283,6 +291,12 @@ export class ApplicationContext {
 		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory, this.agencyTokenHttpService)
 
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
+
+		this.agencyTokenFactory = new AgencyTokenFactory()
+		this.agencyTokenValidator = new Validator<AgencyToken>(this.agencyTokenFactory)
+		this.agencyTokenService = new AgencyTokenService()
+		this.agencyTokenController = new AgencyTokenController(this.agencyTokenValidator, this.agencyTokenService, this.organisationalUnitService, this.agencyTokenFactory, this.csrs)
+
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)

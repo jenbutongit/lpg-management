@@ -68,6 +68,8 @@ export class OrganisationController implements FormController {
 
 	public organisationOverview() {
 		return async (request: Request, response: Response) => {
+			this.deleteAgencyTokenDataStoredInSession(request)
+
 			response.render('page/organisation/organisation-overview')
 		}
 	}
@@ -123,6 +125,7 @@ export class OrganisationController implements FormController {
 				abbreviation: request.body.abbreviation || organisationalUnit.abbreviation,
 				code: request.body.code || organisationalUnit.code,
 				parent: request.body.parent,
+				agencyToken: organisationalUnit.agencyToken
 			}
 
 			try {
@@ -156,6 +159,15 @@ export class OrganisationController implements FormController {
 			request.session!.sessionFlash = {organisationRemovedMessage: 'organisationRemovedMessage', organisationalUnit: organisationalUnit}
 
 			response.redirect('/content-management/organisations/manage')
+		}
+	}
+
+	private deleteAgencyTokenDataStoredInSession(request: any) {
+		if (request.session!.domainsForAgencyToken) {
+			delete request.session!.domainsForAgencyToken
+		}
+		if (request.session!.agencyTokenNumber) {
+			delete request.session!.agencyTokenNumber
 		}
 	}
 }

@@ -1,4 +1,26 @@
 {
+	"agencyToken": {
+		"title": {
+			"addAgencyToken": "Add token",
+			"editAgencyToken": "Edit token",
+			"deleteAgencyToken": "Delete token"
+		},
+		"text": {
+			"tokenNumber": "Token number",
+			"numberOfSpaces": "Number of spaces",
+			"domains": "Domains"
+		},
+		"validation": {
+			"capacity": {
+				"invalid": "Number of spaces is required and must be a whole number between 1 and 999,999"
+			},
+			"domains": {
+				"empty": "At least one domain must be added",
+				"invalidFormat": "Invalid domain format",
+				"invalid": "Invalid domains"
+			}
+		}
+	},
 	"audience": {
 		"pageTitle": {
 			"addName": "Add audience name",
