@@ -36,6 +36,6 @@ export class AgencyTokenService {
 
 	validateAgencyTokenNumber(agencyTokenNumber: string) {
 		const regexForValidCharacters = /^[A-Z0-9]+$/
-		return agencyTokenNumber.length == 10 && agencyTokenNumber.match(regexForValidCharacters)
+		return agencyTokenNumber.length == 10 && regexForValidCharacters.test(agencyTokenNumber)
 	}
 }

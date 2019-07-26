@@ -169,22 +169,30 @@ export class AgencyTokenController implements FormController {
 				})
 			}
 
+			const agencyTokenNumberFormatIsValid = this.agencyTokenService.validateAgencyTokenNumber(request.body.tokenNumber)
+			if (!agencyTokenNumberFormatIsValid) {
+				const errors = {fields: {tokenNumber: ['agencyToken.validation.tokenNumber.invalidFormat']}, size: 1}
+				request.session!.sessionFlash = { errors: errors }
+
+				return request.session!.save(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
+				})
+			}
+
 			console.log(`\n\nSetting agency token for: ${organisationalUnit.name}\n----------------------------------------`)
 			console.log('tokenNumber = ' + request.body.tokenNumber)
 			console.log('capacity = ' + request.body.capacity)
 			console.log('domains = ' + request.session!.domainsForAgencyToken + '\n\n')
 
-			const data = {
-				...request.body,
-				domains: request.session!.domains
-			 }
-			const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
+			// const data = {
+			// 	...request.body,
+			// 	domains: request.session!.domains
+			//  }
+			// const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
 
-			organisationalUnit.agencyToken = agencyToken
+			// organisationalUnit.agencyToken = agencyToken
 
-			await this.csrs.updateOrganisationalUnit(organisationalUnit.id, organisationalUnit)
-
-			// include try/catch for 'token number already exists' case
+			// await this.csrs.updateOrganisationalUnit(organisationalUnit.id, organisationalUnit)
 
 			this.deleteAgencyTokenDataStoredInSession(request)
 

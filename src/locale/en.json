@@ -18,6 +18,9 @@
 				"empty": "At least one domain must be added",
 				"invalidFormat": "Invalid domain format",
 				"invalid": "Invalid domains"
+			},
+			"tokenNumber": {
+				"invalidFormat": "Invalid token number format – please re-generate token number"
 			}
 		}
 	},
