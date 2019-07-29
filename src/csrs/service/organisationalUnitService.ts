@@ -19,7 +19,7 @@ export class OrganisationalUnitService {
 	async getOrganisationalUnit(uri: string) {
 		let organisationalUnit: any
 		let parent: any
-		let agencyToken: any
+		// let agencyToken: any
 
 		organisationalUnit = await this.csrs.getOrganisationalUnit(uri).catch(error => {
 			throw error
@@ -33,13 +33,15 @@ export class OrganisationalUnitService {
 			}
 		})
 
-		agencyToken = await this.agencyTokenHttpService.getAgencyToken(organisationalUnit.id).catch(error => {
-			if (error.response.status == 404) {
-				logger.debug(`Organisation ${organisationalUnit.id} has no agency token`)
-			} else {
-				throw error
-			}
-		})
+		// agencyToken = await this.agencyTokenHttpService.getAgencyToken(organisationalUnit.id).catch(error => {
+		// 	console.log('error = ' + error)
+
+		// 	// if (error.response.status == 404) {
+		// 	// 	logger.debug(`Organisation ${organisationalUnit.id} has no agency token`)
+		// 	// } else {
+		// 	// 	throw error
+		// 	// }
+		// })
 
 		const data = {
 			id: organisationalUnit.id,
@@ -47,7 +49,7 @@ export class OrganisationalUnitService {
 			code: organisationalUnit.code,
 			abbreviation: organisationalUnit.abbreviation,
 			parent: parent,
-			agencyToken: agencyToken,
+			agencyToken: organisationalUnit.agencyToken,
 		}
 
 		return this.organisationalUnitFactory.create(data)

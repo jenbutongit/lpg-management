@@ -187,10 +187,8 @@ export class AgencyTokenController implements FormController {
 			// const data = {
 			// 	...request.body,
 			// 	domains: request.session!.domains
-			//  }
+			// }
 			// const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
-
-			// organisationalUnit.agencyToken = agencyToken
 
 			// await this.csrs.updateOrganisationalUnit(organisationalUnit.id, organisationalUnit)
 
