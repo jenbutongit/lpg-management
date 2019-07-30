@@ -166,7 +166,7 @@ describe('Organisation Controller Tests', function() {
 		validator.check = sinon.stub().returns({fields: [], size: 0})
 		csrs.updateOrganisationalUnit = sinon.stub().returns(organisation)
 		csrs.refreshCache = sinon.stub()
-		
+
 		const updateOrganisation = organisationController.updateOrganisation()
 		await updateOrganisation(req, res)
 
