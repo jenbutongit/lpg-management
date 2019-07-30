@@ -40,12 +40,12 @@ export class Csrs {
 		return await this._organisationalUnitService.createWithoutFollowing(`/organisationalUnits/${organisationalUnitId}/agencyToken`, agencyToken)
 	}
 
+	async updateAgencyToken(organisationalUnitId: string, agencyToken: any): Promise<OrganisationalUnit> {
+		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}/agencyToken`, agencyToken)
+	}
+
 	// async getAgencyToken(organisationalUnitId: string): Promise<OrganisationalUnit> {
 	// 	return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
-	// }
-	//
-	// async updateAgencyToken(organisationalUnitId: string, organisationalUnit: any): Promise<OrganisationalUnit> {
-	// 	return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
 	// }
 
 	async deleteAgencyToken(organisationalUnitId: string): Promise<void> {

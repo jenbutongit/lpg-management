@@ -77,6 +77,14 @@
                             name: "domainToAdd",
                             errorMessage: { text: i18n.agencyToken.validation.domains.empty }
                         }) }}
+                    {% elif errors.fields.domains == 'agencyToken.validation.domains.alreadyExists' %}                    
+                        {{ govukInput ({
+                            label: { text: "Add domain" },
+                            classes: "govuk-input--width-10",
+                            id: "domainToAdd",
+                            name: "domainToAdd",
+                            errorMessage: { text: i18n.agencyToken.validation.domains.alreadyExists }
+                        }) }}
                     {% endif %}
                 {% else %}
                     {{ govukInput ({
@@ -96,7 +104,11 @@
             </fieldset>
         </form>
 
+        {% if organisationalUnit.agencyToken %}
+        <form action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token/edit" method="post">
+        {% else %}
         <form action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token" method="post">
+        {% endif %}
 
             {% if errors.fields.capacity %}
                 {{ govukInput ({

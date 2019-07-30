@@ -59,6 +59,7 @@ export class AgencyTokenController implements FormController {
 	private setRouterPaths() {
 		this.router.get('/content-management/organisations/:organisationalUnitId/agency-token', asyncHandler(this.addEditAgencyToken()))
 		this.router.post('/content-management/organisations/:organisationalUnitId/agency-token', asyncHandler(this.createAgencyToken()))
+		this.router.post('/content-management/organisations/:organisationalUnitId/agency-token/edit', asyncHandler(this.updateAgencyToken()))
 		this.router.get('/content-management/organisations/:organisationalUnitId/agency-token/delete', asyncHandler(this.deleteAgencyTokenConfirmation()))
 		this.router.post('/content-management/organisations/:organisationalUnitId/agency-token/delete', asyncHandler(this.deleteAgencyToken()))
 		this.router.post('/content-management/organisations/:organisationalUnitId/agency-token/domain', asyncHandler(this.addDomainToAgencyTokenWithinSession()))
@@ -106,7 +107,6 @@ export class AgencyTokenController implements FormController {
 			if (!domainIsValid) {
 				const errors = {fields: {domains: ['agencyToken.validation.domains.invalidFormat']}, size: 1}
 				request.session!.sessionFlash = {errors: errors}
-				console.log('SessionFlash.errors = ' + JSON.stringify(errors, null, 2))
 
 				return request.session!.save(() => {
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
@@ -115,6 +115,18 @@ export class AgencyTokenController implements FormController {
 
 			if (request.session!.domainsForAgencyToken == undefined) {
 				request.session!.domainsForAgencyToken = []
+			}
+
+			// validate domain is not already present in domainsForAgencyToken
+			for (let domain of request.session!.domainsForAgencyToken) {
+				if (domain == domainToAdd) {
+					const errors = {fields: {domains: ['agencyToken.validation.domains.alreadyExists']}, size: 1}
+					request.session!.sessionFlash = {errors: errors}
+
+					return request.session!.save(() => {
+						response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
+					})
+				}
 			}
 
 			request.session!.domainsForAgencyToken.push(domainToAdd)
@@ -187,7 +199,8 @@ export class AgencyTokenController implements FormController {
 				})
 			}
 
-			console.log(`\n\nSetting agency token for: ${organisationalUnit.name}\n----------------------------------------`)
+			console.log(`\n\nCreating agency token for: ${organisationalUnit.name}`)
+			console.log(`----------------------------------------`)
 			console.log('tokenNumber = ' + request.body.tokenNumber)
 			console.log('capacity = ' + request.body.capacity)
 			console.log('domains = ' + request.session!.domainsForAgencyToken + '\n\n')
@@ -202,6 +215,76 @@ export class AgencyTokenController implements FormController {
 
 			await this.csrs
 				.createAgencyToken(organisationalUnit.id, agencyToken)
+				.then(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
+				})
+				.catch(error => {
+					next(error)
+				})
+		}
+	}
+
+	@Validate({
+		fields: ['all'],
+		redirect: '/content-management/organisations/:organisationalUnitId/agency-token',
+	})
+	public updateAgencyToken() {
+		return async (request: Request, response: Response, next: NextFunction) => {
+			const organisationalUnit: OrganisationalUnit = response.locals.organisationalUnit
+
+			logger.debug(`Adding agency token to organisation: ${organisationalUnit.name}`)
+
+			const capacityIsValid = this.agencyTokenService.validateCapacity(request.body.capacity)
+			if (!capacityIsValid) {
+				const errors = {fields: {capacity: ['agencyToken.validation.capacity.invalid']}, size: 1}
+				request.session!.sessionFlash = {errors: errors}
+
+				return request.session!.save(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
+				})
+			}
+
+			const domainsIsValid = this.agencyTokenService.validateDomains(request.session!.domainsForAgencyToken)
+			if (!domainsIsValid) {
+				let errors = {}
+				if (!(Array.isArray(request.session!.domainsForAgencyToken) && request.session!.domainsForAgencyToken.length)) {
+					errors = {fields: {domains: ['agencyToken.validation.domains.empty']}, size: 1}
+				} else {
+					errors = {fields: {domains: ['agencyToken.validation.domains.invalid']}, size: 1}
+				}
+				request.session!.sessionFlash = {errors: errors}
+
+				return request.session!.save(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
+				})
+			}
+
+			const agencyTokenNumberFormatIsValid = this.agencyTokenService.validateAgencyTokenNumber(request.body.tokenNumber)
+			if (!agencyTokenNumberFormatIsValid) {
+				const errors = {fields: {tokenNumber: ['agencyToken.validation.tokenNumber.invalidFormat']}, size: 1}
+				request.session!.sessionFlash = {errors: errors}
+
+				return request.session!.save(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
+				})
+			}
+
+			console.log(`\n\nUpdating agency token for: ${organisationalUnit.name}`)
+			console.log(`----------------------------------------`)
+			console.log('tokenNumber = ' + request.body.tokenNumber)
+			console.log('capacity = ' + request.body.capacity)
+			console.log('domains = ' + request.session!.domainsForAgencyToken + '\n\n')
+
+			const data = {
+				...request.body,
+				domains: request.session!.domainsForAgencyToken,
+			}
+			const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
+
+			this.deleteAgencyTokenDataStoredInSession(request)
+
+			await this.csrs
+				.updateAgencyToken(organisationalUnit.id, agencyToken)
 				.then(() => {
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 				})
