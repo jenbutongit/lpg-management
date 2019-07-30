@@ -51,10 +51,6 @@ export class EntityService<T> {
 		return this._factory.create(data)
 	}
 
-	async getWithoutFollow(path: string): Promise<void> {
-		await this._restService.get(path)
-	}
-
 	async update(path: string, entity: any): Promise<T> {
 		return await this._restService.put(path, entity)
 	}
