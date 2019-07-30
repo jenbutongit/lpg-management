@@ -295,7 +295,13 @@ export class ApplicationContext {
 		this.agencyTokenFactory = new AgencyTokenFactory()
 		this.agencyTokenValidator = new Validator<AgencyToken>(this.agencyTokenFactory)
 		this.agencyTokenService = new AgencyTokenService()
-		this.agencyTokenController = new AgencyTokenController(this.agencyTokenValidator, this.agencyTokenService, this.organisationalUnitService, this.agencyTokenFactory, this.csrs)
+		this.agencyTokenController = new AgencyTokenController(
+			this.agencyTokenValidator,
+			this.agencyTokenService,
+			this.organisationalUnitService,
+			this.agencyTokenFactory,
+			this.csrs
+		)
 
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 

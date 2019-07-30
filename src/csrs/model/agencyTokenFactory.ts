@@ -13,10 +13,10 @@ export class AgencyTokenFactory {
 		const agencyToken: AgencyToken = new AgencyToken()
 
 		agencyToken.id = data.id
-		agencyToken.token = data.token
+		agencyToken.token = data.tokenNumber
 		agencyToken.capacity = data.capacity
 		agencyToken.capacityUsed = data.capacity - 10 // ** dummy data for now **
-		agencyToken.agencyDomains = (data.agencyDomains || []).map(this._agencyDomainFactory.create)
+		agencyToken.agencyDomains = (data.domains || []).map(this._agencyDomainFactory.create)
 
 		return agencyToken
 	}

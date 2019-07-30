@@ -5,6 +5,7 @@ import {Auth} from '../identity/auth'
 import {OrganisationalUnitFactory} from './model/organisationalUnitFactory'
 import {DefaultPageResults} from '../learning-catalogue/model/defaultPageResults'
 import {CsrsConfig} from './csrsConfig'
+import {AgencyToken} from './model/agencyToken'
 
 export class Csrs {
 	private _organisationalUnitService: EntityService<OrganisationalUnit>
@@ -35,9 +36,21 @@ export class Csrs {
 		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
 	}
 
-	// create agency token
+	async createAgencyToken(organisationalUnitId: String, agencyToken: AgencyToken): Promise<OrganisationalUnit> {
+		return await this._organisationalUnitService.createWithoutFollowing(`/organisationalUnits/${organisationalUnitId}/agencyToken`, agencyToken)
+	}
 
-	// update agency token (patch)
+	// async getAgencyToken(organisationalUnitId: string): Promise<OrganisationalUnit> {
+	// 	return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
+	// }
+	//
+	// async updateAgencyToken(organisationalUnitId: string, organisationalUnit: any): Promise<OrganisationalUnit> {
+	// 	return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
+	// }
+
+	async deleteAgencyToken(organisationalUnitId: string): Promise<void> {
+		return await this._organisationalUnitService.delete(`/organisationalUnits/${organisationalUnitId}/agencyToken`)
+	}
 
 	async deleteOrganisationalUnit(organisationalUnitId: string): Promise<void> {
 		return await this._organisationalUnitService.delete(`/organisationalUnits/${organisationalUnitId}`)

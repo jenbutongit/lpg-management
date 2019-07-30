@@ -8,8 +8,7 @@ export class AgencyDomainFactory {
 	public create(data: any): any {
 		const agencyDomain: AgencyDomain = new AgencyDomain()
 
-		agencyDomain.id = data.id
-		agencyDomain.domain = data.domain
+		agencyDomain.domain = data
 
 		return agencyDomain
 	}

@@ -125,7 +125,7 @@ export class OrganisationController implements FormController {
 				abbreviation: request.body.abbreviation || organisationalUnit.abbreviation,
 				code: request.body.code || organisationalUnit.code,
 				parent: request.body.parent,
-				agencyToken: organisationalUnit.agencyToken
+				agencyToken: organisationalUnit.agencyToken,
 			}
 
 			try {

@@ -1,5 +1,5 @@
-import { AgencyDomain } from './agencyDomain'
-import { IsNotEmpty, IsNumberString } from 'class-validator'
+import {AgencyDomain} from './agencyDomain'
+import {IsNotEmpty, IsNumberString} from 'class-validator'
 
 export class AgencyToken {
 	id: string
@@ -8,11 +8,11 @@ export class AgencyToken {
 
 	@IsNotEmpty({
 		groups: ['all', 'capacity'],
-		message: 'agencyToken.validation.capacity.invalid'
+		message: 'agencyToken.validation.capacity.invalid',
 	})
 	@IsNumberString({
 		groups: ['all', 'capacity'],
-		message: 'agencyToken.validation.capacity.invalid'
+		message: 'agencyToken.validation.capacity.invalid',
 	})
 	capacity: number
 

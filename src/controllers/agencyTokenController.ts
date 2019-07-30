@@ -1,15 +1,15 @@
-import { NextFunction, Request, Response, Router } from 'express'
+import {NextFunction, Request, Response, Router} from 'express'
 import * as asyncHandler from 'express-async-handler'
 import * as log4js from 'log4js'
-import { AgencyToken } from '../csrs/model/agencyToken'
-import { AgencyTokenService } from '../lib/agencyTokenService'
-import { FormController } from './formController'
-import { OrganisationalUnit } from '../csrs/model/organisationalUnit'
-import { OrganisationalUnitService } from '../csrs/service/organisationalUnitService'
-import { Validator } from '../learning-catalogue/validator/validator'
-import { Validate } from './formValidator'
-import { AgencyTokenFactory } from '../csrs/model/agencyTokenFactory';
-import { Csrs } from '../csrs';
+import {AgencyToken} from '../csrs/model/agencyToken'
+import {AgencyTokenService} from '../lib/agencyTokenService'
+import {FormController} from './formController'
+import {OrganisationalUnit} from '../csrs/model/organisationalUnit'
+import {OrganisationalUnitService} from '../csrs/service/organisationalUnitService'
+import {Validator} from '../learning-catalogue/validator/validator'
+import {Validate} from './formValidator'
+import {AgencyTokenFactory} from '../csrs/model/agencyTokenFactory'
+import {Csrs} from '../csrs'
 
 const logger = log4js.getLogger('controllers/AgencyTokenController')
 
@@ -20,9 +20,14 @@ export class AgencyTokenController implements FormController {
 	organisationalUnitService: OrganisationalUnitService
 	agencyTokenFactory: AgencyTokenFactory
 	csrs: Csrs
-	
-	constructor(validator: Validator<AgencyToken>, agencyTokenService: AgencyTokenService, organisationalUnitService: OrganisationalUnitService, agencyTokenFactory: AgencyTokenFactory, 
-			csrs: Csrs) {
+
+	constructor(
+		validator: Validator<AgencyToken>,
+		agencyTokenService: AgencyTokenService,
+		organisationalUnitService: OrganisationalUnitService,
+		agencyTokenFactory: AgencyTokenFactory,
+		csrs: Csrs
+	) {
 		this.router = Router()
 		this.validator = validator
 		this.agencyTokenService = agencyTokenService
@@ -75,15 +80,18 @@ export class AgencyTokenController implements FormController {
 
 			// list the token's domains if editing and no provisional (session-local) changes to these domains have been made yet
 			if (organisationalUnit.agencyToken && !request.session!.domainsForAgencyToken) {
-				request.session!.domainsForAgencyToken = organisationalUnit.agencyToken.agencyDomains.map((agencyDomain) => { return agencyDomain.domain })
+				request.session!.domainsForAgencyToken = organisationalUnit.agencyToken.agencyDomains.map(agencyDomain => {
+					return agencyDomain.domain
+				})
 			}
 
 			const domainsForAgencyToken = request.session!.domainsForAgencyToken
 
 			request.session!.save(() => {
-				response.render('page/organisation/add-edit-agency-token', { organisationalUnit: organisationalUnit, 
+				response.render('page/organisation/add-edit-agency-token', {
+					organisationalUnit: organisationalUnit,
 					agencyTokenNumber: agencyTokenNumber,
-					domainsForAgencyToken: domainsForAgencyToken
+					domainsForAgencyToken: domainsForAgencyToken,
 				})
 			})
 		}
@@ -97,7 +105,7 @@ export class AgencyTokenController implements FormController {
 			const domainIsValid = this.agencyTokenService.validateDomains([domainToAdd])
 			if (!domainIsValid) {
 				const errors = {fields: {domains: ['agencyToken.validation.domains.invalidFormat']}, size: 1}
-				request.session!.sessionFlash = { errors: errors }
+				request.session!.sessionFlash = {errors: errors}
 				console.log('SessionFlash.errors = ' + JSON.stringify(errors, null, 2))
 
 				return request.session!.save(() => {
@@ -139,7 +147,7 @@ export class AgencyTokenController implements FormController {
 		redirect: '/content-management/organisations/:organisationalUnitId/agency-token',
 	})
 	public createAgencyToken() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const organisationalUnit: OrganisationalUnit = response.locals.organisationalUnit
 
 			logger.debug(`Adding agency token to organisation: ${organisationalUnit.name}`)
@@ -147,7 +155,7 @@ export class AgencyTokenController implements FormController {
 			const capacityIsValid = this.agencyTokenService.validateCapacity(request.body.capacity)
 			if (!capacityIsValid) {
 				const errors = {fields: {capacity: ['agencyToken.validation.capacity.invalid']}, size: 1}
-				request.session!.sessionFlash = { errors: errors }
+				request.session!.sessionFlash = {errors: errors}
 
 				return request.session!.save(() => {
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
@@ -162,7 +170,7 @@ export class AgencyTokenController implements FormController {
 				} else {
 					errors = {fields: {domains: ['agencyToken.validation.domains.invalid']}, size: 1}
 				}
-				request.session!.sessionFlash = { errors: errors }
+				request.session!.sessionFlash = {errors: errors}
 
 				return request.session!.save(() => {
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
@@ -172,7 +180,7 @@ export class AgencyTokenController implements FormController {
 			const agencyTokenNumberFormatIsValid = this.agencyTokenService.validateAgencyTokenNumber(request.body.tokenNumber)
 			if (!agencyTokenNumberFormatIsValid) {
 				const errors = {fields: {tokenNumber: ['agencyToken.validation.tokenNumber.invalidFormat']}, size: 1}
-				request.session!.sessionFlash = { errors: errors }
+				request.session!.sessionFlash = {errors: errors}
 
 				return request.session!.save(() => {
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/agency-token`)
@@ -184,17 +192,22 @@ export class AgencyTokenController implements FormController {
 			console.log('capacity = ' + request.body.capacity)
 			console.log('domains = ' + request.session!.domainsForAgencyToken + '\n\n')
 
-			// const data = {
-			// 	...request.body,
-			// 	domains: request.session!.domains
-			// }
-			// const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
-
-			// await this.csrs.updateOrganisationalUnit(organisationalUnit.id, organisationalUnit)
+			const data = {
+				...request.body,
+				domains: request.session!.domainsForAgencyToken,
+			}
+			const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
 
 			this.deleteAgencyTokenDataStoredInSession(request)
 
-			response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
+			await this.csrs
+				.createAgencyToken(organisationalUnit.id, agencyToken)
+				.then(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -205,14 +218,20 @@ export class AgencyTokenController implements FormController {
 	}
 
 	public deleteAgencyToken() {
-		return async (request: Request, response: Response) => {
+		return async (request: Request, response: Response, next: NextFunction) => {
 			const organisationalUnit = response.locals.organisationalUnit
 
 			logger.debug(`Deleting agency token from organisation: ${organisationalUnit.name}`)
 
-			// CSRS 'delete agency token' call here
-
-			request.session!.sessionFlash = { displayAgencyTokenRemovedMessage: true, organisationalUnit: organisationalUnit }
+			await this.csrs
+				.deleteAgencyToken(organisationalUnit.id)
+				.then(() => {
+					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
+				})
+				.catch(error => {
+					next(error)
+				})
+			request.session!.sessionFlash = {displayAgencyTokenRemovedMessage: true, organisationalUnit: organisationalUnit}
 
 			response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 		}

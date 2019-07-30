@@ -19,7 +19,6 @@ export class OrganisationalUnitService {
 	async getOrganisationalUnit(uri: string) {
 		let organisationalUnit: any
 		let parent: any
-		// let agencyToken: any
 
 		organisationalUnit = await this.csrs.getOrganisationalUnit(uri).catch(error => {
 			throw error
@@ -32,16 +31,6 @@ export class OrganisationalUnitService {
 				throw error
 			}
 		})
-
-		// agencyToken = await this.agencyTokenHttpService.getAgencyToken(organisationalUnit.id).catch(error => {
-		// 	console.log('error = ' + error)
-
-		// 	// if (error.response.status == 404) {
-		// 	// 	logger.debug(`Organisation ${organisationalUnit.id} has no agency token`)
-		// 	// } else {
-		// 	// 	throw error
-		// 	// }
-		// })
 
 		const data = {
 			id: organisationalUnit.id,
