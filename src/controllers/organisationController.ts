@@ -132,6 +132,7 @@ export class OrganisationController implements FormController {
 
 			try {
 				await this.csrs.updateOrganisationalUnit(organisationalUnit.id, data)
+				await this.csrs.refreshCache()
 			} catch (e) {
 				const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
 

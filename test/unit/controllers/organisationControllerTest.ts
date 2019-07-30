@@ -105,6 +105,7 @@ describe('Organisation Controller Tests', function() {
 		organisationalUnitFactory.create = sinon.stub().returns(organisation)
 		validator.check = sinon.stub().returns({fields: [], size: 0})
 		csrs.createOrganisationalUnit = sinon.stub().returns(organisation)
+		csrs.refreshCache = sinon.stub()
 
 		const createOrganisation = organisationController.createOrganisation()
 		await createOrganisation(req, res)
@@ -164,7 +165,8 @@ describe('Organisation Controller Tests', function() {
 		organisationalUnitFactory.create = sinon.stub().returns(organisation)
 		validator.check = sinon.stub().returns({fields: [], size: 0})
 		csrs.updateOrganisationalUnit = sinon.stub().returns(organisation)
-
+		csrs.refreshCache = sinon.stub()
+		
 		const updateOrganisation = organisationController.updateOrganisation()
 		await updateOrganisation(req, res)
 
