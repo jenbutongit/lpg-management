@@ -30,6 +30,9 @@ export class Csrs {
 	async getOrganisationalUnit(organisationalUnitId: string): Promise<OrganisationalUnit> {
 		return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
 	}
+	async refreshCache(): Promise<void> {
+		return await this._organisationalUnitService.getWithoutFollow(`/organisationalUnits/cacheRefresh`)
+	}
 
 	async updateOrganisationalUnit(organisationalUnitId: string, organisationalUnit: any): Promise<OrganisationalUnit> {
 		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}`, organisationalUnit)
