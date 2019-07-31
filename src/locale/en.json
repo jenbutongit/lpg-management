@@ -15,8 +15,8 @@
 				"invalid": "Number of spaces is required and must be a whole number between 1 and 15,000"
 			},
 			"domains": {
-				"alreadyExists": "Domain is already present in list",
-				"empty": "At least one domain must be added",
+				"alreadyExists": "Domain already listed",
+				"empty": "At least one domain required",
 				"invalidFormat": "Invalid domain format",
 				"invalid": "Invalid domains"
 			},

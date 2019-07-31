@@ -49,59 +49,55 @@
             <p class="govuk-body">No domains have been added yet</p>
         {% endif %}
 
-        <form action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token/domain" method="post">  
-            <fieldset class="govuk-fieldset module-selector">
-
-                {% if errors.fields.domains %}
-                    {% if errors.fields.domains == 'agencyToken.validation.domains.invalid' %}
-                        {{ govukInput ({
-                            label: { text: "Add domain" },
-                            classes: "govuk-input--width-10",
-                            id: "domainToAdd",
-                            name: "domainToAdd",
-                            errorMessage: { text: i18n.agencyToken.validation.domains.invalid }
-                        }) }}
-                    {% elif errors.fields.domains == 'agencyToken.validation.domains.invalidFormat' %}
-                        {{ govukInput ({
-                            label: { text: "Add domain" },
-                            classes: "govuk-input--width-10",
-                            id: "domainToAdd",
-                            name: "domainToAdd",
-                            errorMessage: { text: i18n.agencyToken.validation.domains.invalidFormat }
-                        }) }}
-                    {% elif errors.fields.domains == 'agencyToken.validation.domains.empty' %}                    
-                        {{ govukInput ({
-                            label: { text: "Add domain" },
-                            classes: "govuk-input--width-10",
-                            id: "domainToAdd",
-                            name: "domainToAdd",
-                            errorMessage: { text: i18n.agencyToken.validation.domains.empty }
-                        }) }}
-                    {% elif errors.fields.domains == 'agencyToken.validation.domains.alreadyExists' %}                    
-                        {{ govukInput ({
-                            label: { text: "Add domain" },
-                            classes: "govuk-input--width-10",
-                            id: "domainToAdd",
-                            name: "domainToAdd",
-                            errorMessage: { text: i18n.agencyToken.validation.domains.alreadyExists }
-                        }) }}
-                    {% endif %}
-                {% else %}
+        <form id="add-domain-form" action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token/domain" method="post">
+            {% if errors.fields.domains %}
+                {% if errors.fields.domains == 'agencyToken.validation.domains.invalid' %}
                     {{ govukInput ({
                         label: { text: "Add domain" },
                         classes: "govuk-input--width-10",
                         id: "domainToAdd",
-                        name: "domainToAdd"
+                        name: "domainToAdd",
+                        errorMessage: { text: i18n.agencyToken.validation.domains.invalid }
+                    }) }}
+                {% elif errors.fields.domains == 'agencyToken.validation.domains.invalidFormat' %}
+                    {{ govukInput ({
+                        label: { text: "Add domain" },
+                        classes: "govuk-input--width-10",
+                        id: "domainToAdd",
+                        name: "domainToAdd",
+                        errorMessage: { text: i18n.agencyToken.validation.domains.invalidFormat }
+                    }) }}
+                {% elif errors.fields.domains == 'agencyToken.validation.domains.empty' %}                    
+                    {{ govukInput ({
+                        label: { text: "Add domain" },
+                        classes: "govuk-input--width-10",
+                        id: "domainToAdd",
+                        name: "domainToAdd",
+                        errorMessage: { text: i18n.agencyToken.validation.domains.empty }
+                    }) }}
+                {% elif errors.fields.domains == 'agencyToken.validation.domains.alreadyExists' %}
+                    {{ govukInput ({
+                        label: { text: "Add domain" },
+                        classes: "govuk-input--width-10",
+                        id: "domainToAdd",
+                        name: "domainToAdd",
+                        errorMessage: { text: i18n.agencyToken.validation.domains.alreadyExists }
                     }) }}
                 {% endif %}
-
-                {{ govukButton ({
-                    text: "Add domain",
-                    classes: "button-blue button-blue-organisations",
-                    type: "submit"
+            {% else %}
+                {{ govukInput ({
+                    label: { text: "Add domain" },
+                    classes: "govuk-input--width-10",
+                    id: "domainToAdd",
+                    name: "domainToAdd"
                 }) }}
+            {% endif %}
 
-            </fieldset>
+            {{ govukButton ({
+                text: "Add domain",
+                classes: "button-blue button-blue-organisations",
+                type: "submit"
+            }) }}
         </form>
 
         {% if organisationalUnit.agencyToken %}
