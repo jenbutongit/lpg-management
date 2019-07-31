@@ -44,10 +44,6 @@ export class Csrs {
 		return await this._organisationalUnitService.patch(`/organisationalUnits/${organisationalUnitId}/agencyToken`, agencyToken)
 	}
 
-	// async getAgencyToken(organisationalUnitId: string): Promise<OrganisationalUnit> {
-	// 	return await this._organisationalUnitService.get(`/organisationalUnits/${organisationalUnitId}`)
-	// }
-
 	async deleteAgencyToken(organisationalUnitId: string): Promise<void> {
 		return await this._organisationalUnitService.delete(`/organisationalUnits/${organisationalUnitId}/agencyToken`)
 	}

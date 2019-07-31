@@ -106,7 +106,7 @@
         <form action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token" method="post">
         {% endif %}
 
-            {% if errors.fields.capacity %}
+            {% if errors.fields.capacity == 'agencyToken.validation.capacity.invalid' %}
                 {{ govukInput ({
                     label: { text: i18n.agencyToken.text.numberOfSpaces },
                     classes: "govuk-input--width-10",
@@ -115,6 +115,16 @@
                     type: "number",
                     value: form.capacity | default(organisationalUnit.agencyToken.capacity),
                     errorMessage: { text: i18.agencyToken.validation.capacity.invalid }
+                }) }}
+            {% elif errors.fields.capacity == 'agencyToken.validation.capacity.lessThanCurrentUsage' %}
+                {{ govukInput ({
+                    label: { text: i18n.agencyToken.text.numberOfSpaces },
+                    classes: "govuk-input--width-10",
+                    id: "capacity",
+                    name: "capacity",
+                    type: "number",
+                    value: form.capacity | default(organisationalUnit.agencyToken.capacity),
+                    errorMessage: { text: i18.agencyToken.validation.capacity.lessThanCurrentUsage }
                 }) }}
             {% else %}
                 {{ govukInput ({
