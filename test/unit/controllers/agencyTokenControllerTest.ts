@@ -1,7 +1,7 @@
 import * as chai from 'chai'
 import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
-import { Request, Response } from 'express'
+import { Request, Response, NextFunction } from 'express'
 import { describe } from 'mocha'
 import { expect } from 'chai'
 import { mockRes, mockReq } from 'sinon-express-mock'
@@ -19,19 +19,19 @@ chai.use(sinonChai)
 describe('AgencyTokenController', () => {
 	let req: Request
 	let res: Response
-	// let next: NextFunction
+	let next: NextFunction
 	let error: Error
-	let agencyTokenFactory: AgencyTokenFactory = new AgencyTokenFactory()
+	let agencyTokenFactory: AgencyTokenFactory = <AgencyTokenFactory>{}
 	let agencyTokenService: AgencyTokenService = <AgencyTokenService>{}
-	let agencyTokenValidator: Validator<AgencyToken> = new Validator<AgencyToken>(agencyTokenFactory)
+	let agencyTokenValidator: Validator<AgencyToken> = <Validator<AgencyToken>>{}
 	let csrs: Csrs = <Csrs>{}
 	let organisationalUnitService: OrganisationalUnitService = <OrganisationalUnitService>{}
 	let agencyTokenController: AgencyTokenController = new AgencyTokenController(agencyTokenValidator, agencyTokenService, organisationalUnitService, agencyTokenFactory, csrs)
 
 	const organisationId = 'organisation-id'
 	const tokenNumber = 'ABCDEFG123'
-	// const capacity = '125'
-	// const domains = ['cabinetoffice.gov.uk', 'nhs.net']
+	const capacity = '125'
+	const domains = ['cabinetoffice.gov.uk', 'nhs.net']
 
 	beforeEach(() => {
 		req = mockReq()
@@ -41,7 +41,7 @@ describe('AgencyTokenController', () => {
 		res.locals.organisationalUnit = new OrganisationalUnit()
 		res.locals.organisationalUnit.id = organisationId
 
-		// next = sinon.stub()
+		next = sinon.stub()
 		error = new Error()
 	})
 
@@ -64,27 +64,25 @@ describe('AgencyTokenController', () => {
 		})
 	})
 
-	// describe('#createAgencyToken', () => {
-	// 	it('should create agency token for organisation and redirect to the Organisation Overview page if data submitted is valid', async function() {
-	// 		req.body = { capacity: capacity, tokenNumber: tokenNumber }
-	// 		req.session!.domainsForAgencyToken = domains
+	describe.only('#createAgencyToken', () => {
+		it('should create agency token for organisation and redirect to the Organisation Overview page if data submitted is valid', async function() {
+			req.body = { capacity: capacity, tokenNumber: tokenNumber }
+			req.session!.domainsForAgencyToken = domains
 
-	// 		agencyTokenService.validateCapacity = sinon.stub().returns(true)
-	// 		agencyTokenService.validateAgencyTokenNumber = sinon.stub().returns(true)
-	// 		agencyTokenService.validateDomains = sinon.stub().returns(true)
+			agencyTokenValidator.check = sinon.stub().returns([])
+			agencyTokenService.validateCapacity = sinon.stub().returns(true)
+			agencyTokenService.validateAgencyTokenNumber = sinon.stub().returns(true)
+			agencyTokenService.validateDomains = sinon.stub().returns(true)
 
-	// 		const agencyToken = new AgencyToken()
-	// 		agencyTokenFactory.create = sinon.stub().returns(agencyToken)
-	// 		csrs.createAgencyToken = sinon.stub().returns(Promise.resolve())
+			const agencyToken = new AgencyToken()
+			agencyTokenFactory.create = sinon.stub().returns(agencyToken)
+			csrs.createAgencyToken = sinon.stub().returns(Promise.resolve())
 
-	// 		await agencyTokenController.createAgencyToken()(req, res, next)
+			await agencyTokenController.createAgencyToken()(req, res, next)
 
-	// 		console.log('organisationId = ' + organisationId)
-	// 		console.log('agencyToken = ' + JSON.stringify(agencyToken, null, 2))
-			
-	// 		expect(csrs.createAgencyToken).to.have.been.called
-	// 		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/organisations/${organisationId}/overview`)			
-	// 	})
-	// })
+			expect(csrs.createAgencyToken).to.have.been.calledOnceWith(organisationId, agencyToken)
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/organisations/${organisationId}/overview`)	
+		})
+	})
 
 })
