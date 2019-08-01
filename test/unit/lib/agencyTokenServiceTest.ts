@@ -100,8 +100,15 @@ describe('Agency Token Service', () => {
             expect(tokenNumberIsValid).to.be.true
         })
 
-        it('should return `false` when a token number of invalid length is supplied', async () => {
+        it('should return `false` when a token number of below minimum length is supplied', async () => {
             const tokenNumber = 'ABCDEFG12'
+            const tokenNumberIsValid = agencyTokenService.validateAgencyTokenNumber(tokenNumber)
+
+            expect(tokenNumberIsValid).to.be.false
+        })
+
+        it('should return `false` when a token number of above maximum length is supplied', async () => {
+            const tokenNumber = 'ABCDEFG1234'
             const tokenNumberIsValid = agencyTokenService.validateAgencyTokenNumber(tokenNumber)
 
             expect(tokenNumberIsValid).to.be.false

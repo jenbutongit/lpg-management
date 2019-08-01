@@ -147,12 +147,6 @@ export class AgencyTokenController implements FormController {
 				return this.redirectToAddEditAgencyTokenWithError(request, response, error)
 			}
 
-			console.log(`\n\nCreating agency token for: ${organisationalUnit.name}`)
-			console.log(`----------------------------------------`)
-			console.log('tokenNumber = ' + request.body.tokenNumber)
-			console.log('capacity = ' + request.body.capacity)
-			console.log('domains = ' + request.session!.domainsForAgencyToken + '\n\n')
-
 			const data = {
 				...request.body,
 				domains: request.session!.domainsForAgencyToken,
@@ -211,12 +205,6 @@ export class AgencyTokenController implements FormController {
 				const error = {fields: {tokenNumber: ['agencyToken.validation.tokenNumber.invalidFormat']}, size: 1}
 				return this.redirectToAddEditAgencyTokenWithError(request, response, error)
 			}
-
-			console.log(`\n\nUpdating agency token for: ${organisationalUnit.name}`)
-			console.log(`----------------------------------------`)
-			console.log('tokenNumber = ' + request.body.tokenNumber)
-			console.log('capacity = ' + request.body.capacity)
-			console.log('domains = ' + request.session!.domainsForAgencyToken + '\n\n')
 
 			const data = {
 				...request.body,
