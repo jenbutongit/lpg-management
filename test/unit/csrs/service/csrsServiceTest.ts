@@ -37,7 +37,7 @@ describe('CsrsService tests', () => {
 
 			const result = await csrsService.getOrganisations()
 
-			expect(restService.get).to.have.been.calledOnceWith('/organisationalUnits/?size=999')
+			expect(restService.get).to.have.been.calledOnceWith('/organisationalUnits/normalised')
 			expect(result).to.eql(data)
 		})
 	})
@@ -129,12 +129,10 @@ describe('CsrsService tests', () => {
 		it('should return a map from department code to name', async () => {
 			const hmrcName = 'HM Revenue & Customs'
 			const dwpName = 'Department for Work & Pensions'
+			const expectedNames = [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}]
 
-			csrsService.getOrganisations = sinon.stub().returns({
-				_embedded: {
-					organisationalUnits: [{code: 'hmrc', name: hmrcName}, {code: 'dwp', name: dwpName}],
-				},
-			})
+			csrsService.getOrganisations = sinon.stub().returns(expectedNames)
+
 			expect(await csrsService.getDepartmentCodeToNameMapping()).to.be.deep.equal({
 				hmrc: hmrcName,
 				dwp: dwpName,
@@ -163,12 +161,8 @@ describe('CsrsService tests', () => {
 		it('should return a map from department code to abbreviation', async () => {
 			const hmrcAbbreviation = 'HMRC'
 			const dwpAbbreviation = 'DWP'
-
-			csrsService.getOrganisations = sinon.stub().returns({
-				_embedded: {
-					organisationalUnits: [{code: 'hmrc', abbreviation: hmrcAbbreviation}, {code: 'dwp', abbreviation: dwpAbbreviation}],
-				},
-			})
+			const expectedOrganisationalUnits = [{code: 'hmrc', abbreviation: hmrcAbbreviation}, {code: 'dwp', abbreviation: dwpAbbreviation}]
+			csrsService.getOrganisations = sinon.stub().returns(expectedOrganisationalUnits)
 			expect(await csrsService.getDepartmentCodeToAbbreviationMapping()).to.be.deep.equal({
 				hmrc: hmrcAbbreviation,
 				dwp: dwpAbbreviation,
