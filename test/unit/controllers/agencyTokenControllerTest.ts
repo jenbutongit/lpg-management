@@ -1,18 +1,18 @@
 import * as chai from 'chai'
 import * as sinon from 'sinon'
 import * as sinonChai from 'sinon-chai'
-import { Request, Response, NextFunction } from 'express'
-import { describe } from 'mocha'
-import { expect } from 'chai'
-import { mockRes, mockReq } from 'sinon-express-mock'
-import { AgencyToken } from '../../../src/csrs/model/agencyToken'
-import { AgencyTokenController } from '../../../src/controllers/agencyTokenController'
-import { AgencyTokenFactory } from '../../../src/csrs/model/agencyTokenFactory'
-import { AgencyTokenService } from '../../../src/lib/agencyTokenService'
-import { Csrs } from '../../../src/csrs'
-import { OrganisationalUnit } from '../../../src/csrs/model/organisationalUnit'
-import { OrganisationalUnitService } from '../../../src/csrs/service/organisationalUnitService'
-import { Validator } from '../../../src/learning-catalogue/validator/validator'
+import {Request, Response, NextFunction} from 'express'
+import {describe} from 'mocha'
+import {expect} from 'chai'
+import {mockRes, mockReq} from 'sinon-express-mock'
+import {AgencyToken} from '../../../src/csrs/model/agencyToken'
+import {AgencyTokenController} from '../../../src/controllers/agencyTokenController'
+import {AgencyTokenFactory} from '../../../src/csrs/model/agencyTokenFactory'
+import {AgencyTokenService} from '../../../src/lib/agencyTokenService'
+import {Csrs} from '../../../src/csrs'
+import {OrganisationalUnit} from '../../../src/csrs/model/organisationalUnit'
+import {OrganisationalUnitService} from '../../../src/csrs/service/organisationalUnitService'
+import {Validator} from '../../../src/learning-catalogue/validator/validator'
 
 chai.use(sinonChai)
 
@@ -35,7 +35,9 @@ describe('AgencyTokenController', () => {
 
 	beforeEach(() => {
 		req = mockReq()
-		req.session!.save = callback => { callback(undefined) }
+		req.session!.save = callback => {
+			callback(undefined)
+		}
 
 		res = mockRes()
 		res.locals.organisationalUnit = new OrganisationalUnit()
@@ -66,7 +68,7 @@ describe('AgencyTokenController', () => {
 
 	describe.only('#createAgencyToken', () => {
 		it('should create agency token for organisation and redirect to the Organisation Overview page if data submitted is valid', async function() {
-			req.body = { capacity: capacity, tokenNumber: tokenNumber }
+			req.body = {capacity: capacity, tokenNumber: tokenNumber}
 			req.session!.domainsForAgencyToken = domains
 
 			agencyTokenValidator.check = sinon.stub().returns([])
@@ -81,8 +83,7 @@ describe('AgencyTokenController', () => {
 			await agencyTokenController.createAgencyToken()(req, res, next)
 
 			expect(csrs.createAgencyToken).to.have.been.calledOnceWith(organisationId, agencyToken)
-			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/organisations/${organisationId}/overview`)	
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/organisations/${organisationId}/overview`)
 		})
 	})
-
 })
