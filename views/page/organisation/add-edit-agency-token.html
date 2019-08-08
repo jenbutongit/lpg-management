@@ -139,7 +139,7 @@
 
             {% if organisationalUnit.agencyToken %}
                 <label class="govuk-label">Number of spaces currently in use</label>
-                <p class="govuk-body">{{ organisationalUnit.agencyToken.capacity -10 | default('Unknown', true) }}</p>
+                <p class="govuk-body">{{ organisationalUnit.agencyToken.capacityUsed | default('Unknown', true) }}</p>
             {% endif %}
 
             <label class="govuk-label">Token number</label>
