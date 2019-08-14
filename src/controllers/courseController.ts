@@ -81,6 +81,8 @@ export class CourseController implements FormController {
 
 			const grades = this.courseService.getUniqueGrades(res.locals.course)
 
+			const sortedAudiences = await this.courseService.sortAudiences(res.locals.course.audiences)
+
 			res.render('page/course/course-overview', {
 				faceToFaceModules,
 				AudienceType: Audience.Type,
@@ -89,6 +91,7 @@ export class CourseController implements FormController {
 				audienceIdToEvent,
 				eventIdToModuleId,
 				grades,
+				sortedAudiences,
 			})
 		}
 	}

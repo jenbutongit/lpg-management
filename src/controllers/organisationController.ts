@@ -59,10 +59,15 @@ export class OrganisationController implements FormController {
 	}
 
 	public getOrganisationList() {
-		return async (request: Request, response: Response) => {
-			const organisationalUnits: DefaultPageResults<OrganisationalUnit> = await this.csrs.listOrganisationalUnits()
-
-			response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
+		return async (request: Request, response: Response, next: NextFunction) => {
+			await this.csrs
+				.listOrganisationalUnits()
+				.then(organisationalUnits => {
+					response.render('page/organisation/manage-organisations', {organisationalUnits: organisationalUnits})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -92,9 +97,9 @@ export class OrganisationController implements FormController {
 
 			try {
 				const newOrganisationalUnit: OrganisationalUnit = await this.csrs.createOrganisationalUnit(organisationalUnit)
-
 				request.session!.sessionFlash = {organisationAddedSuccessMessage: 'organisationAddedSuccessMessage'}
-
+				this.csrs.listOrganisationalUnits()
+				this.csrs.listOrganisationalUnitsForTypehead()
 				response.redirect(`/content-management/organisations/${newOrganisationalUnit.id}/overview`)
 			} catch (e) {
 				const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
@@ -127,6 +132,8 @@ export class OrganisationController implements FormController {
 
 			try {
 				await this.csrs.updateOrganisationalUnit(organisationalUnit.id, data)
+				this.csrs.listOrganisationalUnits()
+				this.csrs.listOrganisationalUnitsForTypehead()
 			} catch (e) {
 				const errors = {fields: {fields: ['organisations.validation.organisation.alreadyExists'], size: 1}}
 

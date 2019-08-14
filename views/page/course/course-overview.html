@@ -49,11 +49,13 @@
             <div class="title-container"> 
                 <h3 class="govuk-heading-m">Course audiences</h3>
                 {% if course.status !== "Archived" and identity.hasLearningCreate() %}
-                    <a class="govuk-body govuk-link" href="/content-management/courses/{{ course.id }}/audiences/">Add an audience</a>
+                <form action="/content-management/courses/{{ course.id }}/audiences/" method="post">
+                    <button class="govuk-link linkish-button add-audience-link" id="name" name="name" value="temp-audience-name">Add an audience</button>
+                </form>
                 {% endif %}
             </div>
             {% block audiences %}
-                {{ audiences(course, identity) }}
+                {{ audiences(course, sortedAudiences, identity) }}
             {% endblock %}
         </div>
         {% endif %}
