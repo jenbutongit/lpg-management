@@ -35,31 +35,29 @@
                     name: "visibility",
                     fieldset: {
                         legend: {
-                        text: "Is this a public course?",
+                        text: "Is this a private course?",
                         isPageHeading: false,
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {
-                        text: "Public courses are visible to all."
+                        text: "The group you select to attend this course will receive invitations by email; this course cannot be found through search"
                     },
                     items: [
                         {
-                        value: "PUBLIC",
+                        value: "PRIVATE",
                         text: "Yes"
                         },
                         {
-                        value: "PRIVATE",
+                        value: "PUBLIC",
                         text: "No"
                         }
                     ]
                     }) }}
                 </fieldset>
-                <div class="button-container">
-                    {{ govukButton({
-                        text: "Continue"
-                    }) }}
-                </div>
+                {{ govukButton({
+                    text: "Continue"
+                }) }}
                 <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
             </form>
         </div>

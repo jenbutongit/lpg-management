@@ -21,9 +21,9 @@
         <p class="govuk-body no-margin">{{ grades | join(", ") if grades.length > 0 else "Unspecified" }}</p>
     </li>
     <li class="list-item course-item">
-        <h3 class="govuk-heading-s">Public course</h3>
+        <h3 class="govuk-heading-s">Course visibility</h3>
         <p class="govuk-body no-margin">
-        {% if course.getVisibility() === "PUBLIC" %}Yes{% elif course.getVisibility() === "PRIVATE" %}No{% else %}Unspecified{% endif %}
+            {{ course.getVisibility() | capitalize | default("Unspecified", true) }}
         </p>
     </li>
     {% if faceToFace === true %}
