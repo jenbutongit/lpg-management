@@ -125,6 +125,17 @@ export class Course {
 	}
 
 	getVisibility() {
-		return Visibility[this.visibility]
+		const visibility = Visibility[this.visibility]
+
+		if (visibility === 'PRIVATE') {
+			for (const audience of this.audiences) {
+				if (audience.isConfigured()) {
+					return 'CLOSED'
+				}
+			}
+			return visibility // returns PRIVATE only if there are no configured audiences 
+		} else {
+			return visibility // returns PUBLIC
+		}
 	}
 }
