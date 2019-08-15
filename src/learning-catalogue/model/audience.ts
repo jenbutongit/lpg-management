@@ -44,10 +44,10 @@ export class Audience {
 	eventId?: string
 
 	isConfigured() {
-		return this.areasOfWork !== undefined && this.areasOfWork.some(a => typeof a == 'object') ||
-			   this.departments !== undefined && this.departments.some(a => typeof a == 'object') ||
-			   this.interests !== undefined && this.interests.some(a => typeof a == 'object') ||
-			   this.grades !== undefined && this.grades.some(a => typeof a == 'object')
+		return this.areasOfWork !== undefined && this.areasOfWork.length > 0 ||
+			   this.departments !== undefined && this.departments.length > 0 ||
+			   this.interests !== undefined && this.interests.length > 0 ||
+			   this.grades !== undefined && this.grades.length > 0
 	}
 }
 
