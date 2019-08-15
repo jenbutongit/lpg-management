@@ -127,10 +127,8 @@ export class Course {
 	getVisibility() {
 		let visibility = Visibility[this.visibility]
 
-		if (visibility === 'PUBLIC') {
-			return visibility
-		} else {
-			// visibility is PRIVATE if it has no configured audiences, otherwise it is CLOSED
+		if (visibility === 'PRIVATE') {
+			// visibility should be returned as PRIVATE if it has no configured audiences, otherwise it is CLOSED
 			for (const audience of this.audiences) {
 				if (audience.isConfigured()) {
 					visibility = 'CLOSED'
