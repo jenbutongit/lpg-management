@@ -15,7 +15,7 @@ export class AgencyTokenFactory {
 		agencyToken.id = data.id
 		agencyToken.token = data.tokenNumber
 		agencyToken.capacity = data.capacity
-		agencyToken.capacityUsed = data.capacityUsed
+		agencyToken.capacityUsed = data.capacityUsed ? data.capacityUsed : 0
 		agencyToken.agencyDomains = (data.domains || []).map(this._agencyDomainFactory.create)
 
 		return agencyToken
