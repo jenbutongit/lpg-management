@@ -183,10 +183,10 @@ export class AgencyTokenController implements FormController {
 			}
 
 			// ------- 'capacityUsed' computed field not yet implemented ------- //
-			// if (request.body.capacity < organisationalUnit.agencyToken.capacityUsed) {
-			// 	const error = {fields: {capacity: ['agencyToken.validation.capacity.lessThanCurrentUsage']}, size: 1}
-			// 	return this.redirectToAddEditAgencyTokenWithError(request, response, error)
-			// }
+			if (request.body.capacity < organisationalUnit.agencyToken.capacityUsed) {
+				const error = {fields: {capacity: ['agencyToken.validation.capacity.lessThanCurrentUsage']}, size: 1}
+				return this.redirectToAddEditAgencyTokenWithError(request, response, error)
+			}
 
 			const domainsIsValid = this.agencyTokenService.validateDomains(request.session!.domainsForAgencyToken)
 			if (!domainsIsValid) {

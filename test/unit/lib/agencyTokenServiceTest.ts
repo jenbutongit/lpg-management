@@ -34,7 +34,7 @@ describe('Agency Token Service', () => {
 		})
 
 		it('should return `true` when the maximum value is supplied', async () => {
-			const capacity = '15000'
+			const capacity = '1500'
 			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
 
 			expect(capacityIsValid).to.be.true
@@ -55,7 +55,7 @@ describe('Agency Token Service', () => {
 		})
 
 		it('should return `false` when a value above the maximum is supplied', async () => {
-			const capacity = '15001'
+			const capacity = '1501'
 			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
 
 			expect(capacityIsValid).to.be.false
