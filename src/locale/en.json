@@ -12,7 +12,7 @@
 		},
 		"validation": {
 			"capacity": {
-				"invalid": "Number of spaces is required and must be a whole number between 1 and 15,000",
+				"invalid": "Number of spaces is required and must be a whole number between 1 and 1500",
 				"lessThanCurrentUsage": "Number of spaces cannot be less than the number of spaces used"
 			},
 			"domains": {
