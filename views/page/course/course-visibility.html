@@ -35,21 +35,21 @@
                     name: "visibility",
                     fieldset: {
                         legend: {
-                        text: "Is this a closed course?",
+                        text: "Do you want this course to be available to all learners?",
                         isPageHeading: false,
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {
-                        text: "A closed course provides learning to a private group, with invitations sent to specified learners by email. The course cannot be found through Search."
+                        text: "This course would then be found on Search by all learners. Select No and the course can be limited to your organisation or to a specific group within your organisation."
                     },
                     items: [
                         {
-                        value: "PRIVATE",
+                        value: "PUBLIC",
                         text: "Yes"
                         },
                         {
-                        value: "PUBLIC",
+                        value: "PRIVATE",
                         text: "No"
                         }
                     ]
