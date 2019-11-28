@@ -158,6 +158,7 @@ export class AudienceController {
 			const selectedOrganisations: OrganisationalUnit[] = res.locals.audience.departments
 
 			selectedOrganisations.forEach((item, index) => {
+				// @ts-ignore
 				if (item == organisationalUnitCode) {
 					selectedOrganisations.splice(index, 1)
 				}

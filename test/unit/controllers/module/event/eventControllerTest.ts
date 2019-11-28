@@ -533,7 +533,7 @@ describe('EventController', function() {
 		const response: Response = mockRes()
 
 		response.locals.event = event
-
+		// @ts-ignore
 		request.params.bookingId = 99
 
 		learnerRecord.getEventBookings = sinon.stub().returns(bookings)
@@ -564,6 +564,7 @@ describe('EventController', function() {
 		request.params.courseId = 'courseId'
 		request.params.moduleId = 'moduleId'
 		request.params.eventId = 'eventId'
+		// @ts-ignore
 		request.params.bookingId = 99
 
 		request.body.action = 'register'
@@ -591,6 +592,7 @@ describe('EventController', function() {
 		request.params.courseId = 'courseId'
 		request.params.moduleId = 'moduleId'
 		request.params.eventId = 'eventId'
+		// @ts-ignore
 		request.params.bookingId = 99
 
 		request.body.reason = 'cancel'
@@ -619,6 +621,7 @@ describe('EventController', function() {
 		request.params.courseId = 'courseId'
 		request.params.moduleId = 'moduleId'
 		request.params.eventId = 'eventId'
+		// @ts-ignore
 		request.params.bookingId = 99
 
 		request.body.reason = ''
@@ -692,6 +695,7 @@ describe('EventController', function() {
 		const next: NextFunction = sinon.stub()
 
 		response.locals.event = event
+		// @ts-ignore
 		request.params.bookingId = 99
 
 		learnerRecord.getEventBookings = sinon.stub().returns([booking])
