@@ -291,7 +291,7 @@ export class EventController implements FormController {
 			const courseId = request.params.courseId
 			const moduleId = request.params.moduleId
 			const eventId = request.params.eventId
-			const dateRangeIndex = +request.params.dateRangeIndex
+			const dateRangeIndex = request.params.dateRangeIndex
 
 			const errors = await this.dateRangeCommandValidator.check(data)
 
@@ -326,7 +326,7 @@ export class EventController implements FormController {
 					})
 				} else {
 					const event = await this.learningCatalogue.getEvent(courseId, moduleId, eventId)
-
+					// @ts-ignore
 					event!.dateRanges![dateRangeIndex] = dateRange
 
 					await this.learningCatalogue
@@ -551,7 +551,8 @@ export class EventController implements FormController {
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
 			const bookings = await this.learnerRecord.getEventBookings(event.id)
-			const bookingId = +req.params.bookingId
+			const bookingId = req.params.bookingId
+			// @ts-ignore
 			const booking = this.findBooking(bookings, bookingId)
 
 			res.render('page/course/module/events/attendee', {
@@ -566,7 +567,8 @@ export class EventController implements FormController {
 	public updateBooking() {
 		return async (req: Request, res: Response) => {
 			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
-			const bookingId = +req.params.bookingId
+			const bookingId = req.params.bookingId
+			// @ts-ignore
 			const booking = this.findBooking(bookings, bookingId)
 
 			booking.status = Booking.Status.CONFIRMED
@@ -582,7 +584,8 @@ export class EventController implements FormController {
 			const eventDateWithMonthAsText: string = DateTime.convertDate(event.dateRanges[0].date)
 
 			const bookings = await this.learnerRecord.getEventBookings(event.id)
-			const bookingId = +req.params.bookingId
+			const bookingId = req.params.bookingId
+			// @ts-ignore
 			const booking = this.findBooking(bookings, bookingId)
 
 			await this.learnerRecord
@@ -609,7 +612,8 @@ export class EventController implements FormController {
 			}
 
 			const bookings = await this.learnerRecord.getEventBookings(req.params.eventId)
-			const bookingId = +req.params.bookingId
+			const bookingId = req.params.bookingId
+			// @ts-ignore
 			const booking = this.findBooking(bookings, bookingId)
 
 			booking.status = Booking.Status.CANCELLED
