@@ -35,21 +35,21 @@
                     name: "visibility",
                     fieldset: {
                         legend: {
-                        text: "Do you want this course to be available to all learners?",
+                        text: "Is this a private course?",
                         isPageHeading: false,
                         classes: "govuk-fieldset__legend--m"
                         }
                     },
                     hint: {
-                        text: "This course would then be found on Search by all learners. Select No and the course can be limited to your organisation or to a specific group within your organisation."
+                        text: "Limited to your selected group by email; this course cannot be found through Search."
                     },
                     items: [
                         {
-                        value: "PUBLIC",
+                        value: "PRIVATE",
                         text: "Yes"
                         },
                         {
-                        value: "PRIVATE",
+                        value: "PUBLIC",
                         text: "No"
                         }
                     ]
