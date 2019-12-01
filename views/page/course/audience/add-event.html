@@ -7,11 +7,16 @@
 {% block pageTitle %}{{i18n.audience.pageTitle.addEvent}} - {{i18n.proposition_name}}{% endblock %}
 
 {% block beforeContent %}
-    {% block phaseBanner %}
-        {{ phaseBanner("beta") }}
+    {% block govukPhaseBanner %}
+        {{ govukPhaseBanner({
+        tag: {
+        text: "Beta"
+        },
+        html: '<a class="lpg-feedback-link" href="https://www.smartsurvey.co.uk/s/CSHR-Privatebeta/" target="_blank">Complete our survey to help us improve our new service (opens in new window)</a>.'
+        }) }}
     {% endblock %}
-    {% block backLink %}
-        {{ backLink("/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure") }}
+    {% block govukBackLink %}
+        {{ govukBackLink("/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure") }}
     {% endblock %}
 {% endblock %}
 

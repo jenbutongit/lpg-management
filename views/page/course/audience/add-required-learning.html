@@ -8,7 +8,7 @@
 
 {% block content %}
     {% set errors = sessionFlash.errors %}
-    {{ errorSummary(errors.fields) }}
+    {{ govukErrorSummary(errors.fields) }}
     {% set deadlineDate = sessionFlash.deadlineDate %}
 
     <div class="govuk-grid-row">

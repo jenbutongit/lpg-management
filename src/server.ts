@@ -54,7 +54,7 @@ app.use(
 app.use(fileUpload())
 
 nunjucks
-	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/', appRoot + '/node_modules/govuk-frontend/components'], {
+	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/govuk/', appRoot + '/node_modules/govuk-frontend/govuk/components'], {
 		autoescape: true,
 		express: app,
 	})

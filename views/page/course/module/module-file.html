@@ -42,7 +42,7 @@
         {% set chooseFileButtonClass = "govuk-form-group" %}
     {% endif %}
 
-    {{ errorSummary(errors.fields) }}
+    {{ govukErrorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
@@ -245,6 +245,26 @@
                 }
                 ]
                 }) }}
+
+                {{ govukCheckboxes({
+                idPrefix: "associatedLearning",
+                name: "associatedLearning",
+                classes: "font-light",
+                fieldset: {
+                legend: {
+                text: "Is this an associated learning module?",
+                isPageHeading: true,
+                classes: "font-bold"
+                }
+                },
+                items: [
+                {
+                value: "true",
+                text: "Yes, this is associated learning module",
+                checked: true if module.associatedLearning
+                }
+                ]
+                }) }}
                 <div class="button-container">
                     {{ govukButton({
                     text: "Edit item" if module.id else "Add item",
@@ -262,7 +282,7 @@
 {% endblock %}
 
 {% block bodyEnd %}
-    <script src="/govuk-frontend/all.js"></script>
+    <script src="/govuk-frontend/govuk/all.js"></script>
     <script>window.GOVUKFrontend.initAll()</script>
     <script src="/js/upload-file.js"></script>
     <script src="/js/file-uploader.js"></script>
