@@ -18,7 +18,8 @@
 {% set errors = sessionFlash.errors %}
 {% set form = sessionFlash.form %}
 
-{{ govukErrorSummary(errors.fields) }}
+{{ errorSummary(errors.fields) }}
+
 {% set form = sessionFlash.form %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-full">

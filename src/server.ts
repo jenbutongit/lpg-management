@@ -96,10 +96,10 @@ nunjucks
 
 app.set('view engine', 'html')
 
-app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
+app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/govuk/assets'))
 app.use('/js', serveStatic(appRoot + '/views/assets/js'))
 app.use(serveStatic(appRoot + '/dist/views/assets'))
-app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
+app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/govuk/'))
 app.use('/sortablejs', serveStatic(appRoot + '/node_modules/sortablejs/'))
 
 app.use(
@@ -141,7 +141,6 @@ app.use(ctx.linkModuleController.router)
 app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
-app.use(ctx.agencyTokenController.router)
 app.use(ctx.searchController.router)
 app.use(ctx.reportingController.router)
 app.use(ctx.skillsController.router)

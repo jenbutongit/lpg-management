@@ -9,7 +9,7 @@
 {% block content %}
 {% set errors = sessionFlash.errors %}
 
-{{ govukErrorSummary(errors.fields) }}
+{{ errorSummary(errors.fields) }}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-heading-l">Reporting</h1>

@@ -5,7 +5,7 @@
 	"main": "server",
 	"scripts": {
 		"clean": "rm -rf dist",
-		"sass": "node-sass node_modules/govuk-frontend/govuk/all.scss dist/node_modules/govuk-frontend/govuk/all.scss --output-style compressed",
+		"sass": "node-sass views/assets/styles/main.scss dist/views/assets/styles/main.css --output-style compressed",
 		"test": "npm run compile && find dist -name '*Test.js' | xargs ./node_modules/nyc/bin/nyc.js --reporter=text --reporter=html ./node_modules/mocha/bin/mocha",
 		"compile": "./node_modules/typescript/bin/tsc",
 		"build": "npm run sass && npm run compile",

@@ -3,7 +3,7 @@
 {% from "footer/macro.njk" import govukFooter %}
 {% from "phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "back-link/macro.njk" import govukBackLink %}
-{% from "error-summary/macro.njk" import govukErrorSummary with context %}
+{% from "../../views/component/errorSummary/macro.njk" import errorSummary with context %}
 {% from "./nav/macro.njk" import nav with context %}
 
 {% extends "../../node_modules/govuk-frontend/govuk/template.njk" %}

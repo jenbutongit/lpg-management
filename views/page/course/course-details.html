@@ -22,7 +22,7 @@
     {% set form = sessionFlash.form %}
     {% set course = sessionFlash.course %}
 
-    {{ govukErrorSummary(errors.fields) }}
+    {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

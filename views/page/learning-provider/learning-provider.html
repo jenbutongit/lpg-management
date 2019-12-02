@@ -18,7 +18,7 @@
         <div class="govuk-grid-column-two-thirds">
             {% set errors = sessionFlash.errors %}
 
-            {{ govukErrorSummary(errors.fields) }}
+            {{ errorSummary(errors.fields) }}
             
             <form action="/content-management/learning-providers/learning-provider" method="post" class="module-form">
                 <fieldset class="govuk-fieldset">

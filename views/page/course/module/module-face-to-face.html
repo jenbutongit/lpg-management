@@ -23,7 +23,7 @@
     {% set errors = sessionFlash.errors %}
     {% set module = sessionFlash.module %}
 
-    {{ govukErrorSummary(errors.fields) }}
+    {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">

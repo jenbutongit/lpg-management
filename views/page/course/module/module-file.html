@@ -42,7 +42,7 @@
         {% set chooseFileButtonClass = "govuk-form-group" %}
     {% endif %}
 
-    {{ govukErrorSummary(errors.fields) }}
+    {{ errorSummary(errors.fields) }}
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
