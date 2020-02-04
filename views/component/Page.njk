@@ -1,12 +1,12 @@
 {% from "skip-link/macro.njk" import govukSkipLink %}
 {% from "header/macro.njk" import govukHeader %}
 {% from "footer/macro.njk" import govukFooter %}
-{% from "./phaseBanner/macro.njk" import phaseBanner %}
-{% from "./backLink/macro.njk" import backLink %}
-{% from "./errorSummary/macro.njk" import errorSummary with context %}
+{% from "phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "../../views/component/errorSummary/macro.njk" import errorSummary with context %}
 {% from "./nav/macro.njk" import nav with context %}
 
-{% extends "template.njk" %}
+{% extends "../../node_modules/govuk-frontend/govuk/template.njk" %}
 
 {% set htmlClasses = "app-html-class" %}
 {% set htmlLang = "en" %}
@@ -62,16 +62,24 @@
 
 {% block beforeContent %}
   {% if banner === true %}
-    {% block phaseBanner %}
-      {{ phaseBanner("beta") }}
+    {% block govukPhaseBanner %}
+      {{ govukPhaseBanner({
+                             tag: {
+                               text: "Beta"
+                             },
+                             html: '<a class="lpg-feedback-link" href="https://www.smartsurvey.co.uk/s/CSHR-Privatebeta/" target="_blank">Complete our survey to help us improve our new service (opens in new window)</a>.'
+                         }) }}
     {% endblock%}
   {% endif %}
   {% block nav %}
     {{ nav(lpgUiUrl, identity) }}
   {% endblock %}
   {% if backButton %}
-    {% block backLink %}
-      {{ backLink(backButton) }}
+    {% block govukBackLink %}
+      {{ govukBackLink({
+                         text: "Back",
+                         href: backButton
+                       }) }}
     {% endblock%}
   {% endif %}
 {% endblock %}
@@ -103,7 +111,7 @@
 {% endblock %}
 
 {% block bodyEnd %}
-  <script src="/govuk-frontend/all.js"></script>
+  <script src="/govuk-frontend/govuk/all.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
   <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
 
