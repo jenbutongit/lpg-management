@@ -23,6 +23,8 @@ export class VideoModule extends Module {
 	type: Module.Type.VIDEO
 
 	subtype: VideoModule.Subtype
+
+	associatedLearning: boolean
 }
 
 export namespace VideoModule {

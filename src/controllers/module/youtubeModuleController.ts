@@ -103,6 +103,7 @@ export class YoutubeModuleController {
 				duration: duration,
 				optional: data.isOptional || false,
 				url: data.url,
+				associatedLearning: data.associatedLearning,
 			}
 			module = await this.moduleFactory.create(newData)
 
@@ -144,6 +145,7 @@ export class YoutubeModuleController {
 			module.optional = data.isOptional || false
 			module.url = data.url
 			module.duration = duration
+			module.associatedLearning = req.body.associatedLearning
 
 			await this.learningCatalogue
 				.updateModule(course.id, module)
