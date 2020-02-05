@@ -54,7 +54,7 @@ app.use(
 app.use(fileUpload())
 
 nunjucks
-	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/', appRoot + '/node_modules/govuk-frontend/components'], {
+	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/govuk/', appRoot + '/node_modules/govuk-frontend/govuk/components'], {
 		autoescape: true,
 		express: app,
 	})
@@ -96,10 +96,10 @@ nunjucks
 
 app.set('view engine', 'html')
 
-app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
+app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/govuk/assets'))
 app.use('/js', serveStatic(appRoot + '/views/assets/js'))
 app.use(serveStatic(appRoot + '/dist/views/assets'))
-app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
+app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/govuk/'))
 app.use('/sortablejs', serveStatic(appRoot + '/node_modules/sortablejs/'))
 
 app.use(
