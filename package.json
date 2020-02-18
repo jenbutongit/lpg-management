@@ -30,7 +30,7 @@
 	"homepage": "https://github.com/Civil-Service-Human-Resources/lpg-admin#readme",
 	"dependencies": {
 		"app-root-path": "2.1.0",
-		"applicationinsights": "1.0.6",
+		"applicationinsights": "1.5.0",
 		"axios": "0.18.1",
 		"class-validator": "0.9.1",
 		"convert-seconds": "1.0.1",
@@ -42,7 +42,7 @@
 		"express-async-handler": "1.1.1",
 		"express-fileupload": "^1.1.4",
 		"express-session": "1.15.6",
-		"govuk-frontend": "2.3.0",
+		"govuk-frontend": "3.3.0",
 		"i18n-express": "1.1.3",
 		"is-valid-date": "0.0.1",
 		"is-valid-domain": "0.0.11",

@@ -183,6 +183,12 @@
 	position: relative;
 }
 
+#parent:focus {
+	outline: 3px solid #fd0;
+	outline-offset: 0;
+	box-shadow: inset 0 0 0 2px;
+}
+
 .autocomplete__hint {
 	color: $border;
 	position: absolute;
@@ -333,10 +339,6 @@
 		.govuk-button {
 			margin: 30px 0 0 0;
 		}
-	}
-
-	button.button-blue {
-		margin-left: 10px;
 	}
 
 	.small-input {

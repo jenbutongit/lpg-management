@@ -7,11 +7,16 @@
 {% block pageTitle %}{{i18n.audience.pageTitle.addEvent}} - {{i18n.proposition_name}}{% endblock %}
 
 {% block beforeContent %}
-    {% block phaseBanner %}
-        {{ phaseBanner("beta") }}
+    {% block govukPhaseBanner %}
+        {{ govukPhaseBanner({
+            tag: {
+                text: "Beta"
+            },
+            html: '<a class="lpg-feedback-link" href="https://www.smartsurvey.co.uk/s/CSHR-Privatebeta/" target="_blank">Complete our survey to help us improve our new service (opens in new window)</a>.'
+        }) }}
     {% endblock %}
-    {% block backLink %}
-        {{ backLink("/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure") }}
+    {% block govukBackLink %}
+        {{ govukBackLink("/content-management/courses/" + course.id + "/audiences/" + audience.id + "/configure") }}
     {% endblock %}
 {% endblock %}
 
@@ -20,10 +25,10 @@
         <div class="govuk-grid-column-two-thirds">
             <h1 class="govuk-body form-header govuk-!-font-size-24 no-margin">{{i18n.audience.pageText.addNew}}</h1>
             <h2 class="govuk-heading-m govuk-!-font-size-36">Assign event to a private audience</h2>
-            
+
             {% if courseEvents and courseEvents.length > 0 %}
                 <p class="govuk-body">Select an event from list for your new audience</p>
-            
+
                 <form action="/content-management/courses/{{course.id}}/audiences/{{audience.id}}/event" method="post">
                     {% set eventList = [] %}
                     {% for event in courseEvents %}
@@ -31,7 +36,7 @@
                             value: event.id,
                             text: event.venue.location + ", " + event.dateRanges[0].date | dateWithMonthAsText
                         }) %}
-                    {% endfor %} 
+                    {% endfor %}
                     {{ govukRadios({
                         idPrefix: "events",
                         name: "events",

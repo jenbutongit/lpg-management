@@ -41,4 +41,6 @@ export class LinkModule extends Module {
 	isOptional: boolean
 
 	type: Module.Type.LINK
+
+	associatedLearning: boolean
 }

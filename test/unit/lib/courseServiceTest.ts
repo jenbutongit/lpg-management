@@ -246,18 +246,21 @@ describe('CourseService tests', () => {
 						name: 'name',
 						type: Audience.Type.OPEN,
 						grades: ['a', 'b', 'c'],
+						isConfigured: () => true,
 					},
 					{
 						id: 'b',
 						name: 'name',
 						type: Audience.Type.OPEN,
 						grades: ['c', 'd', 'e'],
+						isConfigured: () => true,
 					},
 					{
 						id: 'c',
 						name: 'name',
 						type: Audience.Type.OPEN,
 						grades: ['e', 'f', 'g'],
+						isConfigured: () => true,
 					},
 				]
 

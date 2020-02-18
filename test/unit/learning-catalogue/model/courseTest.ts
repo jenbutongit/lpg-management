@@ -133,8 +133,14 @@ describe('Course tests', () => {
 		const dateRange1 = new DateRange()
 		const dateRange2 = new DateRange()
 
-		dateRange1.date = '2020-02-01'
-		dateRange2.date = '2021-02-01'
+		const date1 = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+		const date2 = new Date(new Date().setFullYear(new Date().getFullYear() + 2))
+
+		const formattedDate1 = date1.getFullYear() + '-' + date1.getMonth() + '-' + date1.getDate()
+		const formattedDate2 = date2.getFullYear() + '-' + date2.getMonth() + '-' + date2.getDate()
+
+		dateRange1.date = formattedDate1
+		dateRange2.date = formattedDate2
 
 		event1.dateRanges = [dateRange1]
 		event2.dateRanges = [dateRange2]
@@ -144,7 +150,7 @@ describe('Course tests', () => {
 
 		course.modules = [module1]
 
-		expect(course.getNextAvailableDate()).to.equal('2020-02-01')
+		expect(course.getNextAvailableDate()).to.equal(formattedDate1)
 	})
 
 	it('should return undefined when no face to face modules exist', () => {
