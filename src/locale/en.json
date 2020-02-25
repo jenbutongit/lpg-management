@@ -18,7 +18,7 @@
 			"domains": {
 				"alreadyExists": "Domain already listed",
 				"empty": "At least one domain required",
-				"invalidFormat": "Invalid domain format",
+				"invalidFormat": "Enter domain in the correct format, like example.com",
 				"invalid": "Invalid domains"
 			},
 			"tokenNumber": {

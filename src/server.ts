@@ -1,5 +1,6 @@
 /* tslint:disable:no-var-requires */
 import * as config from './config'
+
 const appInsights = require('applicationinsights')
 appInsights
 	.setup(config.INSTRUMENTATION_KEY)
@@ -30,6 +31,7 @@ import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 import {Duration} from 'moment'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {FeatureConfig} from './config/featureConfig'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -42,6 +44,7 @@ const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const fileUpload = require('express-fileupload')
+const featureConfig = new FeatureConfig()
 
 app.use(
 	i18n({
@@ -141,10 +144,13 @@ app.use(ctx.linkModuleController.router)
 app.use(ctx.faceToFaceController.router)
 app.use(ctx.eventController.router)
 app.use(ctx.organisationController.router)
-app.use(ctx.agencyTokenController.router)
 app.use(ctx.searchController.router)
 app.use(ctx.reportingController.router)
 app.use(ctx.skillsController.router)
+
+if (featureConfig.getFeatureToggleMap().agencyToggle) {
+	app.use(ctx.agencyTokenController.router)
+}
 
 app.get('/', function(req: any, res: any) {
 	res.redirect('/content-management')

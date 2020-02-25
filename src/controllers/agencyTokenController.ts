@@ -79,7 +79,6 @@ export class AgencyTokenController implements FormController {
 			}
 			const agencyTokenNumber = request.session!.agencyTokenNumber
 
-			// list the token's domains if editing and no provisional (session-local) changes to these domains have been made yet
 			if (organisationalUnit.agencyToken && !request.session!.domainsForAgencyToken) {
 				request.session!.domainsForAgencyToken = organisationalUnit.agencyToken.agencyDomains.map(agencyDomain => {
 					return agencyDomain.domain
@@ -122,12 +121,6 @@ export class AgencyTokenController implements FormController {
 				const error = {fields: {capacity: ['agencyToken.validation.capacity.invalid']}, size: 1}
 				return this.redirectToAddEditAgencyTokenWithError(request, response, error)
 			}
-
-			// ------- 'capacityUsed' computed field not yet implemented ------- //
-			// if (request.body.capacity < organisationalUnit.agencyToken.capacityUsed) {
-			// 	const error = {fields: {capacity: ['agencyToken.validation.capacity.lessThanCurrentUsage']}, size: 1}
-			// 	return this.redirectToAddEditAgencyTokenWithError(request, response, error)
-			// }
 
 			const domainsIsValid = this.agencyTokenService.validateDomains(request.session!.domainsForAgencyToken)
 			if (!domainsIsValid) {
@@ -182,7 +175,6 @@ export class AgencyTokenController implements FormController {
 				return this.redirectToAddEditAgencyTokenWithError(request, response, error)
 			}
 
-			// ------- 'capacityUsed' computed field not yet implemented ------- //
 			if (request.body.capacity < organisationalUnit.agencyToken.capacityUsed) {
 				const error = {fields: {capacity: ['agencyToken.validation.capacity.lessThanCurrentUsage']}, size: 1}
 				return this.redirectToAddEditAgencyTokenWithError(request, response, error)
