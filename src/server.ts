@@ -1,9 +1,25 @@
+/* tslint:disable:no-var-requires */
+import * as config from './config'
+
+const appInsights = require('applicationinsights')
+appInsights
+	.setup(config.INSTRUMENTATION_KEY)
+	.setAutoDependencyCorrelation(true)
+	.setAutoCollectRequests(true)
+	.setAutoCollectPerformance(true)
+	.setAutoCollectExceptions(true)
+	.setAutoCollectDependencies(true)
+	.setAutoCollectConsole(true, true)
+	.setUseDiskRetryCaching(true)
+	.start()
+/* tslint:enable */
+
 import * as express from 'express'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
 import * as sessionFileStore from 'session-file-store'
 import * as log4js from 'log4js'
-import * as config from './config'
+
 import * as serveStatic from 'serve-static'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
@@ -15,6 +31,7 @@ import * as asyncHandler from 'express-async-handler'
 import * as errorController from './lib/errorHandler'
 import {Duration} from 'moment'
 import {OrganisationalUnit} from './csrs/model/organisationalUnit'
+import {FeatureConfig} from './config/featureConfig'
 
 Properties.initialize()
 const logger = log4js.getLogger('server')
@@ -27,19 +44,7 @@ const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const fileUpload = require('express-fileupload')
-
-const appInsights = require('applicationinsights')
-
-appInsights
-	.setup(config.INSTRUMENTATION_KEY)
-	.setAutoDependencyCorrelation(true)
-	.setAutoCollectRequests(true)
-	.setAutoCollectPerformance(true)
-	.setAutoCollectExceptions(true)
-	.setAutoCollectDependencies(true)
-	.setAutoCollectConsole(true)
-	.setUseDiskRetryCaching(true)
-	.start()
+const featureConfig = new FeatureConfig()
 
 app.use(
 	i18n({
@@ -52,7 +57,7 @@ app.use(
 app.use(fileUpload())
 
 nunjucks
-	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/', appRoot + '/node_modules/govuk-frontend/components'], {
+	.configure([appRoot + '/views', appRoot + '/node_modules/govuk-frontend/govuk/', appRoot + '/node_modules/govuk-frontend/govuk/components'], {
 		autoescape: true,
 		express: app,
 	})
@@ -94,10 +99,10 @@ nunjucks
 
 app.set('view engine', 'html')
 
-app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/assets'))
+app.use('/assets', serveStatic(appRoot + '/node_modules/govuk-frontend/govuk/assets'))
 app.use('/js', serveStatic(appRoot + '/views/assets/js'))
 app.use(serveStatic(appRoot + '/dist/views/assets'))
-app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/'))
+app.use('/govuk-frontend', serveStatic(appRoot + '/node_modules/govuk-frontend/govuk/'))
 app.use('/sortablejs', serveStatic(appRoot + '/node_modules/sortablejs/'))
 
 app.use(
@@ -142,6 +147,10 @@ app.use(ctx.organisationController.router)
 app.use(ctx.searchController.router)
 app.use(ctx.reportingController.router)
 app.use(ctx.skillsController.router)
+
+if (featureConfig.getFeatureToggleMap().agencyToggle) {
+	app.use(ctx.agencyTokenController.router)
+}
 
 app.get('/', function(req: any, res: any) {
 	res.redirect('/content-management')

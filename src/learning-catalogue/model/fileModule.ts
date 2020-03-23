@@ -21,4 +21,6 @@ export class FileModule extends Module {
 	type: Module.Type.FILE
 
 	url: string
+
+	associatedLearning: boolean
 }

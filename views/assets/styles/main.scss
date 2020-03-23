@@ -1,9 +1,10 @@
-@import '../../../node_modules/govuk-frontend/all.scss';
+@import '../../../node_modules/govuk-frontend/govuk/all.scss';
 @import './_variables';
 @import './_global';
 @import './_forms';
 @import './_banner';
 
+@import './page/_add-agency-token';
 @import './page/_add-module';
 @import './page/_add-organisation.scss';
 @import './page/_attendee';

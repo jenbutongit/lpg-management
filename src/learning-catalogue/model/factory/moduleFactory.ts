@@ -42,6 +42,8 @@ export class ModuleFactory {
 		video: (data: any) => {
 			const module = <VideoModule>ModuleFactory.defaultCreate(new VideoModule(), data)
 			module.url = data.url
+			module.associatedLearning = data.associatedLearning
+
 			if (data.url) {
 				module.subtype = !data.url.search(/http(.+)youtube(.*)/i) ? VideoModule.Subtype.YOUTUBE : VideoModule.Subtype.MP4
 			}
@@ -53,6 +55,7 @@ export class ModuleFactory {
 			module.duration = data.duration
 			module.id = data.id
 			module.isOptional = data.isOptional
+			module.associatedLearning = data.associatedLearning
 			module.title = data.title
 			module.url = data.url
 			return module
@@ -62,6 +65,7 @@ export class ModuleFactory {
 			module.fileSize = data.fileSize
 			module.mediaId = data.mediaId
 			module.url = data.url
+			module.associatedLearning = data.associatedLearning
 			return module
 		},
 		'face-to-face': (data: any) => {
@@ -80,6 +84,7 @@ export class ModuleFactory {
 			const module = <ELearningModule>ModuleFactory.defaultCreate(new ELearningModule(), data)
 			module.startPage = data.startPage
 			module.url = data.url
+			module.associatedLearning = data.associatedLearning
 			return module
 		},
 	}

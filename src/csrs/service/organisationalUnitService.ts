@@ -1,16 +1,19 @@
 import {OrganisationalUnitFactory} from '../model/organisationalUnitFactory'
 import {Csrs} from '../index'
 import * as log4js from 'log4js'
+import {AgencyTokenHttpService} from '../agencyTokenHttpService'
 
 const logger = log4js.getLogger('csrs/service/OrganisationalUnitService')
 
 export class OrganisationalUnitService {
 	csrs: Csrs
+	agencyTokenHttpService: AgencyTokenHttpService
 	organisationalUnitFactory: OrganisationalUnitFactory
 
-	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory) {
+	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, agencyTokenHttpService: AgencyTokenHttpService) {
 		this.csrs = csrs
 		this.organisationalUnitFactory = organisationalUnitFactory
+		this.agencyTokenHttpService = agencyTokenHttpService
 	}
 
 	async getOrganisationalUnit(uri: string) {
@@ -35,6 +38,7 @@ export class OrganisationalUnitService {
 			code: organisationalUnit.code,
 			abbreviation: organisationalUnit.abbreviation,
 			parent: parent,
+			agencyToken: organisationalUnit.agencyToken,
 		}
 
 		return this.organisationalUnitFactory.create(data)
