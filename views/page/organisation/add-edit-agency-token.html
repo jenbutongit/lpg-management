@@ -138,8 +138,8 @@
             {% endif %}
 
             {% if organisationalUnit.agencyToken %}
-                <label class="govuk-label" aria-labelledby="token-capacity-used">Number of spaces currently in use</label>
-                <p id="token-capacity-used" class="govuk-body">{{ organisationalUnit.agencyToken.capacityUsed  }}</p>
+                <p id=number-of-spaces-currently-in-use-text" class="govuk-body"><strong>Number of spaces currently in use</strong></p>
+                <p id="number-of-spaces-currently-in-use-value" class="govuk-body">{{ organisationalUnit.agencyToken.capacityUsed  }}</p>
             {% endif %}
 
             <label for="token-number-input" class="govuk-label">Token number</label>
