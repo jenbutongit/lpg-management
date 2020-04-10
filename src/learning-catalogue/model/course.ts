@@ -89,7 +89,9 @@ export class Course {
 	getDuration() {
 		let duration = 0
 		for (const module of this.modules) {
-			duration += module.duration
+			if (module.duration) {
+				duration += module.duration
+      }
 		}
 		return DateTime.formatDuration(duration)
 	}

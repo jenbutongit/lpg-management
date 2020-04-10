@@ -9,6 +9,7 @@ import {Event} from '../../../../src/learning-catalogue/model/event'
 import {DateRange} from '../../../../src/learning-catalogue/model/dateRange'
 import {Audience} from '../../../../src/learning-catalogue/model/audience'
 import {Visibility} from '../../../../src/learning-catalogue/model/visibility'
+import * as moment from "moment";
 
 describe('Course tests', () => {
 	let course: Course
@@ -58,6 +59,43 @@ describe('Course tests', () => {
 		course.modules = modules
 
 		expect(course.modules).to.equal(modules)
+	})
+
+	it('should populate duration values extracted from module duration',() => {
+
+    const data1: DateRange = {
+      date: moment()
+      .add(1, 'day')
+      .format('YYYY-MM-DD'),
+      startTime: moment([9, 30], 'HH:mm').format('HH:mm'),
+      endTime: moment([17, 30], 'HH:mm').format('HH:mm'),
+    }
+
+    const data2: DateRange = {
+      date: moment()
+      .add(2, 'day')
+      .format('YYYY-MM-DD'),
+      startTime: moment([9, 30], 'HH:mm').format('HH:mm'),
+      endTime: moment([17, 30], 'HH:mm').format('HH:mm'),
+    }
+
+		const event1 = new Event()
+		const event2 = new Event()
+
+		const module1 = new FaceToFaceModule()
+
+    event1.dateRanges = [data1,data2]
+    event2.dateRanges = [data1,data2]
+
+		module1.type = Module.Type.FACE_TO_FACE
+    module1.events = [event1, event2]
+
+    const modules = [module1]
+		const course = new Course()
+
+    course.modules = modules
+
+    expect(course.getDuration()).to.equal('4 days 4 hours ')
 	})
 
 	describe('#getCost', () => {

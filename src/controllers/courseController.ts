@@ -1,3 +1,5 @@
+import _ = require("lodash")
+
 import {NextFunction, Request, Response, Router} from 'express'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import {LearningCatalogue} from '../learning-catalogue'
@@ -11,6 +13,7 @@ import {DateTime} from '../lib/dateTime'
 import {Validate} from './formValidator'
 import {FormController} from './formController'
 import * as asyncHandler from 'express-async-handler'
+import {FaceToFaceModule} from "../learning-catalogue/model/faceToFaceModule";
 
 export class CourseController implements FormController {
 	learningCatalogue: LearningCatalogue
@@ -101,6 +104,15 @@ export class CourseController implements FormController {
 			const modules: Module[] = response.locals.course.modules
 
 			for (let module of modules) {
+				if (module.type === Module.Type.FACE_TO_FACE) {
+					const events = _.get(module, 'events', [])
+
+					if (events) {
+            for (const event of (<FaceToFaceModule>module).events) {
+              module.duration += event.getDuration()
+            }
+          }
+				}
 				module.formattedDuration = DateTime.formatDuration(module.duration)
 			}
 
