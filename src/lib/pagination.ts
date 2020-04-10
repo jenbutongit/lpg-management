@@ -8,9 +8,11 @@ export class Pagination {
 		let size = 10
 
 		if (request.query.p) {
+      // @ts-ignore
 			page = request.query.p
 		}
 		if (request.query.s) {
+      // @ts-ignore
 			size = request.query.s
 		}
 		return {page, size}
