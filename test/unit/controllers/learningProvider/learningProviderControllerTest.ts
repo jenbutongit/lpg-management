@@ -82,7 +82,9 @@ describe('Learning Provider Controller Tests', function() {
 		const listLearningProviders = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listLearningProviders = listLearningProviders
 
+    // @ts-ignore
 		req.query.p = 3
+    // @ts-ignore
 		req.query.s = 5
 
 		await learningProviderController.index()(req, res)
