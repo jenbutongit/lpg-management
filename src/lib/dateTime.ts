@@ -59,7 +59,7 @@ export class DateTime {
 					formattedDuration = (duration.hours % 7) + ' hours ' + formattedDuration
 				}
 			}
-			if (duration.hours > 7) {
+			if (duration.hours >= 7) {
 				if (Math.floor(duration.hours / 7) == 1) {
 					formattedDuration = Math.floor(duration.hours / 7) + ' day ' + formattedDuration
 				} else {

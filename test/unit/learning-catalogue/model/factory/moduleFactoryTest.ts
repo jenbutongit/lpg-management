@@ -23,6 +23,7 @@ describe('ModuleFactory tests', () => {
 			title: 'module title',
 			description: 'module description',
 			duration: 3600,
+			formattedDuration: '1 hour ',
 			cost: 100,
 		}
 	})
@@ -58,7 +59,10 @@ describe('ModuleFactory tests', () => {
 	it('should create FaceToFaceModule', async () => {
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
-		data.events = [
+		data.duration = 28800
+		data.formattedDuration = '1 day 1 hour ',
+
+			data.events = [
 			{
 				id: 'XEbjXzmVQwSQ_7qIvr7Kew',
 				venue: {
@@ -84,7 +88,9 @@ describe('ModuleFactory tests', () => {
 		expect(module.events[0].dateRanges[0].endTime).to.be.equal('17:00:00')
 	})
 
-	it('should set events to empt lists of missing', async () => {
+	it('should set events to empty lists of missing', async () => {
+		data.duration = 0
+		data.formattedDuration = '0 minutes'
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
 
