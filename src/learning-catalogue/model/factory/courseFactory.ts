@@ -31,6 +31,16 @@ export class CourseFactory {
 		course.learningProvider = this._learningProviderFactory.create(data.learningProvider || {})
 		course.visibility = Visibility[data.visibility as keyof typeof Visibility]
 		course.topicId = data.topicId
+
+		if(course.modules){
+			let duration = 0
+			for (const module of course.modules) {
+				if (module.duration) {
+					duration += module.duration
+				}
+			}
+			course.duration = duration
+		}
 		return course
 	}
 

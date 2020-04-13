@@ -7,7 +7,6 @@ import {Module} from '../learning-catalogue/model/module'
 import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
-import {DateTime} from '../lib/dateTime'
 import {Validate} from './formValidator'
 import {FormController} from './formController'
 import * as asyncHandler from 'express-async-handler'
@@ -98,12 +97,6 @@ export class CourseController implements FormController {
 
 	coursePreview() {
 		return async (request: Request, response: Response) => {
-			const modules: Module[] = response.locals.course.modules
-
-			for (let module of modules) {
-				module.formattedDuration = DateTime.formatDuration(module.duration)
-			}
-
 			response.render('page/course/course-preview')
 		}
 	}

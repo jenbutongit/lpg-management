@@ -804,7 +804,7 @@ describe('EventController', function() {
 
 			dateRangeValidator.check = sinon.stub().returns(errors)
 
-			const event = <Event>{
+			const event = {
 				id: 'event-id',
 				venue: {
 					address: 'London',
@@ -884,7 +884,7 @@ describe('EventController', function() {
 
 			dateRangeValidator.check = sinon.stub().returns(errors)
 
-			const event = <Event>{
+			const event = {
 				id: 'event-id',
 				venue: {
 					address: 'London',
