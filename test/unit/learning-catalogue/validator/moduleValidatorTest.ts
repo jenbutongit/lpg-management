@@ -27,7 +27,7 @@ describe('ModuleValidator tests', () => {
 			startPage: 'startPage',
 			fileSize: 99,
 			productCode: 'productCode',
-			formattedDuration: '1 hour'
+			formattedDuration: '1 hour',
 		}
 	})
 

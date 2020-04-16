@@ -193,16 +193,12 @@ export class EventController implements FormController {
 
 	public dateRangeOverview() {
 		return async (request: Request, response: Response) => {
-			response.locals.event.dateRanges.sort(function compare(a: DateRange,b: DateRange){
-        const dateA = moment(_.get(a, 'date', '')
-						+ ' '
-						+ _.get(a, 'startTime', ''))
+			response.locals.event.dateRanges.sort(function compare(a: DateRange, b: DateRange) {
+				const dateA = moment(_.get(a, 'date', '') + ' ' + _.get(a, 'startTime', ''))
 
-				const dateB = moment(_.get(b, 'date', '')
-            + ' '
-            +_.get(b, 'startTime', ''))
-        // @ts-ignore
-        return dateA - dateB
+				const dateB = moment(_.get(b, 'date', '') + ' ' + _.get(b, 'startTime', ''))
+				// @ts-ignore
+				return dateA - dateB
 			})
 			response.render('page/course/module/events/event-dateRange-edit')
 		}

@@ -60,22 +60,21 @@ describe('ModuleFactory tests', () => {
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
 		data.duration = 28800
-		data.formattedDuration = '1 day 1 hour ',
-
-			data.events = [
-			{
-				id: 'XEbjXzmVQwSQ_7qIvr7Kew',
-				venue: {
-					location: 'London',
-					address: 'SE1',
-					capacity: 99,
-					minCapacity: 10,
-					availability: 99,
+		;(data.formattedDuration = '1 day 1 hour '),
+			(data.events = [
+				{
+					id: 'XEbjXzmVQwSQ_7qIvr7Kew',
+					venue: {
+						location: 'London',
+						address: 'SE1',
+						capacity: 99,
+						minCapacity: 10,
+						availability: 99,
+					},
+					dateRanges: [{date: '2019-01-01', startTime: '09:00:00', endTime: '17:00:00'}],
+					status: Event.Status.ACTIVE,
 				},
-				dateRanges: [{date: '2019-01-01', startTime: '09:00:00', endTime: '17:00:00'}],
-				status: Event.Status.ACTIVE,
-			},
-		]
+			])
 
 		const module = await moduleFactory.create(data)
 

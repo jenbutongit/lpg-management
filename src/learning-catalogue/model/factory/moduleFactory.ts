@@ -86,7 +86,7 @@ export class ModuleFactory {
 			 * therefore selecting the first event duration should be representative of the over module duration.
 			 */
 			const events = _.get(module, 'events', [])
-			if ((events && events[0])) {
+			if (events && events[0]) {
 				const event = events[0]
 
 				module.duration = 0

@@ -32,7 +32,7 @@ export class CourseFactory {
 		course.visibility = Visibility[data.visibility as keyof typeof Visibility]
 		course.topicId = data.topicId
 
-		if(course.modules){
+		if (course.modules) {
 			let duration = 0
 			for (const module of course.modules) {
 				if (module.duration) {
