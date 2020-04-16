@@ -31,6 +31,7 @@ export class SearchController {
 			let {page, size} = this.pagination.getPageAndSizeFromRequest(request)
 			let query = ''
 			if (request.query.q) {
+				// @ts-ignore
 				query = striptags(request.query.q)
 			}
 			// prettier-ignore
