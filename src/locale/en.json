@@ -17,7 +17,7 @@
 			},
 			"domains": {
 				"alreadyExists": "Domain already listed",
-				"empty": "At least one domain required",
+				"empty": "You must enter at least one domain",
 				"invalidFormat": "Enter domain in the correct format, like example.com",
 				"invalid": "Invalid domains"
 			},
