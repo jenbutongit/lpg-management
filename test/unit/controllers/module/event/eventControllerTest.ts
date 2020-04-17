@@ -25,7 +25,7 @@ import {Module} from '../../../../../src/learning-catalogue/model/module'
 
 chai.use(sinonChai)
 
-describe('EventController', function () {
+describe('EventController', function() {
 	let eventController: EventController
 	let learningCatalogue: LearningCatalogue
 	let learnerRecord: LearnerRecord
@@ -69,8 +69,8 @@ describe('EventController', function () {
 		error = new Error()
 	})
 
-	describe('date time paths', function () {
-		it('shoulder render events page', async function () {
+	describe('date time paths', function() {
+		it('shoulder render events page', async function() {
 			const res: Response = mockRes()
 
 			await eventController.getDateTime()(mockReq(), res)
@@ -78,7 +78,7 @@ describe('EventController', function () {
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/events')
 		})
 
-		it('should check for errors and redirect to event date time page', async function () {
+		it('should check for errors and redirect to event date time page', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -114,7 +114,7 @@ describe('EventController', function () {
 			})
 		})
 
-		it('should render errors in DateRangeCommand', async function () {
+		it('should render errors in DateRangeCommand', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -143,7 +143,7 @@ describe('EventController', function () {
 			})
 		})
 
-		it('should render errors in DateRange', async function () {
+		it('should render errors in DateRange', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -179,7 +179,7 @@ describe('EventController', function () {
 			})
 		})
 
-		it('should render event preview page', async function () {
+		it('should render event preview page', async function() {
 			const response: Response = mockRes()
 
 			const course: Course = new Course()
@@ -194,8 +194,8 @@ describe('EventController', function () {
 		})
 	})
 
-	describe('location paths', function () {
-		it('should render location pagefor add', async function () {
+	describe('location paths', function() {
+		it('should render location pagefor add', async function() {
 			const res: Response = mockRes()
 
 			await eventController.getLocation()(mockReq(), res)
@@ -207,14 +207,14 @@ describe('EventController', function () {
 			})
 		})
 
-		it('should render location pagefor edit', async function () {
+		it('should render location pagefor edit', async function() {
 			const res: Response = mockRes()
 
 			await eventController.getLocation()(mockReq(), res)
 			expect(res.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
 		})
 
-		it('should create event and redirect to events overview page if no errors', async function () {
+		it('should create event and redirect to events overview page if no errors', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 			let next: NextFunction
@@ -260,7 +260,7 @@ describe('EventController', function () {
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
 		})
 
-		it('should pass to next if error occurs when creating event', async function () {
+		it('should pass to next if error occurs when creating event', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 			let next: NextFunction
@@ -307,7 +307,7 @@ describe('EventController', function () {
 			expect(next).to.have.been.calledWith(error)
 		})
 
-		it('should update event and redirect to events overview page if no errors', async function () {
+		it('should update event and redirect to events overview page if no errors', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -359,7 +359,7 @@ describe('EventController', function () {
 			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/courses/course-id/modules/module-id/events-overview/event-id`)
 		})
 
-		it('should redirect back to location page if errors on create', async function () {
+		it('should redirect back to location page if errors on create', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 			let next: NextFunction
@@ -388,7 +388,7 @@ describe('EventController', function () {
 			})
 		})
 
-		it('should redirect back to location page if errors on update', async function () {
+		it('should redirect back to location page if errors on update', async function() {
 			const req: Request = mockReq()
 			const res: Response = mockRes()
 
@@ -423,7 +423,7 @@ describe('EventController', function () {
 		})
 	})
 
-	it('should render edit location page', async function () {
+	it('should render edit location page', async function() {
 		const editLocation: (request: Request, response: Response) => void = eventController.editLocation()
 
 		const request = mockReq()
@@ -434,7 +434,7 @@ describe('EventController', function () {
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/event-location')
 	})
 
-	it('should render event overview page', async function () {
+	it('should render event overview page', async function() {
 		const event: Event = new Event()
 		event.dateRanges = [{date: '2019-02-01', startTime: '9:00:00', endTime: '17:00:00'}]
 
@@ -462,7 +462,7 @@ describe('EventController', function () {
 		const request = mockReq()
 		const response = mockRes()
 
-		request.session!.save = (callback) => {
+		request.session!.save = callback => {
 			callback(undefined)
 		}
 
@@ -493,7 +493,7 @@ describe('EventController', function () {
 		const request = mockReq()
 		const response = mockRes()
 
-		request.session!.save = (callback) => {
+		request.session!.save = callback => {
 			callback(undefined)
 		}
 
@@ -510,7 +510,7 @@ describe('EventController', function () {
 		expect(request.session.sessionFlash.emailAddressFoundMessage).is.equal('validation_email_address_invalid')
 	})
 
-	it('should render attendee details page', async function () {
+	it('should render attendee details page', async function() {
 		const date: string = '2020-02-01'
 		const dateRange = new DateRange()
 		dateRange.date = date
@@ -551,7 +551,7 @@ describe('EventController', function () {
 		})
 	})
 
-	it('should change booking status to confirmed and redirect to attendee page', async function () {
+	it('should change booking status to confirmed and redirect to attendee page', async function() {
 		const booking: Booking = new Booking()
 		booking.id = 99
 		const bookings = [booking]
@@ -579,7 +579,7 @@ describe('EventController', function () {
 		expect(booking.status).to.be.equal(Booking.Status.CONFIRMED)
 	})
 
-	it('should change booking status to cancelled and redirect to event overview page', async function () {
+	it('should change booking status to cancelled and redirect to event overview page', async function() {
 		const booking: Booking = new Booking()
 		booking.id = 99
 		const bookings = [booking]
@@ -608,11 +608,11 @@ describe('EventController', function () {
 		expect(booking.status).to.be.equal(Booking.Status.CANCELLED)
 	})
 
-	it('should redirect to cancel attendee page if cancellation reason is not selected', async function () {
+	it('should redirect to cancel attendee page if cancellation reason is not selected', async function() {
 		const request: Request = mockReq()
 		const response: Response = mockRes()
 
-		request.session!.save = (callback) => {
+		request.session!.save = callback => {
 			callback(undefined)
 		}
 
@@ -633,7 +633,7 @@ describe('EventController', function () {
 		expect(response.redirect).to.have.been.calledOnceWith(`/content-management/courses/courseId/modules/moduleId/events/eventId/attendee/99/cancel`)
 	})
 
-	it('should render cancel event page', async function () {
+	it('should render cancel event page', async function() {
 		const course: Course = new Course()
 		const module: Module = new Module()
 
@@ -650,7 +650,7 @@ describe('EventController', function () {
 		expect(response.render).to.have.been.calledOnceWith('page/course/module/events/cancel')
 	})
 
-	it('should cancel event and redirect to events overview page', async function () {
+	it('should cancel event and redirect to events overview page', async function() {
 		const event = new Event()
 
 		const request: Request = mockReq()
@@ -675,7 +675,7 @@ describe('EventController', function () {
 		expect(response.redirect).to.have.been.calledOnceWith('/content-management/courses/courseId/modules/moduleId/events-overview/eventId')
 	})
 
-	it('should render cancel attendee page', async function () {
+	it('should render cancel attendee page', async function() {
 		let dateRange: DateRange = new DateRange()
 		dateRange.date = '2018-01-02'
 
@@ -804,7 +804,7 @@ describe('EventController', function () {
 
 			dateRangeValidator.check = sinon.stub().returns(errors)
 
-			const event = <Event>{
+			const event = {
 				id: 'event-id',
 				venue: {
 					address: 'London',
@@ -884,7 +884,7 @@ describe('EventController', function () {
 
 			dateRangeValidator.check = sinon.stub().returns(errors)
 
-			const event = <Event>{
+			const event = {
 				id: 'event-id',
 				venue: {
 					address: 'London',
@@ -1050,6 +1050,8 @@ describe('EventController', function () {
 		it('should render dateRange overview', async () => {
 			const request = mockReq()
 			const response = mockRes()
+			response.locals.event = new Event()
+			response.locals.event.dateRanges = []
 
 			eventController.dateRangeOverview()(request, response)
 

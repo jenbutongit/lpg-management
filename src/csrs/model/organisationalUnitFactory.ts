@@ -16,7 +16,6 @@ export class OrganisationalUnitFactory {
 		organisationalUnit.children = (data.children || []).map(this.create)
 		organisationalUnit.parent = data.parent
 		organisationalUnit.abbreviation = data.abbreviation
-		organisationalUnit.agencyToken = data.agencyToken
 		organisationalUnit.uri = `${config.REGISTRY_SERVICE_URL.url}/organisationalUnits/${organisationalUnit.id}`
 
 		return organisationalUnit
