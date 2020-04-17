@@ -15,7 +15,7 @@ import {LearningCatalogue} from '../../../../src/learning-catalogue'
 
 chai.use(sinonChai)
 
-describe('Learning Provider Controller Tests', function() {
+describe('Learning Provider Controller Tests', function () {
 	let learningCatalogue: LearningCatalogue
 	let learningProviderFactory: LearningProviderFactory
 	let learningProviderController: LearningProviderController
@@ -31,22 +31,17 @@ describe('Learning Provider Controller Tests', function() {
 		learningProviderValidator = <Validator<LearningProvider>>{}
 		pagination = new Pagination()
 
-		learningProviderController = new LearningProviderController(
-			learningCatalogue,
-			learningProviderFactory,
-			learningProviderValidator,
-			pagination
-		)
+		learningProviderController = new LearningProviderController(learningCatalogue, learningProviderFactory, learningProviderValidator, pagination)
 
 		req = mockReq()
 		res = mockRes()
 
-		req.session!.save = callback => {
+		req.session!.save = (callback) => {
 			callback(undefined)
 		}
 	})
 
-	it('should call learning providers page', async function() {
+	it('should call learning providers page', async function () {
 		const learningProvider: LearningProvider = new LearningProvider()
 		learningProvider.id = 'learning-provider-id'
 		learningProvider.name = 'learning-provider-name'
@@ -67,7 +62,7 @@ describe('Learning Provider Controller Tests', function() {
 		expect(res.render).to.have.been.calledOnceWith('page/learning-provider/learning-providers', {pageResults})
 	})
 
-	it('should call learning provider page with correct page and size', async function() {
+	it('should call learning provider page with correct page and size', async function () {
 		const learningProvider: LearningProvider = new LearningProvider()
 		learningProvider.id = 'course-id'
 		learningProvider.name = 'course-title'
@@ -94,17 +89,17 @@ describe('Learning Provider Controller Tests', function() {
 		})
 	})
 
-	it('should call get learning provider page ', async function() {
+	it('should call get learning provider page ', async function () {
 		await learningProviderController.getLearningProvider()(req, res)
 		expect(res.render).to.have.been.calledOnceWith('page/learning-provider/learning-provider')
 	})
 
-	it('should call get learning provider overview page ', async function() {
+	it('should call get learning provider overview page ', async function () {
 		await learningProviderController.getLearningProviderOverview()(req, res)
 		expect(res.render).to.have.been.calledOnceWith('page/learning-provider/learning-provider-overview')
 	})
 
-	it('should call set learning provider overview page and redirect if errors', async function() {
+	it('should call set learning provider overview page and redirect if errors', async function () {
 		req.body = {name: ''}
 		const learningProvider = new LearningProvider()
 		learningProviderFactory.create = sinon.stub().returns(learningProvider)
@@ -122,7 +117,7 @@ describe('Learning Provider Controller Tests', function() {
 		expect(res.redirect).to.have.been.calledOnceWith('/content-management/learning-providers/learning-provider')
 	})
 
-	it('should call set learning provider page and redirect to new learning provider if no errors', async function() {
+	it('should call set learning provider page and redirect to new learning provider if no errors', async function () {
 		req.body = {name: 'learning-provider-name'}
 
 		const learningProvider = new LearningProvider()
@@ -140,8 +135,6 @@ describe('Learning Provider Controller Tests', function() {
 		expect(req.session!.sessionFlash).to.not.exist
 		expect(learningCatalogue.createLearningProvider).to.have.been.calledWith(learningProvider)
 
-		expect(res.redirect).to.have.been.calledOnceWith(
-			`/content-management/learning-providers/${learningProvider.id}`
-		)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/learning-providers/${learningProvider.id}`)
 	})
 })
