@@ -8,6 +8,7 @@ export class Booking {
 	event: string
 	paymentDetails: string
 	poNumber: string
+	bookingReference: string
 	status: Booking.Status
 
 	@IsNotEmpty({
