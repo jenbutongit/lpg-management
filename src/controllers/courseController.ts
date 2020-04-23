@@ -1,3 +1,5 @@
+import _ = require("lodash")
+
 import {NextFunction, Request, Response, Router} from 'express'
 import {CourseFactory} from '../learning-catalogue/model/factory/courseFactory'
 import {LearningCatalogue} from '../learning-catalogue'
@@ -7,6 +9,7 @@ import {Module} from '../learning-catalogue/model/module'
 import {CourseService} from '../lib/courseService'
 import {CsrsService} from '../csrs/service/csrsService'
 import {Audience} from '../learning-catalogue/model/audience'
+import {DateTime} from '../lib/dateTime'
 import {Validate} from './formValidator'
 import {FormController} from './formController'
 import * as asyncHandler from 'express-async-handler'
@@ -97,6 +100,24 @@ export class CourseController implements FormController {
 
 	coursePreview() {
 		return async (request: Request, response: Response) => {
+			const modules: Module[] = response.locals.course.modules
+
+			for (let module of modules){
+				if (module.type === Module.Type.FACE_TO_FACE) {
+					const events = _.get(module, 'events', [])
+                    // @ts-ignore
+					events.sort(function compare(a, b) {
+                        const dateA = new Date(_.get(a, 'startDate', ''))
+                        const dateB = new Date(_.get(b, 'startDate', ''))
+                        // @ts-ignore
+                        return dateA - dateB
+                    })
+					if (events && events.length > 0) {
+              module.duration = events[0].getDuration()
+          }
+				}
+				module.formattedDuration = DateTime.formatDuration(module.duration)
+			}
 			response.render('page/course/course-preview')
 		}
 	}
