@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response, Router} from 'express'
-import {CsrsService} from '../csrs/service/csrsService'
+import {CsrsService} from '../../csrs/service/csrsService'
 import * as csvtojson from 'csvtojson'
+import {PlaceholderDateSkills} from '../../learning-catalogue/model/placeholderDateSkills'
 
 class Choice {
 	value: string
@@ -55,22 +56,32 @@ export class SkillsController {
 		this.router.get('/content-management/skills', this.getSkills())
 		this.router.post('/content-management/skills', this.uploadAndProcess())
 		this.router.get('/content-management/skills/success', this.getSkillsSuccess())
+		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
+		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
 	}
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			let doesPolicyExist: boolean
-			await this.csrsService
-				.findByName('Policy')
-				.then(() => {
-					doesPolicyExist = true
-				})
-				.catch(() => {
-					doesPolicyExist = false
-				})
-
 			req.session!.save(() => {
-				res.render('page/skills/skills', {doesPolicyExist: doesPolicyExist})
+				res.render('page/skills/skills')
+			})
+		}
+	}
+
+	getAddQuestion() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/add-new-question')
+			})
+		}
+	}
+
+	getSkillsReport() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/generate-report', {
+					placeholder: new PlaceholderDateSkills(),
+				})
 			})
 		}
 	}

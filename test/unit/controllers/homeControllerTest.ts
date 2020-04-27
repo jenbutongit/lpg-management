@@ -69,9 +69,9 @@ describe('Home Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listCourses = listAll
 
-    // @ts-ignore
+		// @ts-ignore
 		request.query.p = 3
-    // @ts-ignore
+		// @ts-ignore
 		request.query.s = 5
 
 		await homeController.index()(request, response, next)
@@ -100,9 +100,9 @@ describe('Home Controller Tests', function() {
 		const listAll = sinon.stub().returns(Promise.reject(error))
 		learningCatalogue.listCourses = listAll
 
-    // @ts-ignore
+		// @ts-ignore
 		request.query.p = 3
-    // @ts-ignore
+		// @ts-ignore
 		request.query.s = 5
 
 		await homeController.index()(request, response, next)

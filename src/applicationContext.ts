@@ -68,7 +68,7 @@ import {DateStartEndCommand} from './controllers/command/dateStartEndCommand'
 import {DateStartEndCommandFactory} from './controllers/command/factory/dateStartEndCommandFactory'
 import {DateStartEnd} from './learning-catalogue/model/dateStartEnd'
 import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartEndFactory'
-import {SkillsController} from './controllers/skillsController'
+import {SkillsController} from './controllers/skills/skillsController'
 import {AudienceService} from './lib/audienceService'
 
 log4js.configure(config.LOGGING)
