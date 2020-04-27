@@ -223,7 +223,6 @@ export class CourseController implements FormController {
 
 	sortModules() {
 		return async (request: Request, response: Response, next: NextFunction) => {
-			// @ts-ignore
 			return await this.courseService
 				// @ts-ignore
 				.sortModules(request.params.courseId, request.query.moduleIds)
