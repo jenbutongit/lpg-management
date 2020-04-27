@@ -31,12 +31,7 @@ describe('Learning Provider Controller Tests', function() {
 		learningProviderValidator = <Validator<LearningProvider>>{}
 		pagination = new Pagination()
 
-		learningProviderController = new LearningProviderController(
-			learningCatalogue,
-			learningProviderFactory,
-			learningProviderValidator,
-			pagination
-		)
+		learningProviderController = new LearningProviderController(learningCatalogue, learningProviderFactory, learningProviderValidator, pagination)
 
 		req = mockReq()
 		res = mockRes()
@@ -142,8 +137,6 @@ describe('Learning Provider Controller Tests', function() {
 		expect(req.session!.sessionFlash).to.not.exist
 		expect(learningCatalogue.createLearningProvider).to.have.been.calledWith(learningProvider)
 
-		expect(res.redirect).to.have.been.calledOnceWith(
-			`/content-management/learning-providers/${learningProvider.id}`
-		)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/learning-providers/${learningProvider.id}`)
 	})
 })

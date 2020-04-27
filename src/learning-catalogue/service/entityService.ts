@@ -45,11 +45,6 @@ export class EntityService<T> {
 		return this._factory.create(data)
 	}
 
-	async createWithoutFollowing(path: string, entity: any): Promise<T> {
-		const data = await this._restService.postWithoutFollowing(path, entity)
-		return this._factory.create(data)
-	}
-
 	async get(path: string): Promise<T> {
 		const data = await this._restService.get(path)
 

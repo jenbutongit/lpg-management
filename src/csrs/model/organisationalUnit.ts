@@ -1,5 +1,4 @@
 import {IsNotEmpty} from 'class-validator'
-import {AgencyToken} from './agencyToken'
 
 export class OrganisationalUnit {
 	id: string
@@ -25,6 +24,4 @@ export class OrganisationalUnit {
 	parent: string
 
 	uri: string
-
-	agencyToken: AgencyToken
 }
