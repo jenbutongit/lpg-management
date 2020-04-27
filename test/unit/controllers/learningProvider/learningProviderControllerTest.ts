@@ -31,12 +31,7 @@ describe('Learning Provider Controller Tests', function() {
 		learningProviderValidator = <Validator<LearningProvider>>{}
 		pagination = new Pagination()
 
-		learningProviderController = new LearningProviderController(
-			learningCatalogue,
-			learningProviderFactory,
-			learningProviderValidator,
-			pagination
-		)
+		learningProviderController = new LearningProviderController(learningCatalogue, learningProviderFactory, learningProviderValidator, pagination)
 
 		req = mockReq()
 		res = mockRes()
