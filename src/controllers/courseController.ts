@@ -225,12 +225,10 @@ export class CourseController implements FormController {
 		return async (request: Request, response: Response, next: NextFunction) => {
 			// @ts-ignore
 			return await this.courseService
-				// @ts-ignore
 				.sortModules(request.params.courseId, request.query.moduleIds)
 				.then(() => {
 					response.redirect(`/content-management/courses/${request.params.courseId}/add-module`)
 				})
-				// @ts-ignore
 				.catch(error => {
 					next(error)
 				})

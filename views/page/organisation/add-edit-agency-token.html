@@ -138,11 +138,11 @@
             {% endif %}
 
             {% if organisationalUnit.agencyToken %}
-                <p id=number-of-spaces-currently-in-use-text" class="govuk-body"><strong>Number of spaces currently in use</strong></p>
-                <p id="number-of-spaces-currently-in-use-value" class="govuk-body">{{ organisationalUnit.agencyToken.capacityUsed  }}</p>
+                <label class="govuk-label">Number of spaces currently in use</label>
+                <p class="govuk-body">{{ organisationalUnit.agencyToken.capacityUsed  }}</p>
             {% endif %}
 
-            <label for="token-number-input" class="govuk-label">Token number</label>
+            <label class="govuk-label">Token number</label>
             <p id="token-number-display-text" class="govuk-body">{{ agencyTokenNumber | default('Unspecified', true) }}</p>
             <input id="token-number-input" name='tokenNumber' value="{{ agencyTokenNumber | default('Unspecified', true) }}" type="hidden">
             <button class="govuk-link linkish-button" type="button" onclick="generateAndDisplayNewToken();">Re-generate token number</button><br/><br/>
