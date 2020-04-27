@@ -39,7 +39,7 @@
                     <li class="list-details list-domain">
                         <p class="govuk-body title">{{ domain }}</p>
                         <form action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token/domain/delete" method="post">
-                            <input class="hidden" name="domainToDelete" value="{{ domain }}">
+                            <input class="hidden" name="domainToDelete" value="{{ domain }}" aria-label="{{ domain }}">
                             <button class="govuk-link linkish-button" type="submit">Remove</button>
                         </form>
                     </li>
