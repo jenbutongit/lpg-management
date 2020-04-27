@@ -1,6 +1,7 @@
 import {OauthRestService} from '../../lib/http/oauthRestService'
 import {JsonpathService} from '../../lib/jsonpathService'
 import {CacheService} from '../../lib/cacheService'
+import {Profession} from "../../controllers/skills/profession"
 
 export class CsrsService {
 	restService: OauthRestService
@@ -18,12 +19,36 @@ export class CsrsService {
 		this.cacheService = cacheService
 	}
 
+	async editDescription(profession: Profession, description: string) {
+		return await this.restService.postWithoutFollowing('api/quiz/update', {profession, description: description})
+	}
+
+	async editQuestion(profession: Profession, question: any) {
+		return await this.restService.postWithoutFollowing('api/questions/update', {profession, question: question})
+	}
+
 	async getOrganisations() {
 		return await this.restService.get('/organisationalUnits/normalised')
 	}
 
-	async postSkills(quiz: any) {
-		return await this.restService.postWithoutFollowing('/quizzes', quiz)
+	async getCivilServant() {
+		return await this.restService.get('/civilServants/me')
+	}
+
+	async createQuizByProfessionID(id: any) {
+		return await this.restService.postWithoutFollowing('/api/quiz', {id: id})
+	}
+
+	async deleteQuizByProfession(id: number): Promise<void> {
+		await this.restService.delete(`/api/quiz/${id}/delete`)
+	}
+
+	async postQuestion(question: any) {
+		return await this.restService.postWithoutFollowing('/api/questions/add-question', {professionId : 1, question})
+	}
+
+	async  getQuestionbyID(questionID: any) {
+		return await this.restService.get(`/api/questions/${questionID}/preview`)
 	}
 
 	async getAreasOfWork() {
