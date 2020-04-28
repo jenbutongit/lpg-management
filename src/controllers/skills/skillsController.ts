@@ -58,6 +58,7 @@ export class SkillsController {
 		this.router.get('/content-management/skills/success', this.getSkillsSuccess())
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
 		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
+		this.router.get('/content-management/skills/add-image', this.getImage())
 	}
 
 	getSkills() {
@@ -72,6 +73,14 @@ export class SkillsController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			req.session!.save(() => {
 				res.render('page/skills/add-new-question')
+			})
+		}
+	}
+
+	getImage() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/add-image')
 			})
 		}
 	}

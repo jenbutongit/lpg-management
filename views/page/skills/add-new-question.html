@@ -25,8 +25,7 @@
 
 <div class="govuk-grid-row add-new-question">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-body form-header govuk-!-font-size-24">{{i18n.course.text.editDetails if course else i18n.course.text.addNew}}</h1>
-        <h2 class="govuk-heading-m govuk-!-font-size-36">{{i18n.course.text.details}}</h2>
+        <h1 class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
         <form action="/content-management/courses/details/{{ course.id }}" method="post" class="course-form">
             {% if course.id %}
             <input type="hidden" name="id" value="{{ form.id|default(course.id) }}">
@@ -61,10 +60,21 @@
                         <div class="govuk-checkboxes__item">
                             <input class="govuk-checkboxes__input" id="answer3" name="waste" type="checkbox" value="carcasses">
                             <label class="govuk-label govuk-checkboxes__label" for="answer3">
-                                <input class="govuk-input" id="event-name" name="event-name" type="text">
+                                <input class="govuk-input" id="answer3-txt" name="event-name" type="text">
                             </label>
                         </div>
-
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="answer4" name="waste" type="checkbox" value="carcasses">
+                            <label class="govuk-label govuk-checkboxes__label" for="answer4">
+                                <input class="govuk-input" id="answer4-txt" name="event-name" type="text">
+                            </label>
+                        </div>
+                        <div class="govuk-checkboxes__item">
+                            <input class="govuk-checkboxes__input" id="answer5" name="waste" type="checkbox" value="carcasses">
+                            <label class="govuk-label govuk-checkboxes__label" for="answer5">
+                                <input class="govuk-input" id="answer5-txt" name="event-name" type="text">
+                            </label>
+                        </div>
                     </div>
 
                 </section>
@@ -91,7 +101,8 @@
             </fieldset>
             <div class="button-container">
                 {{ govukButton({
-                text: "Continue"
+                text: "Continue",
+                href: "add-image"
                 }) }}
             </div>
         </form>
