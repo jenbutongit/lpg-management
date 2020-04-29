@@ -20,6 +20,7 @@ class Quiz {
 	profession: Profession
 	questions: Question[]
 }
+
 class Question {
 	type: string
 	value: string
@@ -63,8 +64,37 @@ export class SkillsController {
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
+			let professionID: any = null
+			let professionName: any = null
+			let professionQuestions: any = null
+			await this.csrsService
+				.getCivilServant()
+				.then(civilServant => {
+					if (civilServant.profession) {
+						professionID = civilServant.profession.id
+						professionName = civilServant.profession.name
+					}
+				})
+				.catch(error => {
+					next(error)
+				})
+
+			if (professionID != null) {
+				await this.csrsService
+					.getQuiz(professionID)
+					.then(quiz => {
+						if (quiz) {
+							console.log(quiz)
+							professionQuestions = quiz.questions
+						}
+					})
+					.catch(error => {
+						next(error)
+					})
+			}
+
 			req.session!.save(() => {
-				res.render('page/skills/skills')
+				res.render('page/skills/skills', {professionID: professionID, professionName: professionName, professionQuestions: professionQuestions})
 			})
 		}
 	}
