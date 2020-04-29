@@ -66,7 +66,7 @@ describe('AgencyTokenController', () => {
 		})
 	})
 
-	describe.only('#createAgencyToken', () => {
+	describe('#createAgencyToken', () => {
 		it('should create agency token for organisation and redirect to the Organisation Overview page if data submitted is valid', async function() {
 			req.body = {capacity: capacity, tokenNumber: tokenNumber}
 			req.session!.domainsForAgencyToken = domains
