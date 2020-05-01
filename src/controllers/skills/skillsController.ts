@@ -84,7 +84,6 @@ export class SkillsController {
 					.getQuiz(professionID)
 					.then(quiz => {
 						if (quiz) {
-							console.log(quiz)
 							professionQuestions = quiz.questions
 						}
 					})

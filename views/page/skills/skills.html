@@ -73,23 +73,26 @@
             <table class="govuk-table quiz-questions">
                 <caption class="govuk-table__caption">Quiz questions</caption>
                 <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Number</th>
-                    <th scope="col" class="govuk-table__header">Question</th>
-                    <th scope="col" class="govuk-table__header"></th>
-                </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Number</th>
+                        <th scope="col" class="govuk-table__header">Question</th>
+                        <th scope="col" class="govuk-table__header govuk-table__cell--numeric"><span class="empty-header">Manage</span></th>
+                    </tr>
                 </thead>
                 <tbody class="govuk-table__body">
-                {% for question in professionQuestions %}
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell question-number">{{loop.index}}</td>
-                        <td class="govuk-table__cell ">{{question.value}}</td>
+                    {% for question in professionQuestions %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell question-number">
+                                {{loop.index}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{question.value}}
+                            </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
                                 <a href="#">manage</a>
                             </td>
-                    </tr>
-                {% endfor %}
-
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
 
@@ -107,16 +110,16 @@
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
                 {% block menu %}
-                {% set actions = [] %}
-                {% set action = actions.push({
-                link: '/content-management/courses/visibility',
-                text: 'Delete Quiz'
-                }) %}
-                {% set action = actions.push({
-                link: '/content-management/skills/generate-report',
-                text: 'Generate quiz report'
-                }) %}
-                {{ menu("Actions", actions) }}
+                    {% set actions = [] %}
+                    {% set action = actions.push({
+                        link: '/content-management/courses/visibility',
+                        text: 'Delete Quiz'
+                    }) %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/generate-report',
+                        text: 'Generate quiz report'
+                    }) %}
+                    {{ menu("Actions", actions) }}
                 {% endblock %}
             </div>
         </div>
