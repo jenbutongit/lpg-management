@@ -232,14 +232,12 @@ export class AgencyTokenController implements FormController {
 			await this.csrs
 				.deleteAgencyToken(organisationalUnit.id)
 				.then(() => {
-					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
+					request.session!.sessionFlash = {displayAgencyTokenRemovedMessage: true, organisationalUnit: organisationalUnit}
+					return response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 				})
 				.catch(error => {
 					next(error)
 				})
-			request.session!.sessionFlash = {displayAgencyTokenRemovedMessage: true, organisationalUnit: organisationalUnit}
-
-			response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 		}
 	}
 
