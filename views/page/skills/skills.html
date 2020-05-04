@@ -23,22 +23,24 @@
     titleText: "There is a problem",
     errorList: [
         {
-            text: "Profession does not exist, skills quiz cannot be accessed."
+            text: "Profession is not set, Please set your profession in your profile page.",
+            href: lpgUiUrl + "/profile"
         }
     ],
     classes: "custom-error-message"
 }) }}
 {% endif %}
 
+{% if professionID %}
+
 <div class="govuk-grid-row quiz">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-m govuk-!-font-size-36">Manage quiz</h1>
-        <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
-
-            <div class="data-table">
-                {{ govukTable({
-                caption: "Data table",
-                head: [
+            <div>
+                <div class="data-table">
+                    {{ govukTable({
+                    caption: "Data table",
+                    head: [
                     {
                         text: "Profession"
                     },
@@ -50,37 +52,38 @@
                         text: "Average score",
                         format: "numeric"
                     }
-                ],
-                rows: [
-                    [
+                    ],
+                    rows: [
+                        [
                         {
                             text: professionName
                         },
                         {
-                            text: "48",
+                            text: "0",
                             format: "numeric"
                         },
                         {
-                            text: "3/4",
+                            text: "0",
                             format: "numeric"
                         }
+                        ]
                     ]
-                ]
-                }) }}
+                    }) }}
 
-            </div>
+                </div>
 
-            <table class="govuk-table quiz-questions">
-                <caption class="govuk-table__caption">Quiz questions</caption>
-                <thead class="govuk-table__head">
+                <table class="govuk-table quiz-questions">
+                    <caption class="govuk-table__caption">Quiz questions</caption>
+                    <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th scope="col" class="govuk-table__header">Number</th>
                         <th scope="col" class="govuk-table__header">Question</th>
                         <th scope="col" class="govuk-table__header govuk-table__cell--numeric"><span class="empty-header">Manage</span></th>
                     </tr>
-                </thead>
-                <tbody class="govuk-table__body">
-                    {% for question in professionQuestions %}
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% if professionQuestions[0] %}
+                        {% for question in professionQuestions %}
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell question-number">
                                 {{loop.index}}
@@ -92,9 +95,22 @@
                                 <a href="#">manage</a>
                             </td>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                    {% else %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell question-number">
+
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                            No questions have been added yet.
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
 
             <a class="add-question" href="/content-management/skills/add-new-question">Add a new question</a>
 
@@ -105,7 +121,6 @@
                 }) }}
             </div>
             <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
-        </form>
     </div>
         <div class="govuk-grid-column-one-third">
             <div class="right-menu">
@@ -124,6 +139,8 @@
             </div>
         </div>
 </div>
+
+{% endif %}
 
 
 {% endblock %}
