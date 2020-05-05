@@ -59,6 +59,7 @@ export class SkillsController {
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
 		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
 		this.router.get('/content-management/skills/add-image', this.getImage())
+		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
 	}
 
 	getSkills() {
@@ -180,6 +181,14 @@ export class SkillsController {
 	getSkillsSuccess() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.render('page/skills/success')
+		}
+	}
+
+	getEditQuitDescription() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/edit-quiz-description')
+			})
 		}
 	}
 }

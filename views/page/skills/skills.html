@@ -124,6 +124,10 @@
             link: '/content-management/skills/generate-report',
             text: 'Generate quiz report'
             }) %}
+            {% set action = actions.push({
+            link: '/content-management/skills/edit-quiz-description',
+            text: 'Edit quiz description'
+            }) %}
             {{ menu("Actions", actions) }}
             {% endblock %}
         </div>
