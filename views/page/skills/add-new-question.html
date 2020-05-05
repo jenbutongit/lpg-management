@@ -6,6 +6,8 @@
 {% from "input/macro.njk" import govukInput %}
 {% from "checkboxes/macro.njk" import govukCheckboxes %}
 
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "file-upload/macro.njk" import govukFileUpload %}
 
 {% extends "../../component/Page.njk" %}
 
@@ -98,11 +100,17 @@
                 name: "suggested-learning"
                 }) }}
 
+                <div class="add-file-form govuk-form-group">
+                    <label class="govuk-label">Attach supporting images (optional)</label>
+                    <input class="govuk-file-upload custom-uploader" id="image-upload" name="img" type="file" aria-describedby="file-upload-hint" accept="image/*">
+                    <label class="btn" for="image-upload"><span>Choose file</span></label>
+                </div>
+
             </fieldset>
             <div class="button-container">
                 {{ govukButton({
-                text: "Continue",
-                href: "add-image"
+                text: "Add Question",
+                href: "skills"
                 }) }}
             </div>
         </form>
@@ -116,4 +124,7 @@
 {% block bodyEnd %}
 <script src="/govuk-frontend/all.js"></script>
 <script>window.GOVUKFrontend.initAll()</script>
+<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
+<script type="text/javascript" src="/js/manage-orgs.js"></script>
+<script src="/js/file-uploader.js"></script>
 {% endblock %}
