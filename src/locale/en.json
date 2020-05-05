@@ -19,7 +19,8 @@
 				"alreadyExists": "Domain already listed",
 				"empty": "You must enter at least one domain",
 				"invalidFormat": "Enter domain in the correct format, like example.com",
-				"invalid": "Invalid domains"
+				"invalid": "Invalid domains",
+				"hint":"example.gov.uk"
 			},
 			"tokenNumber": {
 				"invalidFormat": "Invalid token number format – please re-generate token number"
