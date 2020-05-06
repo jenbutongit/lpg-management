@@ -60,7 +60,7 @@ describe('ModuleFactory tests', () => {
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
 		data.duration = 28800
-		;(data.formattedDuration = '1 day 1 hour '),
+		;(data.formattedDuration = '1 day '),
 			(data.events = [
 				{
 					id: 'XEbjXzmVQwSQ_7qIvr7Kew',
