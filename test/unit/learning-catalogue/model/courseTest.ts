@@ -62,7 +62,7 @@ describe('Course tests', () => {
 
 	it('should populate duration values extracted from module duration', () => {
 		course.duration = 115200
-		expect(course.getDuration()).to.equal('4 days 4 hours ')
+		expect(course.getDuration()).to.equal('4 days ')
 	})
 
 	describe('#getCost', () => {
