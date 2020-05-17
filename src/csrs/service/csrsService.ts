@@ -22,8 +22,16 @@ export class CsrsService {
 		return await this.restService.get('/organisationalUnits/normalised')
 	}
 
+	async getCivilServant() {
+		return await this.restService.get('/civilServants/me')
+	}
+
 	async postSkills(quiz: any) {
 		return await this.restService.postWithoutFollowing('/quizzes', quiz)
+	}
+
+	async getQuiz(id: any) {
+		return await this.restService.get(`/quizzes/myQuiz/profession/${id}`)
 	}
 
 	async getAreasOfWork() {

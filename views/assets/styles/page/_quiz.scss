@@ -19,7 +19,19 @@
         }
         width: 100%;
         margin-top: -8px;
+        display: inline;
+        margin-left: -15px;
+        &.placeholder {
+          display: inline-block;
+          margin-left: 0px;
+        }
       }
     }
+  }
+}
+
+.govuk-grid-row.quiz {
+  table thead tr th span.empty-header {
+    display: none;
   }
 }
