@@ -7,21 +7,23 @@ import {SkillsController} from '../../../../src/controllers/skills/skillsControl
 import {expect} from 'chai'
 import * as chai from 'chai'
 import * as sinonChai from 'sinon-chai'
+import {QuestionFactory} from '../../../../src/controllers/skills/questionFactory'
 
 chai.use(sinonChai)
 
 describe('Skills Controller Tests', function() {
 	let skillsController: SkillsController
 	let csrsService: CsrsService
-
+	let questionFactory: QuestionFactory
 	let req: Request
 	let res: Response
 	const next: NextFunction = sinon.stub()
 
 	beforeEach(() => {
 		csrsService = <CsrsService>{}
+		questionFactory = <QuestionFactory>{}
 
-		skillsController = new SkillsController(csrsService)
+		skillsController = new SkillsController(csrsService, questionFactory)
 
 		req = mockReq()
 		res = mockRes()

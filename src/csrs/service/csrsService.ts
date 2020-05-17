@@ -26,6 +26,10 @@ export class CsrsService {
 		return await this.restService.postWithoutFollowing('/quizzes', quiz)
 	}
 
+	async postQuestion(question: any) {
+		return await this.restService.postWithoutFollowing('/api/questions/add-question', question)
+	}
+
 	async getAreasOfWork() {
 		let areasOfWork = await this.restService.get('/professions/flat')
 

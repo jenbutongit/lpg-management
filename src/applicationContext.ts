@@ -70,6 +70,7 @@ import {DateStartEnd} from './learning-catalogue/model/dateStartEnd'
 import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartEndFactory'
 import {SkillsController} from './controllers/skills/skillsController'
 import {AudienceService} from './lib/audienceService'
+import {QuestionFactory} from './controllers/skills/questionFactory'
 
 log4js.configure(config.LOGGING)
 
@@ -138,6 +139,7 @@ export class ApplicationContext {
 	reportService: ReportService
 	skillsController: SkillsController
 	audienceService: AudienceService
+	questionFactory: QuestionFactory
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -283,7 +285,7 @@ export class ApplicationContext {
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)
-		this.skillsController = new SkillsController(this.csrsService)
+		this.skillsController = new SkillsController(this.csrsService, this.questionFactory)
 	}
 
 	addToResponseLocals() {

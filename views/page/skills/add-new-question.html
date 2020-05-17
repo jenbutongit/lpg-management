@@ -36,7 +36,19 @@
             <input id="topicId" name="topicId" type="hidden" value="{{ form.topicId|default(course.topicId) }}">
             <input  id="visibility" name="visibility" type="hidden" value="{{ course.visibility }}">
             <fieldset class="govuk-fieldset">
-                {{ textarea("Question", "Question", "Maximum of 160 characters", 160, form.shortDescription|default(course.shortDescription), "Question") }}
+
+                <div class="govuk-character-count" data-module="govuk-character-count" data-minlength="10" data-maxlength="500">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="theme">
+                            Question
+                        </label>
+                        <span id="question-hint" class="govuk-hint">
+                            Maximum of 500 characters.
+                        </span>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="question" name="theme" rows="5" aria-describedby="question-info" required></textarea>
+                    </div>
+                </div>
+
 
                 <section class="answers">
                     <p class="label">Answers</p>
@@ -82,23 +94,36 @@
                 </section>
 
 
-                {{ textarea("Te", "learningOutcomes", "This is the text that will be displayed after the user has completed the quiz", 1500, form.learningOutcomes|default(course.learningOutcomes), "Text given after answer") }}
+                <div class="govuk-character-count" data-module="govuk-character-count" data-minlength="10" data-maxlength="500">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="theme">
+                            Text given after answer
+                        </label>
+                        <span id="text-given-hint" class="govuk-hint">
+                            This is the text that will be displayed after the user has completed the quiz.
+                        </span>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="txt-given-after-answer" name="theme" rows="5" aria-describedby="txt-given-after-answer-info" required></textarea>
+                    </div>
+                </div>
 
-                {{ govukInput({
-                label: {
-                text: "Theme"
-                },
-                id: "theme",
-                name: "theme"
-                }) }}
+                <div class="govuk-character-count" data-module="govuk-character-count" data-minlength="3" data-maxlength="200">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="theme">
+                            Theme
+                        </label>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="theme" name="theme" rows="1" aria-describedby="theme-info" required></textarea>
+                    </div>
+                </div>
 
-                {{ govukInput({
-                label: {
-                text: "Suggested learning"
-                },
-                id: "suggested-learning",
-                name: "suggested-learning"
-                }) }}
+                <div class="govuk-character-count" data-module="govuk-character-count" data-minlength="0" data-maxlength="500">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label" for="suggested-learning">
+                            Suggested learning
+                        </label>
+                        <textarea class="govuk-textarea govuk-js-character-count" id="suggested-learning" name="suggested-learning" rows="1" aria-describedby="suggested-learning-info" required></textarea>
+                    </div>
+                </div>
+
 
                 <div class="add-file-form govuk-form-group">
                     <label class="govuk-label">Attach supporting images (optional)</label>
@@ -110,11 +135,11 @@
             <div class="button-container">
                 {{ govukButton({
                 text: "Add Question",
-                href: "skills"
+                href: "add-new-question"
                 }) }}
             </div>
         </form>
-        <a class="cancel-button govuk-body govuk-link" href="/content-management/skills">Cancel</a>
+        <a class="cancel-button govuk-body govuk-link" href="#">Cancel</a>
     </div>
     <div class="govuk-grid-column-one-third">
     </div>
