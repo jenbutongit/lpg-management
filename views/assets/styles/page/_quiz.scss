@@ -1,11 +1,7 @@
 .govuk-grid-row.add-new-question {
   .govuk-grid-column-two-thirds {
-    .quiz-questions .govuk-table {
-      margin-bottom: 10px;
-    }
     .quiz-questions {
       margin-bottom: 20px;
-
     }
     .answers {
       margin-bottom: 25px;
@@ -19,7 +15,23 @@
         }
         width: 100%;
         margin-top: -8px;
+        display: inline;
+        margin-left: -15px;
+        &.placeholder {
+          display: inline-block;
+          margin-left: 0px;
+        }
       }
     }
   }
+}
+
+.govuk-grid-row.quiz {
+  table thead tr th span.empty-header {
+    display: none;
+  }
+}
+
+.delete-quiz .govuk-fieldset {
+  margin-bottom: 20px;
 }

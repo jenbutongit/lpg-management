@@ -28,53 +28,68 @@
 <div class="govuk-grid-row add-new-question">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
-        <form action="/content-management/courses/details/{{ course.id }}" method="post" class="course-form">
-            {% if course.id %}
-            <input type="hidden" name="id" value="{{ form.id|default(course.id) }}">
-            {% endif %}
-            <input id="title" name="title" type="hidden" value="{{ form.title|default(course.title)}}">
-            <input id="topicId" name="topicId" type="hidden" value="{{ form.topicId|default(course.topicId) }}">
-            <input  id="visibility" name="visibility" type="hidden" value="{{ course.visibility }}">
+        <form action="/content-management/skills/add-new-question" method="post" class="course-form">
+
             <fieldset class="govuk-fieldset">
-                {{ textarea("Question", "Question", "Maximum of 160 characters", 160, form.shortDescription|default(course.shortDescription), "Question") }}
+                {{ textarea("value", "value", "Maximum of 160 characters", 160, form.value|default(question.value), "Question") }}
 
                 <section class="answers">
                     <p class="label">Answers</p>
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer0" name="waste" type="checkbox" value="carcasses" checked disabled>
-                            <label class="govuk-label govuk-checkboxes__label" for="answer0">
+                            <input class="govuk-checkboxes__input" id="answer0" type="checkbox" checked disabled>
+                            <label class="govuk-label govuk-checkboxes__label placeholder" for="answer0">
                                 <p>Please tick the checkboxes that contain the correct answers</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer1" name="waste" type="checkbox" value="carcasses">
+                            <input class="govuk-checkboxes__input" id="answer1" name="correctAnswer" type="checkbox" value="A">
                             <label class="govuk-label govuk-checkboxes__label" for="answer1">
-                                <input class="govuk-input" id="answer1-txt" name="event-name" type="text">
+                                <p class="hidden">checkbox for first answer</p>
+                            </label>
+                            <input class="govuk-input" id="answer1-txt" name="answers" type="text">
+                            <label class="govuk-label govuk-input__label" for="answer1-txt">
+                                <p class="hidden">input for first answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer2" name="waste" type="checkbox" value="carcasses">
+                            <input class="govuk-checkboxes__input" id="answer2" name="correctAnswer" type="checkbox" value="B">
                             <label class="govuk-label govuk-checkboxes__label" for="answer2">
-                                <input class="govuk-input" id="answer2-txt" name="event-name" type="text">
+                                <p class="hidden">checkbox for second answer</p>
+                            </label>
+                            <input class="govuk-input" id="answer2-txt" name="answers" type="text">
+                            <label class="govuk-label govuk-input__label" for="answer2-txt">
+                                <p class="hidden">input for second answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer3" name="waste" type="checkbox" value="carcasses">
+                            <input class="govuk-checkboxes__input" id="answer3" name="correctAnswer" type="checkbox" value="C">
                             <label class="govuk-label govuk-checkboxes__label" for="answer3">
-                                <input class="govuk-input" id="answer3-txt" name="event-name" type="text">
+                                <p class="hidden">checkbox for third answer</p>
+                            </label>
+                            <input class="govuk-input" id="answer3-txt" name="answers" type="text">
+                            <label class="govuk-label govuk-input__label" for="answer3-txt">
+                                <p class="hidden">input for third answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer4" name="waste" type="checkbox" value="carcasses">
+                            <input class="govuk-checkboxes__input" id="answer4" name="correctAnswer" type="checkbox" value="D">
                             <label class="govuk-label govuk-checkboxes__label" for="answer4">
-                                <input class="govuk-input" id="answer4-txt" name="event-name" type="text">
+                                <p class="hidden">checkbox for fourth answer</p>
+                            </label>
+                            <input class="govuk-input" id="answer4-txt" name="answers" type="text">
+                            <label class="govuk-label govuk-input__label" for="answer4-txt">
+                                <p class="hidden">input for fourth answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer5" name="waste" type="checkbox" value="carcasses">
+                            <input class="govuk-checkboxes__input" id="answer5" name="checkBox" type="correctAnswer" value="E">
                             <label class="govuk-label govuk-checkboxes__label" for="answer5">
-                                <input class="govuk-input" id="answer5-txt" name="event-name" type="text">
+                                <p class="hidden">checkbox for fifth answer</p>
+                            </label>
+                            <input class="govuk-input" id="answer5-txt" name="answers" type="text">
+                            <label class="govuk-label govuk-input__label" for="answer5-txt">
+                                <p class="hidden">input for fifth answer</p>
                             </label>
                         </div>
                     </div>
@@ -82,7 +97,7 @@
                 </section>
 
 
-                {{ textarea("Te", "learningOutcomes", "This is the text that will be displayed after the user has completed the quiz", 1500, form.learningOutcomes|default(course.learningOutcomes), "Text given after answer") }}
+                {{ textarea("why", "why", "This is the text that will be displayed after the user has completed the quiz", 1500, form.why|default(question.why), "Text given after answer") }}
 
                 {{ govukInput({
                 label: {
@@ -96,21 +111,20 @@
                 label: {
                 text: "Suggested learning"
                 },
-                id: "suggested-learning",
-                name: "suggested-learning"
+                id: "suggestions",
+                name: "suggestions"
                 }) }}
 
                 <div class="add-file-form govuk-form-group">
                     <label class="govuk-label">Attach supporting images (optional)</label>
-                    <input class="govuk-file-upload custom-uploader" id="image-upload" name="img" type="file" aria-describedby="file-upload-hint" accept="image/*">
+                    <input class="govuk-file-upload custom-uploader" id="image-upload" name="imgUrl" type="file" aria-describedby="file-upload-hint" accept="image/*">
                     <label class="btn" for="image-upload"><span>Choose file</span></label>
                 </div>
 
             </fieldset>
             <div class="button-container">
                 {{ govukButton({
-                text: "Add Question",
-                href: "skills"
+                text: "Add Question"
                 }) }}
             </div>
         </form>
@@ -121,10 +135,10 @@
 </div>
 {% endblock %}
 
-{% block bodyEnd %}
-<script src="/govuk-frontend/all.js"></script>
-<script>window.GOVUKFrontend.initAll()</script>
-<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-<script type="text/javascript" src="/js/manage-orgs.js"></script>
-<script src="/js/file-uploader.js"></script>
-{% endblock %}
+<!--{% block bodyEnd %}-->
+<!--<script src="/govuk-frontend/all.js"></script>-->
+<!--<script>window.GOVUKFrontend.initAll()</script>-->
+<!--<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>-->
+<!--<script type="text/javascript" src="/js/manage-orgs.js"></script>-->
+<!--<script src="/js/file-uploader.js"></script>-->
+<!--{% endblock %}-->
