@@ -1,7 +1,11 @@
 import {Question} from './question'
+import {AnswerFactory} from "./answerFactory"
 
 export class QuestionFactory {
-	constructor() {
+
+	private _answerFactory: AnswerFactory
+	constructor(answerFactroy = new AnswerFactory()) {
+		this._answerFactory = answerFactroy
 		this.create = this.create.bind(this)
 	}
 
@@ -9,7 +13,13 @@ export class QuestionFactory {
 		const question = new Question()
 
 		question.value = data.value
-		question.answer = data.answer
+		// question.answer.answers = data.answers
+		// question.answer.correctAnswer = data.checkBox
+		let answer = {
+			'correctAnswer': data.checkBox,
+			'answers': data.answers,
+		}
+		question.answer = this._answerFactory.create(answer)
 		question.why = data.why
 		question.theme = data.theme
 		question.suggestions = data.suggestions

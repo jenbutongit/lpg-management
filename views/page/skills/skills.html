@@ -18,27 +18,29 @@
 
 {% block content %}
 
-{% if not doesPolicyExist %}
+{% if not professionID %}
 {{ govukErrorSummary({
     titleText: "There is a problem",
     errorList: [
         {
-            text: "Policy profession does not exist, and a skills quiz cannot be created."
+            text: "Profession is not set, Please set your profession in your profile page.",
+            href: lpgUiUrl + "/profile"
         }
     ],
     classes: "custom-error-message"
 }) }}
 {% endif %}
 
+{% if professionID %}
+
 <div class="govuk-grid-row quiz">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-m govuk-!-font-size-36">Manage quiz</h1>
-        <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
-
-            <div class="data-table">
-                {{ govukTable({
-                caption: "Data table",
-                head: [
+            <div>
+                <div class="data-table">
+                    {{ govukTable({
+                    caption: "Data table",
+                    head: [
                     {
                         text: "Profession"
                     },
@@ -50,59 +52,67 @@
                         text: "Average score",
                         format: "numeric"
                     }
-                ],
-                rows: [
-                    [
-                        {
-                            text: "Policy"
-                        },
-                        {
-                            text: "48",
-                            format: "numeric"
-                        },
-                        {
-                            text: "3/4",
-                            format: "numeric"
-                        }
-                    ]
-                ]
-                }) }}
-
-            </div>
-
-            <div class="quiz-questions">
-                {{ govukTable({
-                caption: "Quiz questions",
-                head: [
-                    {
-                        text: "Number"
-                    },
-                    {
-                        text: "Question"
-                    },
-                    {
-                        text: ""
-                    }
                     ],
                     rows: [
-                    [
+                        [
                         {
-                            text: "1"
+                            text: professionName
                         },
                         {
-                            text: "What are the principles of ethical research?"
+                            text: "0",
+                            format: "numeric"
                         },
                         {
-                            href: "#",
-                            text: "Change",
-                            visuallyHiddenText: "name"
+                            text: "0",
+                            format: "numeric"
                         }
+                        ]
                     ]
-                ]
-                }) }}
-                <a class="add-question" href="/content-management/skills/add-new-question">Add a new question</a>
+                    }) }}
 
+                </div>
+
+                <table class="govuk-table quiz-questions">
+                    <caption class="govuk-table__caption">Quiz questions</caption>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Number</th>
+                        <th scope="col" class="govuk-table__header">Question</th>
+                        <th scope="col" class="govuk-table__header govuk-table__cell--numeric"><span class="empty-header">Manage</span></th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% if quiz.questions[0] %}
+                        {% for question in quiz.questions %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell question-number">
+                                {{loop.index}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{question.value}}
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a href="#">manage</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell question-number">
+
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                            No questions have been added yet.
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
             </div>
+
+
             <p class="govuk-body">Note, once this quiz has been saved it will be published and therefore it will be available for public viewing.</p>
             <div class="button-container">
                 {{ govukButton({
@@ -110,25 +120,32 @@
                 }) }}
             </div>
             <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
-        </form>
     </div>
+<!--    <a class="add-question" href="/content-management/skills/add-new-question">Add a new question</a>-->
+
     <div class="govuk-grid-column-one-third">
-        <div class="right-menu">
-            {% block menu %}
-            {% set actions = [] %}
-            {% set action = actions.push({
-            link: '/content-management/courses/visibility',
-            text: 'Delete Quiz'
-            }) %}
-            {% set action = actions.push({
-            link: '/content-management/skills/generate-report',
-            text: 'Generate quiz report'
-            }) %}
-            {{ menu("Actions", actions) }}
-            {% endblock %}
+            <div class="right-menu">
+                {% block menu %}
+                    {% set actions = [] %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/delete-quiz',
+                        text: 'Delete quiz'
+                    }) %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/generate-report',
+                        text: 'Generate quiz report'
+                    }) %}
+                    {% set action = actions.push({
+                    link: '/content-management/skills/add-new-question',
+                    text: 'Add a new question'
+                    }) %}
+                    {{ menu("Actions", actions) }}
+                {% endblock %}
+            </div>
         </div>
-    </div>
 </div>
+
+{% endif %}
 
 
 {% endblock %}

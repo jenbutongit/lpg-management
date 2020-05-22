@@ -5,22 +5,24 @@ import {PlaceholderDateSkills} from '../../learning-catalogue/model/placeholderD
 // import {Validate} from '../formValidator'
 import {FormController} from '../formController'
 import {Validator} from '../../learning-catalogue/validator/validator'
-import {Course} from '../../learning-catalogue/model/course'
-import {QuestionFactory} from './questionFactory'
-import {Quiz} from './quiz'
+ import {QuestionFactory} from './questionFactory'
+import {QuizFactory} from './quizFactory'
+import {Question} from "./question"
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
-	validator: Validator<Course>
+	validator: Validator<Question>
 	router: Router
 	questionFactory: QuestionFactory
+	quizFactory: QuizFactory
 
-	constructor(csrsService: CsrsService, questionFactory: QuestionFactory) {
+	constructor(csrsService: CsrsService, questionFactory: QuestionFactory, quizFactory: QuizFactory, questionValidator: Validator<Question>) {
 		this.router = Router()
-		this.configureRouterPaths()
 		this.csrsService = csrsService
-		// this.validator = courseValidator
+		this.validator = questionValidator
 		this.questionFactory = questionFactory
+		this.quizFactory = quizFactory
+		this.configureRouterPaths()
 	}
 
 	private configureRouterPaths() {
@@ -30,39 +32,133 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
 		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
 		this.router.post('/content-management/skills/add-new-question', this.AddQuestion())
+		this.router.get('/content-management/skills/delete-quiz', this.getDeleteQuiz())
+		this.router.post('/content-management/skills/delete-quiz', this.deleteQuiz())
 		this.router.get('/content-management/skills/add-image', this.getImage())
 	}
 
-	AddQuestion() {
-		console.log('This is running ')
-		return async (req: Request, res: Response, next: NextFunction) => {
-			const question = this.questionFactory.create(req.body)
 
-			await this.csrsService
-				.postQuestion(question)
-				.then(() => {
-					res.redirect('/content-management/skills/success')
+	AddQuestion() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			let data = {
+				"value" : req.body.value,
+				'answers': req.body.answers,
+				'correctAnswer': req.body.checkBox,
+				"why" : req.body.why,
+				'theme': req.body.theme,
+				'suggestions': req.body.suggestions,
+				'img': req.body.imgUrl,
+
+			}
+			let errors = await this.validator.check(data)
+
+			if (errors.size) {
+				req.session!.sessionFlash = {
+					errors,
+					form: req.body,
+				}
+				return req.session!.save(() => {
+					res.redirect('/content-management/skills/add-new-question')
 				})
-				.catch(error => {
-					next(error)
+			} else {
+				const question = this.questionFactory.create(req.body)
+
+				await this.csrsService
+					.postQuestion(question)
+					.then(() => {
+						res.redirect('/content-management/skills/success')
+					})
+					.catch(error => {
+						next(error)
+					})
+			}
+
+		}
+	}
+
+	deleteQuiz() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			let professionID: any = null
+
+			if (req.body.deleteQuiz == 'True') {
+				await this.csrsService
+					.getCivilServant()
+					.then(civilServant => {
+						if (civilServant.profession) {
+							professionID = civilServant.profession.id
+						}
+					})
+					.catch(error => {
+						next(error)
+					})
+
+				await this.csrsService
+					.deleteQuizByProfession(professionID)
+					.then(() => {
+						req.session!.save(() => {
+							res.redirect(`/content-management`)
+						})
+					})
+					.catch(error => {
+						next(error)
+					})
+			} else if (req.body.deleteQuiz == 'False')  {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills`)
 				})
+			} else {
+				req.session!.save(() => {
+					res.render('page/skills/delete-quiz', {
+						error: 'please select a yes or no',
+					})
+				})
+			}
+		}
+	}
+
+	getDeleteQuiz() {
+		console.log('get ')
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/delete-quiz')
+			})
 		}
 	}
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
+			let professionID: any = null
+			let professionName: any = null
+			let quiz: any = null
+
 			await this.csrsService
-				.postSkills(3)
-				.then(() => {
-					res.render('page/skills/skills')
+				.getCivilServant()
+				.then(civilServant => {
+					if (civilServant.profession) {
+						professionID = civilServant.profession.id
+						professionName = civilServant.profession.name
+						res.locals.professionID = professionID
+					}
 				})
 				.catch(error => {
 					next(error)
 				})
-			//
-			// req.session!.save(() => {
-			// 	res.render('page/skills/skills')
-			// })
+
+			if (professionID != null) {
+				await this.csrsService
+					.createQuizByProfessionID(professionID)
+					.then(quizInfo => {
+						quiz = this.quizFactory.create(quizInfo.data)
+					})
+					.catch(error => {
+						next(error)
+					})
+
+			}
+
+			req.session!.save(() => {
+				res.render('page/skills/skills', {quiz: quiz, professionName: professionName})
+			})
 		}
 	}
 
