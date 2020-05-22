@@ -35,6 +35,7 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/delete-quiz', this.getDeleteQuiz())
 		this.router.post('/content-management/skills/delete-quiz', this.deleteQuiz())
 		this.router.get('/content-management/skills/add-image', this.getImage())
+		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
 	}
 
 
@@ -273,6 +274,14 @@ export class SkillsController implements FormController {
 	getSkillsSuccess() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			res.render('page/skills/success')
+		}
+	}
+
+	getEditQuitDescription() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/edit-quiz-description')
+			})
 		}
 	}
 }

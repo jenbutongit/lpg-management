@@ -136,8 +136,12 @@
                         text: 'Generate quiz report'
                     }) %}
                     {% set action = actions.push({
-                    link: '/content-management/skills/add-new-question',
-                    text: 'Add a new question'
+                        link: '/content-management/skills/add-new-question',
+                        text: 'Add a new question'
+                    }) %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/edit-quiz-description',
+                        text: 'Edit quiz description'
                     }) %}
                     {{ menu("Actions", actions) }}
                 {% endblock %}
