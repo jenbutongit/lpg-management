@@ -7,6 +7,7 @@ import {ELearningModule} from '../eLearningModule'
 import {Module} from '../module'
 import {Event} from '../event'
 import {DateTime} from '../../../lib/dateTime'
+import _ = require('lodash')
 
 export class ModuleFactory {
 	private eventFactory: EventFactory
@@ -26,6 +27,7 @@ export class ModuleFactory {
 		module.duration = data.duration
 		module.cost = !isNaN(Number(data.cost)) ? Number(data.cost) : data.cost
 		module.optional = data.optional
+		module.formattedDuration = DateTime.formatDuration(module.duration)
 
 		return module
 	}
@@ -77,6 +79,20 @@ export class ModuleFactory {
 			module.events.sort((event1: Event, event2: Event) => {
 				return !event1.dateRanges[0] ? 1 : !event2.dateRanges[0] ? -1 : DateTime.sortDateRanges(event1.dateRanges[0], event2.dateRanges[0])
 			})
+
+			/*
+			 * Using the duration of first event in a face-to-face module to represent module duration
+			 * This assumes that all events are roughly the same duration and
+			 * therefore selecting the first event duration should be representative of the over module duration.
+			 */
+			const events = _.get(module, 'events', [])
+			if (events && events[0]) {
+				const event = events[0]
+
+				module.duration = 0
+				module.duration += event.getDuration()
+				module.formattedDuration = DateTime.formatDuration(module.duration)
+			}
 
 			return module
 		},
