@@ -52,7 +52,7 @@ For a complete list of test dependencies check the `package.json` file. The main
 
 #### External integrations
 
-- none
+- YouTube API key used to fetch metadata on video course links
 
 #### Data Stores
 
@@ -95,6 +95,7 @@ Significant configuration properties are highlighted here. For the full configur
 - `REGISTRY_SERVICE_URL` path for the civil-servant-registry-service
 - `REPORT_SERVICE` path for the civil-servant-registry-service
 - `CACHE` internal object cache TTL and check period
+- `YOUTUBE_API_KEY` key from CSL account on Google Developer Console used to fetch video metadata
 
 
 ## Licenses
