@@ -36,8 +36,44 @@ export class SkillsController implements FormController {
 		this.router.post('/content-management/skills/delete-quiz', this.deleteQuiz())
 		this.router.get('/content-management/skills/add-image', this.getImage())
 		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
+		this.router.post('/content-management/skills/edit-quiz-description', this.editQuizDescription())
 	}
 
+	editQuizDescription() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			let professionID: any = null
+			let description: any = req.body.description
+			if (description != '') {
+				await this.csrsService
+					.getCivilServant()
+					.then(civilServant => {
+						if (civilServant.profession) {
+							professionID = civilServant.profession.id
+						}
+					})
+					.catch(error => {
+						next(error)
+					})
+
+				await this.csrsService
+					.editDescription(professionID, description)
+					.then(() => {
+						req.session!.save(() => {
+							res.redirect(`/content-management`)
+						})
+					})
+					.catch(error => {
+						next(error)
+					})
+			} else {
+				req.session!.save(() => {
+					res.render('page/skills/edit-quiz-description', {
+						error: 'Description is required',
+					})
+				})
+			}
+		}
+	}
 
 	AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {

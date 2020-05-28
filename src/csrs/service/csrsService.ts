@@ -18,6 +18,10 @@ export class CsrsService {
 		this.cacheService = cacheService
 	}
 
+	async editDescription(id: number, description: string) {
+		return await this.restService.postWithoutFollowing('/quiz/update', {id: id, description: description})
+	}
+
 	async getOrganisations() {
 		return await this.restService.get('/organisationalUnits/normalised')
 	}

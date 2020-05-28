@@ -11,12 +11,15 @@ import {QuestionFactory} from '../../../../src/controllers/skills/questionFactor
 import {QuizFactory} from '../../../../src/controllers/skills/quizFactory'
 import {Validator} from "../../../../src/learning-catalogue/validator/validator"
  import {Question} from "../../../../src/controllers/skills/question"
+import {OauthRestService} from "../../../../src/lib/http/oauthRestService"
+import {CacheService} from "../../../../src/lib/cacheService"
 
 chai.use(sinonChai)
 
 describe('Skills Controller Tests', function() {
 	let skillsController: SkillsController
 	let csrsService: CsrsService
+	let restService: OauthRestService
 	let questionFactory: QuestionFactory
 	let quizFactory: QuizFactory
 	let req: Request
@@ -26,7 +29,8 @@ describe('Skills Controller Tests', function() {
 	const next: NextFunction = sinon.stub()
 
 	beforeEach(() => {
-		csrsService = <CsrsService>{}
+		restService = <OauthRestService>{}
+		csrsService = new CsrsService(restService, new CacheService())
 		questionFactory = <QuestionFactory>{}
 		quizFactory = <QuizFactory>{}
 		validator = <Validator<Question>>{}
@@ -41,11 +45,40 @@ describe('Skills Controller Tests', function() {
 	})
 
 	describe('Skills Manage', () => {
+		let mockGetCivilServant, mockCivilServant, mockCreateQuizByProfessionID, mockQuiz
+		mockCivilServant= {
+			"profession": {
+				"id": 1,
+				"name": "Analysis"
+			}
+		}
+
+		mockQuiz = {
+			"id": 1,
+			"name": "Quiz for Analysis",
+			"profession": {
+				"id": 1,
+				"name": "Analysis",
+				"children": []
+			},
+			"questions": [],
+			"status": "DRAFT",
+			"numberOfQuestions": 0,
+			"description": "This is a new sample description"
+		}
+
+
+		mockGetCivilServant = sinon.stub(csrsService, 'getCivilServant')
+		mockGetCivilServant.resolves({mockCivilServant})
+		mockCreateQuizByProfessionID = sinon.stub(csrsService, 'createQuizByProfessionID')
+		mockCreateQuizByProfessionID.resolves({mockQuiz})
+
 		it('should render skills page', async () => {
 			await skillsController.getSkills()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/skills')
 		})
 	})
+
 
 	describe('Add new question', () => {
 		it('should render Add new question page', async () => {
@@ -60,4 +93,13 @@ describe('Skills Controller Tests', function() {
 			expect(res.render).to.have.been.calledOnceWith('page/skills/generate-report')
 		})
 	})
+
+	describe('Skills Description', () => {
+		it('should render Description page', async () => {
+			await skillsController.getSkillsReport()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/edit-quiz-description')
+		})
+	})
+
+
 })
