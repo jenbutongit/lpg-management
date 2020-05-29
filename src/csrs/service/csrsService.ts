@@ -1,6 +1,7 @@
 import {OauthRestService} from '../../lib/http/oauthRestService'
 import {JsonpathService} from '../../lib/jsonpathService'
 import {CacheService} from '../../lib/cacheService'
+import {Profession} from "../../controllers/skills/profession"
 
 export class CsrsService {
 	restService: OauthRestService
@@ -18,8 +19,8 @@ export class CsrsService {
 		this.cacheService = cacheService
 	}
 
-	async editDescription(id: number, description: string) {
-		return await this.restService.postWithoutFollowing('/quiz/update', {id: id, description: description})
+	async editDescription(profession: Profession, description: string) {
+		return await this.restService.postWithoutFollowing('api/quiz/update', {profession, description: description})
 	}
 
 	async getOrganisations() {

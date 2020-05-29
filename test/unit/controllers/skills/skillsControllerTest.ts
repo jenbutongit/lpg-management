@@ -11,15 +11,16 @@ import {QuestionFactory} from '../../../../src/controllers/skills/questionFactor
 import {QuizFactory} from '../../../../src/controllers/skills/quizFactory'
 import {Validator} from "../../../../src/learning-catalogue/validator/validator"
  import {Question} from "../../../../src/controllers/skills/question"
-import {OauthRestService} from "../../../../src/lib/http/oauthRestService"
-import {CacheService} from "../../../../src/lib/cacheService"
+import {Quiz} from "../../../../src/controllers/skills/quiz"
+// import {OauthRestService} from "../../../../src/lib/http/oauthRestService"
+// import {CacheService} from "../../../../src/lib/cacheService"
 
 chai.use(sinonChai)
 
 describe('Skills Controller Tests', function() {
 	let skillsController: SkillsController
 	let csrsService: CsrsService
-	let restService: OauthRestService
+	// let restService: OauthRestService
 	let questionFactory: QuestionFactory
 	let quizFactory: QuizFactory
 	let req: Request
@@ -29,8 +30,8 @@ describe('Skills Controller Tests', function() {
 	const next: NextFunction = sinon.stub()
 
 	beforeEach(() => {
-		restService = <OauthRestService>{}
-		csrsService = new CsrsService(restService, new CacheService())
+		// restService = <OauthRestService>{}
+		csrsService = <CsrsService>{}
 		questionFactory = <QuestionFactory>{}
 		quizFactory = <QuizFactory>{}
 		validator = <Validator<Question>>{}
@@ -45,7 +46,7 @@ describe('Skills Controller Tests', function() {
 	})
 
 	describe('Skills Manage', () => {
-		let mockGetCivilServant, mockCivilServant, mockCreateQuizByProfessionID, mockQuiz
+		let mockCivilServant, mockQuiz
 		mockCivilServant= {
 			"profession": {
 				"id": 1,
@@ -67,17 +68,34 @@ describe('Skills Controller Tests', function() {
 			"description": "This is a new sample description"
 		}
 
-
-		mockGetCivilServant = sinon.stub(csrsService, 'getCivilServant')
-		mockGetCivilServant.resolves({mockCivilServant})
-		mockCreateQuizByProfessionID = sinon.stub(csrsService, 'createQuizByProfessionID')
-		mockCreateQuizByProfessionID.resolves({mockQuiz})
+		const quiz: Quiz = new Quiz()
+		csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(mockCivilServant))
+		csrsService.createQuizByProfessionID = sinon.stub().returns(Promise.resolve(mockQuiz))
+		quizFactory.create = sinon.stub().returns(quiz)
+		// mockGetCivilServant = sinon.stub(csrsService, 'getCivilServant')
+		// mockGetCivilServant.resolves({mockCivilServant})
+		// mockCreateQuizByProfessionID = sinon.stub(csrsService, 'createQuizByProfessionID')
+		// mockCreateQuizByProfessionID.resolves({mockQuiz})
 
 		it('should render skills page', async () => {
 			await skillsController.getSkills()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/skills')
 		})
 	})
+
+	// describe('Skills Manage', () => {
+	//
+	// 	csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(course))
+	//
+	// 	csrsService.getCivilServant = sinon.stub()
+	// 	csrsService.createQuizByProfessionID = sinon.stub()
+	//
+	//
+	// 	it('should render skills page', async () => {
+	// 		await skillsController.getSkills()(req, res, next)
+	// 		expect(res.render).to.have.been.calledOnceWith('page/skills/skills')
+	// 	})
+	// })
 
 
 	describe('Add new question', () => {

@@ -8,6 +8,7 @@ import {Validator} from '../../learning-catalogue/validator/validator'
  import {QuestionFactory} from './questionFactory'
 import {QuizFactory} from './quizFactory'
 import {Question} from "./question"
+import {Profession} from "./profession"
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
@@ -55,8 +56,11 @@ export class SkillsController implements FormController {
 						next(error)
 					})
 
+				let profession = new Profession();
+				profession.id = professionID
+
 				await this.csrsService
-					.editDescription(professionID, description)
+					.editDescription(profession, description)
 					.then(() => {
 						req.session!.save(() => {
 							res.redirect(`/content-management`)
