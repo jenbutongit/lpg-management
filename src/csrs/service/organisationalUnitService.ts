@@ -1,19 +1,19 @@
 import {OrganisationalUnitFactory} from '../model/organisationalUnitFactory'
 import {Csrs} from '../index'
 import * as log4js from 'log4js'
-import {AgencyTokenHttpService} from '../agencyTokenHttpService'
+import {AgencyTokenCapacityUsedHttpService} from '../../identity/agencyTokenCapacityUsedHttpService'
 
 const logger = log4js.getLogger('csrs/service/OrganisationalUnitService')
 
 export class OrganisationalUnitService {
 	csrs: Csrs
-	agencyTokenHttpService: AgencyTokenHttpService
 	organisationalUnitFactory: OrganisationalUnitFactory
+	agencyTokenCapacityUsedHttpService: AgencyTokenCapacityUsedHttpService
 
-	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, agencyTokenHttpService: AgencyTokenHttpService) {
+	constructor(csrs: Csrs, organisationalUnitFactory: OrganisationalUnitFactory, agencyTokenCapacityUsedHttpService: AgencyTokenCapacityUsedHttpService) {
 		this.csrs = csrs
 		this.organisationalUnitFactory = organisationalUnitFactory
-		this.agencyTokenHttpService = agencyTokenHttpService
+		this.agencyTokenCapacityUsedHttpService = agencyTokenCapacityUsedHttpService
 	}
 
 	async getOrganisationalUnit(uri: string) {
@@ -31,6 +31,12 @@ export class OrganisationalUnitService {
 				throw error
 			}
 		})
+
+		if (organisationalUnit.agencyToken !== undefined) {
+			// if org has an agency token get the capacity used
+			const response = await this.agencyTokenCapacityUsedHttpService.getCapacityUsed(organisationalUnit.agencyToken.uid)
+			organisationalUnit.agencyToken.capacityUsed = response.capacityUsed
+		}
 
 		const data = {
 			id: organisationalUnit.id,
