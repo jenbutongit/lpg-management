@@ -1,4 +1,4 @@
 export class Answer {
-	correctAnswer: string
-	answers: string[]
+	correctAnswers: String[]
+	answers: Map<String,String>
 }

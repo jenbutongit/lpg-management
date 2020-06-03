@@ -13,17 +13,26 @@ export class QuestionFactory {
 		const question = new Question()
 
 		question.value = data.value
+		let answer = null
 		// question.answer.answers = data.answers
 		// question.answer.correctAnswer = data.checkBox
-		let answer = {
-			'correctAnswer': data.checkBox,
-			'answers': data.answers,
+		if(data.answer) {
+			answer = {
+				'correctAnswers': data.answer.correctAnswers,
+				'answers': data.answer.answers,
+			}
+		} else {
+			answer = {
+				'correctAnswers': data.correctAnswers,
+				'answers': data.answers,
+			}
 		}
+
 		question.answer = this._answerFactory.create(answer)
 		question.why = data.why
 		question.theme = data.theme
 		question.suggestions = data.suggestions
-		question.imgUrl = data.imgUrl
+		question.img = data.imgUrl
 		return question
 	}
 }

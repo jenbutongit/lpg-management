@@ -5,6 +5,8 @@
 {% from "../../component/textarea/macro.njk" import textarea with context %}
 {% from "input/macro.njk" import govukInput %}
 {% from "checkboxes/macro.njk" import govukCheckboxes %}
+{% from "../../component/menu/macro.njk" import menu %}
+
 
 {% from "date-input/macro.njk" import govukDateInput %}
 {% from "file-upload/macro.njk" import govukFileUpload %}
@@ -43,51 +45,71 @@
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer1" name="correctAnswer" type="checkbox" value="A">
+                            {% if question.answer and question.answer.correctAnswers.includes('A') %}
+                                <input class="govuk-checkboxes__input" id="answer1" name="correctAnswers" type="checkbox" value="A" checked>
+                            {% else %}
+                                <input class="govuk-checkboxes__input" id="answer1" name="correctAnswers" type="checkbox" value="A">
+                            {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer1">
                                 <p class="hidden">checkbox for first answer</p>
                             </label>
-                            <input class="govuk-input" id="answer1-txt" name="answers" type="text">
+                            <input class="govuk-input" id="answer1-txt" name="answers" type="text" value="{{question.answer.answers['A']}}">
                             <label class="govuk-label govuk-input__label" for="answer1-txt">
                                 <p class="hidden">input for first answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer2" name="correctAnswer" type="checkbox" value="B">
+                            {% if question.answer and question.answer.correctAnswers.includes('B') %}
+                                <input class="govuk-checkboxes__input" id="answer2" name="correctAnswers" type="checkbox" value="B" checked>
+                            {% else %}
+                                <input class="govuk-checkboxes__input" id="answer2" name="correctAnswers" type="checkbox" value="B">
+                            {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer2">
                                 <p class="hidden">checkbox for second answer</p>
                             </label>
-                            <input class="govuk-input" id="answer2-txt" name="answers" type="text">
+                            <input class="govuk-input" id="answer2-txt" name="answers" type="text" value="{{question.answer.answers['B']}}">
                             <label class="govuk-label govuk-input__label" for="answer2-txt">
                                 <p class="hidden">input for second answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer3" name="correctAnswer" type="checkbox" value="C">
+                            {% if question.answer and question.answer.correctAnswers.includes('C') %}
+                                <input class="govuk-checkboxes__input" id="answer3" name="correctAnswers" type="checkbox" value="C" checked>
+                            {% else %}
+                                <input class="govuk-checkboxes__input" id="answer3" name="correctAnswers" type="checkbox" value="C">
+                            {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer3">
                                 <p class="hidden">checkbox for third answer</p>
                             </label>
-                            <input class="govuk-input" id="answer3-txt" name="answers" type="text">
+                            <input class="govuk-input" id="answer3-txt" name="answers" type="text" value="{{question.answer.answers['C']}}">
                             <label class="govuk-label govuk-input__label" for="answer3-txt">
                                 <p class="hidden">input for third answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer4" name="correctAnswer" type="checkbox" value="D">
+                            {% if question.answer and question.answer.correctAnswers.includes('D') %}
+                                <input class="govuk-checkboxes__input" id="answer4" name="correctAnswers" type="checkbox" value="D" checked>
+                            {% else %}
+                                <input class="govuk-checkboxes__input" id="answer4" name="correctAnswers" type="checkbox" value="D">
+                            {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer4">
                                 <p class="hidden">checkbox for fourth answer</p>
                             </label>
-                            <input class="govuk-input" id="answer4-txt" name="answers" type="text">
+                            <input class="govuk-input" id="answer4-txt" name="answers" type="text" value="{{question.answer.answers['D']}}">
                             <label class="govuk-label govuk-input__label" for="answer4-txt">
                                 <p class="hidden">input for fourth answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
-                            <input class="govuk-checkboxes__input" id="answer5" name="checkBox" type="correctAnswer" value="E">
+                            {% if question.answer and question.answer.correctAnswers.includes('E') %}
+                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="correctAnswers" value="E" checked>
+                            {% else %}
+                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="correctAnswers" value="E">
+                            {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer5">
                                 <p class="hidden">checkbox for fifth answer</p>
                             </label>
-                            <input class="govuk-input" id="answer5-txt" name="answers" type="text">
+                            <input class="govuk-input" id="answer5-txt" name="answers" type="text" value="{{question.answer.answers['E']}}">
                             <label class="govuk-label govuk-input__label" for="answer5-txt">
                                 <p class="hidden">input for fifth answer</p>
                             </label>
@@ -104,7 +126,8 @@
                 text: "Theme"
                 },
                 id: "theme",
-                name: "theme"
+                name: "theme",
+                value: form.theme|default(question.theme)
                 }) }}
 
                 {{ govukInput({
@@ -112,7 +135,8 @@
                 text: "Suggested learning"
                 },
                 id: "suggestions",
-                name: "suggestions"
+                name: "suggestions",
+                value: form.suggestions|default(question.suggestions)
                 }) }}
 
                 <div class="add-file-form govuk-form-group">
@@ -131,7 +155,22 @@
         <a class="cancel-button govuk-body govuk-link" href="/content-management/skills">Cancel</a>
     </div>
     <div class="govuk-grid-column-one-third">
+        <div class="right-menu">
+            {% block menu %}
+            {% set actions = [] %}
+            {% set action = actions.push({
+            link: '/content-management/skills/question.id/editQuestion',
+            text: 'Edit question'
+            }) %}
+            {% set action = actions.push({
+            link: '/content-management/skills/question.id/deleteQuestion',
+            text: 'Delete Question'
+            }) %}
+            {{ menu("Actions", actions) }}
+            {% endblock %}
+        </div>
     </div>
+</div>
 </div>
 {% endblock %}
 

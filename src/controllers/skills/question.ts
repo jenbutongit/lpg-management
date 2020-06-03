@@ -29,5 +29,5 @@ export class Question {
 	})
 	suggestions: string
 
-	imgUrl: string
+	img: string
 }

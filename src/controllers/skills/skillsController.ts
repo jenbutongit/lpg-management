@@ -9,6 +9,7 @@ import {Validator} from '../../learning-catalogue/validator/validator'
 import {QuizFactory} from './quizFactory'
 import {Question} from "./question"
 import {Profession} from "./profession"
+// import {Answer} from "./answer"
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
@@ -38,6 +39,8 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/add-image', this.getImage())
 		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
 		this.router.post('/content-management/skills/edit-quiz-description', this.editQuizDescription())
+		this.router.get('/content-management/skills/:questionID/edit-question', this.getEditQuestion())
+		// this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
 	}
 
 	editQuizDescription() {
@@ -79,29 +82,30 @@ export class SkillsController implements FormController {
 		}
 	}
 
+
 	AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			let data = {
-				"value" : req.body.value,
-				'answers': req.body.answers,
-				'correctAnswer': req.body.checkBox,
-				"why" : req.body.why,
-				'theme': req.body.theme,
-				'suggestions': req.body.suggestions,
-				'img': req.body.imgUrl,
 
-			}
-			let errors = await this.validator.check(data)
+			// let data = {
+			// 	"value" : req.body.value,
+			// 	'answer': req.body.answers,
+			// 	'correctAnswers': req.body.correctAnswers,
+			// 	"why" : req.body.why,
+			// 	'theme': req.body.theme,
+			// 	'suggestions': req.body.suggestions,
+			// 	'img': req.body.imgUrl,
+			// }
+			// let errors = await this.validator.check(data)
 
-			if (errors.size) {
-				req.session!.sessionFlash = {
-					errors,
-					form: req.body,
-				}
-				return req.session!.save(() => {
-					res.redirect('/content-management/skills/add-new-question')
-				})
-			} else {
+			// if (errors.size) {
+			// 	req.session!.sessionFlash = {
+			// 		errors,
+			// 		form: req.body,
+			// 	}
+			// 	return req.session!.save(() => {
+			// 		res.redirect('/content-management/skills/add-new-question')
+			// 	})
+			// } else {
 				const question = this.questionFactory.create(req.body)
 
 				await this.csrsService
@@ -112,7 +116,7 @@ export class SkillsController implements FormController {
 					.catch(error => {
 						next(error)
 					})
-			}
+			// }
 
 		}
 	}
@@ -203,10 +207,28 @@ export class SkillsController implements FormController {
 		}
 	}
 
+	getEditQuestion() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+
+			await this.csrsService
+				.getQuestionbyID(req.params.questionID)
+				.then( question => {
+					req.session!.save(() => {
+						res.render('page/skills/question', {
+							question: this.questionFactory.create(question)
+						})
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
+		}
+	}
+
 	getAddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			req.session!.save(() => {
-				res.render('page/skills/add-new-question')
+				res.render('page/skills/question')
 			})
 		}
 	}
