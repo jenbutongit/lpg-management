@@ -3,6 +3,8 @@ import {IsNotEmpty} from "class-validator"
 
 export class Question {
 
+	id: number
+
 	@IsNotEmpty({
 		groups: ['all', 'value'],
 		message: 'skills.validation.question.empty',
@@ -24,10 +26,20 @@ export class Question {
 	theme: string
 
 	@IsNotEmpty({
-		groups: ['all', 'suggestions'],
-		message: 'skills.validation.suggestions.empty',
+		groups: ['all', 'learningName'],
+		message: 'skills.validation.learningName.empty',
 	})
-	suggestions: string
+	learningName: string
+
+	@IsNotEmpty({
+		groups: ['all', 'learningReference'],
+		message: 'skills.validation.learningReference.empty',
+	})
+	learningReference: string
 
 	imgUrl: string
+
+	alternativeText: string
+
+	type: string
 }

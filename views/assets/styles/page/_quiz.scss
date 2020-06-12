@@ -31,3 +31,120 @@
     display: none;
   }
 }
+
+.delete-quiz .govuk-fieldset {
+  margin-bottom: 20px;
+}
+
+.skills-message {
+  padding: 20px;
+  font-size: 19px;
+  margin-top: -20px;
+  margin-bottom: 30px;
+  &.success {
+    color: #00703c;
+    border: 4px solid #00703c;
+  }
+  &.failure {
+    color: 	#d4351c;
+    border: 4px solid #d4351c;
+
+  }
+}
+
+.quiz .govuk-grid-column-one-third .right-menu.department-admin .menu-container {
+  margin-top: -20px;
+}
+
+
+.supportingImageHolder {
+  display: grid;
+  grid-template-rows: auto min-content auto;
+}
+
+.supportImageText {
+  font-style: italic;
+  padding: 2px 2px 0px 2px;
+  text-align: center;
+  grid-row: 3;
+}
+
+img.supportingImage {
+  width: 100%;
+  height: auto;
+  align-self: center;
+  background-color: green;
+  grid-row: 2;
+  //margin: 0 auto;
+}
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal!important;
+}
+
+p.alternativeText {
+  display: none;
+}
+
+.skipQuestion {
+  text-decoration: underline;
+  color: #0066CC;
+  cursor: pointer;
+}
+
+th.tableHeading {
+  font-weight: bold;
+}
+
+
+.skills-question .testingTest {
+  color: red;
+}
+
+.quiz-question {
+  .govuk-grid-column-two-thirds {
+      h1 {
+        color: #6f777b;
+        font-weight: normal;
+        font-size: 27px;
+      }
+      h2 {
+        margin-top: -8px;
+        font-size: 30px;
+      }
+      h3 {
+        margin-bottom: 0px;
+        font-size: 20px;
+      }
+      p {
+        font-size: 20px;
+        margin-top: 5px;
+      }
+      .govuk-form-group h3 {
+        margin-bottom: 30px;
+      }
+
+      .button-container {
+        padding-top: 0px;
+      }
+  }
+
+  .govuk-grid-column-one-third {
+    img {
+      margin-top: 50%;
+      width: 150%;
+    }
+  }
+
+}
+
+

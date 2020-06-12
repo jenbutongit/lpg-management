@@ -1,17 +1,21 @@
 window.onload = function () {
-    if(document.getElementById('uploadButton')) {
+    document.getElementById("alternativeTextHeader").style.display = 'none';
+    document.getElementById("alternativeText").style.display = 'none';
+
+    if(document.getElementById('uploadImageButton')) {
         if(document.getElementById("mediaId").value !== "") {
-            document.getElementById("uploadButton").style.display = "none"
+            document.getElementById("uploadImageButton").style.display = "none"
         }
 
-        document.getElementById('uploadButton').onclick = function upload() {
+
+
+        document.getElementById('uploadImageButton').onclick = function upload() {
             let formData = new FormData()
             let fileInput = document.getElementById('file-upload')
             let file = fileInput.files[0]
-            let courseId = document.getElementById('courseId').value
 
             formData.append('file', file)
-            formData.append('container', courseId)
+            formData.append('container', 'quiz-images')
 
             let xhttp = new XMLHttpRequest()
 
@@ -36,7 +40,7 @@ window.onload = function () {
                     const mediaId = mediaLocation.substr(mediaLocation.lastIndexOf("/") + 1)
                     document.getElementById("mediaId").value = mediaId;
 
-                    document.getElementById("uploadButton").style.display = "none"
+                    document.getElementById("uploadImageButton").style.display = "none"
 
                     if(document.getElementById("file-size-warning")) {
                         document.getElementById("file-size-warning").style.display = "none"
@@ -45,19 +49,26 @@ window.onload = function () {
                     document.getElementById("submitButton").disabled = false
 
                     document.getElementById("progress").innerText = "File uploaded"
+
+                    document.getElementById("alternativeText").style.display = 'block';
+                    document.getElementById("alternativeTextHeader").style.display = 'block';
                 }
             }
-
-
 
             xhttp.open("POST", document.getElementById("courseCatalogueUrl").value, true)
             xhttp.setRequestHeader("Authorization", 'BEARER ' + document.getElementById("accessToken").value)
             xhttp.send(formData)
+            xhttp.onload = function () {
+                console.log(xhttp.getResponseHeader('location'))
+                document.getElementById("mediaId").value = xhttp.getResponseHeader('location')
+            };
             return false
         }
     }
 }
 
 document.getElementById("file-upload").onclick = function unHideUploadButton() {
-    document.getElementById("uploadButton").style.display = "block"
+    document.getElementById("uploadImageButton").style.display = "block"
+    document.getElementById("alternativeTextHeader").style.display = 'none';
+    document.getElementById("alternativeText").style.display = 'none';
 }

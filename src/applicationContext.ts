@@ -71,6 +71,8 @@ import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartE
 import {SkillsController} from './controllers/skills/skillsController'
 import {AudienceService} from './lib/audienceService'
 import {QuestionFactory} from './controllers/skills/questionFactory'
+import {QuizFactory} from './controllers/skills/quizFactory'
+import {Question} from "./controllers/skills/question"
 
 log4js.configure(config.LOGGING)
 
@@ -140,6 +142,9 @@ export class ApplicationContext {
 	skillsController: SkillsController
 	audienceService: AudienceService
 	questionFactory: QuestionFactory
+	quizFactory: QuizFactory
+	questionValidator: Validator<Question>
+
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -171,6 +176,10 @@ export class ApplicationContext {
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
+
+		this.questionFactory = new QuestionFactory()
+
+		this.quizFactory = new QuizFactory()
 
 		this.pagination = new Pagination()
 
@@ -285,7 +294,9 @@ export class ApplicationContext {
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)
-		this.skillsController = new SkillsController(this.csrsService, this.questionFactory)
+		this.questionValidator = new Validator<Question>(this.questionFactory)
+		this.skillsController = new SkillsController(this.csrsService, this.questionFactory, this.quizFactory, this.questionValidator)
+
 	}
 
 	addToResponseLocals() {

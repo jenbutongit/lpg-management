@@ -1,7 +1,6 @@
 import {OauthRestService} from '../../lib/http/oauthRestService'
 import {JsonpathService} from '../../lib/jsonpathService'
 import {CacheService} from '../../lib/cacheService'
-import {Profession} from "../../controllers/skills/profession"
 
 export class CsrsService {
 	restService: OauthRestService
@@ -19,12 +18,23 @@ export class CsrsService {
 		this.cacheService = cacheService
 	}
 
-	async editDescription(profession: Profession, description: string) {
-		return await this.restService.postWithoutFollowing('api/quiz/update', {profession, description: description})
+	async editDescription(data: any, user: any) {
+		return await this.restService.postWithoutFollowingWithConfig('api/quiz/update',
+			data,
+			{
+				headers: {
+					Authorization: `Bearer ${user.accessToken}`,
+				},
+			})
 	}
 
-	async editQuestion(profession: Profession, question: any) {
-		return await this.restService.postWithoutFollowing('api/questions/update', {profession, question: question})
+	async editQuestion(question: any, user: any) {
+		return await this.restService.postWithoutFollowingWithConfig('api/questions/update', question,
+{
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
 	async getOrganisations() {
@@ -35,20 +45,62 @@ export class CsrsService {
 		return await this.restService.get('/civilServants/me')
 	}
 
-	async createQuizByProfessionID(id: any) {
-		return await this.restService.postWithoutFollowing('/api/quiz', {id: id})
+	async createQuizByProfessionID(data: any, user: any) {
+		return await this.restService.postWithoutFollowingWithConfig('/api/quiz',
+			data,
+			{
+				headers: {
+					Authorization: `Bearer ${user.accessToken}`,
+				},
+			}
+		)
 	}
 
-	async deleteQuizByProfession(id: number): Promise<void> {
-		await this.restService.delete(`/api/quiz/${id}/delete`)
+	async deleteQuizByProfession(id: number, user: any): Promise<void> {
+		await this.restService.deleteWithCongif(`/api/quiz/delete?professionId=${id}`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
-	async postQuestion(question: any) {
-		return await this.restService.postWithoutFollowing('/api/questions/add-question', {professionId : 1, question})
+	async deleteQuestionbyID(id: string): Promise<void> {
+		await this.restService.delete(`/api/questions/${id}/delete`)
+	}
+
+	async postQuestion(data: any, user: any) {
+		return await this.restService.postWithoutFollowingWithConfig('/api/questions/add-question',
+			data,
+			{
+				headers: {
+					Authorization: `Bearer ${user.accessToken}`,
+				},
+			}
+		)
 	}
 
 	async  getQuestionbyID(questionID: any) {
 		return await this.restService.get(`/api/questions/${questionID}/preview`)
+	}
+
+	async getQuestionsByProfession(id: any) {
+		return await this.restService.get(`/api/quiz?professionId=${id}&limit=10`)
+	}
+
+	async publishSkills(profession: any) {
+		return await this.restService.put(`/api/quiz/publish`, {profession: profession})
+	}
+
+	async getQuizByProfession(id: any) {
+		return await this.restService.get(`/api/quiz/${id}`)
+	}
+
+	async getAllQuizResults() {
+		return await this.restService.get(`/api/quiz/all-results`)
+	}
+
+	async getQuizesByOrg(orgID: any) {
+		return await this.restService.get(`api/quiz/results-for-your-org?organisationId=${orgID}`)
 	}
 
 	async getAreasOfWork() {

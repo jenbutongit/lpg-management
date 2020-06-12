@@ -29,14 +29,27 @@
 
 <div class="govuk-grid-row add-new-question">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
-        <form action="/content-management/skills/add-new-question" method="post" class="course-form">
-
-            <fieldset class="govuk-fieldset">
+        {% if question.id %}
+            <h1 class="govuk-heading-m govuk-!-font-size-36">Edit question</h1>
+        {% else %}
+            <h1 id="header" class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
+        {% endif %}
+        {% if question.id %}
+            <form action="/content-management/skills/{{question.id}}/edit-question" method="post" class="course-form">
+        {% else %}
+            <form action="/content-management/skills/add-new-question" method="post" class="course-form">
+        {% endif %}
+                <input type="hidden" id="questionId" name="questionId" value="{{question.id}}">
+                <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
+                <input id="courseCatalogueUrl" type="hidden" value="{{courseCatalogueUrl}}">
+                <input id="mediaId" name="mediaId" type="hidden" value="">
+                <input id="imgUrl" name="imgUrl" type="hidden" value="{{question.imgUrl}}">
+                <fieldset class="govuk-fieldset">
                 {{ textarea("value", "value", "Maximum of 160 characters", 160, form.value|default(question.value), "Question") }}
 
                 <section class="answers">
                     <p class="label">Answers</p>
+                    <input type="hidden" id="answerId" name="answerId" value="{{question.id}}">
                     <div class="govuk-checkboxes">
                         <div class="govuk-checkboxes__item">
                             <input class="govuk-checkboxes__input" id="answer0" type="checkbox" checked disabled>
@@ -53,7 +66,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer1">
                                 <p class="hidden">checkbox for first answer</p>
                             </label>
-                            <input class="govuk-input" id="answer1-txt" name="answers" type="text" value="{{question.answer.answers['A']}}">
+                            <input class="govuk-input" id="answer1-txt" name="answers" type="text" value="{{keysAnswers[0]}}">
                             <label class="govuk-label govuk-input__label" for="answer1-txt">
                                 <p class="hidden">input for first answer</p>
                             </label>
@@ -67,7 +80,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer2">
                                 <p class="hidden">checkbox for second answer</p>
                             </label>
-                            <input class="govuk-input" id="answer2-txt" name="answers" type="text" value="{{question.answer.answers['B']}}">
+                            <input class="govuk-input" id="answer2-txt" name="answers" type="text" value="{{keysAnswers[1]}}">
                             <label class="govuk-label govuk-input__label" for="answer2-txt">
                                 <p class="hidden">input for second answer</p>
                             </label>
@@ -81,7 +94,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer3">
                                 <p class="hidden">checkbox for third answer</p>
                             </label>
-                            <input class="govuk-input" id="answer3-txt" name="answers" type="text" value="{{question.answer.answers['C']}}">
+                            <input class="govuk-input" id="answer3-txt" name="answers" type="text" value="{{keysAnswers[2]}}">
                             <label class="govuk-label govuk-input__label" for="answer3-txt">
                                 <p class="hidden">input for third answer</p>
                             </label>
@@ -95,21 +108,21 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer4">
                                 <p class="hidden">checkbox for fourth answer</p>
                             </label>
-                            <input class="govuk-input" id="answer4-txt" name="answers" type="text" value="{{question.answer.answers['D']}}">
+                            <input class="govuk-input" id="answer4-txt" name="answers" type="text" value="{{keysAnswers[3]}}">
                             <label class="govuk-label govuk-input__label" for="answer4-txt">
                                 <p class="hidden">input for fourth answer</p>
                             </label>
                         </div>
                         <div class="govuk-checkboxes__item">
                             {% if question.answer and question.answer.correctAnswers.includes('E') %}
-                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="correctAnswers" value="E" checked>
+                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="checkbox" value="E" checked>
                             {% else %}
-                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="correctAnswers" value="E">
+                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="checkbox" value="E">
                             {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer5">
                                 <p class="hidden">checkbox for fifth answer</p>
                             </label>
-                            <input class="govuk-input" id="answer5-txt" name="answers" type="text" value="{{question.answer.answers['E']}}">
+                            <input class="govuk-input" id="answer5-txt" name="answers" type="text" value="{{keysAnswers[4]}}">
                             <label class="govuk-label govuk-input__label" for="answer5-txt">
                                 <p class="hidden">input for fifth answer</p>
                             </label>
@@ -132,45 +145,98 @@
 
                 {{ govukInput({
                 label: {
-                text: "Suggested learning"
+                text: "learningName"
                 },
-                id: "suggestions",
-                name: "suggestions",
-                value: form.suggestions|default(question.suggestions)
+                id: "learningName",
+                name: "learningName",
+                value: form.learningName|default(question.learningName)
+                }) }}
+
+                {{ govukInput({
+                label: {
+                text: "learningReference"
+                },
+                id: "learningReference",
+                name: "learningReference",
+                value: form.learningReference|default(question.learningReference)
                 }) }}
 
                 <div class="add-file-form govuk-form-group">
-                    <label class="govuk-label">Attach supporting images (optional)</label>
-                    <input class="govuk-file-upload custom-uploader" id="image-upload" name="imgUrl" type="file" aria-describedby="file-upload-hint" accept="image/*">
-                    <label class="btn" for="image-upload"><span>Choose file</span></label>
+                    <label class="govuk-label">Attach supporting image (optional)</label>
+                    <input class="govuk-file-upload custom-uploader" id="file-upload" name="imageName" type="file" aria-describedby="file-upload-hint" accept="image/*">
+                    <label class="btn" for="file-upload"><span>Choose file</span></label>
                 </div>
 
-            </fieldset>
-            <div class="button-container">
+                <p id="file-size" class="govuk-body"></p>
+                <p id="progress" class="govuk-body"></p>
+
+                <div id="file-size-warning" class="govuk-warning-text hidden">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This is a large file and may take some time to upload
+                    </strong>
+                </div>
+
                 {{ govukButton({
-                text: "Add Question"
+                attributes: {id: "uploadImageButton"},
+                text: "Upload File",
+                type: "button",
+                classes: "button-blue left-aligned"
                 }) }}
-            </div>
+
+                <input id="img" type="hidden">
+
+                {{ govukInput({
+                label: {
+                    text: "Alternative text",
+                    attributes: {id: "alternativeTextHeader"}
+                },
+                id: "alternativeText",
+                name: "alternativeText",
+                value: form.alternativeText|default(question.alternativeText)
+                }) }}
+
+            </fieldset>
+            {% if question.id %}
+                <div class="button-container">
+                    {{ govukButton({
+                    text: "Save changes",
+                    type: "submit",
+                    attributes: {id: "submitButton"}
+                    }) }}
+                </div>
+            {% else %}
+                <div class="button-container">
+                    {{ govukButton({
+                    text: "Add Question",
+                    type: "submit",
+                    attributes: {id: "submitButton"}
+                    }) }}
+                </div>
+            {% endif %}
+
         </form>
         <a class="cancel-button govuk-body govuk-link" href="/content-management/skills">Cancel</a>
     </div>
     <div class="govuk-grid-column-one-third">
-        <div class="right-menu">
-            {% block menu %}
-            {% set actions = [] %}
-            {% set action = actions.push({
-            link: '/content-management/skills/question.id/editQuestion',
-            text: 'Edit question'
-            }) %}
-            {% set action = actions.push({
-            link: '/content-management/skills/question.id/deleteQuestion',
-            text: 'Delete Question'
-            }) %}
-            {{ menu("Actions", actions) }}
-            {% endblock %}
-        </div>
+        {% if question.id %}
+            <div class="right-menu">
+                {% block menu %}
+                {% set actions = [] %}
+                {% set action = actions.push({
+                link: '/content-management/skills/' + question.id + '/delete-question',
+                text: 'Delete question'
+                }) %}
+                {% set action = actions.push({
+                link: '/content-management/skills/' + question.id + '/preview',
+                text: 'Preview'
+                }) %}
+                {{ menu("Actions", actions) }}
+                {% endblock %}
+            </div>
+        {% endif %}
     </div>
-</div>
 </div>
 {% endblock %}
 
@@ -179,5 +245,6 @@
 <script>window.GOVUKFrontend.initAll()</script>
 <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
 <script type="text/javascript" src="/js/manage-orgs.js"></script>
+<script src="/js/upload-image.js"></script>
 <script src="/js/file-uploader.js"></script>
 {% endblock %}
