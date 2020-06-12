@@ -6,4 +6,6 @@ export class Quiz {
 	profession: string
 	status: string
 	description: string
+	numberOfAttempts: number
+	averageScore: number
 }

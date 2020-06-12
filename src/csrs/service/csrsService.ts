@@ -23,8 +23,8 @@ export class CsrsService {
 		return await this.restService.postWithoutFollowing('api/quiz/update', {profession, description: description})
 	}
 
-	async editQuestion(profession: Profession, question: any) {
-		return await this.restService.postWithoutFollowing('api/questions/update', {profession, question: question})
+	async editQuestion(question: any) {
+		return await this.restService.postWithoutFollowing('api/questions/update', question)
 	}
 
 	async getOrganisations() {
@@ -43,6 +43,10 @@ export class CsrsService {
 		await this.restService.delete(`/api/quiz/delete?professionId=${id}`)
 	}
 
+	async deleteQuestionbyID(id: string): Promise<void> {
+		await this.restService.delete(`/api/questions/${id}/delete`)
+	}
+
 	async postQuestion(question: any) {
 		return await this.restService.postWithoutFollowing('/api/questions/add-question', {professionId : 1, question})
 	}
@@ -57,6 +61,10 @@ export class CsrsService {
 
 	async getQuizByProfession(id: any) {
 		return await this.restService.get(`/api/quiz/${id}/info`)
+	}
+
+	async getQuizByProfessionID(id: any) {
+		return await this.restService.get(`/api/quiz/${id}`)
 	}
 
 	async getAreasOfWork() {

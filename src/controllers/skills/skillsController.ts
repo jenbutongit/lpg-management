@@ -30,7 +30,8 @@ export class SkillsController implements FormController {
 	private configureRouterPaths() {
 		this.router.get('/content-management/skills', this.getSkills())
 		// this.router.post('/content-management/skills', this.uploadAndProcess())
-		this.router.get('/content-management/skills/success', this.getSkillsSuccess())
+		this.router.get('/content-management/skills/add-new-question/success', this.getSkills())
+		this.router.get('/content-management/skills/update-question/success', this.getSkills())
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
 		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
 		this.router.post('/content-management/skills/add-new-question', this.AddQuestion())
@@ -40,7 +41,9 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
 		this.router.post('/content-management/skills/edit-quiz-description', this.editQuizDescription())
 		this.router.get('/content-management/skills/:questionID/edit-question', this.getEditQuestion())
-		// this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
+		this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
+		this.router.get('/content-management/skills/:questionID/delete-question', this.getDeleteQuestion())
+		this.router.post('/content-management/skills/:questionID/delete-question', this.deleteQuestion())
 	}
 
 	editQuizDescription() {
@@ -66,7 +69,7 @@ export class SkillsController implements FormController {
 					.editDescription(profession, description)
 					.then(() => {
 						req.session!.save(() => {
-							res.redirect(`/content-management`)
+							res.redirect(`/content-management/skills`)
 						})
 					})
 					.catch(error => {
@@ -111,7 +114,7 @@ export class SkillsController implements FormController {
 				await this.csrsService
 					.postQuestion(question)
 					.then(() => {
-						res.redirect('/content-management/skills/success')
+						res.redirect('/content-management/skills/add-new-question/success')
 					})
 					.catch(error => {
 						next(error)
@@ -161,8 +164,49 @@ export class SkillsController implements FormController {
 		}
 	}
 
+	deleteQuestion() {
+
+		return async (req: Request, res: Response, next: NextFunction) => {
+
+			if (req.body.deleteQuestion == 'True') {
+				await this.csrsService
+					.deleteQuestionbyID(req.params.questionID)
+					.then(() => {
+						req.session!.save(() => {
+							res.redirect(`/content-management/skills`)
+						})
+					})
+					.catch(error => {
+						next(error)
+					})
+			} else if (req.body.deleteQuestion == 'False')  {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills/${req.params.questionID}/edit-question`)
+				})
+			} else {
+				req.session!.save(() => {
+					res.render('page/skills/delete-question', {
+						error: 'please select a yes or no',
+					})
+				})
+			}
+		}
+
+
+	}
+
+	getDeleteQuestion() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			const questionID = req.params.questionID
+			req.session!.save(() => {
+				res.render('page/skills/delete-question', {
+					questionID: questionID
+				})
+			})
+		}
+	}
+
 	getDeleteQuiz() {
-		console.log('get ')
 		return async (req: Request, res: Response, next: NextFunction) => {
 			req.session!.save(() => {
 				res.render('page/skills/delete-quiz')
@@ -175,6 +219,15 @@ export class SkillsController implements FormController {
 			let professionID: any = null
 			let professionName: any = null
 			let quiz: any = null
+			let url: any = req.url
+			let message: string = ""
+			// const userRoles = req.user.roles
+
+			if(url == '/content-management/skills/add-new-question/success') {
+				message = 'Question successfuly added'
+			} else if (url == '/content-management/skills/update-question/success') {
+				message = 'Question updated successfuly'
+			}
 
 			await this.csrsService
 				.getCivilServant()
@@ -198,11 +251,11 @@ export class SkillsController implements FormController {
 					.catch(error => {
 						next(error)
 					})
-
 			}
 
+
 			req.session!.save(() => {
-				res.render('page/skills/skills', {quiz: quiz, professionName: professionName})
+				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message})
 			})
 		}
 	}
@@ -212,11 +265,33 @@ export class SkillsController implements FormController {
 
 			await this.csrsService
 				.getQuestionbyID(req.params.questionID)
-				.then( question => {
+				.then( questionDTO => {
+					const question = this.questionFactory.create(questionDTO)
+					let keys = Object.values(questionDTO.answer.answers)
+
 					req.session!.save(() => {
 						res.render('page/skills/question', {
-							question: this.questionFactory.create(question)
+							question: question,
+							keysAnswers: keys
 						})
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
+			}
+	}
+
+	EditQuestion() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+
+			const question = this.questionFactory.create(req.body)
+
+			await this.csrsService
+				.editQuestion(question)
+				.then( questionDTO => {
+					req.session!.save(() => {
+						res.redirect('/content-management/skills/update-question/success')
 					})
 				})
 				.catch(error => {
@@ -332,12 +407,6 @@ export class SkillsController implements FormController {
 	// 		}
 	// 	}
 	// }
-
-	getSkillsSuccess() {
-		return async (req: Request, res: Response, next: NextFunction) => {
-			res.render('page/skills/success')
-		}
-	}
 
 	getEditQuitDescription() {
 		return async (req: Request, res: Response, next: NextFunction) => {

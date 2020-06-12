@@ -12,17 +12,26 @@ export class QuestionFactory {
 	create(data: any) {
 		const question = new Question()
 
+		if (data.questionId) {
+			question.id = data.questionId
+		} else {
+			question.id = data.id
+		}
+
+
 		question.value = data.value
 		let answer = null
 		// question.answer.answers = data.answers
 		// question.answer.correctAnswer = data.checkBox
 		if(data.answer) {
 			answer = {
+				'id': data.answerId,
 				'correctAnswers': data.answer.correctAnswers,
 				'answers': data.answer.answers,
 			}
 		} else {
 			answer = {
+				'id': data.answerId,
 				'correctAnswers': data.correctAnswers,
 				'answers': data.answers,
 			}

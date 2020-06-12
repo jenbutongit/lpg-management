@@ -16,6 +16,7 @@ export class AnswerFactory {
 			answers[String.fromCharCode(charCount)] = data.answers[i]
 			charCount++
 		}
+		answer.id = data.id
 		answer.answers = answers
 		answer.correctAnswers = data.correctAnswers
 		return answer

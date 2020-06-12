@@ -12,6 +12,8 @@ export class QuizFactory {
 		quiz.questions = data.questions
 		quiz.status = data.status
 		quiz.description = data.description
+		quiz.numberOfAttempts = data.numberOfAttempts
+		quiz.averageScore = data.averageScore
 		return quiz
 	}
 }

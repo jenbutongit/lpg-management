@@ -3,6 +3,8 @@ import {IsNotEmpty} from "class-validator"
 
 export class Question {
 
+	id: number
+
 	@IsNotEmpty({
 		groups: ['all', 'value'],
 		message: 'skills.validation.question.empty',

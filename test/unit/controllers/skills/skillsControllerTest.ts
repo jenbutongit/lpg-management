@@ -81,10 +81,88 @@ describe('Skills Controller Tests', function() {
 		})
 	})
 
+	describe('Update question', () => {
+		it('should render update question page', async () => {
+			let question = {
+				"id": 1,
+				"type": "MULTIPLE",
+				"value": "What is the capital of Ireland?",
+				"answer": {
+					"id": 1,
+					"correctAnswers": [
+						"A",
+						"D"
+					],
+					"answers": {
+						"A": "Dublin",
+						"B": "London",
+						"C": "New York",
+						"D": "Melbourne"
+					}
+				},
+				"status": "ACTIVE"
+			}
+			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
+			await skillsController.getEditQuestion()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/question')
+		})
+
+		it('should update the question', async () => {
+			let question = {
+				"id": 1,
+				"type": "MULTIPLE",
+				"value": "What is the capital of Ireland?",
+				"answer": {
+					"id": 1,
+					"correctAnswers": [
+						"A",
+						"D"
+					],
+					"answers": {
+						"A": "Dublin",
+						"B": "London",
+						"C": "New York",
+						"D": "Melbourne"
+					}
+				},
+				"status": "ACTIVE"
+			}
+			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
+			await skillsController.EditQuestion()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/question')
+		})
+	})
+
 	describe('Skills report', () => {
 		it('should render Skills report page', async () => {
 			await skillsController.getSkillsReport()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/generate-report')
+		})
+	})
+
+	describe('Archieve a quiz', () => {
+		it('should render the archieve confirmation page', async () => {
+			await skillsController.getDeleteQuiz()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-quiz')
+		})
+
+		it('should call delete a quiz', async () => {
+			// let mockCivilServant
+
+			// @ts-ignore
+// 			mockCivilServant= {
+// 				"profession": {
+// 					"id": 1,
+// 					"name": "Analysis"
+// 				}
+// 			}
+//
+// 			csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(mockCivilServant))
+			// csrsService.deleteQuizByProfession = sinon.stub().returns(Promise.resolve(mockQuiz))
+			// quizFactory.create = sinon.stub().returns(quiz)
+
+			await skillsController.deleteQuiz()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-quiz')
 		})
 	})
 
