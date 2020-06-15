@@ -31,9 +31,9 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
         {% if question.id %}
-            <form action="/content-management/skills/{{question.id}}/edit-question" method="post" class="course-form">
+            <form id="edit-question" action="/content-management/skills/{{question.id}}/edit-question" method="post" class="course-form">
         {% else %}
-            <form action="/content-management/skills/add-new-question" method="post" class="course-form">
+            <form id="create-question" action="/content-management/skills/add-new-question" method="post" class="course-form">
         {% endif %}
                 <input type="hidden" id="questionId" name="questionId" value="{{question.id}}">
 
@@ -145,26 +145,7 @@
                 value: form.suggestions|default(question.suggestions)
                 }) }}
 
-                <div class="add-file-form govuk-form-group">
-                    <label class="govuk-label">Attach supporting images (optional)</label>
-                    <input class="govuk-file-upload custom-uploader" id="image-upload" name="imgUrl" type="file" aria-describedby="file-upload-hint" accept="image/*">
-                    <label class="btn" for="image-upload"><span>Choose file</span></label>
-                </div>
 
-                {{ govukButton({
-                attributes: {id: "uploadButton"},
-                text: "Upload File",
-                type: "input",
-                classes: "button-blue left-aligned"
-                }) }}
-
-                {{ govukInput({
-                label: {
-                text: "Alternative text"
-                },
-                id: "alt",
-                name: "alt"
-                }) }}
 
             </fieldset>
             {% if question.id %}
@@ -201,10 +182,10 @@
 </div>
 {% endblock %}
 
-{% block bodyEnd %}
-<script src="/govuk-frontend/all.js"></script>
-<script>window.GOVUKFrontend.initAll()</script>
-<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-<script type="text/javascript" src="/js/manage-orgs.js"></script>
-<script src="/js/file-uploader.js"></script>
-{% endblock %}
+<!--{% block bodyEnd %}-->
+<!--<script src="/govuk-frontend/all.js"></script>-->
+<!--<script>window.GOVUKFrontend.initAll()</script>-->
+<!--<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>-->
+<!--<script type="text/javascript" src="/js/manage-orgs.js"></script>-->
+<!--<script src="/js/file-uploader.js"></script>-->
+<!--{% endblock %}-->

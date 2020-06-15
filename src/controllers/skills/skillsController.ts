@@ -44,7 +44,37 @@ export class SkillsController implements FormController {
 		this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
 		this.router.get('/content-management/skills/:questionID/delete-question', this.getDeleteQuestion())
 		this.router.post('/content-management/skills/:questionID/delete-question', this.deleteQuestion())
+		// this.router.post('/content-management/skills/:questionID/publish-quizZ', this.publishSkills())
 	}
+
+	// publishSkills() {
+	// 	return async (req: Request, res: Response, next: NextFunction) => {
+	//
+	// 		let profession = new Profession();
+	//
+	// 		await this.csrsService
+	// 			.getCivilServant()
+	// 			.then(civilServant => {
+	// 				if (civilServant.profession) {
+	// 					profession.id = civilServant.profession.id
+	// 				}
+	// 			})
+	// 			.catch(error => {
+	// 				next(error)
+	// 			})
+	//
+	// 		await this.csrsService
+	// 			.publishSkills(profession)
+	// 			.then(() => {
+	// 				req.session!.save(() => {
+	// 					res.redirect(`/content-management`)
+	// 				})
+	// 			})
+	// 			.catch(error => {
+	// 				next(error)
+	// 			})
+	// 	}
+	// }
 
 	editQuizDescription() {
 		return async (req: Request, res: Response, next: NextFunction) => {
@@ -89,26 +119,28 @@ export class SkillsController implements FormController {
 	AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
-			// let data = {
-			// 	"value" : req.body.value,
-			// 	'answer': req.body.answers,
-			// 	'correctAnswers': req.body.correctAnswers,
-			// 	"why" : req.body.why,
-			// 	'theme': req.body.theme,
-			// 	'suggestions': req.body.suggestions,
-			// 	'img': req.body.imgUrl,
-			// }
-			// let errors = await this.validator.check(data)
+			console.log("This is being called")
 
-			// if (errors.size) {
-			// 	req.session!.sessionFlash = {
-			// 		errors,
-			// 		form: req.body,
-			// 	}
-			// 	return req.session!.save(() => {
-			// 		res.redirect('/content-management/skills/add-new-question')
-			// 	})
-			// } else {
+			let data = {
+				"value" : req.body.value,
+				'answer': req.body.answers,
+				'correctAnswers': req.body.correctAnswers,
+				"why" : req.body.why,
+				'theme': req.body.theme,
+				'suggestions': req.body.suggestions,
+				'img': req.body.imgUrl,
+			}
+			let errors = await this.validator.check(data)
+
+			if (errors.size) {
+				req.session!.sessionFlash = {
+					errors,
+					form: req.body,
+				}
+				return req.session!.save(() => {
+					res.redirect('/content-management/skills/add-new-question')
+				})
+			} else {
 				const question = this.questionFactory.create(req.body)
 
 				await this.csrsService
@@ -119,7 +151,7 @@ export class SkillsController implements FormController {
 					.catch(error => {
 						next(error)
 					})
-			// }
+			}
 
 		}
 	}
