@@ -41,6 +41,7 @@
         {% endif %}
                 <input type="hidden" id="questionId" name="questionId" value="{{question.id}}">
                 <input id="courseCatalogueUrl" type="hidden" value="{{courseCatalogueUrl}}">
+                <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
                 <h2>{{courseCatalogueUrl}}</h2>
                 <fieldset class="govuk-fieldset">
                 {{ textarea("value", "value", "Maximum of 160 characters", 160, form.value|default(question.value), "Question") }}
@@ -152,8 +153,8 @@
 
                 <div class="add-file-form govuk-form-group">
                     <label class="govuk-label">Attach supporting image (optional)</label>
-                    <input class="govuk-file-upload custom-uploader" id="image-upload" name="imgUrl" type="file" aria-describedby="file-upload-hint" accept="image/*">
-                    <label class="btn" for="image-upload"><span>Choose file</span></label>
+                    <input class="govuk-file-upload custom-uploader" id="file-upload" name="imgUrl" type="file" aria-describedby="file-upload-hint" accept="image/*">
+                    <label class="btn" for="file-upload"><span>Choose file</span></label>
                 </div>
 
                 {{ govukButton({
@@ -215,5 +216,6 @@
 <script>window.GOVUKFrontend.initAll()</script>
 <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
 <script type="text/javascript" src="/js/manage-orgs.js"></script>
+<script src="/js/upload-file.js"></script>
 <script src="/js/file-uploader.js"></script>
 {% endblock %}
