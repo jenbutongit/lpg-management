@@ -34,7 +34,11 @@
 {% if professionID %}
 
 {% if message != "" %}
-    <p class="skills-message">&#10003; &nbsp; {{message}}</p>
+    <p class="skills-message success">&#10003; &nbsp; {{message}}</p>
+{% endif %}
+
+{% if errorMessage != "" %}
+    <p class="skills-message failure">X &nbsp; {{errorMessage}}</p>
 {% endif %}
 
 <div class="govuk-grid-row quiz">
@@ -96,7 +100,7 @@
                                 {{question.value}}
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric">
-                                <a href="/content-management/skills/{{question.id}}/edit-question">manage</a>
+                                <a href="/content-management/skills/{{question.id}}/edit-question">Manage</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -116,14 +120,18 @@
                 </table>
             </div>
 
+        <p class="govuk-body">Note, once this quiz has been saved it will be published and therefore it will be available for public viewing.</p>
 
-            <p class="govuk-body">Note, once this quiz has been saved it will be published and therefore it will be available for public viewing.</p>
+
+        <form action="/content-management/skills/publish-quiz" method="post" class="course-form">
             <div class="button-container">
                 {{ govukButton({
-                    text: "Publish"
+                text: "Publish"
                 }) }}
             </div>
-            <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
+        </form>
+
+        <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
     </div>
 <!--    <a class="add-question" href="/content-management/skills/add-new-question">Add a new question</a>-->
 

@@ -59,9 +59,9 @@ export class CsrsService {
 		return await this.restService.get(`/api/quiz?professionId=${id}&limit=10`)
 	}
 
-	// async publishSkills(profession: any) {
-	// 	return await this.restService.postWithoutFollowing(`/api/quiz/publish`, profession)
-	// }
+	async publishSkills(profession: any) {
+		return await this.restService.put(`/api/quiz/publish`, {profession: profession})
+	}
 
 	async getQuizByProfession(id: any) {
 		return await this.restService.get(`/api/quiz/${id}/info`)

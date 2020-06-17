@@ -9,6 +9,8 @@ import {Validator} from '../../learning-catalogue/validator/validator'
 import {QuizFactory} from './quizFactory'
 import {Question} from "./question"
 import {Profession} from "./profession"
+import {Answer} from "./answer"
+import * as config from "../../config"
 // import {Answer} from "./answer"
 
 export class SkillsController implements FormController {
@@ -29,7 +31,6 @@ export class SkillsController implements FormController {
 
 	private configureRouterPaths() {
 		this.router.get('/content-management/skills', this.getSkills())
-		// this.router.post('/content-management/skills', this.uploadAndProcess())
 		this.router.get('/content-management/skills/add-new-question/success', this.getSkills())
 		this.router.get('/content-management/skills/update-question/success', this.getSkills())
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
@@ -44,37 +45,39 @@ export class SkillsController implements FormController {
 		this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
 		this.router.get('/content-management/skills/:questionID/delete-question', this.getDeleteQuestion())
 		this.router.post('/content-management/skills/:questionID/delete-question', this.deleteQuestion())
-		// this.router.post('/content-management/skills/:questionID/publish-quizZ', this.publishSkills())
+		this.router.post('/content-management/skills/publish-quiz', this.publishSkills())
+		this.router.get('/content-management/skills/publish-quiz/success', this.getSkills())
+		this.router.get('/content-management/skills/publish-quiz/failure', this.getSkills())
 	}
 
-	// publishSkills() {
-	// 	return async (req: Request, res: Response, next: NextFunction) => {
-	//
-	// 		let profession = new Profession();
-	//
-	// 		await this.csrsService
-	// 			.getCivilServant()
-	// 			.then(civilServant => {
-	// 				if (civilServant.profession) {
-	// 					profession.id = civilServant.profession.id
-	// 				}
-	// 			})
-	// 			.catch(error => {
-	// 				next(error)
-	// 			})
-	//
-	// 		await this.csrsService
-	// 			.publishSkills(profession)
-	// 			.then(() => {
-	// 				req.session!.save(() => {
-	// 					res.redirect(`/content-management`)
-	// 				})
-	// 			})
-	// 			.catch(error => {
-	// 				next(error)
-	// 			})
-	// 	}
-	// }
+	publishSkills() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+
+			let profession = new Profession()
+
+			await this.csrsService
+				.getCivilServant()
+				.then(civilServant => {
+					if (civilServant.profession) {
+						profession.id = civilServant.profession.id
+					}
+				})
+				.catch(error => {
+					next(error)
+				})
+
+			await this.csrsService
+				.publishSkills(profession)
+				.then(() => {
+					req.session!.save(() => {
+						res.redirect(`/content-management/skills/publish-quiz/success`)
+					})
+				})
+				.catch(error => {
+					res.redirect(`/content-management/skills/publish-quiz/failure`)
+				})
+		}
+	}
 
 	editQuizDescription() {
 		return async (req: Request, res: Response, next: NextFunction) => {
@@ -121,10 +124,13 @@ export class SkillsController implements FormController {
 
 			console.log("This is being called")
 
+			let answer = new Answer()
+			answer.answers = req.body.answers
+			answer.correctAnswers = req.body.correctAnswers
+
 			let data = {
 				"value" : req.body.value,
-				'answer': req.body.answers,
-				'correctAnswers': req.body.correctAnswers,
+				'answer': answer,
 				"why" : req.body.why,
 				'theme': req.body.theme,
 				'suggestions': req.body.suggestions,
@@ -253,12 +259,17 @@ export class SkillsController implements FormController {
 			let quiz: any = null
 			let url: any = req.url
 			let message: string = ""
+			let errorMessage: string = ""
 			// const userRoles = req.user.roles
 
 			if(url == '/content-management/skills/add-new-question/success') {
 				message = 'Question successfuly added'
 			} else if (url == '/content-management/skills/update-question/success') {
 				message = 'Question updated successfuly'
+			} else if (url == '/content-management/skills/publish-quiz/success') {
+				message = 'Quiz published successfuly'
+			} else if (url == '/content-management/skills/publish-quiz/failure') {
+				errorMessage = 'A quiz must have a minimum of 18 questions'
 			}
 
 			await this.csrsService
@@ -287,7 +298,7 @@ export class SkillsController implements FormController {
 
 
 			req.session!.save(() => {
-				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message})
+				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message, errorMessage: errorMessage})
 			})
 		}
 	}
@@ -335,7 +346,9 @@ export class SkillsController implements FormController {
 	getAddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			req.session!.save(() => {
-				res.render('page/skills/question')
+				res.render('page/skills/question', {
+					courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media',
+				})
 			})
 		}
 	}
