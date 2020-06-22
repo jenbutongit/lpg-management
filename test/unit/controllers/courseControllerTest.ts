@@ -87,6 +87,7 @@ describe('Course Controller Tests', function() {
 			const module: Module = new Module()
 
 			module.duration = 0
+			module.formattedDuration = '0 minutes'
 			course.modules = [module]
 
 			const coursePreview: (request: Request, response: Response) => void = courseController.coursePreview()

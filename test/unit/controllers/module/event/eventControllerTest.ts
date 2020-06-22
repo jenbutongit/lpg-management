@@ -804,7 +804,7 @@ describe('EventController', function() {
 
 			dateRangeValidator.check = sinon.stub().returns(errors)
 
-			const event = <Event>{
+			const event = {
 				id: 'event-id',
 				venue: {
 					address: 'London',
@@ -884,7 +884,7 @@ describe('EventController', function() {
 
 			dateRangeValidator.check = sinon.stub().returns(errors)
 
-			const event = <Event>{
+			const event = {
 				id: 'event-id',
 				venue: {
 					address: 'London',
@@ -1050,6 +1050,8 @@ describe('EventController', function() {
 		it('should render dateRange overview', async () => {
 			const request = mockReq()
 			const response = mockRes()
+			response.locals.event = new Event()
+			response.locals.event.dateRanges = []
 
 			eventController.dateRangeOverview()(request, response)
 
