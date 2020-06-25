@@ -35,9 +35,9 @@ export class CsrsService {
 		return await this.restService.get('/civilServants/me')
 	}
 
-	async createQuizByProfessionID(id: any, user: any) {
+	async createQuizByProfessionID(data: any, user: any) {
 		return await this.restService.postWithoutFollowingWithConfig('/api/quiz',
-			{id: id},
+			data,
 			{
 				headers: {
 					Authorization: `Bearer ${user.accessToken}`,

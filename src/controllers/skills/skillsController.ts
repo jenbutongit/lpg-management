@@ -322,7 +322,7 @@ export class SkillsController implements FormController {
 				})
 
 			if (professionID != null) {
-				let passedParams = { profession: professionID, organisationId: organisationalID}
+				let passedParams = { profession: { id: professionID} , organisationId: organisationalID}
 
 				await this.csrsService
 					.createQuizByProfessionID(passedParams, req.user)
