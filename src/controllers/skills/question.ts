@@ -31,5 +31,7 @@ export class Question {
 	})
 	suggestions: string
 
-	img: string
+	imgUrl: string
+
+	alternativeText: string
 }

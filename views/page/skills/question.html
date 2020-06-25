@@ -32,7 +32,7 @@
         {% if question.id %}
             <h1 class="govuk-heading-m govuk-!-font-size-36">Edit question</h1>
         {% else %}
-            <h1 class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
+            <h1 id="header" class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
         {% endif %}
         {% if question.id %}
             <form action="/content-management/skills/{{question.id}}/edit-question" method="post" class="course-form">
@@ -40,9 +40,9 @@
             <form action="/content-management/skills/add-new-question" method="post" class="course-form">
         {% endif %}
                 <input type="hidden" id="questionId" name="questionId" value="{{question.id}}">
+                <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
                 <input id="courseCatalogueUrl" type="hidden" value="{{courseCatalogueUrl}}">
-                <input id="mediaId" name="mediaId" type="hidden" value="{{media.id}}">
-                <h2>{{courseCatalogueUrl}}</h2>
+                <input id="mediaId" name="mediaId" type="hidden" value="">
                 <fieldset class="govuk-fieldset">
                 {{ textarea("value", "value", "Maximum of 160 characters", 160, form.value|default(question.value), "Question") }}
 
@@ -153,23 +153,38 @@
 
                 <div class="add-file-form govuk-form-group">
                     <label class="govuk-label">Attach supporting image (optional)</label>
-                    <input class="govuk-file-upload custom-uploader" id="file-upload" name="imgUrl" type="file" aria-describedby="file-upload-hint" accept="image/*">
+                    <input class="govuk-file-upload custom-uploader" id="file-upload" name="imageName" type="file" aria-describedby="file-upload-hint" accept="image/*">
                     <label class="btn" for="file-upload"><span>Choose file</span></label>
                 </div>
 
+                <p id="file-size" class="govuk-body"></p>
+                <p id="progress" class="govuk-body"></p>
+
+                <div id="file-size-warning" class="govuk-warning-text hidden">
+                    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                    <strong class="govuk-warning-text__text">
+                        <span class="govuk-warning-text__assistive">Warning</span>
+                        This is a large file and may take some time to upload
+                    </strong>
+                </div>
+
                 {{ govukButton({
-                attributes: {id: "uploadButton"},
+                attributes: {id: "uploadImageButton"},
                 text: "Upload File",
-                type: "input",
+                type: "button",
                 classes: "button-blue left-aligned"
                 }) }}
 
+                <input id="img" type="hidden">
+
                 {{ govukInput({
                 label: {
-                text: "Alternative text"
+                    text: "Alternative text",
+                    attributes: {id: "alternativeTextHeader"}
                 },
-                id: "alt",
-                name: "alt"
+                id: "alternativeText",
+                name: "alternativeText",
+                value: form.alternativeText|default(question.alternativeText)
                 }) }}
 
             </fieldset>
@@ -201,7 +216,11 @@
                 {% set actions = [] %}
                 {% set action = actions.push({
                 link: '/content-management/skills/' + question.id + '/delete-question',
-                text: 'Delete Question'
+                text: 'Delete question'
+                }) %}
+                {% set action = actions.push({
+                link: '/content-management/skills/ + question.id + '/view',
+                text: 'Preview'
                 }) %}
                 {{ menu("Actions", actions) }}
                 {% endblock %}
@@ -216,6 +235,6 @@
 <script>window.GOVUKFrontend.initAll()</script>
 <script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
 <script type="text/javascript" src="/js/manage-orgs.js"></script>
-<script src="/js/upload-file.js"></script>
+<script src="/js/upload-image.js"></script>
 <script src="/js/file-uploader.js"></script>
 {% endblock %}

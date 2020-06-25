@@ -26,11 +26,11 @@
         <h1 class="govuk-heading-m govuk-!-font-size-36">Edit description</h1>
         <form action="/content-management/skills/edit-quiz-description" method="post" class="course-form">
 
-            {{ textarea("description", "description", "This is the text that will be displayed to the user before starting the quiz", 1500, form.learningOutcomes|default(course.learningOutcomes), "Description") }}
+            {{ textarea("description", "description", "This is the text that will be displayed to the user before starting the quiz", 1500, form.learningOutcomes|default(quiz.description), "Description") }}
 
             <div class="button-container">
                 {{ govukButton({
-                    text: "Edit Description"
+                    text: "Save changes"
                 }) }}
             </div>
         </form>

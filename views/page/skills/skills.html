@@ -3,6 +3,9 @@
 {% from "error-summary/macro.njk" import govukErrorSummary %}
 {% from "../../component/menu/macro.njk" import menu %}
 {% from "table/macro.njk" import govukTable %}
+{% from "../../component/statusWithLabel/macro.njk" import statusWithLabel with context %}
+{% from "../../component/changeStatus/macro.njk" import changeStatus with context %}
+
 
 
 {% extends "../../component/Page.njk" %}
@@ -136,7 +139,15 @@
 <!--    <a class="add-question" href="/content-management/skills/add-new-question">Add a new question</a>-->
 
     <div class="govuk-grid-column-one-third">
-            <div class="right-menu">
+            <div class="right-menu department-admin">
+                {% block statusWithLabel %}
+                    {% if quiz.status == "DRAFT" %}
+                        {{ statusWithLabel('Draft') }}
+                    {% else %}
+                        {{ statusWithLabel('Published') }}
+                    {% endif %}
+                {% endblock %}
+
                 {% block menu %}
                     {% set actions = [] %}
                     {% set action = actions.push({
@@ -147,7 +158,7 @@
                         link: '/content-management/skills/generate-report',
                         text: 'Generate quiz report'
                     }) %}
-                    {% set action = actions.push({
+                    {% set action = actions.push(
                         link: '/content-management/skills/edit-quiz-description',
                         text: 'Edit quiz description'
                     }) %}

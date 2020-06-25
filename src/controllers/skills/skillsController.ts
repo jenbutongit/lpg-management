@@ -1,8 +1,6 @@
 import {NextFunction, Request, Response, Router} from 'express'
 import {CsrsService} from '../../csrs/service/csrsService'
-// import * as csvtojson from 'csvtojson'
 import {PlaceholderDateSkills} from '../../learning-catalogue/model/placeholderDateSkills'
-// import {Validate} from '../formValidator'
 import {FormController} from '../formController'
 import {Validator} from '../../learning-catalogue/validator/validator'
  import {QuestionFactory} from './questionFactory'
@@ -11,7 +9,6 @@ import {Question} from "./question"
 import {Profession} from "./profession"
 import {Answer} from "./answer"
 import * as config from "../../config"
-// import {Answer} from "./answer"
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
@@ -40,6 +37,7 @@ export class SkillsController implements FormController {
 		this.router.post('/content-management/skills/delete-quiz', this.deleteQuiz())
 		this.router.get('/content-management/skills/add-image', this.getImage())
 		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
+		this.router.get('/content-management/skills/edit-quiz-description/success', this.getSkills())
 		this.router.post('/content-management/skills/edit-quiz-description', this.editQuizDescription())
 		this.router.get('/content-management/skills/:questionID/edit-question', this.getEditQuestion())
 		this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
@@ -48,6 +46,39 @@ export class SkillsController implements FormController {
 		this.router.post('/content-management/skills/publish-quiz', this.publishSkills())
 		this.router.get('/content-management/skills/publish-quiz/success', this.getSkills())
 		this.router.get('/content-management/skills/publish-quiz/failure', this.getSkills())
+		this.router.get('/content-management/skills/super-admin', this.getSkillsSuperAdmin())
+		this.router.get('/content-management/skills/delete-questions/success', this.getSkills())
+		this.router.get('/content-management/skills/:questionID/preview', this.previewQuestion())
+	}
+
+		getSkillsSuperAdmin() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+
+			let quizzes: any = null
+
+			await this.csrsService
+				.getAllQuizes()
+				.then(quizzesInfo => {
+					quizzes = quizzesInfo
+				})
+				.catch(error => {
+					next(error)
+				})
+
+			req.session!.save(() => {
+				res.render('page/skills/skills-super-admin', {quizzes: quizzes})
+			})
+		}
+	}
+
+	previewQuestion() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			req.session!.save(() => {
+				res.render('page/skills/edit-quiz-description', {
+					error: 'Description is required',
+				})
+			})
+		}
 	}
 
 	publishSkills() {
@@ -102,7 +133,7 @@ export class SkillsController implements FormController {
 					.editDescription(profession, description)
 					.then(() => {
 						req.session!.save(() => {
-							res.redirect(`/content-management/skills`)
+							res.redirect(`/content-management/skills/edit-quiz-description/success`)
 						})
 					})
 					.catch(error => {
@@ -134,7 +165,6 @@ export class SkillsController implements FormController {
 				"why" : req.body.why,
 				'theme': req.body.theme,
 				'suggestions': req.body.suggestions,
-				'img': req.body.imgUrl,
 			}
 			let errors = await this.validator.check(data)
 
@@ -211,7 +241,7 @@ export class SkillsController implements FormController {
 					.deleteQuestionbyID(req.params.questionID)
 					.then(() => {
 						req.session!.save(() => {
-							res.redirect(`/content-management/skills`)
+							res.redirect(`/content-management/skills/delete-questions/success`)
 						})
 					})
 					.catch(error => {
@@ -265,11 +295,15 @@ export class SkillsController implements FormController {
 			if(url == '/content-management/skills/add-new-question/success') {
 				message = 'Question successfuly added'
 			} else if (url == '/content-management/skills/update-question/success') {
-				message = 'Question updated successfuly'
+				message = 'Your changes have been saved'
 			} else if (url == '/content-management/skills/publish-quiz/success') {
-				message = 'Quiz published successfuly'
+				message = 'Your quiz has been published'
 			} else if (url == '/content-management/skills/publish-quiz/failure') {
-				errorMessage = 'A quiz must have a minimum of 18 questions'
+				errorMessage = 'You can only publish a quiz with at least 18 questions'
+			} else if (url == '/content-management/skills/edit-quiz-description/success') {
+				message = 'Your changes have been saved'
+			} else if (url == '/content-management/skills/delete-questions/success') {
+				message = 'Question deleted successfully'
 			}
 
 			await this.csrsService
@@ -287,7 +321,7 @@ export class SkillsController implements FormController {
 
 			if (professionID != null) {
 				await this.csrsService
-					.createQuizByProfessionID(professionID)
+					.createQuizByProfessionID(professionID, req.user)
 					.then(quizInfo => {
 						quiz = this.quizFactory.create(quizInfo.data)
 					})
@@ -347,7 +381,7 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			req.session!.save(() => {
 				res.render('page/skills/question', {
-					courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media',
+					courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media/skills/image',
 				})
 			})
 		}
@@ -371,93 +405,36 @@ export class SkillsController implements FormController {
 		}
 	}
 
-	// uploadAndProcess() {
-	// 	return async (req: Request, res: Response, next: NextFunction) => {
-	// 		let uploadedFileNotCSV: boolean = false
-	//
-	// 		// @ts-ignore
-	// 		const uploadedFile = req.files.file
-	// 		let fileExtension = uploadedFile.name.split('.')
-	// 		let fileType = fileExtension[fileExtension.length - 1]
-	//
-	// 		if (fileType.toLowerCase() !== 'csv') {
-	// 			uploadedFileNotCSV = true
-	// 			req.session!.sessionFlash = {uploadedFileNotCSV}
-	// 			req.session!.save(() => {
-	// 				res.redirect('/content-management/skills')
-	// 			})
-	// 		} else {
-	// 			await csvtojson()
-	// 				// @ts-ignore
-	// 				.fromString(req.files.file.data.toString('utf-8'))
-	// 				.then(async (questions: any) => {
-	// 					const opts = ['A', 'B', 'C', 'D', 'E']
-	// 					let questionToSend: Question[] = []
-	//
-	// 					questions.forEach((question: any) => {
-	// 						let choices: Choice[] = [],
-	// 							answers: Choice[] = []
-	// 						opts.forEach((o: string) => {
-	// 							if (question['CHOICE ' + o]) {
-	// 								choices.push(new Choice(question['CHOICE ' + o].replace(/(\r\n|\n|\r)/gm)))
-	// 							}
-	// 							if (question['ANSWER ' + o] === 'YES') {
-	// 								answers.push(new Choice(question['CHOICE ' + o].replace(/(\r\n|\n|\r)/gm)))
-	// 							}
-	// 						})
-	// 						questionToSend.push(
-	// 							new Question(
-	// 								question.TYPE,
-	// 								question.QUESTION,
-	// 								question['LEARNING NAME'],
-	// 								question['LEARNING REFERENCE'],
-	// 								question['THEME'],
-	// 								question['WHY'],
-	// 								choices,
-	// 								answers
-	// 							)
-	// 						)
-	// 					})
-	//
-	// 					const policyProfession = new Profession()
-	//
-	// 					await this.csrsService
-	// 						.getAreasOfWork()
-	// 						.then(professions => {
-	// 							professions.forEach((profession: Profession) => {
-	// 								if (profession.name.toLowerCase() === 'policy') {
-	// 									let professionHref = profession.href.split('/')
-	// 									let professionId = professionHref[professionHref.length - 1]
-	// 									policyProfession.id = parseInt(professionId, 0)
-	// 								}
-	// 							})
-	// 						})
-	// 						.catch(error => {
-	// 							next(error)
-	// 						})
-	//
-	// 					const quiz = new Quiz()
-	// 					quiz.profession = policyProfession
-	// 					quiz.questions = questionToSend
-	//
-	// 					await this.csrsService
-	// 						.postSkills(quiz)
-	// 						.then(() => {
-	// 							res.redirect('/content-management/skills/success')
-	// 						})
-	// 						.catch(error => {
-	// 							next(error)
-	// 						})
-	// 				})
-	// 		}
-	// 	}
-	// }
 
 	getEditQuitDescription() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			req.session!.save(() => {
-				res.render('page/skills/edit-quiz-description')
-			})
+
+			let profession = new Profession()
+
+			await this.csrsService
+				.getCivilServant()
+				.then(civilServant => {
+					if (civilServant.profession) {
+						profession.id = civilServant.profession.id
+					}
+				})
+				.catch(error => {
+					next(error)
+				})
+
+			await this.csrsService
+				.getQuizByProfession(profession.id)
+				.then( quiz => {
+					req.session!.save(() => {
+						res.render('page/skills/edit-quiz-description', {
+							quiz: quiz
+						})
+					})
+				})
+				.catch(error => {
+					res.redirect(`/content-management/skills/publish-quiz/failure`)
+				})
+
 		}
 	}
 }

@@ -41,7 +41,10 @@ export class QuestionFactory {
 		question.why = data.why
 		question.theme = data.theme
 		question.suggestions = data.suggestions
-		question.img = data.imgUrl
+		if (data.mediaId) {
+			question.imgUrl = "https://lpgdev.blob.core.windows.net/lpgdevcontent/quiz-images/" + data.mediaId.split("/").pop() + "/" + data.imageName
+		}
+		question.alternativeText = data.alternativeText
 		return question
 	}
 }

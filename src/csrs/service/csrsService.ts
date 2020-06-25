@@ -35,8 +35,15 @@ export class CsrsService {
 		return await this.restService.get('/civilServants/me')
 	}
 
-	async createQuizByProfessionID(id: any) {
-		return await this.restService.postWithoutFollowing('/api/quiz', {id: id})
+	async createQuizByProfessionID(id: any, user: any) {
+		return await this.restService.postWithoutFollowingWithConfig('/api/quiz',
+			{id: id},
+			{
+				headers: {
+					Authorization: `Bearer ${user.accessToken}`,
+				},
+			}
+		)
 	}
 
 	async deleteQuizByProfession(id: number): Promise<void> {
@@ -69,6 +76,10 @@ export class CsrsService {
 
 	async getQuizByProfessionID(id: any) {
 		return await this.restService.get(`/api/quiz/${id}`)
+	}
+
+	async getAllQuizes() {
+		return await this.restService.get(`/api/quiz/all`)
 	}
 
 	async getAreasOfWork() {
