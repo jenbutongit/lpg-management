@@ -291,6 +291,7 @@ export class SkillsController implements FormController {
 			let message: string = ""
 			let errorMessage: string = ""
 			// const userRoles = req.user.roles
+			let organisationalID: any = ""
 
 			if(url == '/content-management/skills/add-new-question/success') {
 				message = 'Question successfuly added'
@@ -312,6 +313,7 @@ export class SkillsController implements FormController {
 					if (civilServant.profession) {
 						professionID = civilServant.profession.id
 						professionName = civilServant.profession.name
+						organisationalID = civilServant.organisationalUnit.id
 						res.locals.professionID = professionID
 					}
 				})
@@ -320,8 +322,10 @@ export class SkillsController implements FormController {
 				})
 
 			if (professionID != null) {
+				let passedParams = { profession: professionID, organisationId: organisationalID}
+
 				await this.csrsService
-					.createQuizByProfessionID(professionID, req.user)
+					.createQuizByProfessionID(passedParams, req.user)
 					.then(quizInfo => {
 						quiz = this.quizFactory.create(quizInfo.data)
 					})
