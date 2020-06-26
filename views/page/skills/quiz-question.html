@@ -1,4 +1,5 @@
-<Page title="Skills" {_csrf}>
+<div class="skills-question" title="Skills" {_csrf}>
+    <h2 class="testingTest">Test</h2>
     <div class="container container--main">
         <div class="grid-row ">
             <div class="column-half">
@@ -6,28 +7,30 @@
                     <a class="link-back" href="/content-management/skills">Back</a>
                 </p>
                 <h1 class="heading heading-medium heading-light no-margin">Measure your skills quiz</h1>
-                {#if question}
+                {% if question %}
                     <h2 class="heading heading-large ">Question 1 of 16/18</h2>
-                {/if}
+                {% endif %}
                 <form id="mainForm" action="skills/questions/{index}" method="post" class="question-form">
                     <input type="hidden" name="_csrf" value="{_csrf}">
                     <fieldset class="form-group">
                 <div class="answers">
                     <div class="question-contents">
-                        <h1><strong>{question.theme}</strong></h1>
-                        <p>{question.value}</p>
-                        {#if multipleAnswers}
+                        <h1><strong>{{question.theme}}</strong></h1>
+                        <p>{{question.value}}</p>
+                        {% if multipleAnswers %}
                         <p><strong>Select all correct answers</strong></p>
-                        {:else}
+                        {% else %}
                         <p><strong>Select one correct answer</strong></p>
-                        {/if}
-                        {#each keys as key}
+                        {% endif %}
+                        {% for key in keys %}
                         <div class="multiple-choice">
-                            <input checked="{answersToQuestionKeys.includes(key.value)}" type="{multipleAnswers ? 'checkbox' : 'radio'}" value={key.value} name="answers" id="{key.value}" />
-                            <label for={key.value}>{key.value}) {question.answer.answers[key.value]}</label>
+                            <input checked="{{answersToQuestionKeys.includes(key.value)}}" type="{multipleAnswers ? 'checkbox' : 'radio'}" value={{key.value}} name="answers" id="{{key.value}}" />
+                            <label for={{key.value}}>{{key.value}} {{question.answer.answers[key.value]}}</label>
                         </div>
-                        {/each}
-                        <p class="screen-reader-text">{question.alternativeText === undefined ? 'Alternative text' : question.alternativeText}</p>
+                        {% endfor %}
+                        {% if question.alternativeText %}
+                            <p class="screen-reader-text">{{question.alternativeText}}</p>
+                        {% endif %}
                         <div>
                         </div>
                     </div>
@@ -39,9 +42,9 @@
                 </form>
             </div>
             <div style="height: 100vh" class="column-half supportingImageHolder">
-                <img class="supportingImage" alt="{question.alternativeText === undefined ? '' : question.alternativeText}" src="{question.imgUrl}"/>
+                <img class="supportingImage" alt="{{question.alternativeText}}" src="{{question.imgUrl}}"/>
             </div>
         </div>
     </div>
-</Page>
+</div>
 
