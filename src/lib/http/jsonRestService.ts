@@ -45,6 +45,10 @@ export class JsonRestService {
 		return (await this._http.put(path, resource, this.getHeaders())).data
 	}
 
+	async deleteWithCongif(path: string, config: any) {
+		return await this._http.delete(path, config)
+	}
+
 	async delete(path: string) {
 		return await this._http.delete(path, this.getHeaders())
 	}

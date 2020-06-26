@@ -158,13 +158,13 @@
                         link: '/content-management/skills/generate-report',
                         text: 'Generate quiz report'
                     }) %}
-                    {% set action = actions.push(
+                    {% set action = actions.push({
                         link: '/content-management/skills/edit-quiz-description',
                         text: 'Edit quiz description'
                     }) %}
                     {% set action = actions.push({
-                        link: '/content-management/skills/delete-quiz',
-                        text: 'Delete quiz'
+                    link: '/content-management/skills/delete-quiz',
+                    text: 'Delete quiz'
                     }) %}
                     {{ menu("Actions", actions) }}
                 {% endblock %}

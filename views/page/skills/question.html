@@ -219,7 +219,7 @@
                 text: 'Delete question'
                 }) %}
                 {% set action = actions.push({
-                link: '/content-management/skills/ + question.id + '/view',
+                link: '/content-management/skills/' + question.id + '/preview',
                 text: 'Preview'
                 }) %}
                 {{ menu("Actions", actions) }}

@@ -74,8 +74,25 @@ export class SkillsController implements FormController {
 	previewQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			req.session!.save(() => {
-				res.render('page/skills/edit-quiz-description', {
-					error: 'Description is required',
+				res.render('page/skills/quiz-question', {
+					answersToQuestionKeys: [],
+					count: 18,
+					index: 1,
+					keys:
+					[ { value: 'A' }, { value: 'B' }, { value: 'C' }, { value: 'D' } ],
+						multipleAnswers: false,
+					question:
+					{
+						id: 16,
+						type: 'SINGLE',
+						theme: 'Question theme',
+						value: 'What is the capital of Ireland',
+						why: 'This is why',
+						answer: { id: 16, answers: [Object] },
+						suggestions: 'Sugg',
+						status: 'ACTIVE'
+					},
+					skipped: false
 				})
 			})
 		}
@@ -129,8 +146,10 @@ export class SkillsController implements FormController {
 				let profession = new Profession();
 				profession.id = professionID
 
+				let data = {profession, description: description}
+
 				await this.csrsService
-					.editDescription(profession, description)
+					.editDescription(data, req.user)
 					.then(() => {
 						req.session!.save(() => {
 							res.redirect(`/content-management/skills/edit-quiz-description/success`)
@@ -178,9 +197,10 @@ export class SkillsController implements FormController {
 				})
 			} else {
 				const question = this.questionFactory.create(req.body)
+				let data = {professionId : 1, question}
 
 				await this.csrsService
-					.postQuestion(question)
+					.postQuestion(data, req.user)
 					.then(() => {
 						res.redirect('/content-management/skills/add-new-question/success')
 					})
@@ -209,7 +229,7 @@ export class SkillsController implements FormController {
 					})
 
 				await this.csrsService
-					.deleteQuizByProfession(professionID)
+					.deleteQuizByProfession(professionID, req.user)
 					.then(() => {
 						req.session!.save(() => {
 							res.redirect(`/content-management`)
@@ -225,7 +245,7 @@ export class SkillsController implements FormController {
 			} else {
 				req.session!.save(() => {
 					res.render('page/skills/delete-quiz', {
-						error: 'please select a yes or no',
+						error: 'please select yes or no',
 					})
 				})
 			}
@@ -254,7 +274,7 @@ export class SkillsController implements FormController {
 			} else {
 				req.session!.save(() => {
 					res.render('page/skills/delete-question', {
-						error: 'please select a yes or no',
+						error: 'please select yes or no',
 					})
 				})
 			}
@@ -322,10 +342,10 @@ export class SkillsController implements FormController {
 				})
 
 			if (professionID != null) {
-				let passedParams = { profession: { id: professionID} , organisationId: organisationalID}
+				let data = { profession: { id: professionID} , organisationId: organisationalID}
 
 				await this.csrsService
-					.createQuizByProfessionID(passedParams, req.user)
+					.createQuizByProfessionID(data, req.user)
 					.then(quizInfo => {
 						quiz = this.quizFactory.create(quizInfo.data)
 					})
@@ -369,7 +389,7 @@ export class SkillsController implements FormController {
 			const question = this.questionFactory.create(req.body)
 
 			await this.csrsService
-				.editQuestion(question)
+				.editQuestion(question, req.user)
 				.then( questionDTO => {
 					req.session!.save(() => {
 						res.redirect('/content-management/skills/update-question/success')
