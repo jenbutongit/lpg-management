@@ -31,12 +31,7 @@ describe('Learning Provider Controller Tests', function() {
 		learningProviderValidator = <Validator<LearningProvider>>{}
 		pagination = new Pagination()
 
-		learningProviderController = new LearningProviderController(
-			learningCatalogue,
-			learningProviderFactory,
-			learningProviderValidator,
-			pagination
-		)
+		learningProviderController = new LearningProviderController(learningCatalogue, learningProviderFactory, learningProviderValidator, pagination)
 
 		req = mockReq()
 		res = mockRes()
@@ -82,9 +77,9 @@ describe('Learning Provider Controller Tests', function() {
 		const listLearningProviders = sinon.stub().returns(Promise.resolve(pageResults))
 		learningCatalogue.listLearningProviders = listLearningProviders
 
-    // @ts-ignore
+		// @ts-ignore
 		req.query.p = 3
-    // @ts-ignore
+		// @ts-ignore
 		req.query.s = 5
 
 		await learningProviderController.index()(req, res)
@@ -142,8 +137,6 @@ describe('Learning Provider Controller Tests', function() {
 		expect(req.session!.sessionFlash).to.not.exist
 		expect(learningCatalogue.createLearningProvider).to.have.been.calledWith(learningProvider)
 
-		expect(res.redirect).to.have.been.calledOnceWith(
-			`/content-management/learning-providers/${learningProvider.id}`
-		)
+		expect(res.redirect).to.have.been.calledOnceWith(`/content-management/learning-providers/${learningProvider.id}`)
 	})
 })
