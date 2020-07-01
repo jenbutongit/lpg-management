@@ -44,7 +44,7 @@ For a complete list of test dependencies check the `package.json` file. The main
 
 #### Other LPG Services
 
-- `identity-service` for OAuth token validation on all requests
+- `identity-service` for to create a new JWT auth token on new requests
 - `learner-record` for retrieving learner record data on bookings and course completion
 - `civil-servant-registry-service` for getting civil servant user profile data
 - `learning-catalogue` for fetching the course details and storing uploaded course metadata for searching
