@@ -72,6 +72,7 @@ describe('AgencyTokenController', () => {
 			req.session!.domainsForAgencyToken = domains
 
 			agencyTokenValidator.check = sinon.stub().returns([])
+			agencyTokenService.validateCapacity = sinon.stub().returns(true)
 			agencyTokenService.validateAgencyTokenNumber = sinon.stub().returns(true)
 			agencyTokenService.validateDomains = sinon.stub().returns(true)
 

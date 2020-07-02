@@ -35,7 +35,7 @@ describe('Agency Token Service', () => {
 		it('should return `true` when a value is supplied', async () => {
 			const capacityIsValid = agencyTokenService.validateCapacity('1')
 
-			expect(capacityIsValid).to.be.false
+			expect(capacityIsValid).to.be.true
 		})
 	})
 
