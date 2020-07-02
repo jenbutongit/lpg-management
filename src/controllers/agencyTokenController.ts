@@ -146,15 +146,19 @@ export class AgencyTokenController implements FormController {
 			}
 			const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
 
-			this.deleteAgencyTokenDataStoredInSession(request)
-
 			await this.csrs
 				.createAgencyToken(organisationalUnit.id, agencyToken)
 				.then(() => {
+					this.deleteAgencyTokenDataStoredInSession(request)
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 				})
-				.catch(error => {
-					next(error)
+				.catch(rejected => {
+					if (rejected.response.status == 400) {
+						const error = {fields: {capacity: rejected.response.data.capacity}, size: 1}
+						return this.redirectToAddEditAgencyTokenWithError(request, response, error)
+					} else {
+						next(rejected)
+					}
 				})
 		}
 	}
@@ -204,15 +208,19 @@ export class AgencyTokenController implements FormController {
 			}
 			const agencyToken: AgencyToken = this.agencyTokenFactory.create(data)
 
-			this.deleteAgencyTokenDataStoredInSession(request)
-
 			await this.csrs
 				.updateAgencyToken(organisationalUnit.id, agencyToken)
 				.then(() => {
+					this.deleteAgencyTokenDataStoredInSession(request)
 					response.redirect(`/content-management/organisations/${organisationalUnit.id}/overview`)
 				})
-				.catch(error => {
-					next(error)
+				.catch(rejected => {
+					if (rejected.response.status == 400) {
+						const error = {fields: {capacity: rejected.response.data.capacity}, size: 1}
+						return this.redirectToAddEditAgencyTokenWithError(request, response, error)
+					} else {
+						next(rejected)
+					}
 				})
 		}
 	}

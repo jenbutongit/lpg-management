@@ -115,7 +115,7 @@
                     name: "capacity",
                     type: "number",
                     value: form.capacity | default(organisationalUnit.agencyToken.capacity),
-                    errorMessage: { text: i18.agencyToken.validation.capacity.invalid }
+                    errorMessage: { text: i18n.agencyToken.validation.capacity.invalid }
                 }) }}
             {% elif errors.fields.capacity == 'agencyToken.validation.capacity.lessThanCurrentUsage' %}
                 {{ govukInput ({
@@ -125,7 +125,7 @@
                     name: "capacity",
                     type: "number",
                     value: form.capacity | default(organisationalUnit.agencyToken.capacity),
-                    errorMessage: { text: i18.agencyToken.validation.capacity.lessThanCurrentUsage }
+                    errorMessage: { text: i18n.agencyToken.validation.capacity.lessThanCurrentUsage }
                 }) }}
             {% else %}
                 {{ govukInput ({
