@@ -30,7 +30,7 @@
 <div class="govuk-grid-row add-new-question">
     <div class="govuk-grid-column-two-thirds">
         {% if question.id %}
-            <h1 class="govuk-heading-m govuk-!-font-size-36 red">Edit question</h1>
+            <h1 class="govuk-heading-m govuk-!-font-size-36">Edit question</h1>
         {% else %}
             <h1 id="header" class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
         {% endif %}
@@ -43,6 +43,7 @@
                 <input id="accessToken" type="hidden" value="{{identity.accessToken}}">
                 <input id="courseCatalogueUrl" type="hidden" value="{{courseCatalogueUrl}}">
                 <input id="mediaId" name="mediaId" type="hidden" value="">
+                <input id="imgUrl" name="imgUrl" type="hidden" value="{{question.imgUrl}}">
                 <fieldset class="govuk-fieldset">
                 {{ textarea("value", "value", "Maximum of 160 characters", 160, form.value|default(question.value), "Question") }}
 
@@ -114,9 +115,9 @@
                         </div>
                         <div class="govuk-checkboxes__item">
                             {% if question.answer and question.answer.correctAnswers.includes('E') %}
-                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="correctAnswers" value="E" checked>
+                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="checkbox" value="E" checked>
                             {% else %}
-                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="correctAnswers" value="E">
+                                <input class="govuk-checkboxes__input" id="answer5" name="correctAnswers" type="checkbox" value="E">
                             {% endif %}
                             <label class="govuk-label govuk-checkboxes__label" for="answer5">
                                 <p class="hidden">checkbox for fifth answer</p>

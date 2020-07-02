@@ -34,4 +34,6 @@ export class Question {
 	imgUrl: string
 
 	alternativeText: string
+
+	type: string
 }

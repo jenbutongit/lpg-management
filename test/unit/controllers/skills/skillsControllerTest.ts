@@ -102,12 +102,49 @@ describe('Skills Controller Tests', function() {
 				},
 				"status": "ACTIVE"
 			}
+
 			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
 			await skillsController.getEditQuestion()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/question')
 		})
 
-		it('should update the question', async () => {
+	})
+
+	describe('Skills report', () => {
+		it('should render Skills report page', async () => {
+			await skillsController.getSkillsReport()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/generate-report')
+		})
+	})
+
+	describe('Archieve a quiz', () => {
+		it('should render the archieve confirmation page for a quiz', async () => {
+			await skillsController.getDeleteQuiz()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-quiz')
+		})
+
+		it('should call delete a quiz', async () => {
+			await skillsController.deleteQuiz()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-quiz')
+		})
+	})
+
+	describe('Archieve a question', () => {
+		it('should render the archieve confirmation page for a question', async () => {
+			await skillsController.getDeleteQuestion()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-question')
+		})
+
+		it('should call delete a question', async () => {
+			req.body.deleteQuestion = 'True'
+			csrsService.deleteQuestionbyID = sinon.stub().returns(Promise.resolve())
+			await skillsController.deleteQuestion()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('/content-management/skills/delete-questions/success')
+		})
+	})
+
+	describe('Preview question', () => {
+		it('should render the preview question page', async () => {
 			let question = {
 				"id": 1,
 				"type": "MULTIPLE",
@@ -127,47 +164,40 @@ describe('Skills Controller Tests', function() {
 				},
 				"status": "ACTIVE"
 			}
+
 			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
-			await skillsController.EditQuestion()(req, res, next)
-			expect(res.render).to.have.been.calledOnceWith('page/skills/question')
-		})
-	})
-
-	describe('Skills report', () => {
-		it('should render Skills report page', async () => {
-			await skillsController.getSkillsReport()(req, res, next)
-			expect(res.render).to.have.been.calledOnceWith('page/skills/generate-report')
-		})
-	})
-
-	describe('Archieve a quiz', () => {
-		it('should render the archieve confirmation page', async () => {
-			await skillsController.getDeleteQuiz()(req, res, next)
-			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-quiz')
-		})
-
-		it('should call delete a quiz', async () => {
-			// let mockCivilServant
-
-			// @ts-ignore
-// 			mockCivilServant= {
-// 				"profession": {
-// 					"id": 1,
-// 					"name": "Analysis"
-// 				}
-// 			}
-//
-// 			csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(mockCivilServant))
-			// csrsService.deleteQuizByProfession = sinon.stub().returns(Promise.resolve(mockQuiz))
-			// quizFactory.create = sinon.stub().returns(quiz)
-
-			await skillsController.deleteQuiz()(req, res, next)
-			expect(res.render).to.have.been.calledOnceWith('page/skills/delete-quiz')
+			await skillsController.previewQuestion()(req, res, next)
+			expect(res.render).to.have.been.calledOnceWith('page/skills/quiz-question')
 		})
 	})
 
 	describe('Skills Description', () => {
 		it('should render Description page', async () => {
+			let mockCivilServant, mockQuiz
+			mockCivilServant= {
+				"profession": {
+					"id": 1,
+					"name": "Analysis"
+				}
+			}
+
+			mockQuiz = {
+				"id": 1,
+				"name": "Quiz for Analysis",
+				"profession": {
+					"id": 1,
+					"name": "Analysis",
+					"children": []
+				},
+				"questions": [],
+				"status": "DRAFT",
+				"numberOfQuestions": 0,
+				"description": "This is a new sample description"
+			}
+
+			csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(mockCivilServant))
+			csrsService.getQuizByProfession = sinon.stub().returns(Promise.resolve(mockQuiz))
+
 			await skillsController.getEditQuitDescription()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/edit-quiz-description')
 		})

@@ -123,6 +123,6 @@ export class Identity {
 	}
 
 	isSkillsManagerOrSuperUser() {
-		return this.hasRole(Identity.SKILLS_MANAGER) || this.isSuperUser()
+		return this.hasRole(Identity.SKILLS_MANAGER) || this.isSuperUser() || this.isCshrReporter() || this.isOrganisationReporter() || this.isProfessionReporter()
 	}
 }

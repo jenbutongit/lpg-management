@@ -1,50 +1,79 @@
-<div class="skills-question" title="Skills" {_csrf}>
-    <h2 class="testingTest">Test</h2>
-    <div class="container container--main">
-        <div class="grid-row ">
-            <div class="column-half">
-                <p class="no-margin">
-                    <a class="link-back" href="/content-management/skills">Back</a>
-                </p>
-                <h1 class="heading heading-medium heading-light no-margin">Measure your skills quiz</h1>
-                {% if question %}
-                    <h2 class="heading heading-large ">Question 1 of 16/18</h2>
-                {% endif %}
-                <form id="mainForm" action="skills/questions/{index}" method="post" class="question-form">
-                    <input type="hidden" name="_csrf" value="{_csrf}">
-                    <fieldset class="form-group">
-                <div class="answers">
-                    <div class="question-contents">
-                        <h1><strong>{{question.theme}}</strong></h1>
-                        <p>{{question.value}}</p>
-                        {% if multipleAnswers %}
-                        <p><strong>Select all correct answers</strong></p>
-                        {% else %}
-                        <p><strong>Select one correct answer</strong></p>
-                        {% endif %}
-                        {% for key in keys %}
-                        <div class="multiple-choice">
-                            <input checked="{{answersToQuestionKeys.includes(key.value)}}" type="{multipleAnswers ? 'checkbox' : 'radio'}" value={{key.value}} name="answers" id="{{key.value}}" />
-                            <label for={{key.value}}>{{key.value}} {{question.answer.answers[key.value]}}</label>
-                        </div>
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "button/macro.njk" import govukButton %}
+{% extends "../../component/Page.njk" %}
+{% from "radios/macro.njk" import govukRadios %}
+
+{% block pageTitle %}
+{{ i18n.course.pageTitle.editCourseDetails if course else i18n.course.pageTitle.addCourseDetails }} - {{ i18n.proposition_name }}
+{% endblock %}
+
+{% set backButton = "/content-management/skills/" + question.id + "/edit-question"%}
+
+
+
+{% block content %}
+<div class="govuk-grid-row add-new-question quiz-question">
+    <div class="govuk-grid-column-two-thirds">
+        <h1>Measure your skills quiz</h1>
+        <h2>Question 1 of 18</h2>
+        <h3>{{question.theme}}</h3>
+        <p>{{question.value}}</p>
+        {% if question.type !== "MULTIPLE" %}
+            <div class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <h3>
+                        Select a correct answer
+                    </h3>
+                    <div class="govuk-radios">
+                        {% set index = 0 %}
+                        {% for answer in answers %}
+                            {% if answer and answer !== "" %}
+                                <div class="govuk-radios__item">
+                                    <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
+                                    <label class="govuk-label govuk-radios__label" for="where-do-you-live">
+                                        {{keys[index]}}) {{answer}}
+                                    </label>
+                                </div>
+                                {% set index =  index + 1  %}
+                            {% endif %}
                         {% endfor %}
-                        {% if question.alternativeText %}
-                            <p class="screen-reader-text">{{question.alternativeText}}</p>
+                    </div>
+                </fieldset>
+                <br><br>
+                <a href="#">Skip this question</a>
+            </div>
+        {% else %}
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+                <h3>
+                    Select all correct answers
+                </h3>
+                <div class="govuk-checkboxes">
+                    {% set index = 0 %}
+                    {% for answer in answers %}
+                        {% if answer and answer !== "" %}
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="waste" name="waste" type="checkbox" value="carcasses">
+                                <label class="govuk-label govuk-checkboxes__label" for="waste">
+                                    {{keys[index]}}) {{answer}}
+                                </label>
+                            </div>
+                            {% set index =  index + 1  %}
                         {% endif %}
-                        <div>
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
-                    </fieldset>
-                    <div class="dont-know">
-                        <a class="skipQuestion">Skip this question</a>
-                    </div>
-                </form>
-            </div>
-            <div style="height: 100vh" class="column-half supportingImageHolder">
-                <img class="supportingImage" alt="{{question.alternativeText}}" src="{{question.imgUrl}}"/>
-            </div>
+            </fieldset>
+        </div>
+        {% endif %}
+
+        <div class="button-container">
+            {{ govukButton({
+                text: "Continue"
+            }) }}
         </div>
     </div>
+    <div class="govuk-grid-column-one-third">
+        <img src="{{question.imgUrl}}">
+    </div>
 </div>
-
+{% endblock %}

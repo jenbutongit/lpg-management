@@ -12,9 +12,9 @@ export class QuestionFactory {
 	create(data: any) {
 		const question = new Question()
 
-		if (data.questionId) {
+		if (data.questionId && data.questionId != "") {
 			question.id = data.questionId
-		} else {
+		} else if (data.id && data.id != "") {
 			question.id = data.id
 		}
 
@@ -37,12 +37,18 @@ export class QuestionFactory {
 			}
 		}
 
+		if(data.type) {
+			question.type = data.type
+		}
+
 		question.answer = this._answerFactory.create(answer)
 		question.why = data.why
 		question.theme = data.theme
 		question.suggestions = data.suggestions
 		if (data.mediaId) {
 			question.imgUrl = "https://lpgdev.blob.core.windows.net/lpgdevcontent/quiz-images/" + data.mediaId.split("/").pop() + "/" + data.imageName
+		} else if (data.imgUrl) {
+			question.imgUrl = data.imgUrl
 		}
 		question.alternativeText = data.alternativeText
 		return question

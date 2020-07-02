@@ -103,6 +103,10 @@ export class CsrsService {
 		return await this.restService.get(`/api/quiz/all`)
 	}
 
+	async getQuizesByOrg(orgID: any) {
+		return await this.restService.get(`api/quiz/results-for-your-org?organisationId=${orgID}`)
+	}
+
 	async getAreasOfWork() {
 		let areasOfWork = await this.restService.get('/professions/flat')
 

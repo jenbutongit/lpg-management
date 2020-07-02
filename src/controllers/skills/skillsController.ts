@@ -35,7 +35,6 @@ export class SkillsController implements FormController {
 		this.router.post('/content-management/skills/add-new-question', this.AddQuestion())
 		this.router.get('/content-management/skills/delete-quiz', this.getDeleteQuiz())
 		this.router.post('/content-management/skills/delete-quiz', this.deleteQuiz())
-		this.router.get('/content-management/skills/add-image', this.getImage())
 		this.router.get('/content-management/skills/edit-quiz-description', this.getEditQuitDescription())
 		this.router.get('/content-management/skills/edit-quiz-description/success', this.getSkills())
 		this.router.post('/content-management/skills/edit-quiz-description', this.editQuizDescription())
@@ -47,6 +46,7 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/publish-quiz/success', this.getSkills())
 		this.router.get('/content-management/skills/publish-quiz/failure', this.getSkills())
 		this.router.get('/content-management/skills/super-admin', this.getSkillsSuperAdmin())
+		this.router.get('/content-management/skills/organisation-admin', this.getSkillsOrgAdmin())
 		this.router.get('/content-management/skills/delete-questions/success', this.getSkills())
 		this.router.get('/content-management/skills/:questionID/preview', this.previewQuestion())
 	}
@@ -71,30 +71,59 @@ export class SkillsController implements FormController {
 		}
 	}
 
-	previewQuestion() {
+	getSkillsOrgAdmin() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			req.session!.save(() => {
-				res.render('page/skills/quiz-question', {
-					answersToQuestionKeys: [],
-					count: 18,
-					index: 1,
-					keys:
-					[ { value: 'A' }, { value: 'B' }, { value: 'C' }, { value: 'D' } ],
-						multipleAnswers: false,
-					question:
-					{
-						id: 16,
-						type: 'SINGLE',
-						theme: 'Question theme',
-						value: 'What is the capital of Ireland',
-						why: 'This is why',
-						answer: { id: 16, answers: [Object] },
-						suggestions: 'Sugg',
-						status: 'ACTIVE'
-					},
-					skipped: false
+
+			let quizzes: any = null
+			let orgID: any = null
+
+			await this.csrsService
+				.getCivilServant()
+				.then(civilServant => {
+					if (civilServant.organisationalUnit) {
+						orgID = civilServant.organisationalUnit.id
+					}
 				})
+				.catch(error => {
+					next(error)
+				})
+
+			await this.csrsService
+				.getQuizesByOrg(orgID)
+				.then(quizzesInfo => {
+					quizzes = quizzesInfo
+				})
+				.catch(error => {
+					next(error)
+				})
+
+			req.session!.save(() => {
+				res.render('page/skills/skills-super-admin', {quizzes: quizzes})
 			})
+
+		}
+	}
+
+	previewQuestion() {
+			return async (req: Request, res: Response, next: NextFunction) => {
+				const questionID = req.params.questionID
+				await this.csrsService
+				.getQuestionbyID(questionID)
+				.then( questionDTO => {
+					const question = this.questionFactory.create(questionDTO)
+					const answers = Object.values(question.answer.answers)
+					const keys = ['A','B','C','D','E']
+					req.session!.save(() => {
+						res.render(`page/skills/quiz-question`, {
+							question: question,
+							answers: answers,
+							keys: keys,
+						})
+					})
+				})
+				.catch(error => {
+					next(error)
+				})
 		}
 	}
 
@@ -245,7 +274,7 @@ export class SkillsController implements FormController {
 			} else {
 				req.session!.save(() => {
 					res.render('page/skills/delete-quiz', {
-						error: 'please select yes or no',
+						error: 'You must select an option below to continue',
 					})
 				})
 			}
@@ -274,7 +303,7 @@ export class SkillsController implements FormController {
 			} else {
 				req.session!.save(() => {
 					res.render('page/skills/delete-question', {
-						error: 'please select yes or no',
+						error: 'You must select an option below to continue',
 					})
 				})
 			}
@@ -304,13 +333,25 @@ export class SkillsController implements FormController {
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
+			// @ts-ignore
+			// const userRoles: any = req.user.roles
+			//
+			// if (userRoles.includes('ORGANISATION_REPORTER')) {
+			// 	req.session!.save(() => {
+			// 		res.redirect(`/content-management/skills/organisation-admin`)
+			// 	})
+			// } else if(userRoles.includes('CSHR_REPORTER')) {
+			// 	req.session!.save(() => {
+			// 		res.redirect(`/content-management/skills/super-admin`)
+			// 	})
+			// }
+
 			let professionID: any = null
 			let professionName: any = null
 			let quiz: any = null
 			let url: any = req.url
 			let message: string = ""
 			let errorMessage: string = ""
-			// const userRoles = req.user.roles
 			let organisationalID: any = ""
 
 			if(url == '/content-management/skills/add-new-question/success') {
@@ -335,11 +376,20 @@ export class SkillsController implements FormController {
 						professionName = civilServant.profession.name
 						organisationalID = civilServant.organisationalUnit.id
 						res.locals.professionID = professionID
+						res.locals.organisationalID = organisationalID
 					}
 				})
 				.catch(error => {
 					next(error)
 				})
+
+			if (!professionID) {
+				errorMessage = "Profession is not set, Please set your profession in your profile page."
+			} else if (!organisationalID) {
+				errorMessage = "Organisatoin is not set, Please set your profession in your profile page."
+			} else if (!professionID && !organisationalID) {
+				errorMessage = "Organisatoin is not set, Please set your profession in your profile page."
+			}
 
 			if (professionID != null) {
 				let data = { profession: { id: professionID} , organisationId: organisationalID}
@@ -354,10 +404,10 @@ export class SkillsController implements FormController {
 					})
 			}
 
-
 			req.session!.save(() => {
 				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message, errorMessage: errorMessage})
 			})
+
 		}
 	}
 
@@ -407,14 +457,6 @@ export class SkillsController implements FormController {
 				res.render('page/skills/question', {
 					courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media/skills/image',
 				})
-			})
-		}
-	}
-
-	getImage() {
-		return async (req: Request, res: Response, next: NextFunction) => {
-			req.session!.save(() => {
-				res.render('page/skills/add-image')
 			})
 		}
 	}

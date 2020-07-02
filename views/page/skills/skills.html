@@ -21,20 +21,20 @@
 
 {% block content %}
 
-{% if not professionID %}
+{% if not professionID or not organisationalID%}
 {{ govukErrorSummary({
     titleText: "There is a problem",
     errorList: [
         {
-            text: "Profession is not set, Please set your profession in your profile page.",
-            href: lpgUiUrl + "/profile"
+            text: errorMessage,
+            href: lpgUiUrl + "/profile/primary-area-of-work"
         }
     ],
     classes: "custom-error-message"
 }) }}
 {% endif %}
 
-{% if professionID %}
+{% if professionID and organisationalID%}
 
 {% if message != "" %}
     <p class="skills-message success">&#10003; &nbsp; {{message}}</p>

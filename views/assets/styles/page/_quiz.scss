@@ -110,6 +110,37 @@ th.tableHeading {
   color: red;
 }
 
-.red {
-  color: red;
+.quiz-question {
+  .govuk-grid-column-two-thirds {
+      h1 {
+        color: #6f777b;
+        font-weight: normal;
+        font-size: 27px;
+      }
+      h2 {
+        margin-top: -8px;
+        font-size: 30px;
+      }
+      h3 {
+        margin-bottom: 0px;
+        font-size: 20px;
+      }
+      p {
+        font-size: 20px;
+        margin-top: 5px;
+      }
+      .govuk-form-group h3 {
+        margin-bottom: 30px;
+      }
+  }
+
+  .govuk-grid-column-one-third {
+    img {
+      margin-top: 50%;
+      width: 150%;
+    }
+  }
+
 }
+
+
