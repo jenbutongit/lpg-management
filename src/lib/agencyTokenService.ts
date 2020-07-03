@@ -1,8 +1,5 @@
 const isValidDomain = require('is-valid-domain')
 
-const MIN_CAPACITY = 1
-const MAX_CAPACITY = 1500
-
 export class AgencyTokenService {
 	generateToken() {
 		const length = 10
@@ -16,7 +13,7 @@ export class AgencyTokenService {
 
 	validateCapacity(numberString: string) {
 		const parsedInt = parseInt(numberString)
-		return !isNaN(parsedInt) && parsedInt >= MIN_CAPACITY && parsedInt <= MAX_CAPACITY
+		return !isNaN(parsedInt)
 	}
 
 	validateDomains(domains: any) {
