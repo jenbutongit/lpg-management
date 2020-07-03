@@ -204,8 +204,11 @@
 			"theme": {
 				"empty": "Theme is required"
 			},
-			"suggestions": {
-				"empty": "Suggestions is required"
+			"learningName": {
+				"empty": "learningName is required"
+			},
+			"learningReference": {
+				"empty": "learningReference is required"
 			}
 		}
 	},

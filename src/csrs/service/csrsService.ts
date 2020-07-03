@@ -92,15 +92,11 @@ export class CsrsService {
 	}
 
 	async getQuizByProfession(id: any) {
-		return await this.restService.get(`/api/quiz/${id}/info`)
-	}
-
-	async getQuizByProfessionID(id: any) {
 		return await this.restService.get(`/api/quiz/${id}`)
 	}
 
-	async getAllQuizes() {
-		return await this.restService.get(`/api/quiz/all`)
+	async getAllQuizResults() {
+		return await this.restService.get(`/api/quiz/all-results`)
 	}
 
 	async getQuizesByOrg(orgID: any) {

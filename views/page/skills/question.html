@@ -145,11 +145,20 @@
 
                 {{ govukInput({
                 label: {
-                text: "Suggested learning"
+                text: "learningName"
                 },
-                id: "suggestions",
-                name: "suggestions",
-                value: form.suggestions|default(question.suggestions)
+                id: "learningName",
+                name: "learningName",
+                value: form.learningName|default(question.learningName)
+                }) }}
+
+                {{ govukInput({
+                label: {
+                text: "learningReference"
+                },
+                id: "learningReference",
+                name: "learningReference",
+                value: form.learningReference|default(question.learningReference)
                 }) }}
 
                 <div class="add-file-form govuk-form-group">

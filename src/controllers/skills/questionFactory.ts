@@ -44,7 +44,8 @@ export class QuestionFactory {
 		question.answer = this._answerFactory.create(answer)
 		question.why = data.why
 		question.theme = data.theme
-		question.suggestions = data.suggestions
+		question.learningName = data.learningName
+		question.learningReference = data.learningReference
 		if (data.mediaId) {
 			question.imgUrl = "https://lpgdev.blob.core.windows.net/lpgdevcontent/quiz-images/" + data.mediaId.split("/").pop() + "/" + data.imageName
 		} else if (data.imgUrl) {

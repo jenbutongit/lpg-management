@@ -12,14 +12,15 @@ export class AnswerFactory {
 		let charCount = 65
 		for (let i = 0; i < 5; i++) {
 			console.log(charCount + " : "+ String.fromCharCode(charCount))
-			if (data.answers[0]) {
+			if (Array.isArray(data.answers) && data.answers[0] && data.answers[i] != "") {
 				// @ts-ignore
 				answers[String.fromCharCode(charCount)] = data.answers[i]
-			} else {
+				charCount++
+			} else if(!Array.isArray(data.answers)) {
 				// @ts-ignore
 				answers[String.fromCharCode(charCount)] = this.getKeyCode(i,data)
+				charCount++
 			}
-			charCount++
 		}
 		if(data.id && data.id != "") {
 			answer.id = data.id

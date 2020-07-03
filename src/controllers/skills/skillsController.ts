@@ -41,6 +41,7 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/:questionID/edit-question', this.getEditQuestion())
 		this.router.post('/content-management/skills/:questionID/edit-question', this.EditQuestion())
 		this.router.get('/content-management/skills/:questionID/delete-question', this.getDeleteQuestion())
+		this.router.get('/content-management/skills/:questionID/delete-question/failed', this.getDeleteQuestion())
 		this.router.post('/content-management/skills/:questionID/delete-question', this.deleteQuestion())
 		this.router.post('/content-management/skills/publish-quiz', this.publishSkills())
 		this.router.get('/content-management/skills/publish-quiz/success', this.getSkills())
@@ -57,7 +58,7 @@ export class SkillsController implements FormController {
 			let quizzes: any = null
 
 			await this.csrsService
-				.getAllQuizes()
+				.getAllQuizResults()
 				.then(quizzesInfo => {
 					quizzes = quizzesInfo
 				})
@@ -212,7 +213,8 @@ export class SkillsController implements FormController {
 				'answer': answer,
 				"why" : req.body.why,
 				'theme': req.body.theme,
-				'suggestions': req.body.suggestions,
+				'learningName': req.body.learningName,
+				'learningReference': req.body.learningReference,
 			}
 			let errors = await this.validator.check(data)
 
@@ -302,9 +304,7 @@ export class SkillsController implements FormController {
 				})
 			} else {
 				req.session!.save(() => {
-					res.render('page/skills/delete-question', {
-						error: 'You must select an option below to continue',
-					})
+					res.redirect(`/content-management/skills/${req.params.questionID}/delete-question/failed`)
 				})
 			}
 		}
@@ -314,9 +314,16 @@ export class SkillsController implements FormController {
 
 	getDeleteQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			const questionID = req.params.questionID
+			let url: any = req.url
+			let errorMessage: string = ""
+			let questionID = req.params.questionID
+			let passedURL = "/content-management/skills/" + questionID + "/delete-question/failed"
+			if (url == passedURL){
+				errorMessage = "You must select an option below to continue"
+			}
 			req.session!.save(() => {
 				res.render('page/skills/delete-question', {
+					error: errorMessage,
 					questionID: questionID
 				})
 			})
@@ -352,7 +359,7 @@ export class SkillsController implements FormController {
 			let url: any = req.url
 			let message: string = ""
 			let errorMessage: string = ""
-			let organisationalID: any = ""
+			let organisationalID: any = null
 
 			if(url == '/content-management/skills/add-new-question/success') {
 				message = 'Question successfuly added'
@@ -374,24 +381,28 @@ export class SkillsController implements FormController {
 					if (civilServant.profession) {
 						professionID = civilServant.profession.id
 						professionName = civilServant.profession.name
-						organisationalID = civilServant.organisationalUnit.id
 						res.locals.professionID = professionID
+					}
+
+					if (civilServant.organisationalUnit && civilServant.organisationalUnit.id) {
+						organisationalID = civilServant.organisationalUnit.id
 						res.locals.organisationalID = organisationalID
 					}
+
 				})
 				.catch(error => {
 					next(error)
 				})
 
-			if (!professionID) {
-				errorMessage = "Profession is not set, Please set your profession in your profile page."
+			if (!professionID && !organisationalID) {
+				errorMessage = "Profession and organisation is not set, Please set your profession in your profile page."
 			} else if (!organisationalID) {
 				errorMessage = "Organisatoin is not set, Please set your profession in your profile page."
-			} else if (!professionID && !organisationalID) {
-				errorMessage = "Organisatoin is not set, Please set your profession in your profile page."
+			} else if (!professionID) {
+				errorMessage = "Profession is not set, Please set your profession in your profile page."
 			}
 
-			if (professionID != null) {
+			if (professionID != null && organisationalID != null) {
 				let data = { profession: { id: professionID} , organisationId: organisationalID}
 
 				await this.csrsService
