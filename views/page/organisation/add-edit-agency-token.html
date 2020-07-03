@@ -107,7 +107,17 @@
         <form action="/content-management/organisations/{{ organisationalUnit.id }}/agency-token" method="post">
         {% endif %}
 
-            {% if errors.fields.capacity == 'agencyToken.validation.capacity.invalid' %}
+            {% if errors.fields.capacity == 'agencyToken.validation.capacity.lessThanCurrentUsage' %}
+                {{ govukInput ({
+                    label: { text: i18n.agencyToken.text.numberOfSpaces },
+                    classes: "govuk-input--width-10",
+                    id: "capacity",
+                    name: "capacity",
+                    type: "number",
+                    value: form.capacity | default(organisationalUnit.agencyToken.capacity),
+                    errorMessage: { text: i18n.agencyToken.validation.capacity.lessThanCurrentUsage }
+                }) }}
+            {% elif errors.fields.capacity == 'agencyToken.validation.capacity.invalid'%}
                 {{ govukInput ({
                     label: { text: i18n.agencyToken.text.numberOfSpaces },
                     classes: "govuk-input--width-10",
@@ -117,15 +127,15 @@
                     value: form.capacity | default(organisationalUnit.agencyToken.capacity),
                     errorMessage: { text: i18n.agencyToken.validation.capacity.invalid }
                 }) }}
-            {% elif errors.fields.capacity == 'agencyToken.validation.capacity.lessThanCurrentUsage' %}
-                {{ govukInput ({
+            {% elif errors.fields.capacity %}
+                  {{ govukInput ({
                     label: { text: i18n.agencyToken.text.numberOfSpaces },
                     classes: "govuk-input--width-10",
                     id: "capacity",
                     name: "capacity",
                     type: "number",
                     value: form.capacity | default(organisationalUnit.agencyToken.capacity),
-                    errorMessage: { text: i18n.agencyToken.validation.capacity.lessThanCurrentUsage }
+                    errorMessage: { text: errors.fields.capacity }
                 }) }}
             {% else %}
                 {{ govukInput ({
