@@ -9,6 +9,7 @@ import {Question} from "./question"
 import {Profession} from "./profession"
 import {Answer} from "./answer"
 import * as config from "../../config"
+import { IsAnswersValid } from '../../learning-catalogue/validator/custom/quizQuestionAnswersValidator'
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
@@ -58,7 +59,7 @@ export class SkillsController implements FormController {
 			let quizzes: any = null
 
 			await this.csrsService
-				.getAllQuizResults()
+				.getAllQuizResults(req.user)
 				.then(quizzesInfo => {
 					quizzes = quizzesInfo
 				})
@@ -90,7 +91,7 @@ export class SkillsController implements FormController {
 				})
 
 			await this.csrsService
-				.getQuizesByOrg(orgID)
+				.getQuizesByOrg(orgID, req.user)
 				.then(quizzesInfo => {
 					quizzes = quizzesInfo
 				})
@@ -109,7 +110,7 @@ export class SkillsController implements FormController {
 			return async (req: Request, res: Response, next: NextFunction) => {
 				const questionID = req.params.questionID
 				await this.csrsService
-				.getQuestionbyID(questionID)
+				.getQuestionbyID(questionID, req.user)
 				.then( questionDTO => {
 					const question = this.questionFactory.create(questionDTO)
 					const answers = Object.values(question.answer.answers)
@@ -199,7 +200,7 @@ export class SkillsController implements FormController {
 	}
 
 
-	AddQuestion() {
+		AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			console.log("This is being called")
@@ -210,13 +211,31 @@ export class SkillsController implements FormController {
 
 			let data = {
 				"value" : req.body.value,
-				'answer': answer,
 				"why" : req.body.why,
 				'theme': req.body.theme,
 				'learningName': req.body.learningName,
 				'learningReference': req.body.learningReference,
 			}
 			let errors = await this.validator.check(data)
+
+			const answerErrors = IsAnswersValid(answer)
+
+			let newErrors: any = null
+			// @ts-ignore
+			answerErrors.forEach(function(errorAnswer: any) {
+				newErrors = Object.assign(errors.fields, errorAnswer);
+			});
+
+			var errorCounter = 0, key;
+
+			if (newErrors) {
+				errors.fields = newErrors
+				for (key in errors.fields) {
+					if (errors.fields.hasOwnProperty(key)) errorCounter++;
+				}
+				let errorSize = {size : errorCounter}
+				errors = Object.assign(errors, errorSize);
+			}
 
 			if (errors.size) {
 				req.session!.sessionFlash = {
@@ -289,7 +308,7 @@ export class SkillsController implements FormController {
 
 			if (req.body.deleteQuestion == 'True') {
 				await this.csrsService
-					.deleteQuestionbyID(req.params.questionID)
+					.deleteQuestionbyID(req.params.questionID, req.user)
 					.then(() => {
 						req.session!.save(() => {
 							res.redirect(`/content-management/skills/delete-questions/success`)
@@ -341,17 +360,19 @@ export class SkillsController implements FormController {
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			// @ts-ignore
-			// const userRoles: any = req.user.roles
-			//
-			// if (userRoles.includes('ORGANISATION_REPORTER')) {
-			// 	req.session!.save(() => {
-			// 		res.redirect(`/content-management/skills/organisation-admin`)
-			// 	})
-			// } else if(userRoles.includes('CSHR_REPORTER')) {
-			// 	req.session!.save(() => {
-			// 		res.redirect(`/content-management/skills/super-admin`)
-			// 	})
-			// }
+			const userRoles: any = req.user.roles
+
+			if (userRoles.includes('ORGANISATION_REPORTER')) {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills/organisation-admin`)
+				})
+				return
+			} else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills/super-admin`)
+				})
+				return
+			}
 
 			let professionID: any = null
 			let professionName: any = null
@@ -360,6 +381,7 @@ export class SkillsController implements FormController {
 			let message: string = ""
 			let errorMessage: string = ""
 			let organisationalID: any = null
+			let quizResults: any = null
 
 			if(url == '/content-management/skills/add-new-question/success') {
 				message = 'Question successfuly added'
@@ -397,7 +419,7 @@ export class SkillsController implements FormController {
 			if (!professionID && !organisationalID) {
 				errorMessage = "Profession and organisation is not set, Please set your profession in your profile page."
 			} else if (!organisationalID) {
-				errorMessage = "Organisatoin is not set, Please set your profession in your profile page."
+				errorMessage = "Organisation is not set, Please set your profession in your profile page."
 			} else if (!professionID) {
 				errorMessage = "Profession is not set, Please set your profession in your profile page."
 			}
@@ -413,27 +435,41 @@ export class SkillsController implements FormController {
 					.catch(error => {
 						next(error)
 					})
+
+				await this.csrsService
+					.getResultsByProfession(professionID, req.user)
+					.then(quizResultsDTO => {
+						quizResults = quizResultsDTO
+					})
+					.catch(error => {
+						next(error)
+					})
 			}
 
 			req.session!.save(() => {
-				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message, errorMessage: errorMessage})
+				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message, errorMessage: errorMessage, quizResults: quizResults})
 			})
 		}
 	}
 
 	getEditQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
+			let imageName: any = null
 
 			await this.csrsService
-				.getQuestionbyID(req.params.questionID)
+				.getQuestionbyID(req.params.questionID, req.user)
 				.then( questionDTO => {
 					const question = this.questionFactory.create(questionDTO)
+					// @ts-ignore
 					let keys = Object.values(questionDTO.answer.answers)
-
+					if (question.imgUrl) {
+						imageName = question.imgUrl.split("/").pop()
+					}
 					req.session!.save(() => {
 						res.render('page/skills/question', {
 							question: question,
-							keysAnswers: keys
+							keysAnswers: keys,
+							imageName: imageName
 						})
 					})
 				})
@@ -448,16 +484,58 @@ export class SkillsController implements FormController {
 
 			const question = this.questionFactory.create(req.body)
 
-			await this.csrsService
-				.editQuestion(question, req.user)
-				.then( questionDTO => {
-					req.session!.save(() => {
-						res.redirect('/content-management/skills/update-question/success')
+			let answer = new Answer()
+			answer.answers = req.body.answers
+			answer.correctAnswers = req.body.correctAnswers
+
+			let data = {
+				"value" : req.body.value,
+				"why" : req.body.why,
+				'theme': req.body.theme,
+				'learningName': req.body.learningName,
+				'learningReference': req.body.learningReference,
+			}
+			let errors = await this.validator.check(data)
+
+			const answerErrors = IsAnswersValid(answer)
+
+			let newErrors: any = null
+			// @ts-ignore
+			answerErrors.forEach(function(errorAnswer: any) {
+				newErrors = Object.assign(errors.fields, errorAnswer);
+			});
+
+			let errorCounter = 0, key;
+
+			if (newErrors) {
+				errors.fields = newErrors
+				for (key in errors.fields) {
+					if (errors.fields.hasOwnProperty(key)) errorCounter++;
+				}
+				let errorSize = {size : errorCounter}
+				errors = Object.assign(errors, errorSize);
+			}
+
+			if (errors.size) {
+				req.session!.sessionFlash = {
+					errors,
+					form: req.body,
+				}
+				return req.session!.save(() => {
+					res.redirect(`/content-management/skills/${req.params.questionID}/edit-question`)
+				})
+			} else {
+				await this.csrsService
+					.editQuestion(question, req.user)
+					.then( questionDTO => {
+						req.session!.save(() => {
+							res.redirect('/content-management/skills/update-question/success')
+						})
 					})
-				})
-				.catch(error => {
-					next(error)
-				})
+					.catch(error => {
+						next(error)
+					})
+			}
 		}
 	}
 
@@ -499,7 +577,7 @@ export class SkillsController implements FormController {
 				})
 
 			await this.csrsService
-				.getQuizByProfession(profession.id)
+				.getQuizByProfession(profession.id, req.user)
 				.then( quiz => {
 					req.session!.save(() => {
 						res.render('page/skills/edit-quiz-description', {

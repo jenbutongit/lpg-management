@@ -31,12 +31,9 @@
     <div class="govuk-grid-column-two-thirds">
         {% if question.id %}
             <h1 class="govuk-heading-m govuk-!-font-size-36">Edit question</h1>
-        {% else %}
-            <h1 id="header" class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
-        {% endif %}
-        {% if question.id %}
             <form action="/content-management/skills/{{question.id}}/edit-question" method="post" class="course-form">
         {% else %}
+            <h1 id="header" class="govuk-heading-m govuk-!-font-size-36">Add new question</h1>
             <form action="/content-management/skills/add-new-question" method="post" class="course-form">
         {% endif %}
                 <input type="hidden" id="questionId" name="questionId" value="{{question.id}}">
@@ -66,7 +63,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer1">
                                 <p class="hidden">checkbox for first answer</p>
                             </label>
-                            <input class="govuk-input" id="answer1-txt" name="answers" type="text" value="{{keysAnswers[0]}}">
+                            <input class="govuk-input" id="answer1-txt" name="answers" type="text" value="{{form.answers[0]|default(keysAnswers[0])}}">
                             <label class="govuk-label govuk-input__label" for="answer1-txt">
                                 <p class="hidden">input for first answer</p>
                             </label>
@@ -80,7 +77,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer2">
                                 <p class="hidden">checkbox for second answer</p>
                             </label>
-                            <input class="govuk-input" id="answer2-txt" name="answers" type="text" value="{{keysAnswers[1]}}">
+                            <input class="govuk-input" id="answer2-txt" name="answers" type="text" value="{{form.answers[1]|default(keysAnswers[1])}}">
                             <label class="govuk-label govuk-input__label" for="answer2-txt">
                                 <p class="hidden">input for second answer</p>
                             </label>
@@ -94,7 +91,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer3">
                                 <p class="hidden">checkbox for third answer</p>
                             </label>
-                            <input class="govuk-input" id="answer3-txt" name="answers" type="text" value="{{keysAnswers[2]}}">
+                            <input class="govuk-input" id="answer3-txt" name="answers" type="text" value="{{form.answers[2]|default(keysAnswers[2])}}">
                             <label class="govuk-label govuk-input__label" for="answer3-txt">
                                 <p class="hidden">input for third answer</p>
                             </label>
@@ -108,7 +105,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer4">
                                 <p class="hidden">checkbox for fourth answer</p>
                             </label>
-                            <input class="govuk-input" id="answer4-txt" name="answers" type="text" value="{{keysAnswers[3]}}">
+                            <input class="govuk-input" id="answer4-txt" name="answers" type="text" value="{{form.answers[3]|default(keysAnswers[3])}}">
                             <label class="govuk-label govuk-input__label" for="answer4-txt">
                                 <p class="hidden">input for fourth answer</p>
                             </label>
@@ -122,7 +119,7 @@
                             <label class="govuk-label govuk-checkboxes__label" for="answer5">
                                 <p class="hidden">checkbox for fifth answer</p>
                             </label>
-                            <input class="govuk-input" id="answer5-txt" name="answers" type="text" value="{{keysAnswers[4]}}">
+                            <input class="govuk-input" id="answer5-txt" name="answers" type="text" value="{{form.answers[4]|default(keysAnswers[4])}}">
                             <label class="govuk-label govuk-input__label" for="answer5-txt">
                                 <p class="hidden">input for fifth answer</p>
                             </label>
@@ -145,7 +142,7 @@
 
                 {{ govukInput({
                 label: {
-                text: "learningName"
+                text: "learning Name"
                 },
                 id: "learningName",
                 name: "learningName",
@@ -154,7 +151,7 @@
 
                 {{ govukInput({
                 label: {
-                text: "learningReference"
+                text: "learning Reference"
                 },
                 id: "learningReference",
                 name: "learningReference",
@@ -164,7 +161,11 @@
                 <div class="add-file-form govuk-form-group">
                     <label class="govuk-label">Attach supporting image (optional)</label>
                     <input class="govuk-file-upload custom-uploader" id="file-upload" name="imageName" type="file" aria-describedby="file-upload-hint" accept="image/*">
-                    <label class="btn" for="file-upload"><span>Choose file</span></label>
+                    {% if not imageName %}
+                        <label class="btn" for="file-upload"><span id="label-file-upload">Choose file</span></label>
+                    {% else %}
+                        <label class="btn" for="file-upload"><span id="label-file-upload">{{imageName}}</span></label>
+                    {% endif %}
                 </div>
 
                 <p id="file-size" class="govuk-body"></p>
@@ -196,6 +197,7 @@
                 name: "alternativeText",
                 value: form.alternativeText|default(question.alternativeText)
                 }) }}
+
 
             </fieldset>
             {% if question.id %}

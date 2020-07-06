@@ -205,10 +205,16 @@
 				"empty": "Theme is required"
 			},
 			"learningName": {
-				"empty": "learningName is required"
+				"empty": "learning Name is required"
 			},
 			"learningReference": {
-				"empty": "learningReference is required"
+				"empty": "learning Reference is required"
+			},
+			"answers": {
+				"empty": "You must provide at least two answers"
+			},
+			"correctAnswers": {
+				"empty": "You must provide at least once correct answer"
 			}
 		}
 	},

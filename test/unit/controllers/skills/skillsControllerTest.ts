@@ -23,6 +23,7 @@ describe('Skills Controller Tests', function() {
 	let req: Request
 	let res: Response
 	let validator: Validator<Question>
+	let userRoles
 
 	const next: NextFunction = sinon.stub()
 
@@ -39,15 +40,24 @@ describe('Skills Controller Tests', function() {
 		req.session!.save = callback => {
 			callback(undefined)
 		}
+
+		userRoles = ["something"]
+
+		req.user = new Object()
+		req.user.roles = userRoles
 	})
 
 	describe('Skills Manage', () => {
 		it('should render skills page', async () => {
-			let mockCivilServant, mockQuiz
+			let mockCivilServant, mockQuiz, mockResults
+
 			mockCivilServant= {
 				"profession": {
 					"id": 1,
 					"name": "Analysis"
+				},
+				"organisationalUnit": {
+					"id": 1
 				}
 			}
 
@@ -65,9 +75,14 @@ describe('Skills Controller Tests', function() {
 				"description": "This is a new sample description"
 			}
 
+			mockResults = {
+
+			}
+
 			const quiz: Quiz = new Quiz()
 			csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(mockCivilServant))
 			csrsService.createQuizByProfessionID = sinon.stub().returns(Promise.resolve(mockQuiz))
+			csrsService.getResultsByProfession = sinon.stub().returns(Promise.resolve(mockResults))
 			quizFactory.create = sinon.stub().returns(quiz)
 			await skillsController.getSkills()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/skills')
@@ -77,12 +92,18 @@ describe('Skills Controller Tests', function() {
 	describe('Add new question', () => {
 		it('should render Add new question page', async () => {
 			await skillsController.getAddQuestion()(req, res, next)
-			expect(res.render).to.have.been.calledOnceWith('page/skills/add-new-question')
+			expect(res.render).to.have.been.calledOnceWith('page/skills/question')
 		})
 	})
 
 	describe('Update question', () => {
 		it('should render update question page', async () => {
+
+
+			req.params.questionID = "2"
+
+			let questsionDTO = new Object()
+
 			let question = {
 				"id": 1,
 				"type": "MULTIPLE",
@@ -104,6 +125,7 @@ describe('Skills Controller Tests', function() {
 			}
 
 			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
+			questionFactory.create = sinon.stub().returns(questsionDTO)
 			await skillsController.getEditQuestion()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/question')
 		})
@@ -136,15 +158,19 @@ describe('Skills Controller Tests', function() {
 		})
 
 		it('should call delete a question', async () => {
+			req.params.questionID = "2"
 			req.body.deleteQuestion = 'True'
 			csrsService.deleteQuestionbyID = sinon.stub().returns(Promise.resolve())
 			await skillsController.deleteQuestion()(req, res, next)
-			expect(res.render).to.have.been.calledOnceWith('/content-management/skills/delete-questions/success')
+			expect(res.redirect).to.have.been.calledOnceWith(`/content-management/skills/delete-questions/success`)
+
 		})
 	})
 
 	describe('Preview question', () => {
 		it('should render the preview question page', async () => {
+			req.params.questionID = "2"
+			// let questsionDTO = new Object()
 			let question = {
 				"id": 1,
 				"type": "MULTIPLE",
@@ -156,16 +182,17 @@ describe('Skills Controller Tests', function() {
 						"D"
 					],
 					"answers": {
-						"A": "Dublin",
-						"B": "London",
-						"C": "New York",
-						"D": "Melbourne"
+						A: "Dublin",
+						B: "London",
+						C: "New York",
+						D: "Melbourne"
 					}
 				},
 				"status": "ACTIVE"
 			}
 
 			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
+			questionFactory.create = sinon.stub().returns(question)
 			await skillsController.previewQuestion()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/quiz-question')
 		})

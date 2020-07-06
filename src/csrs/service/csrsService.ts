@@ -57,15 +57,19 @@ export class CsrsService {
 	}
 
 	async deleteQuizByProfession(id: number, user: any): Promise<void> {
-		await this.restService.deleteWithCongif(`/api/quiz/delete?professionId=${id}`, {
+		await this.restService.deleteWithConfig(`/api/quiz/delete?professionId=${id}`, {
 			headers: {
 				Authorization: `Bearer ${user.accessToken}`,
 			},
 		})
 	}
 
-	async deleteQuestionbyID(id: string): Promise<void> {
-		await this.restService.delete(`/api/questions/${id}/delete`)
+	async deleteQuestionbyID(id: string, user: any): Promise<void> {
+		await this.restService.deleteWithConfig(`/api/questions/${id}/delete`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
 	async postQuestion(data: any, user: any) {
@@ -79,33 +83,52 @@ export class CsrsService {
 		)
 	}
 
-	async  getQuestionbyID(questionID: any) {
-		return await this.restService.get(`/api/questions/${questionID}/preview`)
+	async  getQuestionbyID(questionID: any, user: any) {
+		return await this.restService.getWithConfig(`/api/questions/${questionID}/preview`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
-	async getQuestionsByProfession(id: any) {
-		return await this.restService.get(`/api/quiz?professionId=${id}&limit=10`)
+	async getResultsByProfession(id: any, user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/results-by-profession?professionId=${id}`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
 	async publishSkills(profession: any) {
 		return await this.restService.put(`/api/quiz/publish`, {profession: profession})
 	}
 
-	async getQuizByProfession(id: any) {
-		return await this.restService.get(`/api/quiz/${id}`)
+	async getQuizByProfession(id: any, user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/${id}`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
-	async getAllQuizResults() {
-		return await this.restService.get(`/api/quiz/all-results`)
+	async getAllQuizResults(user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/all-results`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
-	async getQuizesByOrg(orgID: any) {
-		return await this.restService.get(`api/quiz/results-for-your-org?organisationId=${orgID}`)
+	async getQuizesByOrg(orgID: any, user: any) {
+		return await this.restService.getWithConfig(`api/quiz/results-for-your-org?organisationId=${orgID}`, {
+			headers: {
+				Authorization: `Bearer ${user.accessToken}`,
+			},
+		})
 	}
 
 	async getAreasOfWork() {
 		let areasOfWork = await this.restService.get('/professions/flat')
-
 		return areasOfWork
 	}
 

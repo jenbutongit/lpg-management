@@ -1,6 +1,9 @@
 window.onload = function () {
-    document.getElementById("alternativeTextHeader").style.display = 'none';
-    document.getElementById("alternativeText").style.display = 'none';
+    if (document.getElementById("label-file-upload").innerText == "Choose file" ) {
+        document.getElementById("alternativeTextHeader").style.display = 'none';
+        document.getElementById("alternativeText").style.display = 'none';
+    }
+
 
     if(document.getElementById('uploadImageButton')) {
         if(document.getElementById("mediaId").value !== "") {
