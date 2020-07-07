@@ -27,6 +27,7 @@ describe('ModuleValidator tests', () => {
 			startPage: 'startPage',
 			fileSize: 99,
 			productCode: 'productCode',
+			formattedDuration: '1 hour',
 		}
 	})
 
@@ -282,8 +283,8 @@ describe('ModuleValidator tests', () => {
 								date: moment()
 									.add(1, 'd')
 									.format('YYYY-MM-DD'),
-								start: '09:00',
-								end: '17:00',
+								startTime: '09:00',
+								endTime: '17:00',
 							},
 						],
 						venue: {

@@ -52,18 +52,18 @@ export class DateTime {
 					formattedDuration = duration.minutes + ' minutes'
 				}
 			}
-			if (duration.hours > 0 && duration.hours % 24 != 0) {
-				if (duration.hours % 24 == 1) {
-					formattedDuration = (duration.hours % 24) + ' hour ' + formattedDuration
+			if (duration.hours > 0 && duration.hours % 8 != 0) {
+				if (duration.hours % 8 == 1) {
+					formattedDuration = (duration.hours % 8) + ' hour ' + formattedDuration
 				} else {
-					formattedDuration = (duration.hours % 24) + ' hours ' + formattedDuration
+					formattedDuration = (duration.hours % 8) + ' hours ' + formattedDuration
 				}
 			}
-			if (duration.hours > 23) {
-				if (Math.floor(duration.hours / 24) == 1) {
-					formattedDuration = Math.floor(duration.hours / 24) + ' day ' + formattedDuration
+			if (duration.hours >= 8) {
+				if (Math.floor(duration.hours / 8) == 1) {
+					formattedDuration = Math.floor(duration.hours / 8) + ' day ' + formattedDuration
 				} else {
-					formattedDuration = Math.floor(duration.hours / 24) + ' days ' + formattedDuration
+					formattedDuration = Math.floor(duration.hours / 8) + ' days ' + formattedDuration
 				}
 			}
 			return formattedDuration
