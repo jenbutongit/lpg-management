@@ -11,7 +11,6 @@ export class AnswerFactory {
 
 		let charCount = 65
 		for (let i = 0; i < 5; i++) {
-			console.log(charCount + " : "+ String.fromCharCode(charCount))
 			if (Array.isArray(data.answers) && data.answers[0] && data.answers[i] != "") {
 				// @ts-ignore
 				answers[String.fromCharCode(charCount)] = data.answers[i]
@@ -32,7 +31,6 @@ export class AnswerFactory {
 			let array = []
 			array.push(data.correctAnswers)
 			answer.correctAnswers = array
-			console.log("wroks")
 		}
 
 		return answer
@@ -52,6 +50,9 @@ export class AnswerFactory {
 				break;
 			case 4:
 				value = data.answers.D
+				break;
+			case 5:
+				value = data.answers.E
 				break;
 			default:
 				value = ""

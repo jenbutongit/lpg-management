@@ -17,7 +17,6 @@
 {% set banner = true %}
 {% set backButton = "/content-management" %}
 
-<!--{% set uploadedFileNotCSV = sessionFlash.uploadedFileNotCSV %}-->
 
 {% block content %}
 
@@ -67,7 +66,7 @@
                     rows: [
                         [
                         {
-                            text: professionName
+                            text: quizResults.profession
                         },
                         {
                             text: quizResults.numberOfAttempts,

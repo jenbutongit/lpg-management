@@ -62,7 +62,6 @@ window.onload = function () {
             xhttp.setRequestHeader("Authorization", 'BEARER ' + document.getElementById("accessToken").value)
             xhttp.send(formData)
             xhttp.onload = function () {
-                console.log(xhttp.getResponseHeader('location'))
                 document.getElementById("mediaId").value = xhttp.getResponseHeader('location')
             };
             return false

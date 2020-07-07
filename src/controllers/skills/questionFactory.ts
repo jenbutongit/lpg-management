@@ -21,15 +21,13 @@ export class QuestionFactory {
 
 		question.value = data.value
 		let answer = null
-		// question.answer.answers = data.answers
-		// question.answer.correctAnswer = data.checkBox
 		if(data.answer) {
 			answer = {
 				'id': data.answerId,
 				'correctAnswers': data.answer.correctAnswers,
 				'answers': data.answer.answers,
 			}
-		} else {
+		} else if (data.correctAnswers) {
 			answer = {
 				'id': data.answerId,
 				'correctAnswers': data.correctAnswers,

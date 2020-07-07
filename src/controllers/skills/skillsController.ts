@@ -111,8 +111,8 @@ export class SkillsController implements FormController {
 				const questionID = req.params.questionID
 				await this.csrsService
 				.getQuestionbyID(questionID, req.user)
-				.then( questionDTO => {
-					const question = this.questionFactory.create(questionDTO)
+				.then( response => {
+					const question = this.questionFactory.create(response.data)
 					const answers = Object.values(question.answer.answers)
 					const keys = ['A','B','C','D','E']
 					req.session!.save(() => {
@@ -146,7 +146,7 @@ export class SkillsController implements FormController {
 				})
 
 			await this.csrsService
-				.publishSkills(profession)
+				.publishSkills(profession, req.user)
 				.then(() => {
 					req.session!.save(() => {
 						res.redirect(`/content-management/skills/publish-quiz/success`)
@@ -202,15 +202,13 @@ export class SkillsController implements FormController {
 
 		AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-
-			console.log("This is being called")
-
 			let answer = new Answer()
 			answer.answers = req.body.answers
 			answer.correctAnswers = req.body.correctAnswers
 
 			let data = {
 				"value" : req.body.value,
+				"answer": answer,
 				"why" : req.body.why,
 				'theme': req.body.theme,
 				'learningName': req.body.learningName,
@@ -359,23 +357,22 @@ export class SkillsController implements FormController {
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			// @ts-ignore
-			const userRoles: any = req.user.roles
-
-			if (userRoles.includes('ORGANISATION_REPORTER')) {
-				req.session!.save(() => {
-					res.redirect(`/content-management/skills/organisation-admin`)
-				})
-				return
-			} else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
-				req.session!.save(() => {
-					res.redirect(`/content-management/skills/super-admin`)
-				})
-				return
-			}
+			// // @ts-ignore
+			// const userRoles: any = req.user.roles
+			//
+			// if (userRoles.includes('ORGANISATION_REPORTER')) {
+			// 	req.session!.save(() => {
+			// 		res.redirect(`/content-management/skills/organisation-admin`)
+			// 	})
+			// 	return
+			// } else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+			// 	req.session!.save(() => {
+			// 		res.redirect(`/content-management/skills/super-admin`)
+			// 	})
+			// 	return
+			// }
 
 			let professionID: any = null
-			let professionName: any = null
 			let quiz: any = null
 			let url: any = req.url
 			let message: string = ""
@@ -402,7 +399,6 @@ export class SkillsController implements FormController {
 				.then(civilServant => {
 					if (civilServant.profession) {
 						professionID = civilServant.profession.id
-						professionName = civilServant.profession.name
 						res.locals.professionID = professionID
 					}
 
@@ -438,8 +434,8 @@ export class SkillsController implements FormController {
 
 				await this.csrsService
 					.getResultsByProfession(professionID, req.user)
-					.then(quizResultsDTO => {
-						quizResults = quizResultsDTO
+					.then(response => {
+						quizResults = response.data
 					})
 					.catch(error => {
 						next(error)
@@ -447,7 +443,7 @@ export class SkillsController implements FormController {
 			}
 
 			req.session!.save(() => {
-				res.render('page/skills/skills', {quiz: quiz, professionName: professionName, message: message, errorMessage: errorMessage, quizResults: quizResults})
+				res.render('page/skills/skills', {quiz: quiz, message: message, errorMessage: errorMessage, quizResults: quizResults})
 			})
 		}
 	}
@@ -458,10 +454,10 @@ export class SkillsController implements FormController {
 
 			await this.csrsService
 				.getQuestionbyID(req.params.questionID, req.user)
-				.then( questionDTO => {
-					const question = this.questionFactory.create(questionDTO)
+				.then( response => {
+					const question = this.questionFactory.create(response.data)
 					// @ts-ignore
-					let keys = Object.values(questionDTO.answer.answers)
+					let keys = Object.values(response.data.answer.answers)
 					if (question.imgUrl) {
 						imageName = question.imgUrl.split("/").pop()
 					}
@@ -490,6 +486,7 @@ export class SkillsController implements FormController {
 
 			let data = {
 				"value" : req.body.value,
+				"answer": answer,
 				"why" : req.body.why,
 				'theme': req.body.theme,
 				'learningName': req.body.learningName,
@@ -578,10 +575,10 @@ export class SkillsController implements FormController {
 
 			await this.csrsService
 				.getQuizByProfession(profession.id, req.user)
-				.then( quiz => {
+				.then( response => {
 					req.session!.save(() => {
 						res.render('page/skills/edit-quiz-description', {
-							quiz: quiz
+							quiz: response.data
 						})
 					})
 				})

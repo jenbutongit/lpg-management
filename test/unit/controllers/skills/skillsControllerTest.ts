@@ -99,32 +99,34 @@ describe('Skills Controller Tests', function() {
 	describe('Update question', () => {
 		it('should render update question page', async () => {
 
-
 			req.params.questionID = "2"
 
 			let questsionDTO = new Object()
 
-			let question = {
-				"id": 1,
-				"type": "MULTIPLE",
-				"value": "What is the capital of Ireland?",
-				"answer": {
+			let response = {
+				data: {
 					"id": 1,
-					"correctAnswers": [
-						"A",
-						"D"
-					],
-					"answers": {
-						"A": "Dublin",
-						"B": "London",
-						"C": "New York",
-						"D": "Melbourne"
-					}
-				},
-				"status": "ACTIVE"
+					"type": "MULTIPLE",
+					"value": "What is the capital of Ireland?",
+					"answer": {
+						"id": 1,
+						"correctAnswers": [
+							"A",
+							"D"
+						],
+						"answers": {
+							"A": "Dublin",
+							"B": "London",
+							"C": "New York",
+							"D": "Melbourne"
+						}
+					},
+					"status": "ACTIVE"
+				}
+
 			}
 
-			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(question))
+			csrsService.getQuestionbyID = sinon.stub().returns(Promise.resolve(response))
 			questionFactory.create = sinon.stub().returns(questsionDTO)
 			await skillsController.getEditQuestion()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/question')

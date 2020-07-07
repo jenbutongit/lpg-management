@@ -71,7 +71,6 @@ export class FileController {
 		this.router.get('/content-management/courses/:courseId/module-video/:moduleId?', this.getFile('video'))
 		this.router.post('/content-management/courses/:courseId/module-file', this.setFile())
 		this.router.post('/content-management/courses/:courseId/module-file/:moduleId', this.editFile())
-		// this.router.post('/content-management/skills/add-new-question', this.setFile())
 	}
 
 	public getFile(type: string) {
