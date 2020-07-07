@@ -59,7 +59,7 @@
             {% if identity.isSkillsManagerOrSuperUser() %}
                 {% set action = actions.push({
                     link: '/content-management/skills',
-                    text: 'Edit the Measure your skills quiz'
+                    text: 'Manage quiz'
                 }) %}
             {% endif %}
             {{ menu("Actions", actions) }}

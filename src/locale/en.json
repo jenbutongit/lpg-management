@@ -193,7 +193,30 @@
 		}
 	},
 	"skills": {
-		"title": "Add a new skills quiz"
+		"title": "Add a new skills quiz",
+		"validation": {
+			"question": {
+				"empty": "Question is required"
+			},
+			"why": {
+				"empty": "Text given after answer is required"
+			},
+			"theme": {
+				"empty": "Theme is required"
+			},
+			"learningName": {
+				"empty": "learning Name is required"
+			},
+			"learningReference": {
+				"empty": "learning Reference is required"
+			},
+			"answers": {
+				"empty": "You must provide at least two answers"
+			},
+			"correctAnswers": {
+				"empty": "You must provide at least once correct answer"
+			}
+		}
 	},
 
 	"courseType": {

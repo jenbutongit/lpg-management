@@ -1,6 +1,12 @@
 {% from "file-upload/macro.njk" import govukFileUpload %}
 {% from "button/macro.njk" import govukButton %}
 {% from "error-summary/macro.njk" import govukErrorSummary %}
+{% from "../../component/menu/macro.njk" import menu %}
+{% from "table/macro.njk" import govukTable %}
+{% from "../../component/statusWithLabel/macro.njk" import statusWithLabel with context %}
+{% from "../../component/changeStatus/macro.njk" import changeStatus with context %}
+
+
 
 {% extends "../../component/Page.njk" %}
 
@@ -11,49 +17,161 @@
 {% set banner = true %}
 {% set backButton = "/content-management" %}
 
-{% set uploadedFileNotCSV = sessionFlash.uploadedFileNotCSV %}
 
 {% block content %}
 
-{% if not doesPolicyExist %}
+{% if not professionID or not organisationalID%}
 {{ govukErrorSummary({
     titleText: "There is a problem",
     errorList: [
         {
-            text: "Policy profession does not exist, and a skills quiz cannot be created."
+            text: errorMessage,
+            href: lpgUiUrl + "/profile"
         }
     ],
     classes: "custom-error-message"
 }) }}
 {% endif %}
 
-<div class="govuk-grid-row">
+{% if professionID and organisationalID%}
+
+{% if message != "" %}
+    <p class="skills-message success">&#10003; &nbsp; {{message}}</p>
+{% endif %}
+
+{% if errorMessage != "" %}
+    <p class="skills-message failure">X &nbsp; {{errorMessage}}</p>
+{% endif %}
+
+<div class="govuk-grid-row quiz">
     <div class="govuk-grid-column-two-thirds">
-        <p class="govuk-body form-header govuk-!-font-size-24">Add a new skills quiz</p>
-        <h2 class="govuk-heading-m govuk-!-font-size-36">Skills quiz</h2>
-        <form action="/content-management/skills" method="post" class="skills-form" enctype="multipart/form-data">
-            <p class="govuk-body">Currently, only the <strong>Policy</strong> profession can upload a skills quiz.</p>
-            <p class="govuk-body">Quiz questions should be saved as CSV, an Excel file type. In your Excel question document, select
-                ‘Save as’. At ‘Save as type’, select CSV (comma delimited).</p>
-            {% if doesPolicyExist %}
-            <div class="add-file-form govuk-form-group">
-                <label class="govuk-label">Upload a file</label>
-                {% if uploadedFileNotCSV %}
-                <span id="file-upload-error" class="govuk-error-message">"The selected file must be a CSV"</span>
-                {% endif %}
-                <input class="govuk-file-upload custom-uploader" id="file-upload" name="file" type="file" aria-describedby="file-upload-hint">
-                <label class="btn" for="file-upload"><span>Choose file</span></label>
+        <h1 class="govuk-heading-m govuk-!-font-size-36">Manage quiz</h1>
+            <div>
+                <div class="data-table">
+                    {{ govukTable({
+                    caption: "Data table",
+                    head: [
+                    {
+                        text: "Profession"
+                    },
+                    {
+                        text: "Times completed",
+                        format: "numeric"
+                    },
+                    {
+                        text: "Average score",
+                        format: "numeric"
+                    }
+                    ],
+                    rows: [
+                        [
+                        {
+                            text: quizResults.profession
+                        },
+                        {
+                            text: quizResults.numberOfAttempts,
+                            format: "numeric"
+                        },
+                        {
+                            text: quizResults.averageScore,
+                            format: "numeric"
+                        }
+                        ]
+                    ]
+                    }) }}
+
+                </div>
+
+                <table class="govuk-table quiz-questions">
+                    <caption class="govuk-table__caption">Quiz questions</caption>
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Number</th>
+                        <th scope="col" class="govuk-table__header">Question</th>
+                        <th scope="col" class="govuk-table__header govuk-table__cell--numeric"><span class="empty-header">Manage</span></th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% if quiz.questions[0] %}
+                        {% for question in quiz.questions %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell question-number">
+                                {{loop.index}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{question.value}}
+                            </td>
+                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                                <a href="/content-management/skills/{{question.id}}/edit-question">Manage</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell question-number">
+
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                            No questions have been added yet.
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
             </div>
+
+        <p class="govuk-body">Note, once this quiz has been saved it will be published and therefore it will be available for public viewing.</p>
+
+
+        <form action="/content-management/skills/publish-quiz" method="post" class="course-form">
             <div class="button-container">
                 {{ govukButton({
-                    text: "Add file"
+                text: "Publish"
                 }) }}
             </div>
-            {% endif %}
-            <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
         </form>
+
+        <a class="cancel-button govuk-body govuk-link" href="/content-management">Cancel</a>
     </div>
-</div>
+    <div class="govuk-grid-column-one-third">
+            <div class="right-menu department-admin">
+                {% block statusWithLabel %}
+                    {% if quiz.status == "DRAFT" %}
+                        {{ statusWithLabel('Draft') }}
+                    {% else %}
+                        {{ statusWithLabel('Published') }}
+                    {% endif %}
+                {% endblock %}
+
+                {% block menu %}
+                    {% set actions = [] %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/add-new-question',
+                        text: 'Add a new question'
+                    }) %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/generate-report',
+                        text: 'Generate quiz report'
+                    }) %}
+                    {% set action = actions.push({
+                        link: '/content-management/skills/edit-quiz-description',
+                        text: 'Edit quiz description'
+                    }) %}
+                    {% set action = actions.push({
+                    link: '/content-management/skills/delete-quiz',
+                    text: 'Delete quiz'
+                    }) %}
+                    {{ menu("Actions", actions) }}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% endif %}
+
+
 {% endblock %}
 
 {% block bodyEnd %}
