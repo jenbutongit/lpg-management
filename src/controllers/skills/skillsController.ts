@@ -60,8 +60,8 @@ export class SkillsController implements FormController {
 
 			await this.csrsService
 				.getAllQuizResults(req.user)
-				.then(quizzesInfo => {
-					quizzes = quizzesInfo
+				.then(response => {
+					quizzes = response.data
 				})
 				.catch(error => {
 					next(error)
@@ -77,23 +77,27 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			let quizzes: any = null
-			let orgID: any = null
+			let organisationalID: any = null
 
 			await this.csrsService
 				.getCivilServant()
 				.then(civilServant => {
 					if (civilServant.organisationalUnit) {
-						orgID = civilServant.organisationalUnit.id
+						organisationalID = civilServant.organisationalUnit.id
 					}
 				})
 				.catch(error => {
 					next(error)
 				})
 
+			const winston = require('winston')
+			const logger = winston.loggers.get('logger')
+			logger.info("organisationalID" + organisationalID)
+
 			await this.csrsService
-				.getQuizesByOrg(orgID, req.user)
-				.then(quizzesInfo => {
-					quizzes = quizzesInfo
+				.getQuizesByOrg(organisationalID, req.user)
+				.then(response => {
+					quizzes = response.data
 				})
 				.catch(error => {
 					next(error)
@@ -133,20 +137,24 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			let profession = new Profession()
+			let organisationID: any = null
 
 			await this.csrsService
 				.getCivilServant()
 				.then(civilServant => {
-					if (civilServant.profession) {
+					if (civilServant.profession && civilServant.organisationalUnit) {
 						profession.id = civilServant.profession.id
+						organisationID = civilServant.organisationalUnit.id
 					}
 				})
 				.catch(error => {
 					next(error)
 				})
 
+			let data = {profession, organisationId: organisationID}
+
 			await this.csrsService
-				.publishSkills(profession, req.user)
+				.publishSkills(data, req.user)
 				.then(() => {
 					req.session!.save(() => {
 						res.redirect(`/content-management/skills/publish-quiz/success`)
@@ -161,46 +169,40 @@ export class SkillsController implements FormController {
 	editQuizDescription() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let professionID: any = null
+			let organisationID: any = null
 			let description: any = req.body.description
-			if (description != '') {
-				await this.csrsService
-					.getCivilServant()
-					.then(civilServant => {
-						if (civilServant.profession) {
-							professionID = civilServant.profession.id
-						}
-					})
-					.catch(error => {
-						next(error)
-					})
+		await this.csrsService
+			.getCivilServant()
+			.then(civilServant => {
+				if (civilServant.profession && civilServant.organisationalUnit) {
+					professionID = civilServant.profession.id
+					organisationID = civilServant.organisationalUnit.id
+				}
+			})
+			.catch(error => {
+				next(error)
+			})
 
-				let profession = new Profession();
-				profession.id = professionID
+		let profession = new Profession();
+		profession.id = professionID
 
-				let data = {profession, description: description}
+		let data = {profession, organisationId: organisationID, description: description}
 
-				await this.csrsService
-					.editDescription(data, req.user)
-					.then(() => {
-						req.session!.save(() => {
-							res.redirect(`/content-management/skills/edit-quiz-description/success`)
-						})
-					})
-					.catch(error => {
-						next(error)
-					})
-			} else {
+		await this.csrsService
+			.editDescription(data, req.user)
+			.then(() => {
 				req.session!.save(() => {
-					res.render('page/skills/edit-quiz-description', {
-						error: 'Description is required',
-					})
+					res.redirect(`/content-management/skills/edit-quiz-description/success`)
 				})
-			}
+			})
+			.catch(error => {
+				next(error)
+			})
 		}
 	}
 
 
-		AddQuestion() {
+	AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let answer = new Answer()
 			answer.answers = req.body.answers
@@ -245,7 +247,21 @@ export class SkillsController implements FormController {
 				})
 			} else {
 				const question = this.questionFactory.create(req.body)
-				let data = {professionId : 1, question}
+				let professionID: any = null
+				let organisationID: any = null
+				await this.csrsService
+					.getCivilServant()
+					.then(civilServant => {
+						if (civilServant.profession && civilServant.organisationalUnit) {
+							professionID = civilServant.profession.id
+							organisationID = civilServant.organisationalUnit.id
+						}
+					})
+					.catch(error => {
+						next(error)
+					})
+
+				let data = {professionId : professionID, organisationId: organisationID, question}
 
 				await this.csrsService
 					.postQuestion(data, req.user)
@@ -263,13 +279,15 @@ export class SkillsController implements FormController {
 	deleteQuiz() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let professionID: any = null
+			let organisationalID: any = null
 
 			if (req.body.deleteQuiz == 'True') {
 				await this.csrsService
 					.getCivilServant()
 					.then(civilServant => {
-						if (civilServant.profession) {
+						if (civilServant.profession && civilServant.organisationalUnit) {
 							professionID = civilServant.profession.id
+							organisationalID = civilServant.organisationalUnit.id
 						}
 					})
 					.catch(error => {
@@ -277,7 +295,7 @@ export class SkillsController implements FormController {
 					})
 
 				await this.csrsService
-					.deleteQuizByProfession(professionID, req.user)
+					.deleteQuizByProfession(professionID,organisationalID, req.user)
 					.then(() => {
 						req.session!.save(() => {
 							res.redirect(`/content-management`)
@@ -365,11 +383,6 @@ export class SkillsController implements FormController {
 					res.redirect(`/content-management/skills/organisation-admin`)
 				})
 				return
-			} else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
-				req.session!.save(() => {
-					res.redirect(`/content-management/skills/super-admin`)
-				})
-				return
 			}
 
 			let professionID: any = null
@@ -420,6 +433,11 @@ export class SkillsController implements FormController {
 				errorMessage = "Profession is not set, Please set your profession in your profile page."
 			}
 
+			const winston = require('winston')
+			const logger = winston.loggers.get('logger')
+			logger.info("organisationalID" + organisationalID)
+			logger.info("professionID" + professionID)
+
 			if (professionID != null && organisationalID != null) {
 				let data = { profession: { id: professionID} , organisationId: organisationalID}
 
@@ -432,14 +450,26 @@ export class SkillsController implements FormController {
 						next(error)
 					})
 
-				await this.csrsService
-					.getResultsByProfession(professionID, req.user)
-					.then(response => {
-						quizResults = response.data
-					})
-					.catch(error => {
-						next(error)
-					})
+				if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+					await this.csrsService
+						.getAllQuizResults(req.user)
+						.then(response => {
+							quizResults = response.data
+						})
+						.catch(error => {
+							next(error)
+						})
+				} else {
+					await this.csrsService
+						.getResultsByProfession(professionID,organisationalID, req.user)
+						.then(response => {
+							quizResults = response.data
+						})
+						.catch(error => {
+							next(error)
+						})
+				}
+
 			}
 
 			req.session!.save(() => {
@@ -502,6 +532,11 @@ export class SkillsController implements FormController {
 				newErrors = Object.assign(errors.fields, errorAnswer);
 			});
 
+			if(req.body.imageRemoved == "True") {
+				question.imgUrl = ""
+				question.alternativeText = ""
+			}
+
 			let errorCounter = 0, key;
 
 			if (newErrors) {
@@ -561,12 +596,14 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			let profession = new Profession()
+			let organisationalID: any = null
 
 			await this.csrsService
 				.getCivilServant()
 				.then(civilServant => {
 					if (civilServant.profession) {
 						profession.id = civilServant.profession.id
+						organisationalID = civilServant.organisationalUnit.id
 					}
 				})
 				.catch(error => {
@@ -574,7 +611,7 @@ export class SkillsController implements FormController {
 				})
 
 			await this.csrsService
-				.getQuizByProfession(profession.id, req.user)
+				.getQuizByProfession(organisationalID,profession.id, req.user)
 				.then( response => {
 					req.session!.save(() => {
 						res.render('page/skills/edit-quiz-description', {
