@@ -59,7 +59,8 @@
 		"striptags": "3.1.1",
 		"ts-json-properties": "2.0.2",
 		"tslib": "1.9.3",
-		"url": "^0.11.0"
+		"url": "^0.11.0",
+		"winston": "^3.3.3"
 	},
 	"devDependencies": {
 		"@3846masa/axios-cookiejar-support": "0.3.5",
