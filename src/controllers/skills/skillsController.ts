@@ -357,20 +357,20 @@ export class SkillsController implements FormController {
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			// // @ts-ignore
-			// const userRoles: any = req.user.roles
-			//
-			// if (userRoles.includes('ORGANISATION_REPORTER')) {
-			// 	req.session!.save(() => {
-			// 		res.redirect(`/content-management/skills/organisation-admin`)
-			// 	})
-			// 	return
-			// } else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
-			// 	req.session!.save(() => {
-			// 		res.redirect(`/content-management/skills/super-admin`)
-			// 	})
-			// 	return
-			// }
+			// @ts-ignore
+			const userRoles: any = req.user.roles
+
+			if (userRoles.includes('ORGANISATION_REPORTER')) {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills/organisation-admin`)
+				})
+				return
+			} else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills/super-admin`)
+				})
+				return
+			}
 
 			let professionID: any = null
 			let quiz: any = null
