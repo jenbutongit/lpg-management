@@ -37,6 +37,48 @@ describe('Agency Token Service', () => {
 
 			expect(capacityIsValid).to.be.true
 		})
+
+		it('should return `false` when a number is greater than java int max', async () => {
+			const capacity = '2147483648'
+			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
+
+			expect(capacityIsValid).to.be.false
+		})
+
+		it('should return `true` when a number is equal to java int max', async () => {
+			const capacity = '2147483647'
+			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
+
+			expect(capacityIsValid).to.be.true
+		})
+
+		it('should return `true` when a number is one less than java int max', async () => {
+			const capacity = '2147483646'
+			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
+
+			expect(capacityIsValid).to.be.true
+		})
+
+		it('should return `false` when a number is less than 0', async () => {
+			const capacity = '-1'
+			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
+
+			expect(capacityIsValid).to.be.false
+		})
+
+		it('should return `true` when a number is equal to 0', async () => {
+			const capacity = '0'
+			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
+
+			expect(capacityIsValid).to.be.true
+		})
+
+		it('should return `true` when a number is greater than 0', async () => {
+			const capacity = '1'
+			const capacityIsValid = agencyTokenService.validateCapacity(capacity)
+
+			expect(capacityIsValid).to.be.true
+		})
 	})
 
 	describe('#validateDomains', () => {

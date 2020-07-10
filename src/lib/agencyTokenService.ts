@@ -13,7 +13,7 @@ export class AgencyTokenService {
 
 	validateCapacity(numberString: string) {
 		const parsedInt = parseInt(numberString)
-		return !isNaN(parsedInt)
+		return !isNaN(parsedInt) && parsedInt >= 0 && parsedInt <= 2147483647
 	}
 
 	validateDomains(domains: any) {
