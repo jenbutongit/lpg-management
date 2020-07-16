@@ -16,3 +16,4 @@ modules.json
 .nyc_output
 coverage
 .vscode/*
+*.iml
