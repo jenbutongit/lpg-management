@@ -4,6 +4,10 @@ window.onload = function () {
         document.getElementById("alternativeText").style.display = 'none';
     }
 
+    if(document.getElementById("removeImageButton") && document.getElementById("label-file-upload").innerText == "Choose file") {
+        document.getElementById("removeImageButton").style.display = "none"
+    }
+
 
     if(document.getElementById('uploadImageButton')) {
         if(document.getElementById("mediaId").value !== "") {
@@ -23,7 +27,6 @@ window.onload = function () {
             let xhttp = new XMLHttpRequest()
 
             xhttp.upload.onprogress = function (event) {
-                // alert("1")
                 document.getElementById("progress").style.display = 'block';
 
                 const loaded = Math.round((event.loaded / event.total) * 100)
@@ -32,23 +35,18 @@ window.onload = function () {
                 document.getElementById("submitButton").disabled = true
 
                 if(event.total > 100000000){
-                    // alert("2")
                     document.getElementById("file-size-warning").style.display = "block"
                 }
 
                 if(loaded == 100){
-                    // alert("3")
                     document.getElementById("progress").style.color = "black";
                     document.getElementById("progress").innerText = "File processing (this may take a while)..."
                 }
 
-                // alert("4")
             }
 
             xhttp.onreadystatechange = function () {
-                alert(this.readyState)
                 if (this.readyState == this.HEADERS_RECEIVED) {
-                    // alert("5.5")
                     const mediaLocation = xhttp.getResponseHeader("Location")
                     const mediaId = mediaLocation.substr(mediaLocation.lastIndexOf("/") + 1)
                     document.getElementById("mediaId").value = mediaId;
@@ -67,17 +65,13 @@ window.onload = function () {
                     document.getElementById("alternativeTextHeader").style.display = 'block';
                 }
 
-                // alert("6")
 
                 if (this.readyState == 4 && this.status == 500) {
                     document.getElementById("progress").style.color = "red";
                     document.getElementById("progress").innerText = "Image upload failed. Please upload an image which is not greater than 5MB in size and not exceeding 960p width X 640p height."
                 }
 
-                // alert("7")
             }
-
-            // alert("8")
 
             xhttp.open("POST", document.getElementById("courseCatalogueUrl").value, true)
             xhttp.setRequestHeader("Authorization", 'BEARER ' + document.getElementById("accessToken").value)

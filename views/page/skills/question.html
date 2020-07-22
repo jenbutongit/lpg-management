@@ -197,6 +197,8 @@
 
                 <input id="imageRemoved" name="imageRemoved" type="hidden" value="False">
 
+                <br>
+
                 {{ govukInput({
                 label: {
                     text: "Alternative text",
@@ -254,8 +256,6 @@
 {% block bodyEnd %}
 <script src="/govuk-frontend/all.js"></script>
 <script>window.GOVUKFrontend.initAll()</script>
-<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-<script type="text/javascript" src="/js/manage-orgs.js"></script>
 <script src="/js/upload-image.js"></script>
 <script src="/js/file-uploader.js"></script>
 {% endblock %}

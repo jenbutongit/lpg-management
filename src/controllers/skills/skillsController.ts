@@ -10,6 +10,8 @@ import {Profession} from "./profession"
 import {Answer} from "./answer"
 import * as config from "../../config"
 import { IsAnswersValid } from '../../learning-catalogue/validator/custom/quizQuestionAnswersValidator'
+import moment = require('moment')
+import {ReportService} from '../../report-service'
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
@@ -17,13 +19,15 @@ export class SkillsController implements FormController {
 	router: Router
 	questionFactory: QuestionFactory
 	quizFactory: QuizFactory
+	reportService: ReportService
 
-	constructor(csrsService: CsrsService, questionFactory: QuestionFactory, quizFactory: QuizFactory, questionValidator: Validator<Question>) {
+	constructor(csrsService: CsrsService, questionFactory: QuestionFactory, quizFactory: QuizFactory, questionValidator: Validator<Question>, reportService: ReportService) {
 		this.router = Router()
 		this.csrsService = csrsService
 		this.validator = questionValidator
 		this.questionFactory = questionFactory
 		this.quizFactory = quizFactory
+		this.reportService = reportService
 		this.configureRouterPaths()
 	}
 
@@ -32,6 +36,7 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/add-new-question/success', this.getSkills())
 		this.router.get('/content-management/skills/update-question/success', this.getSkills())
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
+		this.router.post('/content-management/skills/generate-report', this.generateReport())
 		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
 		this.router.post('/content-management/skills/add-new-question', this.AddQuestion())
 		this.router.get('/content-management/skills/delete-quiz', this.getDeleteQuiz())
@@ -216,10 +221,15 @@ export class SkillsController implements FormController {
 				'learningName': req.body.learningName,
 				'learningReference': req.body.learningReference,
 			}
+
 			let errors = await this.validator.check(data)
 
 			const answerErrors = IsAnswersValid(answer)
-
+			if (req.body.alternativeText == "" && req.body.mediaId != "") {
+				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
+				let alternativeText: any = { alternativeTextArray }
+				answerErrors.push(alternativeText)
+			}
 			let newErrors: any = null
 			// @ts-ignore
 			answerErrors.forEach(function(errorAnswer: any) {
@@ -495,7 +505,8 @@ export class SkillsController implements FormController {
 						res.render('page/skills/question', {
 							question: question,
 							keysAnswers: keys,
-							imageName: imageName
+							imageName: imageName,
+							courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media/skills/image'
 						})
 					})
 				})
@@ -525,6 +536,11 @@ export class SkillsController implements FormController {
 			let errors = await this.validator.check(data)
 
 			const answerErrors = IsAnswersValid(answer)
+			if (req.body.alternativeText == "" && req.body.mediaId != "") {
+				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
+				let alternativeText: any = { alternativeTextArray }
+				answerErrors.push(alternativeText)
+			}
 
 			let newErrors: any = null
 			// @ts-ignore
@@ -583,11 +599,119 @@ export class SkillsController implements FormController {
 
 	getSkillsReport() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			req.session!.save(() => {
-				res.render('page/skills/generate-report', {
-					placeholder: new PlaceholderDateSkills(),
+
+			let areasOfWork: any = null
+
+			await this.csrsService
+				.getAreasOfWork()
+				.then(profs => {
+					areasOfWork = profs
 				})
-			})
+				.catch(error => {
+					next(error)
+				})
+
+			const newFirstElement = {name: 'All'}
+
+			areasOfWork = [newFirstElement].concat(areasOfWork)
+
+			// @ts-ignore
+			const userRoles: any = req.user.roles
+
+			if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+				req.session!.save(() => {
+					res.render('page/skills/generate-report', {
+						placeholder: new PlaceholderDateSkills(),
+						professions: areasOfWork,
+						role: 'superAdmin'
+					})
+				})
+			} else if (userRoles.includes('ORGANISATION_REPORTER')) {
+				req.session!.save(() => {
+					res.render('page/skills/generate-report', {
+						placeholder: new PlaceholderDateSkills(),
+						areasOfWork: areasOfWork,
+						role: 'orgAdmin'
+					})
+				})
+			} else {
+				req.session!.save(() => {
+					res.render('page/skills/generate-report', {
+						placeholder: new PlaceholderDateSkills(),
+						areasOfWork: areasOfWork,
+						role: 'profAdmin'
+					})
+				})
+			}
+
+		}
+	}
+
+	generateReport() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			const reportType = 'Skills_information_'
+			const filename = reportType.concat(moment().toISOString())
+			const body = req.body
+			const startDate = body.startYear + "-" + body.startMonth + "-" + body.startDay
+			const endDate = body.endYear + "-" + body.endMonth + "-" + body.endDay
+			const professionID = body.profession
+			const role = req.body.role
+
+			if(role == 'superAdmin') {
+				try {
+					await this.reportService
+						.getReportForSuperAdmin(startDate, endDate, professionID)
+						.then(report => {
+							res.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							res.end(Buffer.from(report, 'binary'))
+						})
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
+			} else if (role == 'orgAdmin') {
+				try {
+					await this.reportService
+						.getReportForOrgAdmin(startDate, endDate, professionID)
+						.then(report => {
+							res.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							res.end(Buffer.from(report, 'binary'))
+						})
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
+			} else if (role == 'profAdmin') {
+				try {
+					await this.reportService
+						.getReportForProfAdmin(startDate, endDate)
+						.then(report => {
+							res.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							res.end(Buffer.from(report, 'binary'))
+						})
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
+			}
 		}
 	}
 

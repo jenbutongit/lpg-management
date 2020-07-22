@@ -151,7 +151,17 @@
         width: 150%;
       }
     }
-
 }
+
+.reports-container  {
+  .list .govuk-form-group.profession-selecter {
+    margin-top: 20px;
+  }
+  .list .course.list-details.dates {
+    display: inline-block;
+  }
+}
+
+
 
 
