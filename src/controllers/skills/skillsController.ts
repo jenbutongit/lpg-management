@@ -66,7 +66,7 @@ export class SkillsController implements FormController {
 			await this.csrsService
 				.getAllQuizResults(req.user)
 				.then(response => {
-					quizzes = response.data
+					quizzes = response
 				})
 				.catch(error => {
 					next(error)
@@ -102,7 +102,7 @@ export class SkillsController implements FormController {
 			await this.csrsService
 				.getQuizesByOrg(organisationalID, req.user)
 				.then(response => {
-					quizzes = response.data
+					quizzes = response
 				})
 				.catch(error => {
 					next(error)
@@ -121,7 +121,7 @@ export class SkillsController implements FormController {
 				await this.csrsService
 				.getQuestionbyID(questionID, req.user)
 				.then( response => {
-					const question = this.questionFactory.create(response.data)
+					const question = this.questionFactory.create(response)
 					const answers = Object.values(question.answer.answers)
 					const keys = ['A','B','C','D','E']
 					req.session!.save(() => {
@@ -464,7 +464,7 @@ export class SkillsController implements FormController {
 					await this.csrsService
 						.getAllQuizResults(req.user)
 						.then(response => {
-							quizResults = response.data
+							quizResults = response
 						})
 						.catch(error => {
 							next(error)
@@ -473,7 +473,7 @@ export class SkillsController implements FormController {
 					await this.csrsService
 						.getResultsByProfession(professionID,organisationalID, req.user)
 						.then(response => {
-							quizResults = response.data
+							quizResults = response
 						})
 						.catch(error => {
 							next(error)
@@ -495,9 +495,9 @@ export class SkillsController implements FormController {
 			await this.csrsService
 				.getQuestionbyID(req.params.questionID, req.user)
 				.then( response => {
-					const question = this.questionFactory.create(response.data)
+					const question = this.questionFactory.create(response)
 					// @ts-ignore
-					let keys = Object.values(response.data.answer.answers)
+					let keys = Object.values(response.answer.answers)
 					if (question.imgUrl) {
 						imageName = question.imgUrl.split("/").pop()
 					}
@@ -659,8 +659,8 @@ export class SkillsController implements FormController {
 
 			if(role == 'superAdmin') {
 				try {
-					await this.reportService
-						.getReportForSuperAdmin(startDate, endDate, professionID)
+					await this.csrsService
+						.getReportForSuperAdmin(startDate, endDate, professionID, req.user)
 						.then(report => {
 							res.writeHead(200, {
 								'Content-type': 'text/csv',
@@ -677,8 +677,8 @@ export class SkillsController implements FormController {
 				}
 			} else if (role == 'orgAdmin') {
 				try {
-					await this.reportService
-						.getReportForOrgAdmin(startDate, endDate, professionID)
+					await this.csrsService
+						.getReportForOrgAdmin(startDate, endDate, professionID, req.user)
 						.then(report => {
 							res.writeHead(200, {
 								'Content-type': 'text/csv',
@@ -695,8 +695,8 @@ export class SkillsController implements FormController {
 				}
 			} else if (role == 'profAdmin') {
 				try {
-					await this.reportService
-						.getReportForProfAdmin(startDate, endDate)
+					await this.csrsService
+						.getReportForProfAdmin(startDate, endDate, req.user)
 						.then(report => {
 							res.writeHead(200, {
 								'Content-type': 'text/csv',
@@ -739,7 +739,7 @@ export class SkillsController implements FormController {
 				.then( response => {
 					req.session!.save(() => {
 						res.render('page/skills/edit-quiz-description', {
-							quiz: response.data
+							quiz: response
 						})
 					})
 				})

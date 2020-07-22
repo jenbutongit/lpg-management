@@ -189,4 +189,24 @@ export class CsrsService {
 
 		return mapping
 	}
+
+	async getReportForSuperAdmin(startDate: any, endDate: any, professionID: any, user:any) {
+		let reportUrl = `/report/skills/report-for-super-admin?from=${startDate}&to=${endDate}&professionId=${professionID}`
+
+		return await this.restService.getWithConfig(reportUrl, this.getAuthorizationHeader(user))
+	}
+
+	async getReportForOrgAdmin(startDate: any, endDate: any, professionID: any, user: any) {
+		let reportUrl = `/report/skills/report-for-department-admin?from=${startDate}&to=${endDate}&professionId=${professionID}`
+
+		return await this.restService.getWithConfig(reportUrl, this.getAuthorizationHeader(user))
+	}
+
+	async getReportForProfAdmin(startDate: any, endDate: any, user: any) {
+
+		const reportUrl = `/report/skills/report-for-department-admin?from=${startDate}&to=${endDate}`
+
+		return await this.restService.getWithConfig(reportUrl, this.getAuthorizationHeader(user))
+	}
+
 }
