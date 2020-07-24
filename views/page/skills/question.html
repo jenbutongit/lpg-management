@@ -42,7 +42,7 @@
                 <input id="mediaId" name="mediaId" type="hidden" value="">
                 <input id="imgUrl" name="imgUrl" type="hidden" value="{{question.imgUrl}}">
                 <fieldset class="govuk-fieldset">
-                {{ textarea("value", "value", "Maximum of 160 characters", 160, form.value|default(question.value), "Question") }}
+                {{ textarea("value", "value", "Maximum of 500 characters", 500, form.value|default(question.value), "Question") }}
 
                 <section class="answers">
                     <p class="label">Answers</p>
@@ -129,7 +129,7 @@
                 </section>
 
 
-                {{ textarea("why", "why", "This is the text that will be displayed after the user has completed the quiz", 1500, form.why|default(question.why), "Text given after answer") }}
+                {{ textarea("why", "why", "This is the text that will be displayed after the user has completed the quiz", 500, form.why|default(question.why), "Text given after answer") }}
 
                 {{ govukInput({
                 label: {
@@ -186,7 +186,18 @@
                 classes: "button-blue left-aligned"
                 }) }}
 
-                <input id="img" type="hidden">
+                {% if question.id %}
+                    {{ govukButton({
+                    attributes: {id: "removeImageButton"},
+                    text: "Remove File",
+                    type: "button",
+                    classes: "button-red right-aligned"
+                    }) }}
+                {% endif %}
+
+                <input id="imageRemoved" name="imageRemoved" type="hidden" value="False">
+
+                <br>
 
                 {{ govukInput({
                 label: {
@@ -245,8 +256,6 @@
 {% block bodyEnd %}
 <script src="/govuk-frontend/all.js"></script>
 <script>window.GOVUKFrontend.initAll()</script>
-<script type="text/javascript" src="/js/accessible-autocomplete.min.js"></script>
-<script type="text/javascript" src="/js/manage-orgs.js"></script>
 <script src="/js/upload-image.js"></script>
 <script src="/js/file-uploader.js"></script>
 {% endblock %}

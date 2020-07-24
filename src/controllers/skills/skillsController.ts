@@ -10,6 +10,7 @@ import {Profession} from "./profession"
 import {Answer} from "./answer"
 import * as config from "../../config"
 import { IsAnswersValid } from '../../learning-catalogue/validator/custom/quizQuestionAnswersValidator'
+import moment = require('moment')
 
 export class SkillsController implements FormController {
 	csrsService: CsrsService
@@ -32,6 +33,7 @@ export class SkillsController implements FormController {
 		this.router.get('/content-management/skills/add-new-question/success', this.getSkills())
 		this.router.get('/content-management/skills/update-question/success', this.getSkills())
 		this.router.get('/content-management/skills/generate-report', this.getSkillsReport())
+		this.router.post('/content-management/skills/generate-report', this.generateReport())
 		this.router.get('/content-management/skills/add-new-question', this.getAddQuestion())
 		this.router.post('/content-management/skills/add-new-question', this.AddQuestion())
 		this.router.get('/content-management/skills/delete-quiz', this.getDeleteQuiz())
@@ -60,8 +62,8 @@ export class SkillsController implements FormController {
 
 			await this.csrsService
 				.getAllQuizResults(req.user)
-				.then(quizzesInfo => {
-					quizzes = quizzesInfo
+				.then(response => {
+					quizzes = response
 				})
 				.catch(error => {
 					next(error)
@@ -77,13 +79,13 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			let quizzes: any = null
-			let orgID: any = null
+			let organisationalID: any = null
 
 			await this.csrsService
 				.getCivilServant()
 				.then(civilServant => {
 					if (civilServant.organisationalUnit) {
-						orgID = civilServant.organisationalUnit.id
+						organisationalID = civilServant.organisationalUnit.id
 					}
 				})
 				.catch(error => {
@@ -91,9 +93,9 @@ export class SkillsController implements FormController {
 				})
 
 			await this.csrsService
-				.getQuizesByOrg(orgID, req.user)
-				.then(quizzesInfo => {
-					quizzes = quizzesInfo
+				.getQuizesByOrg(organisationalID, req.user)
+				.then(response => {
+					quizzes = response
 				})
 				.catch(error => {
 					next(error)
@@ -112,7 +114,7 @@ export class SkillsController implements FormController {
 				await this.csrsService
 				.getQuestionbyID(questionID, req.user)
 				.then( response => {
-					const question = this.questionFactory.create(response.data)
+					const question = this.questionFactory.create(response)
 					const answers = Object.values(question.answer.answers)
 					const keys = ['A','B','C','D','E']
 					req.session!.save(() => {
@@ -133,20 +135,24 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			let profession = new Profession()
+			let organisationID: any = null
 
 			await this.csrsService
 				.getCivilServant()
 				.then(civilServant => {
-					if (civilServant.profession) {
+					if (civilServant.profession && civilServant.organisationalUnit) {
 						profession.id = civilServant.profession.id
+						organisationID = civilServant.organisationalUnit.id
 					}
 				})
 				.catch(error => {
 					next(error)
 				})
 
+			let data = {profession, organisationId: organisationID}
+
 			await this.csrsService
-				.publishSkills(profession, req.user)
+				.publishSkills(data, req.user)
 				.then(() => {
 					req.session!.save(() => {
 						res.redirect(`/content-management/skills/publish-quiz/success`)
@@ -161,46 +167,40 @@ export class SkillsController implements FormController {
 	editQuizDescription() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let professionID: any = null
+			let organisationID: any = null
 			let description: any = req.body.description
-			if (description != '') {
-				await this.csrsService
-					.getCivilServant()
-					.then(civilServant => {
-						if (civilServant.profession) {
-							professionID = civilServant.profession.id
-						}
-					})
-					.catch(error => {
-						next(error)
-					})
+		await this.csrsService
+			.getCivilServant()
+			.then(civilServant => {
+				if (civilServant.profession && civilServant.organisationalUnit) {
+					professionID = civilServant.profession.id
+					organisationID = civilServant.organisationalUnit.id
+				}
+			})
+			.catch(error => {
+				next(error)
+			})
 
-				let profession = new Profession();
-				profession.id = professionID
+		let profession = new Profession();
+		profession.id = professionID
 
-				let data = {profession, description: description}
+		let data = {profession, organisationId: organisationID, description: description}
 
-				await this.csrsService
-					.editDescription(data, req.user)
-					.then(() => {
-						req.session!.save(() => {
-							res.redirect(`/content-management/skills/edit-quiz-description/success`)
-						})
-					})
-					.catch(error => {
-						next(error)
-					})
-			} else {
+		await this.csrsService
+			.editDescription(data, req.user)
+			.then(() => {
 				req.session!.save(() => {
-					res.render('page/skills/edit-quiz-description', {
-						error: 'Description is required',
-					})
+					res.redirect(`/content-management/skills/edit-quiz-description/success`)
 				})
-			}
+			})
+			.catch(error => {
+				next(error)
+			})
 		}
 	}
 
 
-		AddQuestion() {
+	AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let answer = new Answer()
 			answer.answers = req.body.answers
@@ -214,10 +214,15 @@ export class SkillsController implements FormController {
 				'learningName': req.body.learningName,
 				'learningReference': req.body.learningReference,
 			}
+
 			let errors = await this.validator.check(data)
 
 			const answerErrors = IsAnswersValid(answer)
-
+			if (req.body.alternativeText == "" && req.body.mediaId != "") {
+				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
+				let alternativeText: any = { alternativeTextArray }
+				answerErrors.push(alternativeText)
+			}
 			let newErrors: any = null
 			// @ts-ignore
 			answerErrors.forEach(function(errorAnswer: any) {
@@ -245,7 +250,21 @@ export class SkillsController implements FormController {
 				})
 			} else {
 				const question = this.questionFactory.create(req.body)
-				let data = {professionId : 1, question}
+				let professionID: any = null
+				let organisationID: any = null
+				await this.csrsService
+					.getCivilServant()
+					.then(civilServant => {
+						if (civilServant.profession && civilServant.organisationalUnit) {
+							professionID = civilServant.profession.id
+							organisationID = civilServant.organisationalUnit.id
+						}
+					})
+					.catch(error => {
+						next(error)
+					})
+
+				let data = {professionId : professionID, organisationId: organisationID, question}
 
 				await this.csrsService
 					.postQuestion(data, req.user)
@@ -263,13 +282,15 @@ export class SkillsController implements FormController {
 	deleteQuiz() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let professionID: any = null
+			let organisationalID: any = null
 
 			if (req.body.deleteQuiz == 'True') {
 				await this.csrsService
 					.getCivilServant()
 					.then(civilServant => {
-						if (civilServant.profession) {
+						if (civilServant.profession && civilServant.organisationalUnit) {
 							professionID = civilServant.profession.id
+							organisationalID = civilServant.organisationalUnit.id
 						}
 					})
 					.catch(error => {
@@ -277,7 +298,7 @@ export class SkillsController implements FormController {
 					})
 
 				await this.csrsService
-					.deleteQuizByProfession(professionID, req.user)
+					.deleteQuizByProfession(professionID,organisationalID, req.user)
 					.then(() => {
 						req.session!.save(() => {
 							res.redirect(`/content-management`)
@@ -357,20 +378,15 @@ export class SkillsController implements FormController {
 
 	getSkills() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			// // @ts-ignore
-			// const userRoles: any = req.user.roles
-			//
-			// if (userRoles.includes('ORGANISATION_REPORTER')) {
-			// 	req.session!.save(() => {
-			// 		res.redirect(`/content-management/skills/organisation-admin`)
-			// 	})
-			// 	return
-			// } else if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
-			// 	req.session!.save(() => {
-			// 		res.redirect(`/content-management/skills/super-admin`)
-			// 	})
-			// 	return
-			// }
+			// @ts-ignore
+			const userRoles: any = req.user.roles
+
+			if (userRoles.includes('ORGANISATION_REPORTER')) {
+				req.session!.save(() => {
+					res.redirect(`/content-management/skills/organisation-admin`)
+				})
+				return
+			}
 
 			let professionID: any = null
 			let quiz: any = null
@@ -432,14 +448,26 @@ export class SkillsController implements FormController {
 						next(error)
 					})
 
-				await this.csrsService
-					.getResultsByProfession(professionID, req.user)
-					.then(response => {
-						quizResults = response.data
-					})
-					.catch(error => {
-						next(error)
-					})
+				if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+					await this.csrsService
+						.getAllQuizResults(req.user)
+						.then(response => {
+							quizResults = response
+						})
+						.catch(error => {
+							next(error)
+						})
+				} else {
+					await this.csrsService
+						.getResultsByProfession(professionID,organisationalID, req.user)
+						.then(response => {
+							quizResults = response
+						})
+						.catch(error => {
+							next(error)
+						})
+				}
+
 			}
 
 			req.session!.save(() => {
@@ -455,9 +483,9 @@ export class SkillsController implements FormController {
 			await this.csrsService
 				.getQuestionbyID(req.params.questionID, req.user)
 				.then( response => {
-					const question = this.questionFactory.create(response.data)
+					const question = this.questionFactory.create(response)
 					// @ts-ignore
-					let keys = Object.values(response.data.answer.answers)
+					let keys = Object.values(response.answer.answers)
 					if (question.imgUrl) {
 						imageName = question.imgUrl.split("/").pop()
 					}
@@ -465,7 +493,8 @@ export class SkillsController implements FormController {
 						res.render('page/skills/question', {
 							question: question,
 							keysAnswers: keys,
-							imageName: imageName
+							imageName: imageName,
+							courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media/skills/image'
 						})
 					})
 				})
@@ -495,12 +524,22 @@ export class SkillsController implements FormController {
 			let errors = await this.validator.check(data)
 
 			const answerErrors = IsAnswersValid(answer)
+			if (req.body.alternativeText == "" && req.body.mediaId != "") {
+				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
+				let alternativeText: any = { alternativeTextArray }
+				answerErrors.push(alternativeText)
+			}
 
 			let newErrors: any = null
 			// @ts-ignore
 			answerErrors.forEach(function(errorAnswer: any) {
 				newErrors = Object.assign(errors.fields, errorAnswer);
 			});
+
+			if(req.body.imageRemoved == "True") {
+				question.imgUrl = ""
+				question.alternativeText = ""
+			}
 
 			let errorCounter = 0, key;
 
@@ -548,11 +587,148 @@ export class SkillsController implements FormController {
 
 	getSkillsReport() {
 		return async (req: Request, res: Response, next: NextFunction) => {
-			req.session!.save(() => {
-				res.render('page/skills/generate-report', {
-					placeholder: new PlaceholderDateSkills(),
+
+			let areasOfWork: any = null
+
+			await this.csrsService
+				.getAreasOfWork()
+				.then(profs => {
+					areasOfWork = profs
 				})
-			})
+				.catch(error => {
+					next(error)
+				})
+
+			const newFirstElement = {name: 'All'}
+
+			areasOfWork = [newFirstElement].concat(areasOfWork)
+
+			// @ts-ignore
+			const userRoles: any = req.user.roles
+
+
+			if(userRoles.includes('CSHR_REPORTER') || userRoles.includes('LEARNING_MANAGER')) {
+				req.session!.save(() => {
+					res.render('page/skills/generate-report', {
+						placeholder: new PlaceholderDateSkills(),
+						professions: areasOfWork,
+						role: 'superAdmin'
+					})
+				})
+			} else if (userRoles.includes('ORGANISATION_REPORTER')) {
+				req.session!.save(() => {
+					res.render('page/skills/generate-report', {
+						placeholder: new PlaceholderDateSkills(),
+						professions: areasOfWork,
+						role: 'orgAdmin'
+					})
+				})
+			} else {
+				req.session!.save(() => {
+					res.render('page/skills/generate-report', {
+						placeholder: new PlaceholderDateSkills(),
+						professions: areasOfWork,
+						role: 'profAdmin'
+					})
+				})
+			}
+
+		}
+	}
+
+	generateReport() {
+		return async (req: Request, res: Response, next: NextFunction) => {
+			const reportType = 'Skills_information_'
+			const filename = reportType.concat(moment().toISOString())
+			const body = req.body
+			const startDate = body.startYear + "-" + body.startMonth + "-" + body.startDay
+			const endDate = body.endYear + "-" + body.endMonth + "-" + body.endDay
+			const professionID = body.profession
+			const role = req.body.role
+
+			if(role == 'superAdmin') {
+				try {
+					await this.csrsService
+						.getReportForSuperAdmin(startDate, endDate, professionID, req.user)
+						.then(report => {
+							res.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							res.end(Buffer.from(report, 'binary'))
+						})
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
+			} else if (role == 'orgAdmin') {
+				try {
+
+					await this.csrsService
+						.getCivilServant()
+						.then(civilServant => {
+							if (civilServant.organisationalUnit.id) {
+								res.locals.organisatonID = civilServant.organisationalUnit.id
+							}
+
+						})
+						.catch(error => {
+							next(error)
+						})
+
+
+					await this.csrsService
+						.getReportForOrgAdmin(startDate, endDate, res.locals.organisatonID,professionID, req.user)
+						.then(report => {
+							res.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							res.end(Buffer.from(report, 'binary'))
+						})
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
+			} else if (role == 'profAdmin') {
+
+				try {
+
+					await this.csrsService
+						.getCivilServant()
+						.then(civilServant => {
+							if (civilServant.profession) {
+								res.locals.professionID = civilServant.profession.id
+							}
+
+						})
+						.catch(error => {
+							next(error)
+						})
+
+					await this.csrsService
+						.getReportForProfAdmin(startDate, endDate, res.locals.professionID, req.user)
+						.then(report => {
+							res.writeHead(200, {
+								'Content-type': 'text/csv',
+								'Content-disposition': `attachment;filename=${filename}.csv`,
+								'Content-length': report.length,
+							})
+							res.end(Buffer.from(report, 'binary'))
+						})
+						.catch(error => {
+							next(error)
+						})
+				} catch (error) {
+					throw new Error(error)
+				}
+			}
 		}
 	}
 
@@ -561,12 +737,14 @@ export class SkillsController implements FormController {
 		return async (req: Request, res: Response, next: NextFunction) => {
 
 			let profession = new Profession()
+			let organisationalID: any = null
 
 			await this.csrsService
 				.getCivilServant()
 				.then(civilServant => {
 					if (civilServant.profession) {
 						profession.id = civilServant.profession.id
+						organisationalID = civilServant.organisationalUnit.id
 					}
 				})
 				.catch(error => {
@@ -574,11 +752,11 @@ export class SkillsController implements FormController {
 				})
 
 			await this.csrsService
-				.getQuizByProfession(profession.id, req.user)
+				.getQuizByProfession(organisationalID,profession.id, req.user)
 				.then( response => {
 					req.session!.save(() => {
 						res.render('page/skills/edit-quiz-description', {
-							quiz: response.data
+							quiz: response
 						})
 					})
 				})

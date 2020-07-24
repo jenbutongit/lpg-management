@@ -42,11 +42,15 @@ export class JsonRestService {
 	}
 
 	async getWithConfig(path: string, config: any) {
-		return (await this._http.get(path, config))
+		return (await this._http.get(path, config)).data
 	}
 
 	async put(path: string, resource: any) {
 		return (await this._http.put(path, resource, this.getHeaders())).data
+	}
+
+	async putWithConfig(path: string,resource: any, config: any) {
+		return (await this._http.put(path, resource, config))
 	}
 
 	async deleteWithConfig(path: string, config: any) {

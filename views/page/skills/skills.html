@@ -47,61 +47,76 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-m govuk-!-font-size-36">Manage quiz</h1>
             <div>
-                <div class="data-table">
-                    {{ govukTable({
-                    caption: "Data table",
-                    head: [
-                    {
-                        text: "Profession"
-                    },
-                    {
-                        text: "Times completed",
-                        format: "numeric"
-                    },
-                    {
-                        text: "Average score",
-                        format: "numeric"
-                    }
-                    ],
-                    rows: [
-                        [
-                        {
-                            text: quizResults.profession
-                        },
-                        {
-                            text: quizResults.numberOfAttempts,
-                            format: "numeric"
-                        },
-                        {
-                            text: quizResults.averageScore,
-                            format: "numeric"
-                        }
-                        ]
-                    ]
-                    }) }}
+                <table class="govuk-table quiz-questions">
+                    <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">Profession</th>
+                        <th scope="col" class="govuk-table__header">Times completed	</th>
+                        <th scope="col" class="govuk-table__header">Average score</th>
+                    </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                    {% if quizResults[0] %}
+                        {% for quiz in quizResults %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell question-number">
+                                {{quiz.profession}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{quiz.numberOfAttempts}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{quiz.averageScore}}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% elif quizResults.profession %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell question-number">
+                                {{quizResults.profession}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{quizResults.numberOfAttempts}}
+                            </td>
+                            <td class="govuk-table__cell ">
+                                {{quizResults.averageScore}}
+                            </td>
+                        </tr>
+                    {% else %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell question-number">
 
-                </div>
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                            No quizzes have been added yet.
+                        </td>
+                        <td class="govuk-table__cell question-number">
+                        </td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
 
                 <table class="govuk-table quiz-questions">
                     <caption class="govuk-table__caption">Quiz questions</caption>
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header">Number</th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Number</th>
                         <th scope="col" class="govuk-table__header">Question</th>
-                        <th scope="col" class="govuk-table__header govuk-table__cell--numeric"><span class="empty-header">Manage</span></th>
+                        <th scope="col" class="govuk-table__header govuk-table__cell--numeric govuk-!-width-one-quarter"><span class="empty-header">Manage</span></th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     {% if quiz.questions[0] %}
                         {% for question in quiz.questions %}
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell question-number">
+                            <td class="govuk-table__cell question-number govuk-width-one-quarter">
                                 {{loop.index}}
                             </td>
                             <td class="govuk-table__cell ">
                                 {{question.value}}
                             </td>
-                            <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <td class="govuk-table__cell govuk-table__cell--numeric govuk-width-one-quarter">
                                 <a href="/content-management/skills/{{question.id}}/edit-question">Manage</a>
                             </td>
                         </tr>

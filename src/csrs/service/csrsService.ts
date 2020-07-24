@@ -43,8 +43,8 @@ export class CsrsService {
 		)
 	}
 
-	async deleteQuizByProfession(id: number, user: any): Promise<void> {
-		await this.restService.deleteWithConfig(`/api/quiz/delete?professionId=${id}`, this.getAuthorizationHeader(user))
+	async deleteQuizByProfession(professionID: number, organisationID: number, user: any): Promise<void> {
+		await this.restService.deleteWithConfig(`/api/quiz/delete?professionId=${professionID}&organisationId=${organisationID}`, this.getAuthorizationHeader(user))
 	}
 
 	async deleteQuestionbyID(id: string, user: any): Promise<void> {
@@ -62,16 +62,16 @@ export class CsrsService {
 		return await this.restService.getWithConfig(`/api/questions/${questionID}/preview`, this.getAuthorizationHeader(user))
 	}
 
-	async getResultsByProfession(id: any, user: any) {
-		return await this.restService.getWithConfig(`/api/quiz/results-by-profession?professionId=${id}`, this.getAuthorizationHeader(user))
+	async getResultsByProfession(professionID: any, organisationalID: any, user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/results-by-profession?professionId=${professionID}&organisationId=${organisationalID}`, this.getAuthorizationHeader(user))
 	}
 
-	async publishSkills(profession: any, user: any) {
-		return await this.restService.put(`/api/quiz/publish`, {profession: profession}, )
+	async publishSkills(data: any, user: any) {
+		return await this.restService.putWithConfig(`/api/quiz/publish`, data, this.getAuthorizationHeader(user) )
 	}
 
-	async getQuizByProfession(id: any, user: any) {
-		return await this.restService.getWithConfig(`/api/quiz/${id}`, this.getAuthorizationHeader(user))
+	async getQuizByProfession(organisationalID: any, professionID: any, user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/${organisationalID}/${professionID}`, this.getAuthorizationHeader(user))
 	}
 
 	async getAllQuizResults(user: any) {
@@ -183,4 +183,24 @@ export class CsrsService {
 
 		return mapping
 	}
+
+	async getReportForSuperAdmin(startDate: any, endDate: any, professionID: any, user:any) {
+		let reportUrl = `/report/skills/report-for-super-admin?from=${startDate}&to=${endDate}&professionId=${professionID}`
+
+		return await this.restService.getWithConfig(reportUrl, this.getAuthorizationHeader(user))
+	}
+
+	async getReportForOrgAdmin(startDate: any, endDate: any, organisationID: any, professionID: any, user: any) {
+		let reportUrl = `/report/skills/report-for-department-admin?from=${startDate}&to=${endDate}&organisationId=${organisationID}&professionId=${professionID}`
+
+		return await this.restService.getWithConfig(reportUrl, this.getAuthorizationHeader(user))
+	}
+
+	async getReportForProfAdmin(startDate: any, endDate: any, professionID: any, user: any) {
+
+		let reportUrl = `/report/skills/report-for-profession-admin?from=${startDate}&to=${endDate}&professionId=${professionID}`
+
+		return await this.restService.getWithConfig(reportUrl, this.getAuthorizationHeader(user))
+	}
+
 }

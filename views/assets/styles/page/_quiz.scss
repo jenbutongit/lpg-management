@@ -23,6 +23,11 @@
         }
       }
     }
+
+    #removeImageButton {
+      border: 2px solid transparent;
+      margin-right: 25px;
+    }
   }
 }
 
@@ -52,66 +57,68 @@
   }
 }
 
-.quiz .govuk-grid-column-one-third .right-menu.department-admin .menu-container {
-  margin-top: -20px;
+.quiz {
+  .govuk-grid-column-one-third .right-menu.department-admin .menu-container {
+    margin-top: -20px;
+  }
 }
 
 
-.supportingImageHolder {
-  display: grid;
-  grid-template-rows: auto min-content auto;
-}
+  .supportingImageHolder {
+    display: grid;
+    grid-template-rows: auto min-content auto;
+  }
 
-.supportImageText {
-  font-style: italic;
-  padding: 2px 2px 0px 2px;
-  text-align: center;
-  grid-row: 3;
-}
+  .supportImageText {
+    font-style: italic;
+    padding: 2px 2px 0px 2px;
+    text-align: center;
+    grid-row: 3;
+  }
 
-img.supportingImage {
-  width: 100%;
-  height: auto;
-  align-self: center;
-  background-color: green;
-  grid-row: 2;
-  //margin: 0 auto;
-}
+  img.supportingImage {
+    width: 100%;
+    height: auto;
+    align-self: center;
+    background-color: green;
+    grid-row: 2;
+    //margin: 0 auto;
+  }
 
-.screen-reader-text {
-  border: 0;
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  word-wrap: normal!important;
-}
+  .screen-reader-text {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    word-wrap: normal!important;
+  }
 
-p.alternativeText {
-  display: none;
-}
+  p.alternativeText {
+    display: none;
+  }
 
-.skipQuestion {
-  text-decoration: underline;
-  color: #0066CC;
-  cursor: pointer;
-}
+  .skipQuestion {
+    text-decoration: underline;
+    color: #0066CC;
+    cursor: pointer;
+  }
 
-th.tableHeading {
-  font-weight: bold;
-}
+  th.tableHeading {
+    font-weight: bold;
+  }
 
 
-.skills-question .testingTest {
-  color: red;
-}
+  .skills-question .testingTest {
+    color: red;
+  }
 
-.quiz-question {
-  .govuk-grid-column-two-thirds {
+  .quiz-question {
+    .govuk-grid-column-two-thirds {
       h1 {
         color: #6f777b;
         font-weight: normal;
@@ -136,15 +143,25 @@ th.tableHeading {
       .button-container {
         padding-top: 0px;
       }
-  }
-
-  .govuk-grid-column-one-third {
-    img {
-      margin-top: 50%;
-      width: 150%;
     }
-  }
 
+    .govuk-grid-column-one-third {
+      img {
+        margin-top: 50%;
+        width: 150%;
+      }
+    }
 }
+
+.reports-container  {
+  .list .govuk-form-group.profession-selecter {
+    margin-top: 20px;
+  }
+  .list .course.list-details.dates {
+    display: inline-block;
+  }
+}
+
+
 
 
