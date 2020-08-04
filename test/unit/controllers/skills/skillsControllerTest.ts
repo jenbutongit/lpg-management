@@ -240,7 +240,7 @@ describe('Skills Controller Tests', function() {
 			csrsService.getCivilServant = sinon.stub().returns(Promise.resolve(mockCivilServant))
 			csrsService.getQuizByProfession = sinon.stub().returns(Promise.resolve(mockQuiz))
 
-			await skillsController.getEditQuitDescription()(req, res, next)
+			await skillsController.getEditQuizDescription()(req, res, next)
 			expect(res.render).to.have.been.calledOnceWith('page/skills/edit-quiz-description')
 		})
 	})
