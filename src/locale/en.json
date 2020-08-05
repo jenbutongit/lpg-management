@@ -1,4 +1,32 @@
 {
+	"agencyToken": {
+		"title": {
+			"addAgencyToken": "Add token",
+			"editAgencyToken": "Edit token",
+			"deleteAgencyToken": "Delete token"
+		},
+		"text": {
+			"tokenNumber": "Token number",
+			"numberOfSpaces": "Number of spaces",
+			"domains": "Domains"
+		},
+		"validation": {
+			"capacity": {
+				"invalid": "Number of spaces is required",
+				"lessThanCurrentUsage": "Number of spaces cannot be less than the number of spaces used"
+			},
+			"domains": {
+				"alreadyExists": "Domain already listed",
+				"empty": "You must enter at least one domain",
+				"invalidFormat": "Enter domain in the correct format, for example: 'example.gov.uk'",
+				"invalid": "Invalid domains",
+				"hint":"For example: 'example.gov.uk'"
+			},
+			"tokenNumber": {
+				"invalidFormat": "Invalid token number format – please re-generate token number"
+			}
+		}
+	},
 	"audience": {
 		"pageTitle": {
 			"addName": "Add audience name",

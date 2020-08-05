@@ -1,5 +1,6 @@
 /* tslint:disable:no-var-requires */
 import * as config from './config'
+
 const appInsights = require('applicationinsights')
 appInsights
 	.setup(config.INSTRUMENTATION_KEY)
@@ -144,6 +145,7 @@ app.use(ctx.organisationController.router)
 app.use(ctx.searchController.router)
 app.use(ctx.reportingController.router)
 app.use(ctx.skillsController.router)
+app.use(ctx.agencyTokenController.router)
 
 app.get('/', function(req: any, res: any) {
 	res.redirect('/content-management')

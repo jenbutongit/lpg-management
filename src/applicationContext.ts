@@ -6,6 +6,7 @@ import {IdentityService} from './identity/identityService'
 import {Auth} from './identity/auth'
 import * as passport from 'passport'
 import {AuthConfig} from './identity/authConfig'
+import {IdentityConfig} from './identity/identityConfig'
 
 import {LearningCatalogueConfig} from './learning-catalogue/learningCatalogueConfig'
 import {LearningCatalogue} from './learning-catalogue'
@@ -73,12 +74,20 @@ import {AudienceService} from './lib/audienceService'
 import {QuestionFactory} from './controllers/skills/questionFactory'
 import {QuizFactory} from './controllers/skills/quizFactory'
 import {Question} from "./controllers/skills/question"
+import {AgencyTokenHttpService} from './csrs/agencyTokenHttpService'
+import {AgencyToken} from './csrs/model/agencyToken'
+import {AgencyTokenFactory} from './csrs/model/agencyTokenFactory'
+import {AgencyTokenService} from './lib/agencyTokenService'
+import {AgencyTokenController} from './controllers/agencyTokenController'
+import {AgencyTokenCapacityUsedHttpService} from './identity/agencyTokenCapacityUsedHttpService'
+import {AgencyTokenCapacityUsedFactory} from './identity/model/AgencyTokenCapacityUsedFactory'
 
 log4js.configure(config.LOGGING)
 
 export class ApplicationContext {
 	identityService: IdentityService
 	auth: Auth
+	identityConfig: IdentityConfig
 	axiosInstance: AxiosInstance
 	cacheService: CacheService
 	homeController: HomeController
@@ -132,6 +141,8 @@ export class ApplicationContext {
 	bookingValidator: Validator<Booking>
 	organisationController: OrganisationController
 	csrs: Csrs
+	agencyTokenHttpService: AgencyTokenHttpService
+	agencyTokenCapacityUsedHttpService: AgencyTokenCapacityUsedHttpService
 	organisationalUnitFactory: OrganisationalUnitFactory
 	organisationalUnitValidator: Validator<OrganisationalUnit>
 	searchController: SearchController
@@ -141,6 +152,11 @@ export class ApplicationContext {
 	reportService: ReportService
 	skillsController: SkillsController
 	audienceService: AudienceService
+	agencyTokenFactory: AgencyTokenFactory
+	agencyTokenValidator: Validator<AgencyToken>
+	agencyTokenService: AgencyTokenService
+	agencyTokenController: AgencyTokenController
+	agencyTokenCapacityUsedFactory: AgencyTokenCapacityUsedFactory
 	questionFactory: QuestionFactory
 	quizFactory: QuizFactory
 	questionValidator: Validator<Question>
@@ -170,6 +186,8 @@ export class ApplicationContext {
 			passport,
 			this.identityService
 		)
+
+		this.identityConfig = new IdentityConfig(config.AUTHENTICATION.authenticationServiceUrl)
 
 		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url)
 
@@ -275,6 +293,8 @@ export class ApplicationContext {
 
 		this.audienceValidator = new Validator<Audience>(this.audienceFactory)
 		this.csrs = new Csrs(this.csrsConfig, this.auth)
+		this.agencyTokenHttpService = new AgencyTokenHttpService(this.csrsConfig, this.auth)
+		this.agencyTokenCapacityUsedHttpService = new AgencyTokenCapacityUsedHttpService(this.identityConfig, this.auth)
 
 		this.audienceService = new AudienceService(this.csrsService)
 		this.audienceController = new AudienceController(
@@ -288,9 +308,23 @@ export class ApplicationContext {
 		)
 		this.organisationalUnitFactory = new OrganisationalUnitFactory()
 		this.organisationalUnitValidator = new Validator<OrganisationalUnit>(this.organisationalUnitFactory)
-		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory)
+		this.organisationalUnitService = new OrganisationalUnitService(this.csrs, this.organisationalUnitFactory, this.agencyTokenCapacityUsedHttpService)
 
 		this.organisationController = new OrganisationController(this.csrs, this.organisationalUnitFactory, this.organisationalUnitValidator, this.organisationalUnitService)
+
+		this.agencyTokenFactory = new AgencyTokenFactory()
+		this.agencyTokenValidator = new Validator<AgencyToken>(this.agencyTokenFactory)
+		this.agencyTokenService = new AgencyTokenService()
+		this.agencyTokenController = new AgencyTokenController(
+			this.agencyTokenValidator,
+			this.agencyTokenService,
+			this.organisationalUnitService,
+			this.agencyTokenFactory,
+			this.csrs
+		)
+
+		this.agencyTokenCapacityUsedFactory = new AgencyTokenCapacityUsedFactory()
+
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)
@@ -304,6 +338,7 @@ export class ApplicationContext {
 			res.locals.originalUrl = req.originalUrl
 			res.locals.lpgUiUrl = this.lpgUiUrl
 			res.locals.sessionFlash = req.session!.sessionFlash
+
 			delete req.session!.sessionFlash
 
 			next()
