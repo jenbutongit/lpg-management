@@ -43,8 +43,8 @@ export class CsrsService {
 		)
 	}
 
-	async deleteQuizByProfession(professionID: number, organisationID: number, user: any): Promise<void> {
-		await this.restService.deleteWithConfig(`/api/quiz/delete?professionId=${professionID}&organisationId=${organisationID}`, this.getAuthorizationHeader(user))
+	async deleteQuizByProfession(professionID: number, user: any): Promise<void> {
+		await this.restService.deleteWithConfig(`/api/quiz/delete?professionId=${professionID}`, this.getAuthorizationHeader(user))
 	}
 
 	async deleteQuestionbyID(id: string, user: any): Promise<void> {
@@ -62,16 +62,16 @@ export class CsrsService {
 		return await this.restService.getWithConfig(`/api/questions/${questionID}/preview`, this.getAuthorizationHeader(user))
 	}
 
-	async getResultsByProfession(professionID: any, organisationalID: any, user: any) {
-		return await this.restService.getWithConfig(`/api/quiz/results-by-profession?professionId=${professionID}&organisationId=${organisationalID}`, this.getAuthorizationHeader(user))
+	async getResultsByProfession(professionID: any, user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/results-by-profession?professionId=${professionID}`, this.getAuthorizationHeader(user))
 	}
 
 	async publishSkills(data: any, user: any) {
 		return await this.restService.putWithConfig(`/api/quiz/publish`, data, this.getAuthorizationHeader(user) )
 	}
 
-	async getQuizByProfession(organisationalID: any, professionID: any, user: any) {
-		return await this.restService.getWithConfig(`/api/quiz/${organisationalID}/${professionID}`, this.getAuthorizationHeader(user))
+	async getQuizByProfession(professionID: any, user: any) {
+		return await this.restService.getWithConfig(`/api/quiz/${professionID}`, this.getAuthorizationHeader(user))
 	}
 
 	async getAllQuizResults(user: any) {
