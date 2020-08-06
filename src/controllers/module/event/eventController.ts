@@ -1,3 +1,5 @@
+import _ = require('lodash')
+
 import {LearningCatalogue} from '../../../learning-catalogue/index'
 import {Validator} from '../../../learning-catalogue/validator/validator'
 import {NextFunction, Request, Response, Router} from 'express'
@@ -191,6 +193,13 @@ export class EventController implements FormController {
 
 	public dateRangeOverview() {
 		return async (request: Request, response: Response) => {
+			response.locals.event.dateRanges.sort(function compare(a: DateRange, b: DateRange) {
+				const dateA = moment(_.get(a, 'date', '') + ' ' + _.get(a, 'startTime', ''))
+
+				const dateB = moment(_.get(b, 'date', '') + ' ' + _.get(b, 'startTime', ''))
+				// @ts-ignore
+				return dateA - dateB
+			})
 			response.render('page/course/module/events/event-dateRange-edit')
 		}
 	}

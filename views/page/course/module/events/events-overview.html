@@ -119,7 +119,7 @@
                 <div class="add-invitee">
                     <h3 class="govuk-heading-m">Invite learners</h3>
                     <form action="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/invite" method="post" class="attendee-form">
-                        <p class="govuk-body no-margin"><strong>Email address of invitee</strong></p>
+                        <label for="learnerEmail" class="govuk-body no-margin"><strong>Email address of invitee</strong></label>
                         <div class="input-with-button invitee">
                             {% if errors.fields %}
                                 {{ govukInput({
@@ -150,7 +150,7 @@
               <h3 class="govuk-heading-m">Event attendees</h3>
               {% if bookings.length > 0 %}
                 <ul class="attendees headers">
-                  <li class="list-headers"><p class="govuk-body header title"><strong>Email Address</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><span class="button-header"></span></li>
+                  <li class="list-headers"><p class="govuk-body header title"><strong>Email Address</strong></p><p class="govuk-body header payment"><strong>Payment</strong></p><p class="govuk-body header title"><strong>Booking Reference</strong></p><span class="button-header"></span></li>
                 </ul>
                 <ul class="attendees list">
                     {% for booking in bookings %}
@@ -159,7 +159,7 @@
                         {% elif booking.status === "Confirmed" %}
                             {% set payment = i18n.attendee.status.Confirmed %}
                         {% endif %}
-                        <li class="list-details"><p class="govuk-body title">{{ booking.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
+                        <li class="list-details"><p class="govuk-body title">{{ booking.learnerEmail}}</p><p class="govuk-body payment">{{ payment }}</p><p class="govuk-body payment">{{ booking.bookingReference }}</p><p class="buttons govuk-body"><a class="govuk-link" href="/content-management/courses/{{course.id}}/modules/{{module.id}}/events/{{event.id}}/attendee/{{booking.id}}">View</a></p></li>
                     {% endfor %}
                 </ul>
               {% else %}

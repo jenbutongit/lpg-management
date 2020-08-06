@@ -60,6 +60,11 @@ describe('Course tests', () => {
 		expect(course.modules).to.equal(modules)
 	})
 
+	it('should populate duration values extracted from module duration', () => {
+		course.duration = 115200
+		expect(course.getDuration()).to.equal('4 days ')
+	})
+
 	describe('#getCost', () => {
 		let module1: VideoModule
 		let module2: LinkModule
@@ -172,18 +177,6 @@ describe('Course tests', () => {
 		course.modules = [module1]
 
 		expect(course.getNextAvailableDate()).to.be.undefined
-	})
-
-	it('should be able to get duration of course', () => {
-		const module1 = new Module()
-		const module2 = new Module()
-
-		module1.duration = 3600
-		module2.duration = 7320
-
-		course.modules = [module1, module2]
-
-		expect(course.getDuration()).to.be.equal('3 hours 2 minutes')
 	})
 
 	it('should be able to get grades', () => {

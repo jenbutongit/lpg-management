@@ -23,6 +23,7 @@ describe('ModuleFactory tests', () => {
 			title: 'module title',
 			description: 'module description',
 			duration: 3600,
+			formattedDuration: '1 hour ',
 			cost: 100,
 		}
 	})
@@ -58,20 +59,22 @@ describe('ModuleFactory tests', () => {
 	it('should create FaceToFaceModule', async () => {
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
-		data.events = [
-			{
-				id: 'XEbjXzmVQwSQ_7qIvr7Kew',
-				venue: {
-					location: 'London',
-					address: 'SE1',
-					capacity: 99,
-					minCapacity: 10,
-					availability: 99,
+		data.duration = 28800
+		;(data.formattedDuration = '1 day '),
+			(data.events = [
+				{
+					id: 'XEbjXzmVQwSQ_7qIvr7Kew',
+					venue: {
+						location: 'London',
+						address: 'SE1',
+						capacity: 99,
+						minCapacity: 10,
+						availability: 99,
+					},
+					dateRanges: [{date: '2019-01-01', startTime: '09:00:00', endTime: '17:00:00'}],
+					status: Event.Status.ACTIVE,
 				},
-				dateRanges: [{date: '2019-01-01', startTime: '09:00:00', endTime: '17:00:00'}],
-				status: Event.Status.ACTIVE,
-			},
-		]
+			])
 
 		const module = await moduleFactory.create(data)
 
@@ -84,7 +87,9 @@ describe('ModuleFactory tests', () => {
 		expect(module.events[0].dateRanges[0].endTime).to.be.equal('17:00:00')
 	})
 
-	it('should set events to empt lists of missing', async () => {
+	it('should set events to empty lists of missing', async () => {
+		data.duration = 0
+		data.formattedDuration = '0 minutes'
 		data.type = 'face-to-face'
 		data.productCode = 'product-code'
 
