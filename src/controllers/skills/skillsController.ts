@@ -474,6 +474,7 @@ export class SkillsController implements FormController {
 					req.session!.save(() => {
 						res.render('page/skills/question', {
 							question: question,
+							answerId: response.answer.id,
 							keysAnswers: keys,
 							imageName: imageName,
 							courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media/skills/image'
