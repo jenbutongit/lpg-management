@@ -388,7 +388,7 @@ export class SkillsController implements FormController {
 			let quizResults: any = null
 
 			if(url == '/content-management/skills/add-new-question/success') {
-				message = 'Question successfuly added'
+				message = 'Question successfully added'
 			} else if (url == '/content-management/skills/update-question/success') {
 				message = 'Your changes have been saved'
 			} else if (url == '/content-management/skills/publish-quiz/success') {

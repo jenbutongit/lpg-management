@@ -29,8 +29,8 @@
                         {% for answer in answers %}
                             {% if answer and answer !== "" %}
                                 <div class="govuk-radios__item">
-                                    <input class="govuk-radios__input" id="where-do-you-live" name="where-do-you-live" type="radio" value="england">
-                                    <label class="govuk-label govuk-radios__label" for="where-do-you-live">
+                                    <input class="govuk-radios__input" id="{{answer}}" name="answer" type="radio" value="{{answer}}">
+                                    <label class="govuk-label govuk-radios__label" for="{{answer}}">
                                         {{keys[index]}})&nbsp;{{answer}}
                                     </label>
                                 </div>
@@ -44,7 +44,7 @@
             </div>
         {% else %}
         <div class="govuk-form-group">
-            <fieldset class="govuk-fieldset" aria-describedby="waste-hint">
+            <fieldset class="govuk-fieldset">
                 <h3>
                     Select all correct answers
                 </h3>
@@ -53,8 +53,8 @@
                     {% for answer in answers %}
                         {% if answer and answer !== "" %}
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="waste" name="waste" type="checkbox" value="carcasses">
-                                <label class="govuk-label govuk-checkboxes__label" for="waste">
+                                <input class="govuk-checkboxes__input" id="{{answer}}" name="{{answer}}" type="checkbox" value="{{answer}}">
+                                <label class="govuk-label govuk-checkboxes__label" for="{{answer}}">
                                     {{keys[index]}}) {{answer}}
                                 </label>
                             </div>
@@ -76,7 +76,7 @@
         </div>
     </div>
     <div class="govuk-grid-column-one-third">
-        <img src="{{question.imgUrl}}">
+        <img alt="{{question.alternativeText}}" src="{{question.imgUrl}}">
     </div>
 </div>
 {% endblock %}
