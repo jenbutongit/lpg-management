@@ -1,11 +1,35 @@
 window.onload = function () {
     if (document.getElementById("label-file-upload").innerText == "Choose file" ) {
-        document.getElementById("alternativeTextHeader").style.display = 'none';
-        document.getElementById("alternativeText").style.display = 'none';
+        document.getElementById("alternativeTextHeader").style.display = 'none'
+        document.getElementById("alternativeText").style.display = 'none'
     }
 
     if(document.getElementById("removeImageButton") && document.getElementById("label-file-upload").innerText == "Choose file") {
         document.getElementById("removeImageButton").style.display = "none"
+    }
+
+    if (document.getElementById("removeImageButton")) {
+        document.getElementById("uploadImageButton").style.display = "none"
+        document.getElementById("alternativeTextHeader").style.marginTop = "50px"
+        document.getElementById("removeImageButton").style.margin = "0px"
+        document.getElementById("removeImageButton").addEventListener("click", removeImageChanges)
+
+    }
+
+    function removeImageChanges() {
+        document.getElementById("file-upload").disabled = true;
+        document.getElementById("label-for-file-upload").style.backgroundColor = "#dddddd";
+        document.getElementById("removeImageButton").style.display = "none"
+        document.getElementById("label-file-upload").innerText = "Choose file"
+        document.getElementById("imageRemoved").value = "True"
+        document.getElementById("alternativeTextHeader").style.display = 'none'
+        document.getElementById("alternativeText").style.display = 'none'
+        document.getElementById("progress").style.display = 'none'
+        document.getElementById("file-size").style.display = 'none'
+        document.getElementById("mediaId").value = null
+        document.getElementById('uploadImageButton').style.display = 'none'
+
+
     }
 
 
@@ -39,13 +63,14 @@ window.onload = function () {
                 }
 
                 if(loaded == 100){
-                    document.getElementById("progress").style.color = "black";
+                    document.getElementById("progress").style.color = "black"
                     document.getElementById("progress").innerText = "File processing (this may take a while)..."
                 }
 
             }
 
             xhttp.onreadystatechange = function () {
+
                 if (this.readyState == this.HEADERS_RECEIVED) {
                     const mediaLocation = xhttp.getResponseHeader("Location")
                     const mediaId = mediaLocation.substr(mediaLocation.lastIndexOf("/") + 1)
@@ -61,15 +86,19 @@ window.onload = function () {
 
                     document.getElementById("progress").innerText = "File uploaded"
 
-                    document.getElementById("alternativeText").style.display = 'block';
-                    document.getElementById("alternativeTextHeader").style.display = 'block';
+                    document.getElementById("alternativeText").style.display = 'block'
+                    document.getElementById("alternativeTextHeader").style.display = 'block'
+                    document.getElementById("removeImageButton").style.display = "block"
+
                 }
 
 
                 if ( this.readyState == 4 &&
                     ( this.status == 500 || this.status == 400 )) {
                     document.getElementById("progress").style.color = "red";
-                    document.getElementById("progress").innerText = "Image upload failed. Please upload an image which is not greater than 5MB in size and not exceeding 960p width X 640p height."
+                    document.getElementById("progress").innerText = "Image upload failed. \n The uploaded image must be of types: png, jpg or svg.  \n Less than 5 MB in size. \n Not exceed 960p width X 640p height."
+                    document.getElementById("submitButton").disabled = false
+                    document.getElementById("removeImageButton").style.display = 'none'
                 }
 
             }
@@ -94,13 +123,7 @@ document.getElementById("file-upload").onclick = function unHideUploadButton() {
 
 }
 
-document.getElementById("removeImageButton").onclick = function HideRemoveButton() {
-    document.getElementById("removeImageButton").style.display = "none"
-    document.getElementById("label-file-upload").innerText = "Choose file"
-    document.getElementById("imageRemoved").value = "True"
-    document.getElementById("alternativeTextHeader").style.display = 'none';
-    document.getElementById("alternativeText").style.display = 'none';
-}
+
 
 
 

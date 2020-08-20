@@ -1,39 +1,49 @@
 import {Answer} from './answer'
-import {IsNotEmpty} from "class-validator"
+import {MaxLength, MinLength} from 'class-validator'
 
 export class Question {
 
 	id: number
 
-	@IsNotEmpty({
+
+	@MaxLength(500 ,{
 		groups: ['all', 'value'],
-		message: 'skills.validation.question.empty',
+		message: 'skills.validation.question.max',
+	})
+	@MinLength(10 ,{
+		groups: ['all', 'value'],
+		message: 'skills.validation.question.min',
 	})
 	value: string
 
 	answer: Answer
 
-	@IsNotEmpty({
-		groups: ['all', 'why'],
-		message: 'skills.validation.why.empty',
+	@MaxLength(500 ,{
+	groups: ['all', 'why'],
+	message: 'skills.validation.why.max',
 	})
 	why: string
 
-	@IsNotEmpty({
+	@MaxLength(500 ,{
 		groups: ['all', 'theme'],
-		message: 'skills.validation.theme.empty',
+		message: 'skills.validation.theme.max',
+	})
+	@MinLength(3 ,{
+		groups: ['all', 'value'],
+		message: 'skills.validation.theme.min',
 	})
 	theme: string
 
-	@IsNotEmpty({
+	@MaxLength(500 ,{
 		groups: ['all', 'learningName'],
-		message: 'skills.validation.learningName.empty',
+		message: 'skills.validation.learningName.max',
 	})
 	learningName: string
 
-	@IsNotEmpty({
+
+	@MaxLength(500 ,{
 		groups: ['all', 'learningReference'],
-		message: 'skills.validation.learningReference.empty',
+		message: 'skills.validation.learningReference.max',
 	})
 	learningReference: string
 

@@ -142,7 +142,7 @@
 
                 {{ govukInput({
                 label: {
-                text: "learning name"
+                text: "Learning name"
                 },
                 id: "learningName",
                 name: "learningName",
@@ -151,7 +151,7 @@
 
                 {{ govukInput({
                 label: {
-                text: "learning reference"
+                text: "Learning reference"
                 },
                 id: "learningReference",
                 name: "learningReference",
@@ -162,9 +162,9 @@
                     <label class="govuk-label">Attach supporting image (optional)</label>
                     <input class="govuk-file-upload custom-uploader" id="file-upload" name="imageName" type="file" aria-describedby="file-upload" accept="image/*">
                     {% if not imageName %}
-                        <label class="btn" for="file-upload"><span id="label-file-upload">Choose file</span></label>
+                        <label id="label-for-file-upload" class="btn" for="file-upload"><span id="label-file-upload">Choose file</span></label>
                     {% else %}
-                        <label class="btn" for="file-upload"><span id="label-file-upload">{{imageName}}</span></label>
+                        <label id="label-for-file-upload" class="btn" for="file-upload"><span id="label-file-upload">{{imageName}}</span></label>
                     {% endif %}
                 </div>
 
@@ -181,7 +181,7 @@
 
                 {{ govukButton({
                 attributes: {id: "uploadImageButton"},
-                text: "Upload File",
+                text: "Upload file",
                 type: "button",
                 classes: "button-blue left-aligned"
                 }) }}
@@ -198,6 +198,7 @@
                 <input id="imageRemoved" name="imageRemoved" type="hidden" value="False">
 
                 <br>
+
 
                 {{ govukInput({
                 label: {
@@ -222,7 +223,7 @@
             {% else %}
                 <div class="button-container">
                     {{ govukButton({
-                    text: "Add Question",
+                    text: "Add question",
                     type: "submit",
                     attributes: {id: "submitButton"}
                     }) }}
