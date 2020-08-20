@@ -24,7 +24,7 @@ export class Question {
 	})
 	why: string
 
-	@MaxLength(500 ,{
+	@MaxLength(200 ,{
 		groups: ['all', 'theme'],
 		message: 'skills.validation.theme.max',
 	})
