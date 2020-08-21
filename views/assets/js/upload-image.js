@@ -96,7 +96,7 @@ window.onload = function () {
                 if ( this.readyState == 4 &&
                     ( this.status == 500 || this.status == 400 )) {
                     document.getElementById("progress").style.color = "red";
-                    document.getElementById("progress").innerText = "Image upload failed. \n The uploaded image must be of types: png, jpg or svg.  \n Less than 5 MB in size. \n Not exceed 960p width X 640p height."
+                    document.getElementById("progress").innerText = "Your image has failed to upload. Uploaded images must: \n - use file extension .png, .jpg or .svg  \n - use file extension .png, .jpg or .svg \n - not exceed 960px width x 640px height"
                     document.getElementById("submitButton").disabled = false
                     document.getElementById("removeImageButton").style.display = 'none'
                 }
