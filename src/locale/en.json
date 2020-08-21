@@ -224,26 +224,26 @@
 		"title": "Add a new skills quiz",
 		"validation": {
 			"question": {
-				"empty": "Question is required",
-				"max": "Question must be less than 500 characters",
-				"min": "Question must be more than 10 characters"
+				"max": "A Question must be less than 500 characters.",
+				"min": "A question must be more than 10 characters."
 			},
 			"why": {
-				"max": "Text given after answer must be less than 500 characters"
+				"max": "Text given after answer must be less than 500 characters."
 			},
 			"theme": {
-				"empty": "Theme is required",
-				"max": "Theme must be less than 200 characters",
-				"min": "Theme must be more than 3 characters"
+				"max": "Theme must be less than 200 characters.",
+				"min": "Theme is a required field. A theme must be at least 3 characters."
 			},
 			"answers": {
-				"empty": "You must provide at least two answers"
+				"empty": "You must provide at least 2 answers.",
+				"wrongCheck": "A correct answer cannot be blank.",
+				"wrongCheckSolution": "Add a value to this answer or deselect it as correct."
 			},
 			"correctAnswers": {
-				"empty": "You must provide at least one correct answer"
+				"empty": "You must provide at least one correct answer."
 			},
 			"alternativeText": {
-				"empty": "Alternative Text is required"
+				"empty": "Alternative text is required for uploaded images."
 			},
 			"learningName": {
 				"max": "Learning name must be less than 500 characters"
