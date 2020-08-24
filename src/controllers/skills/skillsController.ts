@@ -195,12 +195,45 @@ export class SkillsController implements FormController {
 		}
 	}
 
+	checkChecks(answer: any) {
+		const possibleAnswers = new Array("A", "B", "C", "D", "E")
+
+		let answerIndecies = new Array();
+		let correctAnswersIndecies = new Array();
+
+		if(Array.isArray(answer.correctAnswers)) {
+			// @ts-ignore
+			answer.correctAnswers.forEach(function(entry) {
+				// @ts-ignore
+				if(possibleAnswers.includes(entry)){
+					// @ts-ignore
+					correctAnswersIndecies.push(possibleAnswers.indexOf(entry))
+				}
+			});
+		} else {
+			if(possibleAnswers.includes(answer.correctAnswers)){
+				// @ts-ignore
+				correctAnswersIndecies.push(possibleAnswers.indexOf(answer.correctAnswers))
+			}
+		}
+
+
+		answer.answers.forEach(function(entry: string) {
+			if(entry != "" && entry != " ") {
+				answerIndecies.push(answer.answers.indexOf(entry))
+			}
+		});
+
+		// @ts-ignore
+		return answerIndecies.filter(e => correctAnswersIndecies.indexOf(e) !== -1).length === correctAnswersIndecies.length
+	}
 
 	AddQuestion() {
 		return async (req: Request, res: Response, next: NextFunction) => {
 			let answer = new Answer()
 			answer.answers = req.body.answers
 			answer.correctAnswers = req.body.correctAnswers
+
 
 			let data = {
 				"value" : req.body.value,
@@ -218,7 +251,13 @@ export class SkillsController implements FormController {
 				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
 				let alternativeText: any = { alternativeTextArray }
 				answerErrors.push(alternativeText)
+			} else if (!this.checkChecks(answer)) {
+				let wrongCheckArray = new Array('skills.validation.answers.wrongCheck')
+				let wrongCheckSolutionArray = new Array('skills.validation.answers.wrongCheckSolution')
+				let wrongCheckedAnswer: any = { wrongCheckArray, wrongCheckSolutionArray }
+				answerErrors.push(wrongCheckedAnswer)
 			}
+
 			let newErrors: any = null
 			// @ts-ignore
 			answerErrors.forEach(function(errorAnswer: any) {
@@ -511,6 +550,11 @@ export class SkillsController implements FormController {
 				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
 				let alternativeText: any = { alternativeTextArray }
 				answerErrors.push(alternativeText)
+			} else if (!this.checkChecks(answer)) {
+				let wrongCheckArray = new Array('skills.validation.answers.wrongCheck')
+				let wrongCheckSolutionArray = new Array('skills.validation.answers.wrongCheckSolution')
+				let wrongCheckedAnswer: any = { wrongCheckArray, wrongCheckSolutionArray }
+				answerErrors.push(wrongCheckedAnswer)
 			}
 
 			let newErrors: any = null
@@ -626,7 +670,7 @@ export class SkillsController implements FormController {
 			const body = req.body
 			const startDate = body.startYear + "-" + body.startMonth + "-" + body.startDay
 			const endDate = body.endYear + "-" + body.endMonth + "-" + body.endDay
-			const professionID = body.profession
+			const professionID = body.profession !== undefined ? body.profession : ""
 			const role = req.body.role
 
 			if(role == 'superAdmin') {
@@ -654,14 +698,13 @@ export class SkillsController implements FormController {
 						.getCivilServant()
 						.then(civilServant => {
 							if (civilServant.organisationalUnit.id) {
-								res.locals.organisatonID = civilServant.organisationalUnit.id
+								res.locals.organisatonID = civilServant.organisationalUnit.id !== undefined ? civilServant.organisationalUnit.id : ""
 							}
 
 						})
 						.catch(error => {
 							next(error)
 						})
-
 
 					await this.csrsService
 						.getReportForOrgAdmin(startDate, endDate, res.locals.organisatonID,professionID, req.user)
