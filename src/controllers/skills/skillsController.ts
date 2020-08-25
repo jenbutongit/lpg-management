@@ -253,8 +253,7 @@ export class SkillsController implements FormController {
 				answerErrors.push(alternativeText)
 			} else if (!this.checkChecks(answer)) {
 				let wrongCheckArray = new Array('skills.validation.answers.wrongCheck')
-				let wrongCheckSolutionArray = new Array('skills.validation.answers.wrongCheckSolution')
-				let wrongCheckedAnswer: any = { wrongCheckArray, wrongCheckSolutionArray }
+				let wrongCheckedAnswer: any = { wrongCheckArray }
 				answerErrors.push(wrongCheckedAnswer)
 			}
 
@@ -552,8 +551,7 @@ export class SkillsController implements FormController {
 				answerErrors.push(alternativeText)
 			} else if (!this.checkChecks(answer)) {
 				let wrongCheckArray = new Array('skills.validation.answers.wrongCheck')
-				let wrongCheckSolutionArray = new Array('skills.validation.answers.wrongCheckSolution')
-				let wrongCheckedAnswer: any = { wrongCheckArray, wrongCheckSolutionArray }
+				let wrongCheckedAnswer: any = { wrongCheckArray }
 				answerErrors.push(wrongCheckedAnswer)
 			}
 

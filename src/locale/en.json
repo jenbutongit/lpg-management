@@ -224,7 +224,7 @@
 		"title": "Add a new skills quiz",
 		"validation": {
 			"question": {
-				"max": "A Question must be less than 500 characters.",
+				"max": "A question must be less than 500 characters.",
 				"min": "A question must be more than 10 characters."
 			},
 			"why": {
@@ -236,8 +236,7 @@
 			},
 			"answers": {
 				"empty": "You must provide at least 2 answers.",
-				"wrongCheck": "A correct answer cannot be blank.",
-				"wrongCheckSolution": "Add a value to this answer or deselect it as correct."
+				"wrongCheck": "A correct answer cannot be blank. Add a value to this answer or deselect it as correct."
 			},
 			"correctAnswers": {
 				"empty": "You must provide at least one correct answer."
