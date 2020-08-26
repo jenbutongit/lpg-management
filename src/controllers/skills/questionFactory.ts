@@ -1,11 +1,13 @@
+import * as config from '../../config'
+
 import {Question} from './question'
 import {AnswerFactory} from "./answerFactory"
 
 export class QuestionFactory {
 
 	private _answerFactory: AnswerFactory
-	constructor(answerFactroy = new AnswerFactory()) {
-		this._answerFactory = answerFactroy
+	constructor(answerFactory = new AnswerFactory()) {
+		this._answerFactory = answerFactory
 		this.create = this.create.bind(this)
 	}
 
@@ -45,7 +47,8 @@ export class QuestionFactory {
 		question.learningName = data.learningName
 		question.learningReference = data.learningReference
 		if (data.mediaId) {
-			question.imgUrl = "https://lpgdev.blob.core.windows.net/lpgdevcontent/quiz-images/" + data.mediaId.split("/").pop() + "/" + data.imageName
+			question.imgUrl = config.CONTENT_URL + '/quiz-images/'
+				+ data.mediaId.split("/").pop() + "/" + data.imageName
 		} else if (data.imgUrl) {
 			question.imgUrl = data.imgUrl
 		}
