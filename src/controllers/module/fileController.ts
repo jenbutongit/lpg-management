@@ -106,7 +106,7 @@ export class FileController {
 						.catch(() => {
 							response.render('page/course/module/module-file', {
 								type: type,
-								courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media/skills/image?container=lpgdevcontent',
+								courseCatalogueUrl: config.COURSE_CATALOGUE.url + '/media',
 							})
 						})
 				}
