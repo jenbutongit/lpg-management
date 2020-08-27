@@ -69,8 +69,11 @@ import {DateStartEndCommand} from './controllers/command/dateStartEndCommand'
 import {DateStartEndCommandFactory} from './controllers/command/factory/dateStartEndCommandFactory'
 import {DateStartEnd} from './learning-catalogue/model/dateStartEnd'
 import {DateStartEndFactory} from './learning-catalogue/model/factory/dateStartEndFactory'
-import {SkillsController} from './controllers/skillsController'
+import {SkillsController} from './controllers/skills/skillsController'
 import {AudienceService} from './lib/audienceService'
+import {QuestionFactory} from './controllers/skills/questionFactory'
+import {QuizFactory} from './controllers/skills/quizFactory'
+import {Question} from "./controllers/skills/question"
 import {AgencyTokenHttpService} from './csrs/agencyTokenHttpService'
 import {AgencyToken} from './csrs/model/agencyToken'
 import {AgencyTokenFactory} from './csrs/model/agencyTokenFactory'
@@ -154,6 +157,10 @@ export class ApplicationContext {
 	agencyTokenService: AgencyTokenService
 	agencyTokenController: AgencyTokenController
 	agencyTokenCapacityUsedFactory: AgencyTokenCapacityUsedFactory
+	questionFactory: QuestionFactory
+	quizFactory: QuizFactory
+	questionValidator: Validator<Question>
+
 
 	@EnvValue('LPG_UI_URL')
 	public lpgUiUrl: String
@@ -187,6 +194,10 @@ export class ApplicationContext {
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
 		this.courseFactory = new CourseFactory()
+
+		this.questionFactory = new QuestionFactory()
+
+		this.quizFactory = new QuizFactory()
 
 		this.pagination = new Pagination()
 
@@ -317,7 +328,9 @@ export class ApplicationContext {
 		this.searchController = new SearchController(this.learningCatalogue, this.pagination)
 
 		this.reportingController = new ReportingController(this.reportService, this.dateStartEndCommandFactory, this.dateStartEndCommandValidator, this.dateStartEndValidator)
-		this.skillsController = new SkillsController(this.csrsService)
+		this.questionValidator = new Validator<Question>(this.questionFactory)
+		this.skillsController = new SkillsController(this.csrsService, this.questionFactory, this.quizFactory, this.questionValidator)
+
 	}
 
 	addToResponseLocals() {

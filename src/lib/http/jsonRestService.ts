@@ -27,6 +27,10 @@ export class JsonRestService {
 		return await this._http.post(path, resource, this.getHeaders())
 	}
 
+	async postWithoutFollowingWithConfig(path: string, resource: any, config: any) {
+		return await this._http.post(path, resource, config)
+	}
+
 	async post(path: string, resource: any) {
 		const response: AxiosResponse = await this._http.post(path, resource, this.getHeaders())
 
@@ -37,8 +41,20 @@ export class JsonRestService {
 		return (await this._http.get(path, this.getHeaders())).data
 	}
 
+	async getWithConfig(path: string, config: any) {
+		return (await this._http.get(path, config)).data
+	}
+
 	async put(path: string, resource: any) {
 		return (await this._http.put(path, resource, this.getHeaders())).data
+	}
+
+	async putWithConfig(path: string,resource: any, config: any) {
+		return (await this._http.put(path, resource, config))
+	}
+
+	async deleteWithConfig(path: string, config: any) {
+		return await this._http.delete(path, config)
 	}
 
 	async delete(path: string) {

@@ -48,6 +48,8 @@ window.onload = function () {
                 }
             }
 
+
+
             xhttp.open("POST", document.getElementById("courseCatalogueUrl").value, true)
             xhttp.setRequestHeader("Authorization", 'BEARER ' + document.getElementById("accessToken").value)
             xhttp.send(formData)

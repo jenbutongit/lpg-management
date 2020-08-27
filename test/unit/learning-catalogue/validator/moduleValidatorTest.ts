@@ -58,22 +58,6 @@ describe('ModuleValidator tests', () => {
 			expect(errors.size).to.equal(0)
 		})
 
-		it('should fail validation if duration is not present', async () => {
-			delete params.duration
-			const errors = await validator.check(params, ['duration'])
-
-			expect(errors.size).to.equal(2)
-			expect(errors.fields['duration']).to.eql(['validation.module.duration.empty', 'validation.module.duration.positive'])
-		})
-
-		it('should fail validation if duration is not a positive number', async () => {
-			params.duration = -99
-			const errors = await validator.check(params, ['duration'])
-
-			expect(errors.size).to.equal(1)
-			expect(errors.fields['duration']).to.eql(['validation.module.duration.positive'])
-		})
-
 		it('should pass validation if duration is a positive number', async () => {
 			const errors = await validator.check(params, ['duration'])
 			expect(errors.size).to.equal(0)
@@ -317,6 +301,20 @@ describe('ModuleValidator tests', () => {
 			expect(errors.size).to.equal(1)
 			expect(errors.fields['description']).to.eql(['validation_module_description_empty'])
 		})
+
+		// it('should fail validation if duration is not present', async () => {
+		// 	delete params.duration
+		// 	const errors = await validator.check(params)
+		// 	expect(errors.size).to.equal(2)
+		// 	expect(errors.fields['duration']).to.eql(['validation.module.duration.empty', 'validation.module.duration.positive'])
+		// })
+		//
+		// it('should fail validation if duration is negative', async () => {
+		// 	params.duration = -99
+		// 	const errors = await validator.check(params)
+		// 	expect(errors.size).to.equal(1)
+		// 	expect(errors.fields['duration']).to.eql(['validation.module.duration.positive'])
+		// })
 
 		it('should fail validation if cost is negative', async () => {
 			params.cost = -3.5
