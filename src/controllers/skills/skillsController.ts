@@ -545,7 +545,7 @@ export class SkillsController implements FormController {
 			let errors = await this.validator.check(data)
 
 			const answerErrors = IsAnswersValid(answer)
-			if (req.body.alternativeText == "" && req.body.mediaId != "") {
+			if ( (req.body.alternativeText == "" && req.body.imgUrl != "") || (req.body.alternativeText == "" && 'imgUrl' in question && question.imgUrl != "") ) {
 				let alternativeTextArray = new Array('skills.validation.alternativeText.empty')
 				let alternativeText: any = { alternativeTextArray }
 				answerErrors.push(alternativeText)
