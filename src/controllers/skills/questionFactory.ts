@@ -35,6 +35,12 @@ export class QuestionFactory {
 				'correctAnswers': data.correctAnswers,
 				'answers': data.answers,
 			}
+		} else {
+			answer = {
+				'id': data.answerId,
+				'correctAnswers': null,
+				'answers': data.answers,
+			}
 		}
 
 		if(data.type) {
