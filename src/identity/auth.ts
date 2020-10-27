@@ -10,6 +10,7 @@ const logger = log4js.getLogger('config/passport')
 
 export class Auth {
 	readonly REDIRECT_COOKIE_NAME: string = 'redirectTo'
+	readonly HTTP_UNAUTHORISED: number = 401
 
 	config: AuthConfig
 	passportStatic: PassportStatic
@@ -32,6 +33,7 @@ export class Auth {
 
 		app.use(this.checkAuthenticatedAndAssignCurrentUser())
 		app.use(this.addToResponseLocals())
+		app.use(this.hasAdminRole())
 	}
 
 	initialize(): Handler {
@@ -120,6 +122,20 @@ export class Auth {
 			res.locals.isAuthenticated = req.isAuthenticated()
 			res.locals.identity = req.user
 			next()
+		}
+	}
+
+	hasAdminRole() {
+		return (req: Request, res: Response, next: NextFunction) => {
+			if (req.user && req.user.hasAnyAdminRole()) {
+				return next()
+			} else {
+				if (req.user && req.user.uid) {
+					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
+					+ req.ip + ' from page ' + req.originalUrl)
+				}
+				res.sendStatus(this.HTTP_UNAUTHORISED)
+			}
 		}
 	}
 

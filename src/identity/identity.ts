@@ -34,6 +34,16 @@ export class Identity {
 		return this.roles && this.roles.some(value => roles.indexOf(value) > -1)
 	}
 
+	hasAnyAdminRole() {
+		// i.e. isn't just a LEARNER who navigated to the admin app by modifying the URL
+		return this.hasAnyRole([Identity.ORGANISATION_MANAGER, Identity.CSL_AUTHOR, 
+			Identity.LEARNING_MANAGER, Identity.LEARNING_CREATE, Identity.LEARNING_EDIT, 
+			Identity.LEARNING_DELETE, Identity.ORGANISATION_AUTHOR, Identity.PROFESSION_AUTHOR, 
+			Identity.LEARNING_PUBLISH, Identity.LEARNING_ARCHIVE, Identity.KPMG_SUPPLIER_AUTHOR, 
+			Identity.KORNFERRY_SUPPLIER_AUTHOR, Identity.KNOWLEDGEPOOL_SUPPLIER_AUTHOR, 
+			Identity.LEARNING_PROVIDER_MANAGER, Identity.SKILLS_MANAGER])
+	}
+
 	isOrganisationManager() {
 		return this.hasRole(Identity.ORGANISATION_MANAGER)
 	}
