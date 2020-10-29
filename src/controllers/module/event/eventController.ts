@@ -148,7 +148,7 @@ export class EventController implements FormController {
 					this.logger.error('Rejecting user without event viewing role ' + req.user.uid + ' with IP ' 
 						+ req.ip + ' from page ' + req.originalUrl)
 					}
-				res.sendStatus(401)
+				res.render('page/unauthorised')
 			}
 		}
 	}
