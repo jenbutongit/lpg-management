@@ -46,8 +46,7 @@ export class Identity {
 
 	hasEventViewingRole() {
 		// coarse-grained check for general permission to view events
-		return this.hasAnyRole([Identity.CSL_AUTHOR, Identity.KPMG_SUPPLIER_AUTHOR, 
-			Identity.KORNFERRY_SUPPLIER_AUTHOR])
+		return this.hasAnyRole([Identity.CSL_AUTHOR, Identity.LEARNING_MANAGER]) || this.isSupplierAuthor()
 	}
 
 	isOrganisationManager() {
