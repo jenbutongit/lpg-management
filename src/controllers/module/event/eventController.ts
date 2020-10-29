@@ -104,39 +104,39 @@ export class EventController implements FormController {
 			})
 		)
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/create', this.checkForEventViewRole, asyncHandler(this.getLocation()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/create', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.getLocation()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', this.checkForEventViewRole, asyncHandler(this.editLocation()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/location', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.editLocation()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/', this.checkForEventViewRole, asyncHandler(this.setLocation()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.setLocation()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId', this.checkForEventViewRole, asyncHandler(this.updateLocation()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/location/:eventId', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.updateLocation()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?', this.checkForEventViewRole, asyncHandler(this.getDatePreview()))
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId', this.checkForEventViewRole, asyncHandler(this.getEventOverview()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-preview/:eventId?', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.getDatePreview()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events-overview/:eventId', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.getEventOverview()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', this.checkForEventViewRole, asyncHandler(this.getDateTime()))
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', this.checkForEventViewRole, asyncHandler(this.setDateTime()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.getDateTime()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.setDateTime()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', this.checkForEventViewRole, asyncHandler(this.editDateRange()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.editDateRange()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', this.checkForEventViewRole, asyncHandler(this.dateRangeOverview()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.dateRangeOverview()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', this.checkForEventViewRole, asyncHandler(this.addDateRange()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.addDateRange()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', this.checkForEventViewRole, asyncHandler(this.updateDateRange()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/dateRanges/:dateRangeIndex', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.updateDateRange()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', this.checkForEventViewRole, asyncHandler(this.getAttendeeDetails()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.getAttendeeDetails()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', this.checkForEventViewRole, asyncHandler(this.updateBooking()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/update', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.updateBooking()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.checkForEventViewRole, asyncHandler(this.cancelEvent()))
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', this.checkForEventViewRole, asyncHandler(this.setCancelEvent()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.cancelEvent()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/cancel', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.setCancelEvent()))
 
-		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', this.checkForEventViewRole, asyncHandler(this.getCancelBooking()))
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', this.checkForEventViewRole, asyncHandler(this.cancelBooking()))
+		this.router.get('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.getCancelBooking()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/attendee/:bookingId/cancel', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.cancelBooking()))
 
-		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite', this.checkForEventViewRole, asyncHandler(this.inviteLearner()))
+		this.router.post('/content-management/courses/:courseId/modules/:moduleId/events/:eventId/invite', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.inviteLearner()))
 	}
 
 	public checkForEventViewRole() {
@@ -145,9 +145,9 @@ export class EventController implements FormController {
 				next()
 			} else {
 				if (req.user && req.user.uid) {
-				this.logger.error('Rejecting user without event viewing role ' + req.user.uid + ' with IP ' 
-					+ req.ip + ' from page ' + req.originalUrl)
-				}
+					this.logger.error('Rejecting user without event viewing role ' + req.user.uid + ' with IP ' 
+						+ req.ip + ' from page ' + req.originalUrl)
+					}
 				res.sendStatus(401)
 			}
 		}
