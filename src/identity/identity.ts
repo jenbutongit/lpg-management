@@ -44,6 +44,12 @@ export class Identity {
 			Identity.LEARNING_PROVIDER_MANAGER, Identity.SKILLS_MANAGER])
 	}
 
+	hasEventViewingRole() {
+		// coarse-grained check for general permission to view events
+		return this.hasAnyRole([Identity.CSL_AUTHOR, Identity.KPMG_SUPPLIER_AUTHOR, 
+			Identity.KORNFERRY_SUPPLIER_AUTHOR])
+	}
+
 	isOrganisationManager() {
 		return this.hasRole(Identity.ORGANISATION_MANAGER)
 	}
