@@ -13,8 +13,10 @@ import {DateTime} from '../lib/dateTime'
 import {Validate} from './formValidator'
 import {FormController} from './formController'
 import * as asyncHandler from 'express-async-handler'
+import * as log4js from 'log4js'
 
 export class CourseController implements FormController {
+	logger = log4js.getLogger('controllers/homeController')
 	learningCatalogue: LearningCatalogue
 	validator: Validator<Course>
 	courseFactory: CourseFactory
@@ -53,8 +55,8 @@ export class CourseController implements FormController {
 
 	/* istanbul ignore next */
 	private configureRouterPaths() {
-		this.router.get('/content-management/courses/:courseId/overview', asyncHandler(this.courseOverview()))
-		this.router.get('/content-management/courses/:courseId/preview', this.coursePreview())
+		this.router.get('/content-management/courses/:courseId/overview', asyncHandler(this.checkForEventViewRole()), asyncHandler(this.courseOverview()))
+		this.router.get('/content-management/courses/:courseId/preview', this.checkForEventViewRole(), this.coursePreview())
 
 		this.router.get('/content-management/courses/visibility/:courseId?', this.getCourseVisibility())
 		this.router.post('/content-management/courses/visibility/:courseId?', this.setCourseVisibility())
@@ -71,6 +73,20 @@ export class CourseController implements FormController {
 		this.router.post('/content-management/courses/:courseId/status/publish', this.publishCourse())
 		this.router.post('/content-management/courses/:courseId/status/archive', this.archiveCourse())
 		this.router.get('/content-management/courses/:courseId/sortDateRanges-modules', this.sortModules())
+	}
+
+	public checkForEventViewRole() {
+		return (req: Request, res: Response, next: NextFunction) => {
+			if (req.user && req.user.hasEventViewingRole()) {
+				next()
+			} else {
+				if (req.user && req.user.uid) {
+					this.logger.error('Rejecting user without event viewing role ' + req.user.uid + ' with IP ' 
+						+ req.ip + ' from page ' + req.originalUrl)
+					}
+				res.render('page/unauthorised')
+			}
+		}
 	}
 
 	courseOverview() {
