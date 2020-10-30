@@ -5,6 +5,7 @@ import {IdentityService} from './identityService'
 import * as oauth2 from 'passport-oauth2'
 import {Identity} from './identity'
 import {AuthConfig} from './authConfig'
+import {EnvValue} from 'ts-json-properties'
 
 const logger = log4js.getLogger('config/passport')
 
@@ -16,6 +17,9 @@ export class Auth {
 	passportStatic: PassportStatic
 	identityService: IdentityService
 	currentUser: Identity
+
+	@EnvValue('LPG_UI_URL')
+	public lpgUiUrl: String
 
 	constructor(config: AuthConfig, passportStatic: PassportStatic, identityService: IdentityService) {
 		this.config = config
@@ -134,6 +138,7 @@ export class Auth {
 					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
 					+ req.ip + ' from page ' + req.originalUrl)
 				}
+				res.locals.lpgUiUrl = this.lpgUiUrl
 				res.render('page/unauthorised')
 			}
 		}
