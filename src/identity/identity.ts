@@ -15,6 +15,16 @@ export class Identity {
 	public static readonly KNOWLEDGEPOOL_SUPPLIER_AUTHOR = 'KNOWLEDGEPOOL_SUPPLIER_AUTHOR'
 	public static readonly LEARNING_PROVIDER_MANAGER = 'LEARNING_PROVIDER_MANAGER'
 	public static readonly SKILLS_MANAGER = 'SKILLS_MANAGER'
+	public static readonly CSHR_REPORTER = 'CSHR_REPORTER'
+	public static readonly DOWNLOAD_BOOKING_FEED = 'DOWNLOAD_BOOKING_FEED'
+	public static readonly IDENTITY_DELETE = 'IDENTITY_DELETE'
+	public static readonly IDENTITY_MANAGER = 'IDENTITY_MANAGER'
+	public static readonly KORNFERRY_SUPPLIER_REPORTER = 'KORNFERRY_SUPPLIER_REPORTER'
+	public static readonly KPMG_SUPPLIER_REPORTER = 'KPMG_SUPPLIER_REPORTER'
+	public static readonly MANAGE_CALL_OFF_PO = 'MANAGE_CALL_OFF_PO'
+	public static readonly ORGANISATION_REPORTER = 'ORGANISATION_REPORTER'
+	public static readonly PROFESSION_MANAGER = 'PROFESSION_MANAGER'
+	public static readonly PROFESSION_REPORTER = 'PROFESSION_REPORTER'
 
 	readonly uid: string
 	readonly roles: string[]
@@ -32,6 +42,39 @@ export class Identity {
 
 	hasAnyRole(roles: string[]) {
 		return this.roles && this.roles.some(value => roles.indexOf(value) > -1)
+	}
+
+	hasAnyAdminRole() {
+		// i.e. isn't just a LEARNER who navigated to the admin app by modifying the URL
+		return this.hasAnyRole([Identity.CSHR_REPORTER,
+			Identity.CSL_AUTHOR,
+			Identity.DOWNLOAD_BOOKING_FEED,
+			Identity.IDENTITY_DELETE,
+			Identity.IDENTITY_MANAGER,
+			Identity.KNOWLEDGEPOOL_SUPPLIER_AUTHOR,
+			Identity.KORNFERRY_SUPPLIER_AUTHOR,
+			Identity.KORNFERRY_SUPPLIER_REPORTER,
+			Identity.KPMG_SUPPLIER_AUTHOR,
+			Identity.KPMG_SUPPLIER_REPORTER,
+			Identity.LEARNING_ARCHIVE,
+			Identity.LEARNING_CREATE,
+			Identity.LEARNING_DELETE,
+			Identity.LEARNING_EDIT,
+			Identity.LEARNING_MANAGER,
+			Identity.LEARNING_PUBLISH,
+			Identity.MANAGE_CALL_OFF_PO,
+			Identity.ORGANISATION_AUTHOR,
+			Identity.ORGANISATION_MANAGER,
+			Identity.ORGANISATION_REPORTER,
+			Identity.PROFESSION_AUTHOR,
+			Identity.PROFESSION_MANAGER,
+			Identity.PROFESSION_REPORTER
+		])
+	}
+
+	hasEventViewingRole() {
+		// coarse-grained check for general permission to view events
+		return this.hasAnyRole([Identity.CSL_AUTHOR, Identity.LEARNING_MANAGER]) || this.isSupplierAuthor()
 	}
 
 	isOrganisationManager() {
