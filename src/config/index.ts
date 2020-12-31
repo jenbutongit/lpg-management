@@ -2,9 +2,9 @@ import * as fs from 'fs'
 import * as dotenv from 'dotenv'
 
 export const ENV = process.env.NODE_ENV || 'development'
-
+export const PRODUCTION_ENV = ENV === 'production'
 if (ENV === 'development') {
-	const envFile = '/keybase/team/lpg/dev/dotenv'
+	const envFile = '/volumes/keybase/team/lpg/dev/dotenv'
 	try {
 		if (!fs.statSync(envFile).isFile()) {
 			throw new Error(`File not found: ${envFile}`)
@@ -58,7 +58,21 @@ export const AUTHENTICATION = set({
 	clientId: env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
 	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl: env.AUTHENTICATION_SERVICE_URL || 'http://localhost:8080',
-	callbackUrl: env.CALLBACK_URL || 'http://localhost:3005',
+	callbackUrl: env.CALLBACK_URL || 'http://lpg.local.cshr.digital:3005',
+})
+
+export const SESSION_SECRET =
+	env.SESSION_SECRET ||
+	'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt'
+
+export const REDIS = set({
+	host: env.REDIS_HOST || 'localhost',
+	password: env.REDIS_PASSWORD || '',
+	port: +(env.REDIS_PORT || '6379'),
+})
+
+export const COOKIE = set({
+	maxAge: Number(env.COOKIE_AGE_IN_MILLISECONDS) || 15768000,
 })
 
 export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000

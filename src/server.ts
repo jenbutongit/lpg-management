@@ -14,17 +14,20 @@ appInsights
 	.start()
 /* tslint:enable */
 
+import * as connectRedis from 'connect-redis'
 import * as express from 'express'
 import * as session from 'express-session'
-import * as cookieParser from 'cookie-parser'
-import * as sessionFileStore from 'session-file-store'
+//import * as cookieParser from 'cookie-parser'
+//import * as sessionFileStore from 'session-file-store'
+import * as redis from 'redis'
 import * as log4js from 'log4js'
 
 import * as serveStatic from 'serve-static'
+//import * as sessionFileStore from 'session-file-store'
 import {Properties} from 'ts-json-properties'
 import {ApplicationContext} from './applicationContext'
 import * as bodyParser from 'body-parser'
-import {AppConfig} from './config/appConfig'
+//import {AppConfig} from './config/appConfig'
 import moment = require('moment')
 import {DateTime} from './lib/dateTime'
 import * as asyncHandler from 'express-async-handler'
@@ -37,12 +40,13 @@ const logger = log4js.getLogger('server')
 const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')
 const appRoot = require('app-root-path')
-const FileStore = sessionFileStore(session)
+//const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
 const i18n = require('i18n-express')
 const fileUpload = require('express-fileupload')
+const flash = require('connect-flash')
 
 app.use(
 	i18n({
@@ -111,19 +115,66 @@ app.use(
 	})
 )
 
-app.use(cookieParser())
+// app.use(cookieParser())
+//
+// const appConfig = new AppConfig()
+// app.use(
+// 	session({
+// 		cookie: appConfig.cookie,
+// 		name: appConfig.name,
+// 		resave: appConfig.resave,
+// 		saveUninitialized: appConfig.saveUninitialized,
+// 		secret: appConfig.secret,
+// 		store: new FileStore({path: appConfig.path}),
+// 	})
+// )
 
-const appConfig = new AppConfig()
-app.use(
-	session({
-		cookie: appConfig.cookie,
-		name: appConfig.name,
-		resave: appConfig.resave,
-		saveUninitialized: appConfig.saveUninitialized,
-		secret: appConfig.secret,
-		store: new FileStore({path: appConfig.path}),
+// if (config.PROFILE === 'local') {
+// 	const FileStore = sessionFileStore(session)
+// 	app.use(
+// 		session({
+// 			cookie: {
+// 				httpOnly: true,
+// 				maxAge: config.COOKIE.maxAge,
+// 				secure: config.PRODUCTION_ENV,
+// 			},
+// 			name: 'lpg-ui',
+// 			resave: true,
+// 			saveUninitialized: true,
+// 			secret: config.SESSION_SECRET,
+// 			store: new FileStore({
+// 				path: process.env.NOW ? `/tmp/sessions` : `.sessions`,
+// 			}),
+// 		})
+// 	)
+// }
+//
+// if (config.PROFILE !== 'local') {
+	const RedisStore = connectRedis(session)
+	const redisClient = redis.createClient({
+		auth_pass: config.REDIS.password,
+		host: config.REDIS.host,
+		no_ready_check: true,
+		port: config.REDIS.port,
 	})
-)
+	app.use(
+		session({
+			cookie: {
+				httpOnly: true,
+				maxAge: config.COOKIE.maxAge,
+				secure: config.PRODUCTION_ENV,
+			},
+			name: 'lpg-ui',
+			resave: true,
+			saveUninitialized: true,
+			secret: config.SESSION_SECRET,
+			store: new RedisStore({
+				client: redisClient,
+			}),
+		})
+	)
+// }
+app.use(flash())
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))

@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response, Handler} from 'express'
+import {Handler, NextFunction, Request, Response} from 'express'
 import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
@@ -12,7 +12,7 @@ const logger = log4js.getLogger('config/passport')
 export class Auth {
 	readonly REDIRECT_COOKIE_NAME: string = 'redirectTo'
 	readonly HTTP_UNAUTHORISED: number = 401
-
+	hasAnyAdminRole: any
 	config: AuthConfig
 	passportStatic: PassportStatic
 	identityService: IdentityService
@@ -103,14 +103,18 @@ export class Auth {
 
 	redirect() {
 		return (req: Request, res: Response) => {
-			const redirect = req.cookies[this.REDIRECT_COOKIE_NAME]
-			if (!redirect) {
-				logger.info('Passport session not present on express request - redirecting to root')
+			try {
+				const redirect = req.cookies[this.REDIRECT_COOKIE_NAME]
+				if (!redirect) {
+					logger.info('Passport session not present on express request - redirecting to root')
+					res.redirect('/')
+					return
+				}
+				delete req.cookies[this.REDIRECT_COOKIE_NAME]
+				res.redirect(redirect)
+			} catch(e) {
 				res.redirect('/')
-				return
 			}
-			delete req.cookies[this.REDIRECT_COOKIE_NAME]
-			res.redirect(redirect)
 		}
 	}
 
