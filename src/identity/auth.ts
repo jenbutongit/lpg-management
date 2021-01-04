@@ -12,7 +12,7 @@ const logger = log4js.getLogger('config/passport')
 export class Auth {
 	readonly REDIRECT_COOKIE_NAME: string = 'redirectTo'
 	readonly HTTP_UNAUTHORISED: number = 401
-	hasAnyAdminRole: any
+	//hasAnyAdminRole: any
 	config: AuthConfig
 	passportStatic: PassportStatic
 	identityService: IdentityService
