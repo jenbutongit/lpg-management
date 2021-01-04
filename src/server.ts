@@ -17,7 +17,7 @@ appInsights
 import * as connectRedis from 'connect-redis'
 import * as express from 'express'
 import * as session from 'express-session'
-//import * as cookieParser from 'cookie-parser'
+import * as cookieParser from 'cookie-parser'
 //import * as sessionFileStore from 'session-file-store'
 import * as redis from 'redis'
 import * as log4js from 'log4js'
@@ -115,8 +115,8 @@ app.use(
 	})
 )
 
-// app.use(cookieParser())
-//
+app.use(cookieParser())
+
 // const appConfig = new AppConfig()
 // app.use(
 // 	session({
@@ -148,7 +148,7 @@ app.use(
 // 		})
 // 	)
 // }
-//
+
 // if (config.PROFILE !== 'local') {
 	const RedisStore = connectRedis(session)
 	const redisClient = redis.createClient({

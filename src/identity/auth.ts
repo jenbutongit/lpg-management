@@ -1,4 +1,4 @@
-import {Handler, NextFunction, Request, Response} from 'express'
+import {NextFunction, Request, Response, Handler} from 'express'
 import * as log4js from 'log4js'
 import {PassportStatic} from 'passport'
 import {IdentityService} from './identityService'
@@ -114,6 +114,7 @@ export class Auth {
 				res.redirect(redirect)
 			} catch(e) {
 				res.redirect('/')
+				return
 			}
 		}
 	}
