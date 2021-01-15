@@ -29,11 +29,13 @@ export class Identity {
 	readonly uid: string
 	readonly roles: string[]
 	readonly accessToken: string
+	readonly userName: string
 
-	constructor(uid: string, roles: string[], accessToken: string) {
+	constructor(uid: string, roles: string[], accessToken: string, userName: string) {
 		this.uid = uid
 		this.roles = roles
 		this.accessToken = accessToken
+		this.userName = userName
 	}
 
 	hasRole(role: string) {

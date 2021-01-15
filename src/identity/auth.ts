@@ -88,7 +88,6 @@ export class Auth {
 				this.currentUser = req.user as Identity
 				return next()
 			}
-
 			res.cookie(this.REDIRECT_COOKIE_NAME, req.originalUrl)
 			res.redirect(this.config.authenticationPath)
 		}
@@ -117,7 +116,11 @@ export class Auth {
 	deserializeUser() {
 		return async (data: string, done: any) => {
 			let jsonResponse = JSON.parse(data)
-			done(null, new Identity(jsonResponse.uid, jsonResponse.roles, jsonResponse.accessToken))
+			if (jsonResponse.userName) {
+				done(null, new Identity(jsonResponse.uid, jsonResponse.roles, jsonResponse.accessToken, jsonResponse.userName))
+			} else {
+				done(null, new Identity(jsonResponse.uid, jsonResponse.roles, jsonResponse.accessToken, ''))
+			}
 		}
 	}
 
@@ -132,7 +135,15 @@ export class Auth {
 	hasAdminRole() {
 		return (req: Request, res: Response, next: NextFunction) => {
 			if (req.user && req.user.hasAnyAdminRole()) {
-				return next()
+				if(this.currentUser.userName) {
+					return next()
+				} else {
+					logger.warn(`Username is missing. Invoking logout.`)
+					let accessToken = req!.user!.accessToken
+					this.identityService.logout(accessToken)
+					req.logout()
+					return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
+				}
 			} else {
 				if (req.user && req.user.uid) {
 					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
@@ -147,9 +158,10 @@ export class Auth {
 	logout() {
 		return async (req: Request, res: Response) => {
 			try {
-				await this.identityService.logout(req!.user!.accessToken)
+				let accessToken = req!.user!.accessToken
+				await this.identityService.logout(accessToken)
 				req.logout()
-				return res.redirect(`${this.config.authenticationServiceUrl}/login`)
+				return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
 			} catch (e) {
 				logger.warn(`Error logging user out`, e)
 			}

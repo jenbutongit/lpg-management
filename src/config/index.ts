@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 export const ENV = process.env.NODE_ENV || 'development'
 
 if (ENV === 'development') {
-	const envFile = '/keybase/team/lpg/dev/dotenv'
+	const envFile = '/volumes/keybase/team/lpg/dev/dotenv'
 	try {
 		if (!fs.statSync(envFile).isFile()) {
 			throw new Error(`File not found: ${envFile}`)
@@ -58,7 +58,7 @@ export const AUTHENTICATION = set({
 	clientId: env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
 	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl: env.AUTHENTICATION_SERVICE_URL || 'http://localhost:8080',
-	callbackUrl: env.CALLBACK_URL || 'http://localhost:3005',
+	callbackUrl: env.CALLBACK_URL || 'http://lpg.local.cshr.digital:3005',
 })
 
 export const REDIS = set({

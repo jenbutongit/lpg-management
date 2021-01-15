@@ -25,7 +25,7 @@ describe('OAuthRestService tests', () => {
 			defaults: {},
 		}
 		auth = <Auth>{}
-		auth.currentUser = new Identity('user123', [], 'access123')
+		auth.currentUser = new Identity('user123', [], 'access123', 'abc')
 
 		restService = new OauthRestService(config, auth)
 		restService.http = http
