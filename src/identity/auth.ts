@@ -135,7 +135,7 @@ export class Auth {
 
 	hasAdminRole() {
 		return (req: Request, res: Response, next: NextFunction) => {
-			if(req.user && this.currentUser.userName) {
+			if(this.currentUser.userName) {
 				if (req.user && req.user.hasAnyAdminRole()) {
 					return next()
 				} else {
