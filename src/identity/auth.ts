@@ -88,6 +88,7 @@ export class Auth {
 				this.currentUser = req.user as Identity
 				return next()
 			}
+
 			res.cookie(this.REDIRECT_COOKIE_NAME, req.originalUrl)
 			res.redirect(this.config.authenticationPath)
 		}

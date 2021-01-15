@@ -16,7 +16,6 @@ export class IdentityService {
 				Authorization: `Bearer ${token}`,
 			},
 		})
-
 		//Setting empty userName because details returned above does not contains it.
 		const identity = new Identity(response.data.uid, response.data.roles, token, '')
 
