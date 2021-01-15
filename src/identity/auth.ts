@@ -135,23 +135,23 @@ export class Auth {
 
 	hasAdminRole() {
 		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.user && req.user.hasAnyAdminRole()) {
-				if(this.currentUser.userName) {
+			if(req.user && this.currentUser.userName) {
+				if (req.user && req.user.hasAnyAdminRole()) {
 					return next()
 				} else {
-					logger.warn(`Username is missing. Invoking logout.`)
-					let accessToken = req!.user!.accessToken
-					this.identityService.logout(accessToken)
-					req.logout()
-					return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
+					if (req.user && req.user.uid) {
+						logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
+						+ req.ip + ' from page ' + req.originalUrl)
+					}
+					res.locals.lpgUiUrl = this.lpgUiUrl
+					res.render('page/unauthorised')
 				}
 			} else {
-				if (req.user && req.user.uid) {
-					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
-					+ req.ip + ' from page ' + req.originalUrl)
-				}
-				res.locals.lpgUiUrl = this.lpgUiUrl
-				res.render('page/unauthorised')
+				logger.warn(`Username is missing. Invoking logout.`)
+				let accessToken = req!.user!.accessToken
+				this.identityService.logout(accessToken)
+				req.logout()
+				return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
 			}
 		}
 	}
