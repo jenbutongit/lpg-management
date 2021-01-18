@@ -138,7 +138,8 @@ export class Auth {
 					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
 					+ req.ip + ' from page ' + req.originalUrl)
 				}
-				return res.redirect(this.lpgUiUrl.toString())
+				res.locals.lpgUiUrl = this.lpgUiUrl
+				res.render('page/unauthorised')
 			}
 		}
 	}
