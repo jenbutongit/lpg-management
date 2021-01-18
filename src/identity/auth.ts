@@ -135,7 +135,7 @@ export class Auth {
 				if (req.user.hasAnyAdminRole()) {
 					return next()
 				} else {
-					if (req.user && req.user.uid) {
+					if (req.user.uid) {
 						logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
 							+ req.ip + ' from page ' + req.originalUrl)
 					}
