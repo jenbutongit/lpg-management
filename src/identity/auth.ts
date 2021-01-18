@@ -149,7 +149,7 @@ export class Auth {
 			try {
 				await this.identityService.logout(req!.user!.accessToken)
 				req.logout()
-				return res.redirect(`${this.config.authenticationServiceUrl}/login`)
+				return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
 			} catch (e) {
 				logger.warn(`Error logging user out`, e)
 			}
