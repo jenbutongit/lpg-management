@@ -138,8 +138,7 @@ export class Auth {
 					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
 					+ req.ip + ' from page ' + req.originalUrl)
 				}
-				res.locals.lpgUiUrl = this.lpgUiUrl
-				return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
+				return res.redirect(this.lpgUiUrl.toString())
 			}
 		}
 	}
