@@ -131,18 +131,14 @@ export class Auth {
 
 	hasAdminRole() {
 		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.user) {
-				if (req.user.hasAnyAdminRole()) {
-					return next()
-				} else {
-					if (req.user.uid) {
-						logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
-							+ req.ip + ' from page ' + req.originalUrl)
-					}
-					res.locals.lpgUiUrl = this.lpgUiUrl
-					res.render('page/unauthorised')
-				}
+			if (req.user && req.user.hasAnyAdminRole()) {
+				return next()
 			} else {
+				if (req.user && req.user.uid) {
+					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
+						+ req.ip + ' from page ' + req.originalUrl)
+				}
+				res.locals.lpgUiUrl = this.lpgUiUrl
 				return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
 			}
 		}
