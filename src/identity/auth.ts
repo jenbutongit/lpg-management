@@ -140,7 +140,7 @@ export class Auth {
 							+ req.ip + ' from page ' + req.originalUrl)
 					}
 					res.locals.lpgUiUrl = this.lpgUiUrl
-					res.render('page/unauthorised')
+					return res.redirect(this.lpgUiUrl.toString())
 				}
 			} else {
 				return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
