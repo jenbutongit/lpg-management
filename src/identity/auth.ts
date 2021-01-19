@@ -131,15 +131,19 @@ export class Auth {
 
 	hasAdminRole() {
 		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.user && req.user.hasAnyAdminRole()) {
-				return next()
-			} else {
-				if (req.user && req.user.uid) {
-					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
-					+ req.ip + ' from page ' + req.originalUrl)
+			if (req.isAuthenticated()) {
+				if (req.user && req.user.hasAnyAdminRole()) {
+					return next()
+				} else {
+					if (req.user && req.user.uid) {
+						logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
+							+ req.ip + ' from page ' + req.originalUrl)
+					}
+					res.locals.lpgUiUrl = this.lpgUiUrl
+					res.render('page/unauthorised')
 				}
-				res.locals.lpgUiUrl = this.lpgUiUrl
-				res.render('page/unauthorised')
+			} else {
+				return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
 			}
 		}
 	}
@@ -149,7 +153,7 @@ export class Auth {
 			try {
 				await this.identityService.logout(req!.user!.accessToken)
 				req.logout()
-				return res.redirect(`${this.config.authenticationServiceUrl}/login?returnTo=` + this.lpgUiUrl)
+				return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
 			} catch (e) {
 				logger.warn(`Error logging user out`, e)
 			}
