@@ -150,12 +150,16 @@ export class Auth {
 
 	logout() {
 		return async (req: Request, res: Response) => {
-			try {
-				await this.identityService.logout(req!.user!.accessToken)
-				req.logout()
-				return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
-			} catch (e) {
-				logger.warn(`Error logging user out`, e)
+			if (req.isAuthenticated()) {
+				try {
+					await this.identityService.logout(req!.user!.accessToken)
+					req.logout()
+					return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+				} catch (e) {
+					logger.warn(`Error logging user out`, e)
+				}
+			} else {
+				return res.redirect(this.lpgUiUrl.toString())
 			}
 		}
 	}
