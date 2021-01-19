@@ -139,9 +139,14 @@ export class Auth {
 						logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
 							+ req.ip + ' from page ' + req.originalUrl)
 					}
-					this.identityService.logout(req!.user!.accessToken)
-					req.logout()
-					return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+					try {
+						this.identityService.logout(req!.user!.accessToken)
+						req.logout()
+						return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+					} catch (e) {
+						logger.warn(`Error logging user out`, e)
+						return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+					}
 				}
 			} else {
 				return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
