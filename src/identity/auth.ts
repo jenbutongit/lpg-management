@@ -142,14 +142,20 @@ export class Auth {
 					try {
 						this.identityService.logout(req!.user!.accessToken)
 						req.logout()
-						return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+						res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+						res.locals.lpgUiUrl = this.lpgUiUrl
+						return res.redirect(this.lpgUiUrl.toString())
 					} catch (e) {
 						logger.warn(`Error logging user out`, e)
-						return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+						res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+						res.locals.lpgUiUrl = this.lpgUiUrl
+						return res.redirect(this.lpgUiUrl.toString())
 					}
 				}
 			} else {
-				return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+				res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+				res.locals.lpgUiUrl = this.lpgUiUrl
+				return res.redirect(this.lpgUiUrl.toString())
 			}
 		}
 	}
@@ -160,11 +166,17 @@ export class Auth {
 				try {
 					await this.identityService.logout(req!.user!.accessToken)
 					req.logout()
-					return res.redirect(`${this.config.authenticationServiceUrl}/logout?returnTo=` + this.lpgUiUrl)
+					res.locals.lpgUiUrl = this.lpgUiUrl
+					return res.redirect(this.lpgUiUrl.toString())
 				} catch (e) {
 					logger.warn(`Error logging user out`, e)
+					res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+					res.locals.lpgUiUrl = this.lpgUiUrl
+					return res.redirect(this.lpgUiUrl.toString())
 				}
 			} else {
+				res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+				res.locals.lpgUiUrl = this.lpgUiUrl
 				return res.redirect(this.lpgUiUrl.toString())
 			}
 		}
