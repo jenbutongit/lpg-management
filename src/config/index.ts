@@ -61,6 +61,12 @@ export const AUTHENTICATION = set({
 	callbackUrl: env.CALLBACK_URL || 'http://localhost:3005',
 })
 
+export const REDIS = set({
+	host: env.REDIS_HOST || 'localhost',
+	password: env.REDIS_PASSWORD || '',
+	port: +(env.REDIS_PORT || '6379'),
+})
+
 export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000
 
 export const AUTHENTICATION_PATH = '/authenticate'

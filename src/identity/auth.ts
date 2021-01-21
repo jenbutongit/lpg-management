@@ -131,27 +131,53 @@ export class Auth {
 
 	hasAdminRole() {
 		return (req: Request, res: Response, next: NextFunction) => {
-			if (req.user && req.user.hasAnyAdminRole()) {
-				return next()
-			} else {
-				if (req.user && req.user.uid) {
-					logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP ' 
-					+ req.ip + ' from page ' + req.originalUrl)
+			if (req.isAuthenticated()) {
+				if (req.user && req.user.hasAnyAdminRole()) {
+					return next()
+				} else {
+					if (req.user && req.user.uid) {
+						logger.error('Rejecting non-admin user ' + req.user.uid + ' with IP '
+							+ req.ip + ' from page ' + req.originalUrl)
+					}
+					try {
+						this.identityService.logout(req!.user!.accessToken)
+						req.logout()
+						res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+						res.locals.lpgUiUrl = this.lpgUiUrl
+						return res.redirect(this.lpgUiUrl.toString())
+					} catch (e) {
+						logger.warn(`Error logging user out`, e)
+						res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+						res.locals.lpgUiUrl = this.lpgUiUrl
+						return res.redirect(this.lpgUiUrl.toString())
+					}
 				}
+			} else {
+				res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
 				res.locals.lpgUiUrl = this.lpgUiUrl
-				res.render('page/unauthorised')
+				return res.redirect(this.lpgUiUrl.toString())
 			}
 		}
 	}
 
 	logout() {
 		return async (req: Request, res: Response) => {
-			try {
-				await this.identityService.logout(req!.user!.accessToken)
-				req.logout()
-				return res.redirect(`${this.config.authenticationServiceUrl}/login`)
-			} catch (e) {
-				logger.warn(`Error logging user out`, e)
+			if (req.isAuthenticated()) {
+				try {
+					await this.identityService.logout(req!.user!.accessToken)
+					req.logout()
+					res.locals.lpgUiUrl = this.lpgUiUrl
+					return res.redirect(this.lpgUiUrl.toString())
+				} catch (e) {
+					logger.warn(`Error logging user out`, e)
+					res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+					res.locals.lpgUiUrl = this.lpgUiUrl
+					return res.redirect(this.lpgUiUrl.toString())
+				}
+			} else {
+				res.cookie(this.REDIRECT_COOKIE_NAME, this.lpgUiUrl)
+				res.locals.lpgUiUrl = this.lpgUiUrl
+				return res.redirect(this.lpgUiUrl.toString())
 			}
 		}
 	}

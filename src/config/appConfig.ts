@@ -8,5 +8,4 @@ export class AppConfig {
 	public resave: boolean = true
 	public saveUninitialized: boolean = true
 	public secret: string = 'dcOVe-ZW3ul77l23GiQSNbTJtMRio87G2yUOUAk_otcbL3uywfyLMZ9NBmDMuuOt'
-	public path: string = `/tmp/sessions`
 }
