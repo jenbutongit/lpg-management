@@ -141,8 +141,10 @@ describe('Course tests', () => {
 		const date1 = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
 		const date2 = new Date(new Date().setFullYear(new Date().getFullYear() + 2))
 
-		const formattedDate1 = date1.getFullYear() + '-' + date1.getMonth() + '-' + date1.getDate()
-		const formattedDate2 = date2.getFullYear() + '-' + date2.getMonth() + '-' + date2.getDate()
+		//date1.getMonth() or date2.getMonth() returns the value from 0 to 11
+		//hence to get the correct month 1 need to be added to the value
+		const formattedDate1 = date1.getFullYear() + '-' + (date1.getMonth() + 1) + '-' + date1.getDate()
+		const formattedDate2 = date2.getFullYear() + '-' + (date2.getMonth() + 1) + '-' + date2.getDate()
 
 		dateRange1.date = formattedDate1
 		dateRange2.date = formattedDate2

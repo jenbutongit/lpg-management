@@ -17,7 +17,8 @@ appInsights
 import * as express from 'express'
 import * as session from 'express-session'
 import * as cookieParser from 'cookie-parser'
-import * as sessionFileStore from 'session-file-store'
+import * as connectRedis from 'connect-redis'
+import * as redis from 'redis'
 import * as log4js from 'log4js'
 
 import * as serveStatic from 'serve-static'
@@ -37,7 +38,6 @@ const logger = log4js.getLogger('server')
 const nunjucks = require('nunjucks')
 const jsonpath = require('jsonpath')
 const appRoot = require('app-root-path')
-const FileStore = sessionFileStore(session)
 const {PORT = 3005} = process.env
 const app = express()
 const ctx = new ApplicationContext()
@@ -111,6 +111,14 @@ app.use(
 	})
 )
 
+const RedisStore = connectRedis(session)
+const redisClient = redis.createClient({
+	auth_pass: config.REDIS.password,
+	host: config.REDIS.host,
+	no_ready_check: true,
+	port: config.REDIS.port,
+})
+
 app.use(cookieParser())
 
 const appConfig = new AppConfig()
@@ -121,7 +129,9 @@ app.use(
 		resave: appConfig.resave,
 		saveUninitialized: appConfig.saveUninitialized,
 		secret: appConfig.secret,
-		store: new FileStore({path: appConfig.path}),
+		store: new RedisStore({
+			client: redisClient,
+		}),
 	})
 )
 
