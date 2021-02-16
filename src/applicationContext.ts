@@ -220,7 +220,7 @@ export class ApplicationContext {
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
-		this.youtubeConfig = new YoutubeConfig(15000)
+		this.youtubeConfig = new YoutubeConfig(30000)
 		this.youtubeService = new YoutubeService(this.youtubeConfig, this.auth)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()

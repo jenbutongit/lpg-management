@@ -2,7 +2,7 @@ export class YoutubeConfig {
 	private _timeout: number
 	private _url: string
 
-	constructor(timeout: number = 15000) {
+	constructor(timeout: number = 30000) {
 		this._timeout = timeout
 		this._url = ''
 	}
