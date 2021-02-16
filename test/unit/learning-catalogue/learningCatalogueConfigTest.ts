@@ -24,8 +24,8 @@ describe('LearningCatalogueConfig tests', () => {
 		expect(config.timeout).to.equal(60)
 	})
 
-	it('should have default timeout of 15000', () => {
+	it('should have default timeout of 30000', () => {
 		const config = new LearningCatalogueConfig('url')
-		expect(config.timeout).to.equal(15000)
+		expect(config.timeout).to.equal(30000)
 	})
 })

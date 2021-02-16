@@ -2,7 +2,7 @@ export class LearnerRecordConfig {
 	private _url: string
 	private _timeout: number
 
-	constructor(url: string, timeout: number = 15000) {
+	constructor(url: string, timeout: number = 30000) {
 		this._url = url
 		this._timeout = timeout
 	}
