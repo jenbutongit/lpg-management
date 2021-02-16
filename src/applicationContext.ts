@@ -273,7 +273,7 @@ export class ApplicationContext {
 		this.bookingFactory = new BookingFactory()
 		this.inviteFactory = new InviteFactory()
 
-		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url)
+		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url, 30000)
 		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory, this.inviteFactory)
 
 		this.bookingValidator = new Validator<Booking>(this.bookingFactory)
