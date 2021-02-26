@@ -67,7 +67,7 @@ export const REDIS = set({
 	port: +(env.REDIS_PORT || '6379'),
 })
 
-export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 15000
+export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 30000
 
 export const AUTHENTICATION_PATH = '/authenticate'
 

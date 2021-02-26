@@ -19,10 +19,10 @@ describe('Tests for leanerRecordConfig', () => {
 		expect(config.timeout).to.equal(10000)
 	})
 
-	it('Should set timeout to 15000ms by default', () => {
+	it('Should set timeout to 30000ms by default', () => {
 		config = new LearnerRecordConfig('http://example.com')
 		expect(config.url).to.equal('http://example.com')
-		expect(config.timeout).to.equal(15000)
+		expect(config.timeout).to.equal(30000)
 	})
 
 	it('Should be able to set url', () => {
