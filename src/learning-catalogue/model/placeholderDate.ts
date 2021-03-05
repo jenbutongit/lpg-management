@@ -1,16 +1,10 @@
+import moment = require('moment')
+
 export class PlaceholderDate {
-	startDay: string
-	startMonth: string
-	startYear: number
-	endDay: string
-	endMonth: string
-	endYear: number
+	endDate: moment.Moment
+	startDate: moment.Moment
 	constructor() {
-		this.startDay = '01'
-		this.startMonth = '04'
-		this.startYear = new Date().getFullYear()
-		this.endDay = '31'
-		this.endMonth = '03'
-		this.endYear = this.startYear + 1
+		this.endDate = moment()
+		this.startDate = moment()
 	}
 }
