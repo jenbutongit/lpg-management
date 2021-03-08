@@ -206,7 +206,7 @@ export class ApplicationContext {
 			checkperiod: config.CACHE.CHECK_PERIOD_SECONDS,
 		})
 
-		this.reportServiceConfig = new ReportServiceConfig()
+		this.reportServiceConfig = new ReportServiceConfig(config.REPORT_SERVICE.url, config.REPORT_SERVICE.timeout, config.REPORT_SERVICE.map)
 		this.reportService = new ReportService(this.reportServiceConfig, new OauthRestService(this.reportServiceConfig, this.auth))
 
 		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
