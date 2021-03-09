@@ -90,7 +90,7 @@ export const REPORT_SERVICE = set({
 	map: {
 		'booking-information': '/bookings',
 	},
-	timeout: Number(env.REPORT_SERVICE_TIMEOUT)
+	timeout: Number(env.REPORT_SERVICE_TIMEOUT_SECONDS)
 })
 
 export const CACHE = {
