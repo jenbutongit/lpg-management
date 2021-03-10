@@ -28,8 +28,8 @@
                     <li class="course list-details u--border--bgrey">
                         <form action="/reporting/booking-information" method="post">
                             {{ govukDateInput({
-                                id: "start-date",
-                                name: "start-date",
+                                id: "bookingStartDate",
+                                name: "bookingStartDate",
                                 fieldset: {
                                     legend: {
                                         text: "Start date",
@@ -46,18 +46,21 @@
                                     },
                                     label: "Day",
                                     name: "startDay",
+                                    id: "bookingStartDay",
                                     value: placeholder.startDay,
                                     classes: "govuk-input--width-3"
                                 },
                                 {
                                     label: "Month",
                                     name: "startMonth",
+                                    id: "bookingStartMonth",
                                     value: placeholder.startMonth,
                                     classes: "govuk-input--width-3"
                                 },
                                 {
                                     label: "Year",
                                     name: "startYear",
+                                    id: "bookingStartYear",
                                     value: placeholder.startYear,
                                     classes: "govuk-input--width-5"
                                 }
@@ -66,8 +69,8 @@
 
 
                             {{ govukDateInput({
-                                id: "end-date",
-                                name: "end-date",
+                                id: "bookingEndDate",
+                                name: "bookingEndDate",
                                 fieldset: {
                                     legend: {
                                         text: "End date",
@@ -84,18 +87,21 @@
                                         },
                                         label: "Day",
                                         name: "endDay",
+                                        id: "bookingEndDay",
                                         value: placeholder.endDay,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Month",
                                         name: "endMonth",
+                                        id: "bookingEndMonth",
                                         value: placeholder.endMonth,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Year",
                                         name: "endYear",
+                                        id: "bookingEndYear",
                                         value: placeholder.endYear,
                                         classes: "govuk-input--width-5"
                                     }
@@ -122,8 +128,8 @@
                     <li class="course list-details u--border--bgrey">
                         <form action="/reporting/learner-record" method="post">
                             {{ govukDateInput({
-                                id: "start-date",
-                                name: "start-date",
+                                id: "learningRecordStartDate",
+                                name: "learningRecordStartDate",
                                 fieldset: {
                                     legend: {
                                     text: "Start date",
@@ -140,18 +146,21 @@
                                     },
                                         label: "Day",
                                         name: "startDay",
+                                        id: "learningRecordStartDay",
                                         value: placeholder.startDay,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Month",
                                         name: "startMonth",
+                                        id: "learningRecordStartMonth",
                                         value: placeholder.startMonth,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Year",
                                         name: "startYear",
+                                        id: "learningRecordStartYear",
                                         value: placeholder.startYear,
                                         classes: "govuk-input--width-5"
                                 }
@@ -160,8 +169,8 @@
 
 
                                 {{ govukDateInput({
-                                    id: "end-date",
-                                    name: "end-date",
+                                    id: "learningRecordEndDate",
+                                    name: "learningRecordEndDate",
                                     fieldset: {
                                     legend: {
                                         text: "End date",
@@ -178,18 +187,21 @@
                                         },
                                             label: "Day",
                                             name: "endDay",
+                                            id: "learningRecordEndDay",
                                             value: placeholder.endDay,
                                             classes: "govuk-input--width-3"
                                         },
                                         {
                                             label: "Month",
                                             name: "endMonth",
+                                            id: "learningRecordEndMonth",
                                             value: placeholder.endMonth,
                                             classes: "govuk-input--width-3"
                                         },
                                         {
                                             label: "Year",
                                             name: "endYear",
+                                            id: "learningRecordEndYear",
                                             value: placeholder.endYear,
                                             classes: "govuk-input--width-5"
                                         }
