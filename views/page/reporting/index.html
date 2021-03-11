@@ -38,7 +38,7 @@
                                     }
                                 },
                             hint: {
-                                text: "For example, 1 4 " + placeholder.startYear
+                                text: "For example, " + placeholder.startDate.format("DD MM YYYY")
                             },
                             items: [
                                 {   attributes: {
@@ -46,22 +46,22 @@
                                     },
                                     label: "Day",
                                     name: "startDay",
+                                    value: placeholder.startDate.format("DD"),
                                     id: "bookingStartDay",
-                                    value: placeholder.startDay,
                                     classes: "govuk-input--width-3"
                                 },
                                 {
                                     label: "Month",
                                     name: "startMonth",
+                                    value: placeholder.startDate.format("MM"),
                                     id: "bookingStartMonth",
-                                    value: placeholder.startMonth,
                                     classes: "govuk-input--width-3"
                                 },
                                 {
                                     label: "Year",
                                     name: "startYear",
+                                    value: placeholder.startDate.format("YYYY"),
                                     id: "bookingStartYear",
-                                    value: placeholder.startYear,
                                     classes: "govuk-input--width-5"
                                 }
                             ]
@@ -79,7 +79,7 @@
                                     }
                                 },
                                 hint: {
-                                    text: "For example, 31 3 " + placeholder.endYear
+                                    text: "For example, " + placeholder.endDate.format("DD MM YYYY")
                                 },
                                 items: [
                                     {attributes: {
@@ -87,22 +87,22 @@
                                         },
                                         label: "Day",
                                         name: "endDay",
+                                        value: placeholder.endDate.format("DD"),
                                         id: "bookingEndDay",
-                                        value: placeholder.endDay,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Month",
                                         name: "endMonth",
+                                        value: placeholder.endDate.format("MM"),
                                         id: "bookingEndMonth",
-                                        value: placeholder.endMonth,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Year",
                                         name: "endYear",
+                                        value: placeholder.endDate.format("YYYY"),
                                         id: "bookingEndYear",
-                                        value: placeholder.endYear,
                                         classes: "govuk-input--width-5"
                                     }
                                 ]
@@ -139,7 +139,7 @@
                                 }
                                 },
                                 hint: {
-                                    text: "For example, 31 3 " + placeholder.startYear
+                                    text: "For example, " + placeholder.startDate.format("DD MM YYYY")
                                 },
                                 items: [
                                     {   attributes: {
@@ -147,22 +147,22 @@
                                     },
                                         label: "Day",
                                         name: "startDay",
+                                        value: placeholder.startDate.format("DD"),
                                         id: "learningRecordStartDay",
-                                        value: placeholder.startDay,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Month",
                                         name: "startMonth",
+                                        value: placeholder.startDate.format("MM"),
                                         id: "learningRecordStartMonth",
-                                        value: placeholder.startMonth,
                                         classes: "govuk-input--width-3"
                                     },
                                     {
                                         label: "Year",
                                         name: "startYear",
+                                        value: placeholder.startDate.format("YYYY"),
                                         id: "learningRecordStartYear",
-                                        value: placeholder.startYear,
                                         classes: "govuk-input--width-5"
                                 }
                                 ]
@@ -180,7 +180,7 @@
                                     }
                                     },
                                     hint: {
-                                        text: "For example, 31 3 " + placeholder.endYear
+                                        text: "For example, " + placeholder.endDate.format("DD MM YYYY")
                                     },
                                     items: [
                                     {attributes: {
@@ -188,22 +188,22 @@
                                         },
                                             label: "Day",
                                             name: "endDay",
+                                            value: placeholder.endDate.format("DD"),
                                             id: "learningRecordEndDay",
-                                            value: placeholder.endDay,
                                             classes: "govuk-input--width-3"
                                         },
                                         {
                                             label: "Month",
                                             name: "endMonth",
+                                            value: placeholder.endDate.format("MM"),
                                             id: "learningRecordEndMonth",
-                                            value: placeholder.endMonth,
                                             classes: "govuk-input--width-3"
                                         },
                                         {
                                             label: "Year",
                                             name: "endYear",
+                                            value: placeholder.endDate.format("YYYY"),
                                             id: "learningRecordEndYear",
-                                            value: placeholder.endYear,
                                             classes: "govuk-input--width-5"
                                         }
                                 ]
