@@ -9,7 +9,7 @@ export class IdentityConfig {
 	private _url: string
 	private _timeout: number
 
-	constructor(url: string, timeout: number = 30000) {
+	constructor(url: string, timeout: number) {
 		this._url = url
 		this._timeout = timeout
 	}
