@@ -1,4 +1,10 @@
+import * as dotenv from 'dotenv'
+
 export const ENV = process.env.NODE_ENV || 'development'
+
+if (ENV === 'development') {
+	dotenv.config()
+}
 
 function getEnv(obj: any, attr: string) {
 	return process.env[attr] || ''
