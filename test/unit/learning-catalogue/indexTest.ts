@@ -28,7 +28,7 @@ describe('Learning Catalogue tests', () => {
 	let termsAndConditionsService: EntityService<TermsAndConditions>
 	let eventService: EntityService<Event>
 
-	const config = new LearningCatalogueConfig('http://example.org')
+	const config = new LearningCatalogueConfig('http://example.org', 60000)
 
 	let learningCatalogue: LearningCatalogue
 
