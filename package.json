@@ -65,8 +65,7 @@
 		"tslib": "1.9.3",
 		"url": "^0.11.0",
 		"winston": "3.3.3",
-		"winston-azure-application-insights": "3.0.0",
-		"express-winston": "4.1.0"
+		"winston-azure-application-insights": "3.0.0"
 	},
 	"devDependencies": {
 		"@3846masa/axios-cookiejar-support": "0.3.5",
