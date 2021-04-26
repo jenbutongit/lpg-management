@@ -18,7 +18,7 @@ chai.use(sinonChai)
 
 describe('JsonRestService tests', () => {
 	let http: AxiosInstance
-	let config = new LearningCatalogueConfig('http://example.org')
+	let config = new LearningCatalogueConfig('http://example.org', 60000)
 	let auth: Auth
 	let restService: JsonRestService
 

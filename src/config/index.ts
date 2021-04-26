@@ -59,6 +59,7 @@ export const AUTHENTICATION = set({
 	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl: env.AUTHENTICATION_SERVICE_URL || 'http://localhost:8080',
 	callbackUrl: env.CALLBACK_URL || 'http://localhost:3005',
+	timeout: Number(env.AUTHENTICATION_SERVICE_TIMEOUT_MS)
 })
 
 export const REDIS = set({
@@ -67,22 +68,28 @@ export const REDIS = set({
 	port: +(env.REDIS_PORT || '6379'),
 })
 
-export const REQUEST_TIMEOUT = Number(env.REQUEST_TIMEOUT) || 30000
+export const REQUEST_TIMEOUT_MS = Number(env.REQUEST_TIMEOUT_MS)
 
 export const AUTHENTICATION_PATH = '/authenticate'
 
-export const YOUTUBE_API_KEY = env.YOUTUBE_API_KEY
+export const YOUTUBE = set({
+	api_key: env.YOUTUBE_API_KEY,
+	timeout: Number(env.YOUTUBE_TIMEOUT_MS)
+})
 
 export const COURSE_CATALOGUE = set({
 	url: env.COURSE_CATALOGUE_URL || 'http://localhost:9001',
+	timeout: Number(env.COURSE_CATALOGUE_TIMEOUT_MS)
 })
 
 export const LEARNER_RECORD = set({
 	url: env.LEARNER_RECORD_URL || 'http://localhost:9000',
+	timeout: Number(env.LEARNER_RECORD_TIMEOUT_MS)
 })
 
-export const REGISTRY_SERVICE_URL = set({
+export const REGISTRY_SERVICE = set({
 	url: env.REGISTRY_SERVICE_URL || 'http://localhost:9002',
+	timeout: Number(env.REGISTRY_SERVICE_TIMEOUT_MS)
 })
 
 export const REPORT_SERVICE = set({
@@ -90,6 +97,7 @@ export const REPORT_SERVICE = set({
 	map: {
 		'booking-information': '/bookings',
 	},
+	timeout: Number(env.REPORT_SERVICE_TIMEOUT_MS)
 })
 
 export const CACHE = {

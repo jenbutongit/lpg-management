@@ -22,7 +22,7 @@ describe('Leaner Record Tests', () => {
 	let bookingFactory: BookingFactory
 	let restService: OauthRestService
 
-	const config = new LearnerRecordConfig('http://example.org')
+	const config = new LearnerRecordConfig('http://example.org', 60000)
 
 	beforeEach(() => {
 		inviteFactory = <InviteFactory>{}

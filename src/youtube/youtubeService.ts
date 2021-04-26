@@ -1,4 +1,3 @@
-import * as config from '../config'
 import * as log4js from 'log4js'
 import {Auth} from '../identity/auth'
 import {YoutubeRestService} from './youtubeRestService'
@@ -10,11 +9,13 @@ const logger = log4js.getLogger('learning-catalogue/service/restService')
 export class YoutubeService {
 	youtubeConfig: YoutubeConfig
 	_restService: YoutubeRestService
+	api_key: String
 	public auth: Auth
 
-	constructor(youtubeConfig: YoutubeConfig, auth: Auth) {
+	constructor(youtubeConfig: YoutubeConfig, auth: Auth, api_key: String) {
 		this.youtubeConfig = youtubeConfig
 		this.auth = auth
+		this.api_key = api_key
 
 		this._restService = new YoutubeRestService(youtubeConfig, this.auth)
 	}
@@ -23,7 +24,7 @@ export class YoutubeService {
 		try {
 			return await this._restService.get(
 				`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=${
-					config.YOUTUBE_API_KEY
+					this.api_key
 				}`
 			)
 		} catch (err) {
@@ -69,7 +70,7 @@ export class YoutubeService {
 		try {
 			resp = await this._restService.get(
 				`https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoID}&key=${
-					config.YOUTUBE_API_KEY
+					this.api_key
 				}`
 			)
 		} catch (err) {
