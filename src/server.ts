@@ -167,4 +167,5 @@ app.get('/content-management', asyncHandler(ctx.homeController.index()))
 
 app.use(errorController.handleError)
 
-app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
+const server = app.listen(PORT, () => logger.info(`LPG Management listening on port ${PORT}`))
+server.setTimeout(500000)
