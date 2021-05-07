@@ -106,3 +106,5 @@ export const CACHE = {
 }
 
 export const INSTRUMENTATION_KEY = env.instrumentation_key || 'instrumentation_key'
+
+export const SERVER_TIMEOUT = Number(env.SERVER_TIMEOUT) || 600000
