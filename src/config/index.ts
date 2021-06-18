@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv'
 export const ENV = process.env.NODE_ENV || 'development'
 
 if (ENV === 'development') {
-	const envFile = '/keybase/team/lpg/dev/dotenv'
+	const envFile = '/volumes/keybase/team/lpg/dev/dotenv'
 	try {
 		if (!fs.statSync(envFile).isFile()) {
 			throw new Error(`File not found: ${envFile}`)
@@ -29,7 +29,7 @@ function set<T>(defaultValue: T, envValues: Record<string, T> = {}): T {
 
 const env: Record<string, string> = new Proxy({}, {get: getEnv})
 
-export const CONTENT_URL = env.CONTENT_URL || 'http://local-cdn.cshr.digital/lpgdevcontent'
+export const CONTENT_URL = env.CONTENT_URL || 'http://cdn.local.learn.civilservice.gov.uk/lpgdevcontent'
 
 export const CONTENT_CONTAINER = env.CONTENT_CONTAINER || 'lpgdevcontent'
 
@@ -58,7 +58,7 @@ export const AUTHENTICATION = set({
 	clientId: env.OAUTH_CLIENT_ID || 'a5881544-6159-4d2f-9b51-8c47ce97454d',
 	clientSecret: env.OAUTH_CLIENT_SECRET || 'test',
 	authenticationServiceUrl: env.AUTHENTICATION_SERVICE_URL || 'http://localhost:8080',
-	callbackUrl: env.CALLBACK_URL || 'http://localhost:3005',
+	callbackUrl: env.CALLBACK_URL || 'http://management.local.learn.civilservice.gov.uk:3005',
 	timeout: Number(env.AUTHENTICATION_SERVICE_TIMEOUT_MS)
 })
 
