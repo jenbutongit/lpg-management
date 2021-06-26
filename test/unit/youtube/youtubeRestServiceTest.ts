@@ -16,7 +16,7 @@ chai.use(sinonChai)
 
 describe('YoutubeRestService tests', () => {
 	let http: AxiosInstance
-	let config = new LearningCatalogueConfig('http://example.org')
+	let config = new LearningCatalogueConfig('http://example.org', 60000)
 	let auth: Auth
 	let restService: YoutubeRestService
 	let headers: {}

@@ -1,7 +1,6 @@
 import sinonChai = require('sinon-chai')
 import * as chai from 'chai'
 import * as sinon from 'sinon'
-import * as config from '../../../src/config/index'
 import {expect} from 'chai'
 import {Auth} from '../../../src/identity/auth'
 import {YoutubeService} from '../../../src/youtube/youtubeService'
@@ -22,7 +21,7 @@ describe('Youtube Service Test', function() {
 		_restService = <YoutubeRestService>{}
 		auth = <Auth>{}
 
-		youtubeService = new YoutubeService(youtubeConfig, auth)
+		youtubeService = new YoutubeService(youtubeConfig, auth, 'test_key')
 		youtubeService._restService = _restService
 
 		youtubeResponse = {
@@ -50,9 +49,7 @@ describe('Youtube Service Test', function() {
 
 	it('Should get and return response from Youtube', async function() {
 		const url = 'https://www.youtubeService.com/example'
-		const requestUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=${
-			config.YOUTUBE_API_KEY
-		}`
+		const requestUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=test_key`
 
 		_restService.get = sinon.stub().returns(youtubeResponse)
 
@@ -64,9 +61,7 @@ describe('Youtube Service Test', function() {
 
 	it('Should get response from Youtube and throw error', async function() {
 		const url = 'https://www.youtubeService.com/example'
-		const requestUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=${
-			config.YOUTUBE_API_KEY
-		}`
+		const requestUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json&key=test_key`
 
 		const error = new Error('Error In Test')
 

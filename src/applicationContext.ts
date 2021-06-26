@@ -167,7 +167,7 @@ export class ApplicationContext {
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			timeout: config.REQUEST_TIMEOUT,
+			timeout: config.REQUEST_TIMEOUT_MS,
 		})
 
 		this.identityService = new IdentityService(this.axiosInstance)
@@ -184,9 +184,9 @@ export class ApplicationContext {
 			this.identityService
 		)
 
-		this.identityConfig = new IdentityConfig(config.AUTHENTICATION.authenticationServiceUrl)
+		this.identityConfig = new IdentityConfig(config.AUTHENTICATION.authenticationServiceUrl, config.AUTHENTICATION.timeout)
 
-		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url)
+		this.learningCatalogueConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url, config.COURSE_CATALOGUE.timeout)
 
 		this.learningCatalogue = new LearningCatalogue(this.learningCatalogueConfig, this.auth)
 
@@ -206,7 +206,7 @@ export class ApplicationContext {
 		this.reportServiceConfig = new ReportServiceConfig(config.REPORT_SERVICE.url, config.REPORT_SERVICE.timeout, config.REPORT_SERVICE.map)
 		this.reportService = new ReportService(this.reportServiceConfig, new OauthRestService(this.reportServiceConfig, this.auth))
 
-		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE_URL.url)
+		this.csrsConfig = new CsrsConfig(config.REGISTRY_SERVICE.url, config.REGISTRY_SERVICE.timeout)
 		this.csrsService = new CsrsService(new OauthRestService(this.csrsConfig, this.auth), this.cacheService)
 
 		this.courseValidator = new Validator<Course>(this.courseFactory)
@@ -217,8 +217,8 @@ export class ApplicationContext {
 		this.learningProviderFactory = new LearningProviderFactory()
 		this.cancellationPolicyFactory = new CancellationPolicyFactory()
 
-		this.youtubeConfig = new YoutubeConfig(30000)
-		this.youtubeService = new YoutubeService(this.youtubeConfig, this.auth)
+		this.youtubeConfig = new YoutubeConfig(config.YOUTUBE.timeout)
+		this.youtubeService = new YoutubeService(this.youtubeConfig, this.auth, config.YOUTUBE.api_key)
 		this.audienceFactory = new AudienceFactory()
 		this.eventFactory = new EventFactory()
 		this.moduleFactory = new ModuleFactory()
@@ -241,7 +241,7 @@ export class ApplicationContext {
 
 		this.termsAndConditionsController = new TermsAndConditionsController(this.learningCatalogue, this.termsAndConditionsFactory, this.termsAndConditionsValidator)
 
-		this.mediaConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url + '/media')
+		this.mediaConfig = new LearningCatalogueConfig(config.COURSE_CATALOGUE.url + '/media', config.COURSE_CATALOGUE.timeout)
 
 		this.moduleController = new ModuleController(this.learningCatalogue, this.moduleFactory)
 		this.fileController = new FileController(
@@ -270,7 +270,7 @@ export class ApplicationContext {
 		this.bookingFactory = new BookingFactory()
 		this.inviteFactory = new InviteFactory()
 
-		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url, 30000)
+		this.learnerRecordConfig = new LearnerRecordConfig(config.LEARNER_RECORD.url, config.LEARNER_RECORD.timeout)
 		this.learnerRecord = new LearnerRecord(this.learnerRecordConfig, this.auth, this.bookingFactory, this.inviteFactory)
 
 		this.bookingValidator = new Validator<Booking>(this.bookingFactory)

@@ -16,7 +16,7 @@ chai.use(sinonChai)
 describe('AgencyTokenCapacityUsedHttpService tests...', function() {
 	let agencyTokenCapacityUsedHttpService: AgencyTokenCapacityUsedHttpService
 	let agencyTokenCapacityUsedEntityService: EntityService<AgencyTokenCapacityUsed>
-	const config = new IdentityConfig('http://example.org')
+	const config = new IdentityConfig('http://example.org', 60000)
 
 	beforeEach(function() {
 		agencyTokenCapacityUsedEntityService = <EntityService<AgencyTokenCapacityUsed>>{}
