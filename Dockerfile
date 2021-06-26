@@ -1,4 +1,4 @@
-FROM node:8
+FROM node:16.3.0-slim
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Bundle app source
 COPY . .
