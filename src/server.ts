@@ -2,7 +2,7 @@
 import * as config from './config'
 import appInsights = require('applicationinsights')
 appInsights.setup(config.INSTRUMENTATION_KEY)
-.setAutoCollectConsole(false)
+.setAutoCollectConsole(true)
 
 appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = "lpg-management"
 appInsights.start()

@@ -1,5 +1,4 @@
 import { format, transports, createLogger } from 'winston' 
-import { AzureApplicationInsightsLogger } from 'winston-azure-application-insights'
 const { combine, timestamp, printf } = format
 import * as config from '../config'
 
@@ -17,7 +16,6 @@ const WINSTON_CONFIG = {
 		loggingFormat
 	),
 	transports: [
-		new AzureApplicationInsightsLogger({key: config.INSTRUMENTATION_KEY}),
 		new transports.Console()
 	]
 }
