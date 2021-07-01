@@ -1,7 +1,7 @@
 /* tslint:disable:no-var-requires */
 import * as config from './config'
 import appInsights = require('applicationinsights')
-appInsights.setup(config.INSTRUMENTATION_KEY)
+appInsights.setup(config.APPLICATIONINSIGHTS_CONNECTION_STRING)
 .setAutoCollectConsole(true)
 
 appInsights.defaultClient.context.tags[appInsights.defaultClient.context.keys.cloudRole] = "lpg-management"
