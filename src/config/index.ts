@@ -29,7 +29,7 @@ function set<T>(defaultValue: T, envValues: Record<string, T> = {}): T {
 
 const env: Record<string, string> = new Proxy({}, {get: getEnv})
 
-export const APPLICATIONINSIGHTS_CONNECTION_STRING = env.APPLICATIONINSIGHTS_CONNECTION_STRING
+export const APPLICATIONINSIGHTS_CONNECTION_STRING = env.APPLICATIONINSIGHTS_CONNECTION_STRING || 'ai_key'
 
 export const CONTENT_URL = env.CONTENT_URL || 'http://cdn.local.learn.civilservice.gov.uk/lpgdevcontent'
 
